@@ -37,6 +37,7 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from apartment import anneal
 from apartment import evaluate as apt_evaluate
 from apartment import geometry
 from engine import loader
@@ -151,6 +152,8 @@ def generate_furnishings(
     specs: dict,
     count: int = 8,
     seed: int = 0,
+    anneal_iterations: int = 2500,
+    weights: anneal.Weights | None = None,
 ) -> list[dict]:
     """Produce distinct furnishing arrangements of the same item list.
 
@@ -188,6 +191,9 @@ def generate_furnishings(
     results: list[dict] = []
     seen: set[str] = set()
 
+    # Seed each variant with a greedy pass, then hand it to the annealer.
+    # Greedy alone gave about four distinct packings before converging, and
+    # none of them were good — only valid.
     for index in range(count):
         plan = deepcopy(base_plan)
         plan["furniture"] = list(fixed)
@@ -207,6 +213,14 @@ def generate_furnishings(
                 plan["furniture"].append(dict(item))
                 continue
             plan["furniture"].append({**item, **spot})
+
+        if anneal_iterations:
+            improved = anneal.arrange(
+                plan, specs, weights=weights, variants=1,
+                iterations=anneal_iterations, seed=seed + index * 31,
+            )
+            if improved:
+                plan = improved[0]["plan"]
 
         # Deduplicate: different orders often converge on the same packing.
         key = json.dumps(
@@ -254,6 +268,8 @@ def explore(
     furnishings_per_scheme: int = 6,
     spec_ids: list[str] | None = None,
     keep_infeasible: bool = False,
+    anneal_iterations: int = 2500,
+    weights: anneal.Weights | None = None,
 ) -> dict:
     """Search partition schemes x furnishings x specifications.
 
@@ -285,6 +301,7 @@ def explore(
 
         for f_index, furnished in enumerate(generate_furnishings(
             base, specs, count=furnishings_per_scheme,
+            anneal_iterations=anneal_iterations, weights=weights,
         )):
             # --- one geometry run, reused across every specification ---
             geo = geometry.analyse(

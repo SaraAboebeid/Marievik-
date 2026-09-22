@@ -43,7 +43,7 @@
         { "id": "f6", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
         { "id": "f7", "type": "chair.dining", "x": 4200, "y": 4300, "rot": 0 },
         { "id": "f8", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
-        { "id": "f9", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f9", "type": "fridge.600", "x": 5350, "y": 700, "rot": 0 },
         { "id": "f10", "type": "shower.900", "x": 5750, "y": 4650, "rot": 0 },
         { "id": "f11", "type": "basin.600", "x": 7700, "y": 4550, "rot": 0 },
         { "id": "f12", "type": "wc.pan", "x": 7750, "y": 6500, "rot": 180 }
@@ -75,7 +75,7 @@
         { "id": "f6", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
         { "id": "f7", "type": "chair.dining", "x": 4200, "y": 4300, "rot": 0 },
         { "id": "f8", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
-        { "id": "f9", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f9", "type": "fridge.600", "x": 5350, "y": 700, "rot": 0 },
         { "id": "f10", "type": "shower.900", "x": 5750, "y": 4650, "rot": 0 },
         { "id": "f11", "type": "basin.600", "x": 7700, "y": 4550, "rot": 0 },
         { "id": "f12", "type": "wc.pan", "x": 7750, "y": 6500, "rot": 180 }
@@ -138,7 +138,7 @@
         { "id": "f9", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
         { "id": "f10", "type": "chair.dining", "x": 4200, "y": 4300, "rot": 0 },
         { "id": "f11", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
-        { "id": "f12", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f12", "type": "fridge.600", "x": 5350, "y": 700, "rot": 0 },
         { "id": "f13", "type": "shower.900", "x": 5750, "y": 4650, "rot": 0 },
         { "id": "f14", "type": "basin.600", "x": 7700, "y": 4550, "rot": 0 },
         { "id": "f15", "type": "wc.pan", "x": 7750, "y": 6500, "rot": 180 }

@@ -446,6 +446,15 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
     # -----------------------------------------------------------------
     # Issues and room table
     # -----------------------------------------------------------------
+    for clash in geo.overlaps:
+        result.issues.append({
+            "severity": clash["severity"],
+            "title": f'{clash["a_name"]} overlaps {clash["b_name"]}',
+            "detail": (
+                f'{clash["area_m2"]} m2 of shared floor. Two things cannot occupy the '
+                "same place; one of them has to move."
+            ),
+        })
     for blocked in geo.blocked_items:
         result.issues.append({
             "severity": blocked["severity"],

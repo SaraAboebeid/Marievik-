@@ -214,6 +214,7 @@ class GeometryResult:
     tight_rooms: list[int] = field(default_factory=list)
     item_rooms: dict[str, int] = field(default_factory=dict)
     blocked_items: list[dict] = field(default_factory=list)
+    overlaps: list[dict] = field(default_factory=list)
     wall_length_m: float = 0.0
     raster: Raster | None = None
     room_map: np.ndarray | None = None
@@ -570,6 +571,28 @@ def analyse(plan: dict, specs: dict, turning_circle_mm: float,
     result.unreachable_rooms = [r.index for r in result.rooms if r.access_state == "blocked"]
     result.tight_rooms = [r.index for r in result.rooms if r.access_state == "tight"]
     result.circulation_m2 = max(0.0, result.free_floor_m2)
+
+    # --- furniture overlapping furniture -----------------------------------
+    # The masks above union every item together, so two items occupying the
+    # same floor simply merge and the collision is invisible. It has to be
+    # checked pairwise. Found by the annealer, which scored a demo plan as
+    # colliding when the analyser called it clean.
+    for a in range(len(item_geoms)):
+        item_a, spec_a, geom_a = item_geoms[a]
+        for b in range(a + 1, len(item_geoms)):
+            item_b, spec_b, geom_b = item_geoms[b]
+            if not geom_a.intersects(geom_b):
+                continue
+            shared = geom_a.intersection(geom_b).area
+            if shared < 10_000:  # under 100x100 mm: drawing tolerance
+                continue
+            smaller = min(geom_a.area, geom_b.area)
+            result.overlaps.append({
+                "a": item_a.get("id"), "b": item_b.get("id"),
+                "a_name": spec_a["name"], "b_name": spec_b["name"],
+                "area_m2": round(shared / 1e6, 3),
+                "severity": "major" if shared / smaller > 0.15 else "minor",
+            })
 
     # --- furniture clearance violations ------------------------------------
     obstruction = walls_mask & ~doors_mask

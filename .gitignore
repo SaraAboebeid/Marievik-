@@ -30,3 +30,6 @@ apartment/static/dist/
 # Use them to fill neufert_ref fields; cite the regulation as the source.
 *.pdf
 Neufert*
+
+# Isolated simulation environment (Honeybee/Ladybug/Dragonfly)
+.venv-sim/

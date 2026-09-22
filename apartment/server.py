@@ -263,6 +263,58 @@ def api_place(req: PlaceRequest):
     return _json({"ok": True, **spot})
 
 
+class ArrangeRequest(BaseModel):
+    plan: dict
+    settings: dict = {}
+    variants: int = 4
+    iterations: int = 4000
+    weights: dict | None = None
+
+
+@app.post("/api/arrange")
+def api_arrange(req: ArrangeRequest):
+    """Propose annealed furniture arrangements for this plan.
+
+    Items stay in the room they started in and sanitary fixtures do not move
+    at all. The weights are the design opinions and are deliberately
+    adjustable — you tune an architectural objective by rejecting output,
+    not by specifying it in the abstract.
+    """
+    from apartment import anneal
+
+    specs = specs_for(req.settings.get("user_group", "adult"))
+    weights = anneal.Weights(**req.weights) if req.weights else anneal.Weights()
+
+    results = anneal.arrange(
+        req.plan, specs, weights=weights,
+        variants=max(1, min(8, req.variants)),
+        iterations=max(500, min(20000, req.iterations)),
+    )
+    return _json({
+        "variants": [
+            {
+                "variant": r["variant"],
+                "score": r["score"],
+                "terms": r["terms"],
+                "stats": r["stats"],
+                "furniture": r["plan"]["furniture"],
+            }
+            for r in results
+        ],
+        "weights": weights.as_dict(),
+        "weight_help": {
+            "overlap": "items colliding, or sitting in a wall — should always reach zero",
+            "clearance": "the space each item needs to be usable, from the standards engine",
+            "door_swing": "blocking a door",
+            "wall_backing": "reward for backs against walls (negative = reward)",
+            "free_circle": "reward for a room you can move around in",
+            "daylight": "reward for putting the desk at the window and the wardrobe not",
+            "cohesion": "reward for a kitchen that reads as a kitchen",
+            "spread": "penalty for scattering items across the floor",
+        },
+    })
+
+
 class ExploreRequest(BaseModel):
     schemes: list[str] | None = None
     settings: dict = {}

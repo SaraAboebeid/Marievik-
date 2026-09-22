@@ -3,11 +3,30 @@
 A local parametric model of one apartment. Move a wall or a chair and cost,
 carbon and the social metrics update together.
 
+Stack: **Vite + React + TypeScript + Tailwind v4** front end, **FastAPI** engine.
+The browser owns interaction and drawing; Python owns every number, so there is
+one implementation of the costing and nothing to keep in sync.
+
 ```powershell
-python -m apartment.server     # http://127.0.0.1:8000
+# 1. build the frontend once
+cd frontend
+npm install
+npm run build
+
+# 2. run the app
+cd ..
+python -m apartment.server         # http://127.0.0.1:8000
 ```
 
-Binds to localhost only. Nothing leaves the machine.
+For frontend work, leave the Python server running and start Vite alongside it:
+
+```powershell
+cd frontend
+npm run dev                        # http://localhost:5173, proxies /api to 8000
+```
+
+Both halves then hot-reload independently. Binds to localhost only; nothing
+leaves the machine.
 
 ---
 
@@ -58,14 +77,38 @@ unreachable — it is the first bug this model had.
 
 ## Switching user group changes the building
 
-Not just the score. `care_resident_assisted` raises any bed's working space to
-900 mm on both sides and 1200 mm at the foot, because in assisted care that is
-an occupational-health requirement under arbetsmiljölagen rather than a comfort
-preference. The turning circle goes to 1800 mm and passage to 1300 mm.
+Not just the score. Every clearance in the plan is resolved by the
+[standards engine](../standards/README.md) against the ergonomic envelope of
+whoever you are designing for. Nothing is hardcoded per user group:
 
-Load **Care apartment** and watch what a single change of user group does to a
-plan that was comfortable a moment ago. That is the project's argument in one
-interaction.
+| Wardrobe approach | |
+|---|---|
+| Adult, ambulant | 750 mm |
+| Manual wheelchair user | 1200 mm |
+| Care resident, assisted | 1300 mm |
+
+Turning goes 1200 → 1500 → 1800 mm, passage 900 → 1300 mm, and in assisted care
+a bed inherits two-staff working space because arbetsmiljölagen makes it an
+occupational-health requirement rather than a comfort preference.
+
+Load **Care apartment**, then switch the user group back to *Adult* and forward
+again. Watch a comfortable plan stop working. That is the project's argument in
+one interaction — and the **Standards** tab on the right shows exactly which
+rule moved and what it is cited to.
+
+---
+
+## Placement
+
+New furniture is placed by the engine, not dropped in the middle. It searches
+for a position where the item *and its clearance* fit without taking the space
+another item needs to be usable, preferring backs against walls. If nothing
+fits it says so rather than stacking items on top of each other.
+
+The search and the analysis build their clearance zones with the same function.
+They did not at first, and the placements the search called valid were then
+flagged as blocked — the two disagreed about which way "front" pointed after
+rotation.
 
 ---
 

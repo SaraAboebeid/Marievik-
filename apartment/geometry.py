@@ -219,6 +219,114 @@ class GeometryResult:
     clearance_map: np.ndarray | None = None
 
 
+def find_placement(plan: dict, specs: dict, type_id: str,
+                   anchor: tuple[float, float] | None = None) -> dict | None:
+    """Find somewhere a new item actually fits.
+
+    Dropping every new item at the apartment's centre piles them on top of
+    each other and on top of the circulation route. The engine already knows
+    where the free floor is, so placement belongs here rather than in the UI.
+
+    Candidates are scored to behave the way furniture behaves: backs to
+    walls, out of the middle of the room, near where you asked for it.
+    """
+    spec = specs.get(type_id)
+    if not spec:
+        return None
+
+    shell = plan["shell"]
+    raster = Raster(shell["width_mm"], shell["depth_mm"])
+    ext = shell.get("external_wall_thickness_mm", 250)
+    interior = raster.fill(box(0, 0, shell["width_mm"], shell["depth_mm"]).buffer(-ext))
+
+    geoms = []
+    for wall in plan.get("walls", []) + shell.get("structural_walls", []):
+        geoms.append(wall_polygon(wall["x1"], wall["y1"], wall["x2"], wall["y2"],
+                                  wall.get("thickness", 100)))
+    for item in plan.get("furniture", []):
+        other = specs.get(item["type"])
+        if not other:
+            continue
+        merged = {**other, **item, "w": other["w"], "d": other["d"]}
+        geoms.append(item_polygon(merged))
+        # Keep out of other items' clearance too, or the new item lands in
+        # the space that makes its neighbour usable.
+        for zone in clearance_polygons(merged, other):
+            geoms.append(zone)
+
+    blocked = ~interior
+    if geoms:
+        blocked = blocked | raster.fill(shapely.union_all(geoms))
+
+    # Summed-area table so each candidate rectangle is O(1) to test.
+    integral = np.cumsum(np.cumsum(blocked.astype(np.int32), axis=0), axis=1)
+
+    def occupied(x0: float, y0: float, x1: float, y1: float) -> int:
+        c0 = max(0, int(x0 // RES)); r0 = max(0, int(y0 // RES))
+        c1 = min(raster.ncols - 1, int(x1 // RES)); r1 = min(raster.nrows - 1, int(y1 // RES))
+        if c1 < c0 or r1 < r0:
+            return 10 ** 6
+        total = integral[r1, c1]
+        if r0 > 0:
+            total -= integral[r0 - 1, c1]
+        if c0 > 0:
+            total -= integral[r1, c0 - 1]
+        if r0 > 0 and c0 > 0:
+            total += integral[r0 - 1, c0 - 1]
+        return int(total)
+
+    w, d = spec["w"], spec["d"]
+    anchor = anchor or (shell["width_mm"] / 2, shell["depth_mm"] / 2)
+    step = 100
+
+    best = None
+    for rot in (0, 90, 180, 270):
+        # Footprint is axis-aligned at 90 degree steps, as are the clearance
+        # zones, so a bounding box IS the zone and the integral image applies.
+        fw, fd = (w, d) if rot % 180 == 0 else (d, w)
+        for cy in range(int(ext + fd / 2), int(shell["depth_mm"] - ext - fd / 2) + 1, step):
+            for cx in range(int(ext + fw / 2), int(shell["width_mm"] - ext - fw / 2) + 1, step):
+                x0, y0 = cx - fw / 2, cy - fd / 2
+                if occupied(x0, y0, x0 + fw, y0 + fd):
+                    continue
+
+                # Build the clearance zones with the SAME function the
+                # analyser uses. Hand-rolling them here produced placements
+                # the analyser then flagged as blocked, because the two
+                # disagreed about which way "front" points after rotation.
+                candidate = {**spec, "x": cx, "y": cy, "rot": rot,
+                             "w": spec["w"], "d": spec["d"]}
+                zones = clearance_polygons(candidate, spec)
+                front_zone = zones[0] if spec.get("clearance_front_mm", 0) else None
+                side_zones = zones[1:] if spec.get("clearance_side_mm", 0) else []
+
+                if front_zone is not None and occupied(*front_zone.bounds):
+                    continue
+                if side_zones and all(occupied(*z.bounds) for z in side_zones):
+                    continue  # a side zone is needed on at least one side
+
+                # Prefer backs against something solid, and near the anchor.
+                back = {
+                    0: (x0, y0 - 120, x0 + fw, y0),
+                    180: (x0, y0 + fd, x0 + fw, y0 + fd + 120),
+                    90: (x0 + fw, y0, x0 + fw + 120, y0 + fd),
+                    270: (x0 - 120, y0, x0, y0 + fd),
+                }[rot]
+                backing = min(occupied(*back), 40)
+                dist = math.hypot(cx - anchor[0], cy - anchor[1])
+                # Backing dominates: furniture goes against walls. Distance to
+                # the anchor only breaks ties between equally backed spots.
+                score = -backing * 1.0 + dist / 3000.0
+
+                if best is None or score < best[0]:
+                    best = (score, cx, cy, rot)
+
+    if best is None:
+        return None
+    _score, cx, cy, rot = best
+    return {"x": int(round(cx / 50) * 50), "y": int(round(cy / 50) * 50), "rot": rot}
+
+
 def analyse(plan: dict, specs: dict, turning_circle_mm: float,
             passage_width_mm: float, door_clear_mm: float = 800) -> GeometryResult:
     """Full geometric analysis of a plan for one user group."""

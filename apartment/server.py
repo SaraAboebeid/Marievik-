@@ -14,13 +14,37 @@ from dataclasses import asdict, is_dataclass
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from engine import loader
+from standards import rules
 
 from . import evaluate, geometry
+
+
+def specs_for(user_group: str) -> dict[str, dict]:
+    """Furniture specs with clearances resolved by the standards engine.
+
+    The flat numbers in furniture.json are a fallback. Where the standards
+    layer has an activity mapping for an item, it wins — that is what makes
+    a wardrobe need 750 mm for an ambulant adult and 1200 mm for a wheelchair
+    user without anyone editing the furniture record.
+    """
+    raw = json.loads((DATA / "furniture.json").read_text(encoding="utf-8"))["items"]
+    out: dict[str, dict] = {}
+    for item in raw:
+        spec = dict(item)
+        derived = rules.item_clearances(item["id"], user_group)
+        if "front" in derived and derived["front"].value_mm:
+            spec["clearance_front_mm"] = derived["front"].value_mm
+            spec["clearance_front_basis"] = derived["front"].basis
+        if "side" in derived and derived["side"].value_mm:
+            spec["clearance_side_mm"] = derived["side"].value_mm
+            spec["clearance_side_basis"] = derived["side"].basis
+        out[item["id"]] = spec
+    return out
 
 HERE = Path(__file__).resolve().parent
 STATIC = HERE / "static"
@@ -49,9 +73,27 @@ def _json(payload) -> JSONResponse:
     return JSONResponse(content=payload)
 
 
-@app.get("/")
-def index() -> FileResponse:
-    return FileResponse(STATIC / "index.html")
+DIST = STATIC / "dist"
+
+
+@app.get("/", response_class=HTMLResponse)
+def index():
+    """Serve the built Vite bundle, or say how to get one."""
+    built = DIST / "index.html"
+    if built.exists():
+        return FileResponse(built)
+    return HTMLResponse(
+        "<pre style='font:14px ui-monospace;padding:40px;line-height:1.6'>"
+        "No frontend build found.\n\n"
+        "  cd frontend\n"
+        "  npm install      (once)\n"
+        "  npm run build    then reload this page\n\n"
+        "Or, for development with hot reload, leave this server running and:\n\n"
+        "  cd frontend\n"
+        "  npm run dev      then open http://localhost:5173\n\n"
+        "The API is up either way - see /api/docs.</pre>",
+        status_code=503,
+    )
 
 
 @app.get("/api/bootstrap")
@@ -119,20 +161,7 @@ def api_evaluate(req: EvaluateRequest):
     group = groups.get(settings.get("user_group", "adult"), groups["adult"])
     clearances = group.get("clearances_mm", {})
 
-    specs = {item["id"]: item for item in
-             json.loads((DATA / "furniture.json").read_text(encoding="utf-8"))["items"]}
-
-    # In assisted care use, staff working space around a bed stops being a
-    # comfort preference and becomes an occupational-health requirement
-    # (arbetsmiljölagen). Any bed inherits the care bed's clearances.
-    if settings.get("user_group") == "care_resident_assisted":
-        for key, spec in specs.items():
-            if spec["category"] == "bedroom":
-                specs[key] = {
-                    **spec,
-                    "clearance_side_mm": max(spec.get("clearance_side_mm", 0), 900),
-                    "clearance_front_mm": max(spec.get("clearance_front_mm", 0), 1200),
-                }
+    specs = specs_for(settings.get("user_group", "adult"))
 
     geo = geometry.analyse(
         req.plan, specs,
@@ -211,19 +240,70 @@ def _clearance_grid(geo: geometry.GeometryResult, step_mm: int = 200) -> dict:
     }
 
 
+class PlaceRequest(BaseModel):
+    plan: dict
+    type: str
+    settings: dict = {}
+    anchor: list[float] | None = None
+
+
+@app.post("/api/place")
+def api_place(req: PlaceRequest):
+    """Where should a new item go? Answered by the engine, not the UI."""
+    specs = specs_for(req.settings.get("user_group", "adult"))
+    anchor = tuple(req.anchor) if req.anchor else None
+    spot = geometry.find_placement(req.plan, specs, req.type, anchor)
+    if spot is None:
+        return _json({
+            "ok": False,
+            "reason": "Nothing fits. Every position that would hold this item and "
+                      "its clearance is already taken by a wall, another item, or "
+                      "the space another item needs to be usable.",
+        })
+    return _json({"ok": True, **spot})
+
+
+@app.get("/api/standards/{user_group}")
+def api_standards(user_group: str):
+    """What the standards engine says about designing for this person."""
+    return _json({**rules.summary(user_group), "coverage": rules.coverage()})
+
+
+@app.get("/api/standards")
+def api_standards_index():
+    return _json({
+        "user_groups": list(rules.envelopes().keys()),
+        "space_types": [
+            {"id": s["id"], "label": s["label"], "category": s["category"]}
+            for s in rules.space_types().values()
+        ],
+        "coverage": rules.coverage(),
+    })
+
+
 @app.get("/api/clearance")
 def api_clearance():
     return _json({"resolution_mm": geometry.RES})
 
 
+if (STATIC / "dist" / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=str(STATIC / "dist" / "assets")), name="assets")
 app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 
 
 def main() -> None:
     import uvicorn
 
+    built = (STATIC / "dist" / "index.html").exists()
     print("\n  Marievik+ Apartment Lab")
-    print("  http://127.0.0.1:8000\n")
+    print("  http://127.0.0.1:8000")
+    if built:
+        print("  serving the built frontend from apartment/static/dist")
+    else:
+        print("  NO BUILD FOUND — run `npm run build` in frontend/")
+    print("\n  For frontend development, leave this running and start Vite:")
+    print("      cd frontend && npm run dev     ->  http://localhost:5173")
+    print("  Vite proxies /api here, so both halves hot-reload independently.\n")
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
 
 

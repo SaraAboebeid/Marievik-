@@ -62,6 +62,42 @@ export function StandardsPanel({ std }: { std: StandardsSummary }) {
 
       <section className="rounded-md border border-line bg-raised px-3 py-2.5">
         <h4 className="mb-1.5 font-mono text-[9.5px] font-medium uppercase tracking-[0.09em] text-muted">
+          Heights
+        </h4>
+        <p className="mb-2 text-[11px] leading-snug text-muted">
+          A counter height <em>is</em> this person&rsquo;s work surface; a switch
+          <em> is</em> somewhere inside their reach. Derived, so one change of user
+          group moves every height at once.
+        </p>
+        <div className="space-y-0">
+          {(std.heights ?? []).map((h) => (
+            <details key={h.id} className="border-t border-line py-1.5 first:border-t-0">
+              <summary className="flex cursor-pointer list-none items-baseline justify-between gap-2 text-[12px]">
+                <span className={h.warning ? 'text-warn' : undefined}>
+                  {h.label}{h.warning ? ' ⚠' : ''}
+                </span>
+                <span className="whitespace-nowrap font-mono tabular-nums text-ink-2">
+                  {h.is_maximum && <span className="text-muted">≤ </span>}
+                  {fmt(h.value_mm)}<span className="text-muted"> mm</span>
+                </span>
+              </summary>
+              <p className="mt-1 text-[11px] leading-snug text-muted">{h.basis}</p>
+              {h.warning && (
+                <p className="mt-1 text-[11px] leading-snug text-warn">{h.warning}</p>
+              )}
+              {h.note && (
+                <p className="mt-1 text-[11px] leading-snug text-muted">{h.note}</p>
+              )}
+              <p className="mt-1 font-mono text-[10px] text-muted">
+                {h.source_ref.length ? h.source_ref.join(' · ') : '⚠ uncited'}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="rounded-md border border-line bg-raised px-3 py-2.5">
+        <h4 className="mb-1.5 font-mono text-[9.5px] font-medium uppercase tracking-[0.09em] text-muted">
           Space each activity needs
         </h4>
         <p className="mb-2 text-[11px] leading-snug text-muted">

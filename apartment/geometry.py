@@ -212,6 +212,7 @@ class GeometryResult:
     turn_coverage: float = 0.0
     unreachable_rooms: list[int] = field(default_factory=list)
     tight_rooms: list[int] = field(default_factory=list)
+    item_rooms: dict[str, int] = field(default_factory=dict)
     blocked_items: list[dict] = field(default_factory=list)
     wall_length_m: float = 0.0
     raster: Raster | None = None
@@ -220,7 +221,8 @@ class GeometryResult:
 
 
 def find_placement(plan: dict, specs: dict, type_id: str,
-                   anchor: tuple[float, float] | None = None) -> dict | None:
+                   anchor: tuple[float, float] | None = None,
+                   region: np.ndarray | None = None) -> dict | None:
     """Find somewhere a new item actually fits.
 
     Dropping every new item at the apartment's centre piles them on top of
@@ -279,6 +281,48 @@ def find_placement(plan: dict, specs: dict, type_id: str,
     anchor = anchor or (shell["width_mm"] / 2, shell["depth_mm"] / 2)
     step = 100
 
+    # Clearance zone bounds, computed ONCE per rotation about the origin and
+    # then translated per candidate. Rotation is about the item's own centre,
+    # so translation commutes with it and this is exact — while building
+    # shapely polygons inside the candidate loop made the search 10x slower
+    # for identical results.
+    zone_offsets: dict[int, tuple[tuple | None, list[tuple]]] = {}
+    for rot in (0, 90, 180, 270):
+        ref = {**spec, "x": 0.0, "y": 0.0, "rot": rot, "w": spec["w"], "d": spec["d"]}
+        zones = clearance_polygons(ref, spec)
+        front_b = zones[0].bounds if spec.get("clearance_front_mm", 0) else None
+        side_b = [z.bounds for z in zones[1:]] if spec.get("clearance_side_mm", 0) else []
+        zone_offsets[rot] = (front_b, side_b)
+
+    def shifted(bounds: tuple, cx: float, cy: float) -> tuple:
+        return (bounds[0] + cx, bounds[1] + cy, bounds[2] + cx, bounds[3] + cy)
+
+    # Optional: confine the item to one room. Without this the search is
+    # programme-blind — it packs a bed wherever a bed fits, including the
+    # kitchen, and then destroys the very separation that made a divided
+    # plan worth having. Varying the arrangement WITHIN a room is what you
+    # want; varying which room things are in is a different decision.
+    outside_integral = None
+    if region is not None:
+        outside = (~region).astype(np.int32)
+        outside_integral = np.cumsum(np.cumsum(outside, axis=0), axis=1)
+
+    def leaves_region(x0: float, y0: float, x1: float, y1: float) -> bool:
+        if outside_integral is None:
+            return False
+        c0 = max(0, int(x0 // RES)); r0 = max(0, int(y0 // RES))
+        c1 = min(raster.ncols - 1, int(x1 // RES)); r1 = min(raster.nrows - 1, int(y1 // RES))
+        if c1 < c0 or r1 < r0:
+            return True
+        total = outside_integral[r1, c1]
+        if r0 > 0:
+            total -= outside_integral[r0 - 1, c1]
+        if c0 > 0:
+            total -= outside_integral[r1, c0 - 1]
+        if r0 > 0 and c0 > 0:
+            total += outside_integral[r0 - 1, c0 - 1]
+        return bool(total)
+
     best = None
     for rot in (0, 90, 180, 270):
         # Footprint is axis-aligned at 90 degree steps, as are the clearance
@@ -289,20 +333,17 @@ def find_placement(plan: dict, specs: dict, type_id: str,
                 x0, y0 = cx - fw / 2, cy - fd / 2
                 if occupied(x0, y0, x0 + fw, y0 + fd):
                     continue
-
-                # Build the clearance zones with the SAME function the
-                # analyser uses. Hand-rolling them here produced placements
-                # the analyser then flagged as blocked, because the two
-                # disagreed about which way "front" points after rotation.
-                candidate = {**spec, "x": cx, "y": cy, "rot": rot,
-                             "w": spec["w"], "d": spec["d"]}
-                zones = clearance_polygons(candidate, spec)
-                front_zone = zones[0] if spec.get("clearance_front_mm", 0) else None
-                side_zones = zones[1:] if spec.get("clearance_side_mm", 0) else []
-
-                if front_zone is not None and occupied(*front_zone.bounds):
+                if leaves_region(x0, y0, x0 + fw, y0 + fd):
                     continue
-                if side_zones and all(occupied(*z.bounds) for z in side_zones):
+
+                # Zones come from the SAME function the analyser uses, just
+                # precomputed per rotation. Hand-rolling them here produced
+                # placements the analyser then flagged as blocked, because
+                # the two disagreed about which way "front" points.
+                front_b, side_b = zone_offsets[rot]
+                if front_b is not None and occupied(*shifted(front_b, cx, cy)):
+                    continue
+                if side_b and all(occupied(*shifted(b, cx, cy)) for b in side_b):
                     continue  # a side zone is needed on at least one side
 
                 # Prefer backs against something solid, and near the anchor.
@@ -481,6 +522,10 @@ def analyse(plan: dict, specs: dict, turning_circle_mm: float,
         room_index = int(room_map[row, col])
         if room_index:
             categories_by_room.setdefault(room_index, set()).add(spec["category"])
+            # Which room each item is in. Needed to ask whether sleeping is
+            # separated from living, which is what acoustic privacy actually
+            # means — not whether the building contains a wall somewhere.
+            result.item_rooms[item.get("id", "")] = room_index
 
     # --- per-room metrics ---------------------------------------------------
     for index in range(1, n_rooms + 1):

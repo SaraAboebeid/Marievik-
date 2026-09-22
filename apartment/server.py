@@ -263,6 +263,57 @@ def api_place(req: PlaceRequest):
     return _json({"ok": True, **spot})
 
 
+class ExploreRequest(BaseModel):
+    schemes: list[str] | None = None
+    settings: dict = {}
+    furnishings: int = 6
+    specs: list[str] | None = None
+
+
+@app.post("/api/explore")
+def api_explore(req: ExploreRequest):
+    """Search partition schemes x furnishings x specifications.
+
+    Returns every feasible option plus the Pareto front — the set that
+    nothing beats on cost, carbon AND experience at once. See
+    docs/02_how_to_think_about_the_search.md.
+    """
+    from explore import search
+
+    demos = json.loads((DATA / "demo_plans.json").read_text(encoding="utf-8"))
+    wanted = req.schemes or list(demos["configurations"])
+    schemes = {}
+    for key in wanted:
+        cfg = demos["configurations"].get(key)
+        if not cfg:
+            continue
+        schemes[key] = {
+            "label": cfg["label"], "shell": demos["shell"],
+            "walls": cfg["walls"], "doors": cfg["doors"],
+            "furniture": cfg["furniture"],
+        }
+
+    result = search.explore(
+        schemes, req.settings or {},
+        furnishings_per_scheme=req.furnishings,
+        spec_ids=req.specs,
+    )
+
+    def pack(option) -> dict:
+        data = {k: v for k, v in option.__dict__.items() if k != "plan"}
+        data["on_front"] = option in result["front"]
+        return data
+
+    return _json({
+        "options": [pack(o) for o in result["options"]],
+        "front": [pack(o) for o in result["front"]],
+        "front_plans": {o.id: o.plan for o in result["front"]},
+        "stats": result["stats"],
+        "summary": search.summarise(result["front"]),
+        "spec_variants": search.SPEC_VARIANTS,
+    })
+
+
 @app.get("/api/standards/{user_group}")
 def api_standards(user_group: str):
     """What the standards engine says about designing for this person."""

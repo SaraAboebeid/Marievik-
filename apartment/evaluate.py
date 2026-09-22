@@ -360,25 +360,54 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
         hard_fail=bool(habitable) and len(lit) < len(habitable),
     ))
 
-    # 3. Acoustic privacy — the weakest wall is the whole story
-    rw_values = []
-    for wall in plan.get("walls", []):
-        component = catalogue.get(wall.get("component"))
-        if component:
-            rw_values.append(component.get("performance", {}).get("Rw_dB", 0))
-    if rw_values:
-        weakest = min(rw_values)
-        target = 35 if occupants > 1 else 30
-        score = _clamp(100.0 - max(0, target - weakest) * 9)
+    # 3. Acoustic privacy — is sleeping separated from living?
+    #
+    # The question is NOT whether the building contains a wall. A studio has
+    # a bathroom wall and no privacy whatsoever. What matters is whether the
+    # bed is in a different room from the sofa, the table and the kitchen,
+    # and only then how good the wall between them is.
+    sleep_rooms = {
+        geo.item_rooms.get(item["id"])
+        for item in plan.get("furniture", [])
+        if FURNITURE.get(item["type"], {}).get("sleeps")
+    } - {None}
+    social_rooms = {
+        geo.item_rooms.get(item["id"])
+        for item in plan.get("furniture", [])
+        if FURNITURE.get(item["type"], {}).get("category") in {"living", "kitchen"}
+    } - {None}
+
+    partition_rw = [
+        catalogue[w["component"]].get("performance", {}).get("Rw_dB", 0)
+        for w in plan.get("walls", [])
+        if w.get("component") in catalogue
+    ]
+
+    if not sleep_rooms:
+        score = 70.0
+        d = "no sleeping space in this plan, so there is nothing to separate"
+    elif sleep_rooms & social_rooms:
+        # Bed and living space share a room. No wall will fix that.
+        score = 25.0 if occupants > 1 else 40.0
         d = (
-            f"weakest internal wall Rw {weakest} dB against {target} dB "
-            f"for {occupants} occupant(s)"
+            "the bed shares a room with the living and cooking space — there is "
+            "no acoustic privacy to measure"
+            + (", and two people have nowhere to be apart" if occupants > 1
+               else ". Acceptable for one person who chooses it; not for two")
+        )
+    else:
+        weakest = min(partition_rw) if partition_rw else 0
+        target = 40 if occupants > 1 else 32
+        score = _clamp(100.0 - max(0, target - weakest) * 7)
+        d = (
+            f"sleeping is separated from living; weakest partition Rw {weakest} dB "
+            f"against {target} dB for {occupants} occupant(s)"
         )
         if weakest < target:
-            d += " — conversation is audible between rooms"
-    else:
-        score, d = 50.0, "no internal walls: one undivided space, no acoustic privacy"
-    result.social.append(SocialMetric("Acoustic privacy", score, d))
+            d += " — normal conversation is audible through it"
+    result.social.append(SocialMetric(
+        "Acoustic privacy", score, d, hard_fail=bool(sleep_rooms & social_rooms) and occupants > 1,
+    ))
 
     # 4. Space adequacy
     per_person = geo.total_floor_m2 / max(1, occupants)

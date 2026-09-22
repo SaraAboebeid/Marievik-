@@ -193,7 +193,21 @@ export interface StandardsActivity {
   cited: boolean
 }
 
+export interface StandardsHeight {
+  id: string
+  label: string
+  value_mm: number
+  basis: string
+  is_maximum: boolean
+  source_ref: string[]
+  neufert_ref: string
+  note?: string
+  warning?: string
+}
+
 export interface StandardsSummary {
+  heights: StandardsHeight[]
+  layout_standards: Record<string, Record<string, number | string | string[]>>
   user_group: string
   label: string
   posture: string

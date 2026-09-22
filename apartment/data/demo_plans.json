@@ -120,7 +120,8 @@
         { "id": "w1", "x1": 5150, "y1": 4050, "x2": 5150, "y2": 6950, "thickness": 100, "component": "part.stud.gypsum.95" },
         { "id": "w2", "x1": 5150, "y1": 4050, "x2": 8150, "y2": 4050, "thickness": 100, "component": "part.stud.gypsum.95" },
         { "id": "w3", "x1": 250, "y1": 3500, "x2": 5150, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" },
-        { "id": "w4", "x1": 2800, "y1": 250, "x2": 2800, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" }
+        { "id": "w4", "x1": 2800, "y1": 250, "x2": 2800, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" },
+        { "id": "w5", "x1": 5150, "y1": 250, "x2": 5150, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" }
       ],
       "doors": [
         { "id": "d1", "wall_id": "w1", "t": 0.81, "clear_mm": 850 },

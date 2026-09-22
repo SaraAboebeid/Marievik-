@@ -40,7 +40,24 @@ def envelopes() -> dict[str, dict]:
 
 @lru_cache(maxsize=None)
 def activity_zones() -> dict[str, dict]:
-    return {z["id"]: z for z in _load("ergonomics.json")["activity_zones"]["zones"]}
+    # The zone list carries `_section` markers to keep it readable; they are
+    # documentation, not data.
+    return {
+        z["id"]: z
+        for z in _load("ergonomics.json")["activity_zones"]["zones"]
+        if "id" in z
+    }
+
+
+@lru_cache(maxsize=None)
+def height_rules() -> list[dict]:
+    return _load("ergonomics.json")["heights"]["rules"]
+
+
+@lru_cache(maxsize=None)
+def layout_standards() -> dict:
+    raw = _load("ergonomics.json")["layout_standards"]
+    return {k: v for k, v in raw.items() if not k.startswith("_")}
 
 
 @lru_cache(maxsize=None)
@@ -79,9 +96,27 @@ BODY_SHARE = {
     "open_drawer": 0.5,
     "open_wardrobe": 0.6,
     "sit_at_table": 0.7,
+    "sit_at_table_side": 0.7,
+    "pass_behind_seated": 0.8,
     "work_at_counter": 0.5,
     "bend_to_oven": 0.5,
     "make_bed": 0.8,
+    # Seating
+    "sofa_legroom": 0.2,
+    "pass_in_front_of_seating": 1.0,
+    "rise_from_low_seat": 0.6,
+    # Kitchen
+    "at_sink": 0.5,
+    "at_hob": 0.5,
+    "galley_between_runs": 1.0,
+    "at_dishwasher": 0.5,
+    # Sanitary
+    "at_wc_front": 0.6,
+    "at_basin": 0.5,
+    "shower_entry": 0.8,
+    "dry_and_dress": 1.0,
+    # Thresholds
+    "at_door_pull_side": 0.7,
 }
 
 # Zones already dimensioned around a device or a task, not a generic body.
@@ -89,7 +124,14 @@ BODY_SHARE = {
 # turning zone resolves to the group's own turning circle instead.
 ABSOLUTE_ZONES = {
     "stand_and_turn", "transfer_wheelchair", "assist_two_staff", "hoist_transfer",
+    "at_wc_side", "door_swing", "park_mobility_aid",
 }
+
+# Zones where the real constraint is "can you turn round in here". Additive
+# body scaling overshoots these — it gave a 1950 mm galley where the
+# accessible figure is 1500 — so they resolve to the larger of the base
+# dimension and the user's turning circle.
+TURN_BOUNDED_ZONES = {"galley_between_runs", "dry_and_dress", "shower_entry"}
 
 REFERENCE_DEPTH = 450  # occupied depth of the reference ambulant adult, mm
 REFERENCE_WIDTH = 600  # occupied width of the same reference body, mm
@@ -164,6 +206,17 @@ def activity_clearance(activity_id: str, user_group: str) -> Requirement:
             zone.get("source_ref", []), zone.get("neufert_ref", ""),
         )
 
+    if activity_id in TURN_BOUNDED_ZONES:
+        turn = turning_circle(user_group)
+        value = max(base_depth, turn.value_mm)
+        return Requirement(
+            activity_id, value,
+            f"{zone['label']}: the larger of {base_depth} mm and the "
+            f"{turn.value_mm:.0f} mm turning circle — the real constraint here "
+            "is whether you can turn round, not how deep your body is",
+            turn.source_ref or zone.get("source_ref", []), zone.get("neufert_ref", ""),
+        )
+
     share = BODY_SHARE.get(activity_id, 0.6)
     occupied = envelope.get("occupied_depth", REFERENCE_DEPTH)
     extra = (occupied - REFERENCE_DEPTH) * share
@@ -227,6 +280,81 @@ def item_clearances(item_type: str, user_group: str) -> dict[str, Requirement]:
         out["front"] = activity_clearance(mapping["front"], user_group)
     if mapping.get("side"):
         out["side"] = activity_clearance(mapping["side"], user_group)
+    return out
+
+
+def heights(user_group: str) -> list[dict]:
+    """Every working and operating height, derived for one person.
+
+    A counter height IS this user's standing work surface. A light switch IS
+    somewhere inside their reach band. Deriving rather than tabulating means
+    one change of user group moves every height in the building at once —
+    which is the behaviour a lookup table cannot give you.
+    """
+    envelope = envelopes().get(user_group) or envelopes()["adult"]
+    band = reach_band(user_group)
+    seated = "seated" in str(envelope.get("posture", ""))
+    out: list[dict] = []
+
+    for rule in height_rules():
+        if rule.get("seated_only") and not seated:
+            continue
+
+        value: float | None = None
+        basis = ""
+
+        if "absolute_mm" in rule:
+            value = rule["absolute_mm"]
+            basis = "fixed requirement, independent of the user"
+        elif "derive" in rule:
+            # A seated user has no standing work surface. Fall back to the
+            # seated one rather than dropping the requirement silently —
+            # "no counter height for a wheelchair user" is the wrong answer.
+            key = rule["derive"]
+            if seated and rule.get("derive_seated") and envelope.get(key) is None:
+                key = rule["derive_seated"]
+            source = envelope.get(key)
+            if source is None:
+                continue
+            rule = {**rule, "derive": key}
+            value = float(source) + rule.get("offset_mm", 0)
+            basis = (
+                f"{rule['derive'].replace('_', ' ')} "
+                f"{source} mm for {envelope['label'].lower()}"
+                + (f", {rule['offset_mm']:+d} mm" if rule.get("offset_mm") else "")
+            )
+
+        if value is None:
+            continue
+
+        clamped = False
+        if rule.get("clamp_to_reach_band") and band:
+            low, high = band
+            if value < low or value > high:
+                value = min(max(value, low), high)
+                clamped = True
+
+        entry = {
+            "id": rule["id"],
+            "label": rule["label"],
+            "value_mm": int(round(value / 10) * 10),
+            "basis": basis + (
+                f"; pulled inside the {band[0]}–{band[1]} mm reach band" if clamped else ""
+            ),
+            "is_maximum": bool(rule.get("is_maximum")),
+            "source_ref": rule.get("source_ref", []),
+            "neufert_ref": rule.get("neufert_ref", ""),
+            "note": rule.get("note", ""),
+        }
+        if rule.get("requires_knee_clearance_when_seated") and seated:
+            entry["warning"] = (
+                "Height alone is not enough for a seated user: this needs "
+                f"{envelope.get('knee_clearance_height', 700)} mm of clear space "
+                f"beneath it and {envelope.get('knee_clearance_depth', 600)} mm deep, "
+                "or they cannot get close enough to use it."
+            )
+        out.append(entry)
+
     return out
 
 
@@ -401,6 +529,8 @@ def summary(user_group: str) -> dict:
         "max_sill_for_view_mm": sill.value_mm,
         "sill_basis": sill.basis,
         "activities": activities,
+        "heights": heights(user_group),
+        "layout_standards": layout_standards(),
         "uncited_count": sum(1 for a in activities if not a["cited"]),
     }
 

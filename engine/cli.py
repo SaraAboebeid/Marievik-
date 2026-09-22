@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from . import evaluate, fit, loader, scenarios
+from . import evaluate, fit, layout, loader, scenarios
 
 ROOT = Path(__file__).resolve().parent.parent
 RUNS = ROOT / "runs"
@@ -279,6 +279,85 @@ def cmd_compare(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+# layout
+# ---------------------------------------------------------------------------
+
+
+def cmd_layout(args) -> int:
+    programs = [args.program] if args.program else list(loader.use_programs())
+
+    print(RULE)
+    print("ADAPT — parametric layout on the structural grid")
+    print(RULE)
+    print("""
+  The plate is allocated bay by bay, because in reuse the grid is fixed and
+  the grid decides everything. Zones needing daylight compete for perimeter
+  bays; the rest are pushed deep. The number that matters is the partition
+  quantity at the bottom — that is what becomes cost and carbon.
+""")
+
+    comparison: list[tuple[str, float, float, float]] = []
+
+    for program_id in programs:
+        result = layout.generate(program_id, iterations=args.iterations)
+        program = loader.use_programs()[program_id]
+
+        print(THIN)
+        print(f"{program['label_en'].upper()}")
+        print(THIN)
+        print(result.to_ascii())
+
+        partition_m = result.partition_length_m
+        partition_area = result.partition_area_m2
+        floor_area = sum(b.area_m2 for b in result.grid if not b.is_core)
+
+        print(f"""
+  Grid ................... {result.n_cols} x {result.n_rows} bays,
+                           {result.grid[0].width_m:.1f} x {result.grid[0].depth_m:.1f} m each
+  Usable floor area ...... {floor_area:,.0f} m²
+  Internal partition ..... {partition_m:,.0f} m run, {partition_area:,.0f} m² face
+  Partition density ...... {partition_area / floor_area:.2f} m² wall per m² floor
+  Layout penalty score ... {result.score:,.0f}  (lower is better)""")
+
+        # Price the same layout two ways: irreversible vs demountable.
+        for component_id, name in (
+            ("part.stud.gypsum.95", "stud + gypsum (irreversible)"),
+            ("part.demount.solid.100", "demountable  (reversible)"),
+        ):
+            bill = layout.bill_from_layout(result, component_id)
+            assessment = evaluate.evaluate_bill(
+                bill, area_m2=floor_area, years=50, include_replacements=False
+            )
+            print(
+                f"  {name:<32}"
+                f"{_co2(assessment.carbon.upfront):>16}"
+                f"{_sek(assessment.cost.capex):>16}"
+            )
+
+        comparison.append((program['label_en'], floor_area, partition_area, result.score))
+        print()
+
+    if len(comparison) > 1:
+        print(RULE)
+        print("PARTITION DEMAND BY USE — how much wall each programme needs")
+        print(RULE)
+        print(f"\n  {'USE':<42}{'m² wall/m² floor':>18}")
+        print("  " + "-" * 58)
+        for label, floor_area, partition_area, _score in sorted(
+            comparison, key=lambda row: row[2] / row[1]
+        ):
+            print(f"  {label[:41]:<42}{partition_area / floor_area:>18.2f}")
+        print("""
+  This spread is the flexibility problem in one table. A shell fitted out
+  for the lightest programme cannot become the heaviest without buying a
+  great deal of new partition; fit out for the heaviest and you have paid
+  for wall you do not need. The adaptable strategy is the third option:
+  buy partition once, and move it.
+""")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # all
 # ---------------------------------------------------------------------------
 
@@ -348,6 +427,13 @@ def main(argv: list[str] | None = None) -> int:
 
     compare = sub.add_parser("compare", help="compare use timelines on cost and carbon")
     compare.set_defaults(func=cmd_compare)
+
+    layout_parser = sub.add_parser("layout", help="generate parametric bay layouts")
+    layout_parser.add_argument("-p", "--program", help="single programme id")
+    layout_parser.add_argument(
+        "-n", "--iterations", type=int, default=12000, help="annealing iterations"
+    )
+    layout_parser.set_defaults(func=cmd_layout)
 
     run_all = sub.add_parser("all", help="run everything and write a timestamped record")
     run_all.add_argument("-p", "--program", default=None, help=argparse.SUPPRESS)

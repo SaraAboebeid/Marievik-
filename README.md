@@ -68,10 +68,15 @@ runs/                 timestamped outputs — the LEARN layer
 ## Quick start
 
 ```powershell
-python -m engine.cli doctor          # data health + confidence report
-python -m engine.cli fit             # which uses fit the shell, and how well
-python -m engine.cli compare         # cost/carbon of every use transition
+python -m engine.cli doctor          # data health + what is still unknown
+python -m engine.cli fit             # which uses the shell can host, and what stops it
+python -m engine.cli layout          # parametric bay layouts + partition demand per use
+python -m engine.cli compare         # cost/carbon across 50-year use timelines
+python -m engine.cli all             # everything, written to runs/
+python -m tests.test_engine          # 29 checks incl. ledger conservation
 ```
+
+Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
 
 ## Data honesty rule
 

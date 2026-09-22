@@ -71,12 +71,27 @@ runs/                 timestamped outputs — the LEARN layer
 python -m engine.cli doctor          # data health + what is still unknown
 python -m engine.cli fit             # which uses the shell can host, and what stops it
 python -m engine.cli layout          # parametric bay layouts + partition demand per use
+python -m engine.cli experience      # daylight, acoustics, access, staff — the third KPI
 python -m engine.cli compare         # cost/carbon across 50-year use timelines
+python -m engine.cli cad             # export layouts to Rhino/.3dm + CSV for Grasshopper
+python -m engine.cli cad -r plan.3dm # measure a real floor plate, replacing the template
 python -m engine.cli all             # everything, written to runs/
+
+python -m engine.intake file.json    # validate a supplier submission (no dependencies)
+python -m engine.build_web           # rebuild the published dashboard
 python -m tests.test_engine          # 29 checks incl. ledger conservation
 ```
 
 Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
+
+## Published dashboard
+
+https://claude.ai/artifact/8Pz3DFeq814iwewoRzMcyR — private until shared from the
+page's Share menu. Rebuild with `python -m engine.build_web`, then republish.
+
+The page embeds a timestamped snapshot of the engine's output, carrying its own
+placeholder share in a banner. That is deliberate: a published figure should say
+how much of itself is real.
 
 ## Data honesty rule
 

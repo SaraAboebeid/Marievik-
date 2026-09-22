@@ -29,7 +29,8 @@ apartment/static/dist/
 # Reference works. Copyrighted - keep them on disk, never in the repo.
 # Use them to fill neufert_ref fields; cite the regulation as the source.
 *.pdf
-Neufert*
+/Neufert-4th-edition.pdf
+!standards/data/neufert_index.json
 
 # Isolated simulation environment (Honeybee/Ladybug/Dragonfly)
 .venv-sim/

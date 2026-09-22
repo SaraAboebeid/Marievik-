@@ -70,8 +70,27 @@ used only to locate pages; every number is read off the rendered page
 directly. A silently wrong dimension propagating into a carbon model is the
 worst failure this system has, and it would look exactly like a correct one.
 
-Pages verified so far: **23** (accessible housing), **29** (body measurements
-and space requirements), **150** (kitchens), **175** (dining and catering).
+Pages verified so far: **23** (accessible housing), **29** (body measurements and
+space requirements), **150** (kitchens), **157** (living areas and bedrooms),
+**161** (bathrooms), **169** (nursing and care homes), **175** (dining and
+catering). `neufert_index.json` is a finding aid mapping this project's topics
+to page numbers, so the next verification pass knows where to look.
+
+### The result that matters most so far
+
+Neufert p.157 fig.1 names a room type it calls a **flexibly functional
+individual room** — 13 m2, min 3.60 x 3.50 m, *including* a 1.50 x 1.50 m
+wheelchair movement area. Run both through `check_space`:
+
+| | Adult | Wheelchair user |
+|---|---|---|
+| Minimal single bedroom, 8 m2 | passes | **fails** — needs 1500 mm to make the bed and to turn |
+| Flexible individual room, 13 m2 | passes | **passes** |
+
+That is the adaptability argument in two rows, from a published reference: 8 m2
+buys a room that works for one user, 13 m2 buys a room that works for both. The
+~60% area premium is what the flexibility case has to earn back — and now it is
+a number rather than a conviction.
 
 The satisfying check: with bed access made turn-bounded, the engine
 reproduces Neufert p.23 fig.9 exactly — **1.20 m** along the access side of an

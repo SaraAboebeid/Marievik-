@@ -4,59 +4,116 @@
     "updated": "2026-09-22",
     "purpose": "Room-level standards, derived from the ergonomic layer rather than asserted alongside it. A space type declares the ACTIVITIES it must support; the rule engine turns those into dimensions using the envelopes in ergonomics.json for whichever user group is being tested. Change the user group and every requirement moves, which is the whole point.",
     "derivation_note": "Where a dimension is given directly (min_width, min_area) it is a regulatory minimum and is cited. Where it is derived from activities it carries no number here at all — the engine computes it. Mixing the two silently is how standards documents become impossible to update.",
-    "provenance": "Regulatory minima cited. `neufert_ref` left empty for your own verification pass."
+    "provenance": "Regulatory minima cited. `neufert_ref` left empty for your own verification pass.",
+    "verification": {
+      "reference": "Neufert, Architects' Data, 3rd English ed. (4th German ed.)",
+      "pages_read": [
+        23,
+        29,
+        150,
+        157,
+        161,
+        169,
+        175
+      ],
+      "method": "Pages rendered and read directly. OCR used only to locate pages."
+    }
   },
-
   "space_types": [
     {
       "id": "bedroom_single",
       "label": "Single bedroom",
       "category": "habitable",
-      "min_area_m2": 7.0,
-      "min_width_mm": 2100,
+      "min_area_m2": 8.0,
+      "min_width_mm": 2600,
       "requires_daylight": true,
       "requires_openable_window": true,
       "min_ceiling_mm": 2400,
-      "activities": ["make_bed", "open_wardrobe", "stand_and_turn", "pass_single"],
-      "required_fixtures": ["bed", "wardrobe"],
+      "activities": [
+        "make_bed",
+        "open_wardrobe",
+        "stand_and_turn",
+        "pass_single"
+      ],
+      "required_fixtures": [
+        "bed",
+        "wardrobe"
+      ],
       "acoustic_class": "B",
       "ventilation_ls_per_person": 7,
-      "source_ref": ["BBR 3:22", "SS 91 42 21"],
-      "neufert_ref": "",
-      "notes": "7 m² is a regulatory floor, not a target. A single bedroom that meets it and fails the activity checks below is compliant and unusable — which is exactly the gap this engine exists to expose."
+      "source_ref": [
+        "Neufert p.157",
+        "BBR 3:22",
+        "SS 91 42 21"
+      ],
+      "neufert_ref": "p.157 figs.3 — small bedroom min 2.60 x 3.10 m; text gives approx 8 m2 for a single room",
+      "notes": "Neufert's 8 m2 is above the 7 m2 regulatory floor. A room that meets the floor and fails the activity checks is compliant and unusable, which is the gap this engine exists to expose."
     },
     {
       "id": "bedroom_double",
       "label": "Double bedroom",
       "category": "habitable",
-      "min_area_m2": 11.0,
-      "min_width_mm": 2700,
+      "min_area_m2": 13.0,
+      "min_width_mm": 3500,
       "requires_daylight": true,
       "requires_openable_window": true,
       "min_ceiling_mm": 2400,
-      "activities": ["make_bed", "open_wardrobe", "stand_and_turn", "pass_single"],
-      "required_fixtures": ["bed", "wardrobe"],
+      "activities": [
+        "make_bed",
+        "open_wardrobe",
+        "stand_and_turn",
+        "pass_single"
+      ],
+      "required_fixtures": [
+        "bed",
+        "wardrobe"
+      ],
       "acoustic_class": "B",
       "ventilation_ls_per_person": 7,
-      "source_ref": ["BBR 3:22", "SS 91 42 21"],
-      "neufert_ref": ""
+      "source_ref": [
+        "Neufert p.157",
+        "BBR 3:22",
+        "SS 91 42 21"
+      ],
+      "neufert_ref": "p.157 figs.3 and text — small twin bedroom min 3.50 x 3.10 m; approx 13 m2 as a parents' or twin bedroom"
     },
     {
       "id": "care_bedroom",
       "label": "Care bedroom",
       "category": "habitable",
-      "min_area_m2": 16.0,
+      "min_area_m2": 18.0,
       "min_width_mm": 3600,
       "requires_daylight": true,
       "min_ceiling_mm": 2400,
-      "activities": ["assist_two_staff", "hoist_transfer", "transfer_wheelchair", "open_wardrobe"],
-      "required_fixtures": ["bed", "wardrobe"],
+      "activities": [
+        "assist_two_staff",
+        "hoist_transfer",
+        "transfer_wheelchair",
+        "open_wardrobe"
+      ],
+      "required_fixtures": [
+        "bed",
+        "wardrobe"
+      ],
       "acoustic_class": "B",
       "ventilation_ls_per_person": 10,
-      "structural": { "hoist_point_load_kn": 3.0 },
-      "source_ref": ["AFS 2020:1", "Socialstyrelsen SOSFS"],
-      "neufert_ref": "",
-      "notes": "3600 mm clear width is what a bed plus 900 mm staff working space on one side plus transfer space on the other actually needs. Deep narrow rooms fail this while meeting the area figure."
+      "structural": {
+        "hoist_point_load_kn": 3.0
+      },
+      "source_ref": [
+        "Neufert p.169",
+        "AFS 2020:1",
+        "Socialstyrelsen SOSFS"
+      ],
+      "neufert_ref": "p.169 — guideline dimensions: 18 m2 single, 20 m2 double; 7 m2 single / 12 m2 double where the bedroom is separate; entrance at least 1.25 x 1.25 m for a wheelchair; wet cell with WC, washbasin and shower",
+      "notes": "Neufert's 18 m2 is the German guideline for the whole care unit including the wet cell. Swedish SAEBO practice runs larger at 35 m2 - both are recorded so a comparison states which it is using.",
+      "area_double_m2": 20.0,
+      "area_if_bedroom_separate_m2": 7.0,
+      "area_if_bedroom_separate_double_m2": 12.0,
+      "entrance_min_mm": [
+        1250,
+        1250
+      ]
     },
     {
       "id": "living",
@@ -67,29 +124,58 @@
       "requires_daylight": true,
       "requires_openable_window": true,
       "min_ceiling_mm": 2400,
-      "activities": ["sit_at_table", "stand_and_turn", "pass_two"],
-      "required_fixtures": ["seating"],
+      "activities": [
+        "sit_at_table",
+        "stand_and_turn",
+        "pass_two"
+      ],
+      "required_fixtures": [
+        "seating"
+      ],
       "acoustic_class": "C",
       "ventilation_ls_per_person": 7,
-      "source_ref": ["BBR 3:22"],
-      "neufert_ref": ""
+      "source_ref": [
+        "Neufert p.157",
+        "BBR 3:22"
+      ],
+      "neufert_ref": "p.157 figs.6-7 — all-purpose room with cloakroom, kitchen, eating and living 6.00 x 5.00 m; classic living room with dining area 8.00 x 4.50 m",
+      "with_dining_typical_m2": 36.0,
+      "all_purpose_typical_m2": 30.0
     },
     {
       "id": "kitchen",
       "label": "Kitchen",
       "category": "service",
-      "min_area_m2": 5.0,
+      "min_area_m2": 5.5,
       "min_width_mm": 1800,
       "requires_daylight": false,
-      "activities": ["work_at_counter", "bend_to_oven", "open_drawer", "stand_and_turn"],
-      "required_fixtures": ["kitchen", "fridge"],
+      "activities": [
+        "work_at_counter",
+        "bend_to_oven",
+        "open_drawer",
+        "stand_and_turn"
+      ],
+      "required_fixtures": [
+        "kitchen",
+        "fridge"
+      ],
       "requires_water": true,
       "requires_drainage": true,
       "requires_extract": true,
       "ventilation_ls": 10,
-      "source_ref": ["BBR 3:22", "BBR 6:25"],
-      "neufert_ref": "",
-      "notes": "The clearance in front of a run must hold a person working with a drawer or oven open, and someone passing behind. That is 1100 mm before anyone argues about it, and 1200 mm where two people cook."
+      "source_ref": [
+        "Neufert p.150",
+        "BBR 3:22",
+        "BBR 6:25"
+      ],
+      "neufert_ref": "p.150 — working kitchen 5.5-9.5 m2; with dining area from approx 10 m2; good L-shape with doors to living room and corridor approx 14 m2",
+      "notes": "The clearance in front of a run must hold a person working with a drawer or oven open, and someone passing behind. That is 1100 mm before anyone argues about it, and 1200 mm where two people cook.",
+      "area_range_m2": [
+        5.5,
+        9.5
+      ],
+      "with_dining_min_m2": 10.0,
+      "with_dining_good_m2": 14.0
     },
     {
       "id": "kitchenette",
@@ -98,46 +184,82 @@
       "min_area_m2": 2.5,
       "min_width_mm": 1500,
       "requires_daylight": false,
-      "activities": ["work_at_counter", "open_drawer"],
-      "required_fixtures": ["kitchen"],
+      "activities": [
+        "work_at_counter",
+        "open_drawer"
+      ],
+      "required_fixtures": [
+        "kitchen"
+      ],
       "requires_water": true,
       "requires_drainage": true,
       "requires_extract": true,
-      "source_ref": ["BBR 3:22"],
+      "source_ref": [
+        "BBR 3:22"
+      ],
       "neufert_ref": ""
     },
     {
       "id": "wet_room_accessible",
       "label": "Accessible wet room",
       "category": "sanitary",
-      "min_area_m2": 4.0,
-      "min_width_mm": 2000,
+      "min_area_m2": 7.7,
+      "min_width_mm": 3150,
       "requires_daylight": false,
-      "activities": ["transfer_wheelchair", "stand_and_turn"],
-      "required_fixtures": ["wc", "basin", "shower"],
+      "activities": [
+        "transfer_wheelchair",
+        "stand_and_turn"
+      ],
+      "required_fixtures": [
+        "wc",
+        "basin",
+        "shower"
+      ],
       "requires_water": true,
       "requires_drainage": true,
       "requires_extract": true,
       "requires_tanking": true,
-      "source_ref": ["BBR 3:14", "BBR 6:5321", "SS 91 42 21"],
-      "neufert_ref": "",
-      "notes": "Transfer space beside the WC is required on one side for independent wheelchair use and on both for assisted care. It is the most commonly omitted requirement in small-apartment plans, and it cannot be retrofitted without moving drainage."
+      "source_ref": [
+        "Neufert p.161",
+        "Neufert p.23",
+        "BBR 3:14",
+        "SS 91 42 21"
+      ],
+      "neufert_ref": "p.161 fig.11 — accessible bathroom with showering space, min 3.15 x 2.45 m with a 1.50 x 1.50 m movement area marked",
+      "notes": "Considerably larger than the 4-5 m2 typical of Swedish accessible wet rooms, because Neufert's figure carries both a bath and a showering space. Cite whichever matches the brief, and say which.",
+      "min_depth_mm": 2450,
+      "movement_area_mm": [
+        1500,
+        1500
+      ]
     },
     {
       "id": "wet_room_standard",
       "label": "Wet room",
       "category": "sanitary",
-      "min_area_m2": 2.5,
-      "min_width_mm": 1500,
+      "min_area_m2": 3.2,
+      "min_width_mm": 1600,
       "requires_daylight": false,
-      "activities": ["stand_and_turn"],
-      "required_fixtures": ["wc", "basin", "shower"],
+      "activities": [
+        "stand_and_turn"
+      ],
+      "required_fixtures": [
+        "wc",
+        "basin",
+        "shower"
+      ],
       "requires_water": true,
       "requires_drainage": true,
       "requires_extract": true,
       "requires_tanking": true,
-      "source_ref": ["BBR 3:22", "BBR 6:5321"],
-      "neufert_ref": ""
+      "source_ref": [
+        "Neufert p.161",
+        "BBR 3:22",
+        "BBR 6:5321"
+      ],
+      "neufert_ref": "p.161 fig.5 — shower room min 1.60 x 2.00 m; fig.6 with washing machine 1.60 x 2.15 m; fig.8 full bath 2.70 x 1.55 m",
+      "min_depth_mm": 2000,
+      "notes": "Neufert records that the former German standard for bathroom movement areas was WITHDRAWN WITHOUT REPLACEMENT in 2007 because it inadequately considered disabled people, and says movement areas should instead be based on the accessible-building standard. These figures are absolute minimums, not targets - and the reference itself says to derive from the user, which is what this engine does."
     },
     {
       "id": "hall",
@@ -146,10 +268,20 @@
       "min_area_m2": 2.0,
       "min_width_mm": 1300,
       "requires_daylight": false,
-      "activities": ["stand_and_turn", "pass_single"],
-      "source_ref": ["BBR 3:143"],
-      "neufert_ref": "",
-      "notes": "Must hold a turning circle for the user group, with the entrance door open. A hall that only works with the door shut is not a hall."
+      "activities": [
+        "stand_and_turn",
+        "pass_single"
+      ],
+      "source_ref": [
+        "Neufert p.169",
+        "BBR 3:143"
+      ],
+      "neufert_ref": "p.169 — entrance should have a minimum size of 1.25 x 1.25 m, suitable for wheelchairs",
+      "notes": "Must hold a turning circle for the user group, with the entrance door open. A hall that only works with the door shut is not a hall.",
+      "wheelchair_min_mm": [
+        1250,
+        1250
+      ]
     },
     {
       "id": "study",
@@ -158,46 +290,233 @@
       "min_area_m2": 6.0,
       "min_width_mm": 2100,
       "requires_daylight": true,
-      "activities": ["sit_at_table", "stand_and_turn"],
-      "required_fixtures": ["desk"],
+      "activities": [
+        "sit_at_table",
+        "stand_and_turn"
+      ],
+      "required_fixtures": [
+        "desk"
+      ],
       "acoustic_class": "B",
       "illuminance_lux_task": 500,
-      "source_ref": ["AFS 2020:1"],
+      "source_ref": [
+        "AFS 2020:1"
+      ],
       "neufert_ref": ""
+    },
+    {
+      "id": "flexible_individual_room",
+      "label": "Flexibly functional individual room",
+      "category": "habitable",
+      "min_area_m2": 13.0,
+      "min_width_mm": 3600,
+      "min_depth_mm": 3500,
+      "movement_area_mm": [
+        1500,
+        1500
+      ],
+      "requires_daylight": true,
+      "requires_openable_window": true,
+      "min_ceiling_mm": 2400,
+      "activities": [
+        "make_bed",
+        "open_wardrobe",
+        "stand_and_turn",
+        "sit_at_table",
+        "pass_single"
+      ],
+      "required_fixtures": [
+        "bed"
+      ],
+      "acoustic_class": "B",
+      "ventilation_ls_per_person": 7,
+      "source_ref": [
+        "Neufert p.157",
+        "EN 17210"
+      ],
+      "neufert_ref": "p.157 fig.1 and text — an individual room usable for a flexible range of functions, approx 13 m2, min 3.60 x 3.50 m, INCLUDING a 1.50 x 1.50 m movement area suitable for a wheelchair",
+      "notes": "The reference's own name for this project's thesis: a room sized so it can be several things over its life rather than one. 13 m2 with the wheelchair movement area built in is the price of that option, and it is about 60% more than a minimal single bedroom. That premium is exactly what the adaptability case has to earn back."
+    },
+    {
+      "id": "bedroom_twin_generous",
+      "label": "Generous twin bedroom, partitionable",
+      "category": "habitable",
+      "min_area_m2": 16.5,
+      "min_width_mm": 5000,
+      "min_depth_mm": 3100,
+      "requires_daylight": true,
+      "requires_openable_window": true,
+      "min_ceiling_mm": 2400,
+      "subdivisible": true,
+      "activities": [
+        "make_bed",
+        "open_wardrobe",
+        "stand_and_turn",
+        "pass_single"
+      ],
+      "required_fixtures": [
+        "bed",
+        "wardrobe"
+      ],
+      "acoustic_class": "B",
+      "source_ref": [
+        "Neufert p.157"
+      ],
+      "neufert_ref": "p.157 fig.4 and text — generous twin bedroom of 16.5 m2, min 5.00 x 3.10 m, which could be partitioned, for example for children as they grow up",
+      "notes": "Adaptability at room scale, and the cheapest kind: a room proportioned so a partition can be added later without moving anything else. Costs area now, costs almost nothing to change later."
+    },
+    {
+      "id": "wc_only",
+      "label": "WC with washbasin",
+      "category": "sanitary",
+      "min_area_m2": 2.1,
+      "min_width_mm": 1000,
+      "min_depth_mm": 2100,
+      "requires_daylight": false,
+      "activities": [
+        "at_wc_front",
+        "at_basin"
+      ],
+      "required_fixtures": [
+        "wc",
+        "basin"
+      ],
+      "requires_water": true,
+      "requires_drainage": true,
+      "requires_extract": true,
+      "source_ref": [
+        "Neufert p.161",
+        "BBR 3:22"
+      ],
+      "neufert_ref": "p.161 figs.3-4 — WC with washbasin min 1.00 x 2.10 m; WC with handbasin min 1.15 x 1.65 m"
     }
   ],
-
   "fixture_families": {
     "_note": "Maps the catalogue's furniture categories onto the abstract fixtures a space type requires, so a space type never names a product.",
-    "bed": ["bed.single.900", "bed.double.1600", "bed.care.profiling"],
-    "wardrobe": ["wardrobe.1000"],
-    "seating": ["sofa.2seat", "armchair.800"],
-    "desk": ["desk.1200"],
-    "kitchen": ["kitchen.run.2400", "kitchen.kitchenette.1200"],
-    "fridge": ["fridge.600"],
-    "wc": ["wc.pan"],
-    "basin": ["basin.600"],
-    "shower": ["shower.900"]
+    "bed": [
+      "bed.single.900",
+      "bed.double.1600",
+      "bed.care.profiling"
+    ],
+    "wardrobe": [
+      "wardrobe.1000"
+    ],
+    "seating": [
+      "sofa.2seat",
+      "armchair.800"
+    ],
+    "desk": [
+      "desk.1200"
+    ],
+    "kitchen": [
+      "kitchen.run.2400",
+      "kitchen.kitchenette.1200"
+    ],
+    "fridge": [
+      "fridge.600"
+    ],
+    "wc": [
+      "wc.pan"
+    ],
+    "basin": [
+      "basin.600"
+    ],
+    "shower": [
+      "shower.900"
+    ]
   },
-
   "item_activities": {
     "_note": "Which activity each catalogue item must support. The engine looks up the activity zone for the tested user group and derives the required clearance from it, instead of the flat numbers baked into furniture.json. This is how a wardrobe's clearance grows when the user arrives in a wheelchair.",
-    "bed.single.900": {"front": "make_bed", "side": null},
-    "bed.double.1600": {"front": "make_bed", "side": "make_bed"},
-    "bed.care.profiling": {"front": "assist_two_staff", "side": "assist_two_staff"},
-    "wardrobe.1000": {"front": "open_wardrobe", "side": null},
-    "shelf.800": {"front": "open_drawer", "side": null},
-    "desk.1200": {"front": "sit_at_table", "side": null},
-    "table.dining.1200": {"front": "sit_at_table", "side": "sit_at_table"},
-    "sofa.2seat": {"front": "pass_single", "side": null},
-    "armchair.800": {"front": "pass_single", "side": null},
-    "kitchen.run.2400": {"front": "work_at_counter", "side": null},
-    "kitchen.kitchenette.1200": {"front": "work_at_counter", "side": null},
-    "fridge.600": {"front": "open_wardrobe", "side": null},
-    "washer.600": {"front": "bend_to_oven", "side": null},
-    "wc.pan": {"front": "stand_and_turn", "side": "transfer_wheelchair"},
-    "basin.600": {"front": "stand_and_turn", "side": null},
-    "shower.900": {"front": "stand_and_turn", "side": null},
-    "space.rollator": {"front": "pass_single", "side": null}
+    "bed.single.900": {
+      "front": "make_bed",
+      "side": null
+    },
+    "bed.double.1600": {
+      "front": "make_bed",
+      "side": "make_bed"
+    },
+    "bed.care.profiling": {
+      "front": "assist_two_staff",
+      "side": "assist_two_staff"
+    },
+    "wardrobe.1000": {
+      "front": "open_wardrobe",
+      "side": null
+    },
+    "shelf.800": {
+      "front": "open_drawer",
+      "side": null
+    },
+    "desk.1200": {
+      "front": "sit_at_table",
+      "side": null
+    },
+    "table.dining.1200": {
+      "front": "sit_at_table",
+      "side": "sit_at_table"
+    },
+    "sofa.2seat": {
+      "front": "pass_single",
+      "side": null
+    },
+    "armchair.800": {
+      "front": "pass_single",
+      "side": null
+    },
+    "kitchen.run.2400": {
+      "front": "work_at_counter",
+      "side": null
+    },
+    "kitchen.kitchenette.1200": {
+      "front": "work_at_counter",
+      "side": null
+    },
+    "fridge.600": {
+      "front": "open_wardrobe",
+      "side": null
+    },
+    "washer.600": {
+      "front": "bend_to_oven",
+      "side": null
+    },
+    "wc.pan": {
+      "front": "stand_and_turn",
+      "side": "transfer_wheelchair"
+    },
+    "basin.600": {
+      "front": "stand_and_turn",
+      "side": null
+    },
+    "shower.900": {
+      "front": "stand_and_turn",
+      "side": null
+    },
+    "space.rollator": {
+      "front": "pass_single",
+      "side": null
+    }
+  },
+  "organisation": {
+    "care_home": {
+      "residential_group_people": [
+        8,
+        10
+      ],
+      "individual_room_share": 0.5,
+      "adapted_bath_per_groups": 2,
+      "support_rooms": [
+        "nurses' sitting and handover room",
+        "WC and cloakroom",
+        "care bathroom with acid-resistant bath",
+        "cleaning room with bucket sink and sluice",
+        "washroom",
+        "store for equipment and wheelchairs"
+      ],
+      "source_ref": [
+        "Neufert p.169"
+      ],
+      "neufert_ref": "p.169 — a residential group is approx 8-10 elderly people with a communal living room and tea kitchen; residential area is 50% individual rooms; one adapted bath per two residential groups",
+      "notes": "The group size is the organisational unit that sets everything else - communal area, staff base, bathing provision. It is a briefing decision that looks like a plan decision."
+    }
   }
 }

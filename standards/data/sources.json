@@ -2,9 +2,20 @@
   "_meta": {
     "purpose": "Bibliographic register. Every rule in this library carries source keys that resolve here, so any number the platform shows can be cited properly in a paper, a drawing note or a client report.",
     "how_to_cite": "Dimensional facts are not copyrightable and citing them is normal scholarly practice. What this repository does NOT do is reproduce the reference works themselves — no scanned pages, no redrawn figures, no wholesale transcription of a table's selection and arrangement. Values are recorded as facts with a page pointer so a reader can verify them in their own copy.",
-    "verification_note": "A record carrying `neufert_ref` has been checked against the page cited. A record without one is seeded from the regulatory sources and is still to be verified."
+    "verification_note": "A record carrying `neufert_ref` has been checked against the page cited. A record without one is seeded from the regulatory sources and is still to be verified.",
+    "authority_model": {
+      "purpose": "Which source wins when two disagree. Without this a handbook figure can quietly outrank a regulation, which is how a model produces a confident answer that fails building control.",
+      "levels": {
+        "binding": "In force for the jurisdiction. Non-compliance stops the project. BBR, AFS, EKS, PBL.",
+        "normative": "A standard referenced by regulation or adopted contractually. Binding in practice where the regulation or contract points to it. SS 91 42 21, SS 25268, EN 17210.",
+        "guidance": "Official advice. Departing from it is allowed but must be argued. Boverket allmanna rad, Socialstyrelsen, municipal programmes.",
+        "reference": "Professional reference work. Carries no legal weight and covers far more ground than the others. Neufert, Bygg ikapp.",
+        "data": "A dataset rather than a rule. Boverket klimatdatabas, EPDs, cost books."
+      },
+      "rule": "For a Swedish project the highest level present governs the value. A reference work is used where nothing above it speaks - which is most of the time, because regulation dimensions very few rooms.",
+      "why_both": "Swedish sources are AUTHORITATIVE; Neufert is COMPREHENSIVE. BBR and SS 91 42 21 are what building control holds you to, and between them they dimension a small fraction of what a building contains. Neufert covers the rest and has no standing. Keeping both, with precedence recorded, is more accurate than choosing either."
+    }
   },
-
   "sources": {
     "neufert4": {
       "key": "neufert4",
@@ -13,7 +24,13 @@
       "type": "reference work",
       "note": "Page numbers refer to the PRINTED page number shown on the page, not the PDF index. The offset in the scanned copy on this machine is +13 (PDF page 36 carries printed page 23).",
       "access": "Not distributed with this repository. Copyrighted work; obtain your own copy.",
-      "verified_pages": [23, 29, 150, 175]
+      "verified_pages": [
+        23,
+        29,
+        150,
+        175
+      ],
+      "authority": "reference"
     },
     "bbr": {
       "key": "bbr",
@@ -21,7 +38,8 @@
       "full": "Boverket (2011, as amended) Boverkets byggregler, BFS 2011:6 (BBR).",
       "type": "regulation",
       "jurisdiction": "SE",
-      "note": "Being replaced by Boverket's new regulations — confirm which applies to your consent date."
+      "note": "Being replaced by Boverket's new regulations — confirm which applies to your consent date.",
+      "authority": "binding"
     },
     "ss914221": {
       "key": "ss914221",
@@ -29,56 +47,150 @@
       "full": "SIS (2006) SS 91 42 21:2006 Byggnadsutformning — Bostäder — Invändiga mått.",
       "type": "standard",
       "jurisdiction": "SE",
-      "note": "Distinguishes normalnivå (dwellings) from höjd nivå (raised provision), which is why one turning figure will not do."
+      "note": "Distinguishes normalnivå (dwellings) from höjd nivå (raised provision), which is why one turning figure will not do.",
+      "authority": "normative"
     },
     "ss25268": {
       "key": "ss25268",
       "short": "SS 25268",
       "full": "SIS (2007) SS 25268:2007 Byggakustik — Ljudklassning av utrymmen i byggnader.",
       "type": "standard",
-      "jurisdiction": "SE"
+      "jurisdiction": "SE",
+      "authority": "normative"
     },
     "en17210": {
       "key": "en17210",
       "short": "EN 17210",
       "full": "CEN (2021) EN 17210:2021 Accessibility and usability of the built environment — Functional requirements.",
       "type": "standard",
-      "jurisdiction": "EU"
+      "jurisdiction": "EU",
+      "authority": "normative"
     },
     "afs2020_1": {
       "key": "afs2020_1",
       "short": "AFS 2020:1",
       "full": "Arbetsmiljöverket (2020) AFS 2020:1 Arbetsplatsens utformning.",
       "type": "regulation",
-      "jurisdiction": "SE"
+      "jurisdiction": "SE",
+      "authority": "binding"
     },
     "afs2012_2": {
       "key": "afs2012_2",
       "short": "AFS 2012:2",
       "full": "Arbetsmiljöverket (2012) AFS 2012:2 Belastningsergonomi.",
       "type": "regulation",
-      "jurisdiction": "SE"
+      "jurisdiction": "SE",
+      "authority": "binding"
     },
     "iso7176": {
       "key": "iso7176",
       "short": "ISO 7176",
       "full": "ISO (2008) ISO 7176-5:2008 Wheelchairs — Part 5: Determination of dimensions, mass and manoeuvring space.",
       "type": "standard",
-      "jurisdiction": "ISO"
+      "jurisdiction": "ISO",
+      "authority": "normative"
     },
     "en547_3": {
       "key": "en547_3",
       "short": "EN 547-3",
       "full": "CEN (2008) EN 547-3:1996+A1:2008 Safety of machinery — Human body measurements — Part 3: Anthropometric data.",
       "type": "standard",
-      "jurisdiction": "EU"
+      "jurisdiction": "EU",
+      "authority": "normative"
     },
     "boverket_friyta": {
       "key": "boverket_friyta",
       "short": "Boverket friyta",
       "full": "Boverket (2015) Allmänna råd om friyta för lek och utevistelse vid fritidshem, förskolor, skolor.",
       "type": "guidance",
-      "jurisdiction": "SE"
+      "jurisdiction": "SE",
+      "authority": "guidance"
+    },
+    "bygg_ikapp": {
+      "key": "bygg_ikapp",
+      "short": "Bygg ikapp",
+      "full": "Svensson, E. Bygg ikapp: for okad tillganglighet och anvandbarhet for personer med funktionsnedsattning. Stockholm: Svensk Byggtjanst.",
+      "type": "reference work",
+      "jurisdiction": "SE",
+      "authority": "reference",
+      "note": "The closest Swedish equivalent to Neufert for ACCESSIBILITY, and more detailed than Neufert on that subject because it interprets BBR and SS 91 42 21 directly. Where it and Neufert differ on a Swedish project, this one is the better guide - it is written against the regulation you are actually held to.",
+      "access": "Purchase from Svensk Byggtjanst. Not distributed with this repository.",
+      "verify": "Confirm the current edition before citing."
+    },
+    "boverket_klimatdatabas": {
+      "key": "boverket_klimatdatabas",
+      "short": "Boverkets klimatdatabas",
+      "full": "Boverket. Boverkets klimatdatabas - generiska klimatdata for byggprodukter. Karlskrona: Boverket.",
+      "type": "dataset",
+      "jurisdiction": "SE",
+      "authority": "data",
+      "url": "https://www.boverket.se/sv/om-boverket/oppna-data/boverkets-klimatdatabas/",
+      "modules": [
+        "A1-A3",
+        "A4",
+        "A5",
+        "energy and fuel"
+      ],
+      "note": "OPEN DATA, free, API in JSON, XML and Excel, roughly 200 generic building resources in Swedish and English. This is what should replace the PLACEHOLDER carbon values in data/components/catalogue.json, and it is the dataset a Swedish klimatdeklaration must draw generic values from.",
+      "important": "Generic product values are set roughly 25% ABOVE average on purpose, to push designers toward product-specific EPDs. So a comparison built on generic data is systematically conservative, and a design that switches to real EPDs will appear to improve even if nothing changed. State which you used. Energy and fuel factors are NOT conservatively set.",
+      "attribution": "Boverket and the climate database must be named as the source."
+    },
+    "coclass": {
+      "key": "coclass",
+      "short": "CoClass",
+      "full": "Svensk Byggtjanst. CoClass - nationell struktur for byggd miljo.",
+      "type": "classification",
+      "jurisdiction": "SE",
+      "authority": "reference",
+      "note": "The Swedish classification system for the built environment, successor to BSAB 96. Worth adopting as the backbone for the component catalogue and space types: it gives every building part and space a national code, which is what lets this platform exchange data with Swedish consultants and BIM models instead of using its own private vocabulary.",
+      "verify": "Check licensing terms for redistributing codes."
+    },
+    "ama": {
+      "key": "ama",
+      "short": "AMA",
+      "full": "Svensk Byggtjanst. AMA - Allman material- och arbetsbeskrivning (AMA Hus, AMA VVS & Kyl, AMA EL) with RA (Rad och anvisningar).",
+      "type": "specification system",
+      "jurisdiction": "SE",
+      "authority": "reference",
+      "note": "The Swedish specification standard. Not dimensional, but it is how build-ups are described in Swedish contracts - the right vocabulary for the component catalogue's construction descriptions, and what a contractor will price from."
+    },
+    "ivl_bm": {
+      "key": "ivl_bm",
+      "short": "IVL BM",
+      "full": "IVL Svenska Miljoinstitutet. BM - Byggsektorns miljoberakningsverktyg.",
+      "type": "tool and dataset",
+      "jurisdiction": "SE",
+      "authority": "data",
+      "note": "Free Swedish LCA tool for buildings with its own dataset. Useful as a cross-check on Boverket's figures: two independent Swedish sources agreeing is worth more than one source quoted precisely."
+    },
+    "wikells": {
+      "key": "wikells",
+      "short": "Wikells Sektionsfakta",
+      "full": "Wikells Byggberakningar AB. Sektionsfakta (NYB / ROT / VVS).",
+      "type": "cost data",
+      "jurisdiction": "SE",
+      "authority": "data",
+      "note": "Swedish construction cost data by work section, updated annually. The realistic replacement for the PLACEHOLDER SEK values. It will NOT contain demount labour, which remains the weakest number in the model and the one no published source carries.",
+      "access": "Commercial subscription."
+    },
+    "bygghandlingar90": {
+      "key": "bygghandlingar90",
+      "short": "Bygghandlingar 90",
+      "full": "Svensk Byggtjanst. Bygghandlingar 90 - riktlinjer for byggnadsdokumentation.",
+      "type": "documentation standard",
+      "jurisdiction": "SE",
+      "authority": "reference",
+      "note": "Swedish conventions for drawings, layers and file naming. Relevant when the CAD bridge starts exchanging files with consultants rather than only round-tripping its own output."
+    },
+    "sosfs_sabo": {
+      "key": "sosfs_sabo",
+      "short": "Socialstyrelsen / municipal SABO programme",
+      "full": "Socialstyrelsen foreskrifter och allmanna rad, and municipal programme requirements for sarskilt boende (e.g. Stockholms stad).",
+      "type": "guidance",
+      "jurisdiction": "SE",
+      "authority": "guidance",
+      "note": "Where Swedish care-home area standards actually come from, and they run well above Neufert's 18 m2 German guideline - typically 35 m2 per resident unit. Municipal programmes are often stricter than national guidance and are the figure a client will hold you to.",
+      "verify": "Obtain the specific municipal programme for the project."
     }
   }
 }

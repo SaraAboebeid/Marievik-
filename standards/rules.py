@@ -60,6 +60,50 @@ def sources() -> dict[str, dict]:
     return _load("sources.json")["sources"]
 
 
+# Precedence when sources disagree. Order matters: first match governs.
+AUTHORITY_ORDER = ["binding", "normative", "guidance", "data", "reference"]
+
+
+def governing(refs: list[str]) -> dict:
+    """Which of these sources actually governs the value, and why.
+
+    A reference work carries no legal weight; a regulation stops the
+    project. Without a precedence rule a handbook figure can quietly
+    outrank a regulation, which is how a model produces a confident answer
+    that fails building control.
+    """
+    resolved = [c for c in cite(refs) if c["resolved"]]
+    if not resolved:
+        return {"level": None, "source": None,
+                "note": "No source resolves — this value is uncited."}
+
+    registry = sources()
+    ranked = sorted(
+        resolved,
+        key=lambda c: AUTHORITY_ORDER.index(
+            registry[c["key"]].get("authority", "reference")
+        ),
+    )
+    top = ranked[0]
+    level = registry[top["key"]].get("authority", "reference")
+    others = [c["short"] for c in ranked[1:]]
+
+    if level == "reference":
+        note = (
+            f"{top['short']} is a reference work with no legal standing. Nothing "
+            "binding or normative speaks to this value, which is the usual case — "
+            "regulation dimensions very few rooms."
+        )
+    else:
+        note = f"{top['short']} governs ({level})."
+        if others:
+            note += " Corroborated by " + ", ".join(others) + "."
+    return {
+        "level": level, "source": top["short"], "page": top["page"],
+        "full": top["full"], "supporting": others, "note": note,
+    }
+
+
 def cite(refs: list[str]) -> list[dict]:
     """Turn loose source strings into resolved citations.
 

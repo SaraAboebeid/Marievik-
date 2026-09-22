@@ -55,15 +55,35 @@ any number the platform shows can be traced to the clause it came from.
 
 ---
 
-## On Neufert specifically
+## Neufert as the reference
 
-**There is no licensed Neufert database or API.** *Architects' Data* is a
-copyrighted work sold as a book and a licensed PDF. Copying its tables into
-this repository would create a rights problem for anything the project
-publishes or shares with suppliers and the municipality.
+Values are verified against **Neufert, *Architects' Data*, 3rd English edition
+(4th German edition)** and cited by printed page. Dimensional facts are not
+copyrightable and citing them is ordinary scholarly practice; what this
+repository does not do is reproduce the work itself — no scanned pages, no
+redrawn figures, no wholesale transcription of a table's selection and
+arrangement. A reader with their own copy can check every number.
 
-So this engine reproduces the *structure* Neufert gives you without
-reproducing its content. Values are seeded from sources you can cite freely:
+**Method, and why it matters.** The scanned copy is OCR'd, and OCR of a
+technical reference gets *digits* wrong more than words. So the OCR text is
+used only to locate pages; every number is read off the rendered page
+directly. A silently wrong dimension propagating into a carbon model is the
+worst failure this system has, and it would look exactly like a correct one.
+
+Pages verified so far: **23** (accessible housing), **29** (body measurements
+and space requirements), **150** (kitchens), **175** (dining and catering).
+
+The satisfying check: with bed access made turn-bounded, the engine
+reproduces Neufert p.23 fig.9 exactly — **1.20 m** along the access side of an
+ambulant user's bed, **1.50 m** for a wheelchair user — without those figures
+being entered anywhere. They fall out of the turning circles, which is not a
+coincidence: you have to turn to get out of bed.
+
+`sources.json` is the bibliographic register, and `rules.cite()` resolves a
+loose reference like `"Neufert p.23"` into a full entry plus page, so a number
+on screen becomes a footnote without anyone retyping it.
+
+Values are also seeded from sources you can cite freely:
 
 - **BBR** — accessibility, egress, ventilation, daylight, dwelling design
 - **SS 91 42 21** — dwelling dimensioning, normal and raised level

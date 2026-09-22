@@ -1,0 +1,84 @@
+{
+  "_meta": {
+    "purpose": "Bibliographic register. Every rule in this library carries source keys that resolve here, so any number the platform shows can be cited properly in a paper, a drawing note or a client report.",
+    "how_to_cite": "Dimensional facts are not copyrightable and citing them is normal scholarly practice. What this repository does NOT do is reproduce the reference works themselves — no scanned pages, no redrawn figures, no wholesale transcription of a table's selection and arrangement. Values are recorded as facts with a page pointer so a reader can verify them in their own copy.",
+    "verification_note": "A record carrying `neufert_ref` has been checked against the page cited. A record without one is seeded from the regulatory sources and is still to be verified."
+  },
+
+  "sources": {
+    "neufert4": {
+      "key": "neufert4",
+      "short": "Neufert",
+      "full": "Neufert, E. and Neufert, P. (2000) Architects' Data. 3rd English edition (4th German edition). Oxford: Blackwell Science.",
+      "type": "reference work",
+      "note": "Page numbers refer to the PRINTED page number shown on the page, not the PDF index. The offset in the scanned copy on this machine is +13 (PDF page 36 carries printed page 23).",
+      "access": "Not distributed with this repository. Copyrighted work; obtain your own copy.",
+      "verified_pages": [23, 29, 150, 175]
+    },
+    "bbr": {
+      "key": "bbr",
+      "short": "BBR",
+      "full": "Boverket (2011, as amended) Boverkets byggregler, BFS 2011:6 (BBR).",
+      "type": "regulation",
+      "jurisdiction": "SE",
+      "note": "Being replaced by Boverket's new regulations — confirm which applies to your consent date."
+    },
+    "ss914221": {
+      "key": "ss914221",
+      "short": "SS 91 42 21",
+      "full": "SIS (2006) SS 91 42 21:2006 Byggnadsutformning — Bostäder — Invändiga mått.",
+      "type": "standard",
+      "jurisdiction": "SE",
+      "note": "Distinguishes normalnivå (dwellings) from höjd nivå (raised provision), which is why one turning figure will not do."
+    },
+    "ss25268": {
+      "key": "ss25268",
+      "short": "SS 25268",
+      "full": "SIS (2007) SS 25268:2007 Byggakustik — Ljudklassning av utrymmen i byggnader.",
+      "type": "standard",
+      "jurisdiction": "SE"
+    },
+    "en17210": {
+      "key": "en17210",
+      "short": "EN 17210",
+      "full": "CEN (2021) EN 17210:2021 Accessibility and usability of the built environment — Functional requirements.",
+      "type": "standard",
+      "jurisdiction": "EU"
+    },
+    "afs2020_1": {
+      "key": "afs2020_1",
+      "short": "AFS 2020:1",
+      "full": "Arbetsmiljöverket (2020) AFS 2020:1 Arbetsplatsens utformning.",
+      "type": "regulation",
+      "jurisdiction": "SE"
+    },
+    "afs2012_2": {
+      "key": "afs2012_2",
+      "short": "AFS 2012:2",
+      "full": "Arbetsmiljöverket (2012) AFS 2012:2 Belastningsergonomi.",
+      "type": "regulation",
+      "jurisdiction": "SE"
+    },
+    "iso7176": {
+      "key": "iso7176",
+      "short": "ISO 7176",
+      "full": "ISO (2008) ISO 7176-5:2008 Wheelchairs — Part 5: Determination of dimensions, mass and manoeuvring space.",
+      "type": "standard",
+      "jurisdiction": "ISO"
+    },
+    "en547_3": {
+      "key": "en547_3",
+      "short": "EN 547-3",
+      "full": "CEN (2008) EN 547-3:1996+A1:2008 Safety of machinery — Human body measurements — Part 3: Anthropometric data.",
+      "type": "standard",
+      "jurisdiction": "EU"
+    },
+    "boverket_friyta": {
+      "key": "boverket_friyta",
+      "short": "Boverket friyta",
+      "full": "Boverket (2015) Allmänna råd om friyta för lek och utevistelse vid fritidshem, förskolor, skolor.",
+      "type": "guidance",
+      "jurisdiction": "SE"
+    }
+  }
+}

@@ -116,6 +116,12 @@ export function StandardsPanel({ std }: { std: StandardsSummary }) {
                 </span>
               </summary>
               <p className="mt-1 text-[11px] leading-snug text-muted">{a.basis}</p>
+              {a.note && <p className="mt-1 text-[11px] leading-snug text-muted">{a.note}</p>}
+              {a.neufert_ref && (
+                <p className="mt-1 rounded border-l-2 border-accent bg-accent-soft px-2 py-1 font-mono text-[10px] leading-snug text-ink-2">
+                  Neufert {a.neufert_ref}
+                </p>
+              )}
               <p className="mt-1 font-mono text-[10px] text-muted">
                 {a.source_ref.length ? a.source_ref.join(' · ') : '⚠ uncited — verify before publishing'}
               </p>

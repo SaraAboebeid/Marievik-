@@ -55,6 +55,42 @@ def height_rules() -> list[dict]:
 
 
 @lru_cache(maxsize=None)
+def sources() -> dict[str, dict]:
+    """The bibliographic register every source_ref resolves against."""
+    return _load("sources.json")["sources"]
+
+
+def cite(refs: list[str]) -> list[dict]:
+    """Turn loose source strings into resolved citations.
+
+    A reference like "Neufert p.23" resolves to the full bibliographic entry
+    plus the page, so a number on screen can become a footnote in a paper
+    without anyone retyping it.
+    """
+    out: list[dict] = []
+    registry = sources()
+    for ref in refs or []:
+        matched = None
+        for key, entry in registry.items():
+            if entry["short"].lower() in ref.lower() or key in ref.lower():
+                matched = entry
+                break
+        page = ""
+        marker = ref.lower().find("p.")
+        if marker >= 0:
+            page = ref[marker:].split()[0]
+        out.append({
+            "raw": ref,
+            "key": matched["key"] if matched else None,
+            "short": matched["short"] if matched else ref,
+            "full": matched["full"] if matched else "",
+            "page": page,
+            "resolved": matched is not None,
+        })
+    return out
+
+
+@lru_cache(maxsize=None)
 def layout_standards() -> dict:
     raw = _load("ergonomics.json")["layout_standards"]
     return {k: v for k, v in raw.items() if not k.startswith("_")}
@@ -131,7 +167,14 @@ ABSOLUTE_ZONES = {
 # body scaling overshoots these — it gave a 1950 mm galley where the
 # accessible figure is 1500 — so they resolve to the larger of the base
 # dimension and the user's turning circle.
-TURN_BOUNDED_ZONES = {"galley_between_runs", "dry_and_dress", "shower_entry"}
+TURN_BOUNDED_ZONES = {
+    "galley_between_runs", "dry_and_dress", "shower_entry",
+    # Bed access reproduces Neufert p.23 fig.9 exactly when turn-bounded:
+    # 1.20 m along the access side of an ambulant user's bed, 1.50 m along
+    # the long side of a wheelchair user's. Those are the two turning
+    # circles, which is not a coincidence — you have to turn to get out.
+    "make_bed",
+}
 
 REFERENCE_DEPTH = 450  # occupied depth of the reference ambulant adult, mm
 REFERENCE_WIDTH = 600  # occupied width of the same reference body, mm
@@ -507,13 +550,18 @@ def summary(user_group: str) -> dict:
         depth = activity_clearance(activity_id, user_group)
         width = activity_width(activity_id, user_group)
         if depth.value_mm or width.value_mm:
+            zone = activity_zones()[activity_id]
+            refs = depth.source_ref or width.source_ref
             activities.append({
                 "id": activity_id,
-                "label": activity_zones()[activity_id]["label"],
+                "label": zone["label"],
                 "depth_mm": depth.value_mm,
                 "width_mm": width.value_mm,
                 "basis": depth.basis or width.basis,
-                "source_ref": depth.source_ref or width.source_ref,
+                "source_ref": refs,
+                "citations": cite(refs),
+                "neufert_ref": zone.get("neufert_ref", ""),
+                "note": zone.get("note", ""),
                 "cited": depth.cited or width.cited,
             })
 

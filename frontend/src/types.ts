@@ -190,6 +190,9 @@ export interface StandardsActivity {
   width_mm: number
   basis: string
   source_ref: string[]
+  citations: { raw: string; short: string; full: string; page: string; resolved: boolean }[]
+  neufert_ref: string
+  note?: string
   cited: boolean
 }
 

@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-from . import evaluate, fit, layout, loader, scenarios
+from . import evaluate, experience, fit, layout, loader, scenarios
 
 ROOT = Path(__file__).resolve().parent.parent
 RUNS = ROOT / "runs"
@@ -279,6 +279,69 @@ def cmd_compare(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+# experience
+# ---------------------------------------------------------------------------
+
+
+def _bar(score: float, width: int = 22) -> str:
+    filled = int(round(score / 100.0 * width))
+    return "#" * filled + "." * (width - filled)
+
+
+def cmd_experience(args) -> int:
+    print(RULE)
+    print("EVALUATE — experience and social value")
+    print(RULE)
+    print("""
+  The third KPI. Cost and carbon total easily and therefore dominate; these
+  qualities have no natural unit and vanish from comparisons unless forced in.
+  Scores are shown per dimension and never only as a blend — weighting
+  daylight against acoustics is a value judgement, not a measurement.
+""")
+
+    profiles = (
+        [experience.profile(args.program)] if args.program else experience.profile_all()
+    )
+    profiles.sort(key=lambda p: -p.blended)
+
+    print(f"  {'USE':<38}{'DAYLT':>7}{'VIEW':>7}{'ACOUS':>7}{'ACCESS':>7}{'STAFF':>7}{'OUTDR':>7}{'MEAN':>7}")
+    print("  " + "-" * 87)
+    for p in profiles:
+        scores = {d.name: d.score for d in p.dimensions}
+        print(
+            f"  {p.program_label[:37]:<38}"
+            f"{scores.get('Daylight reach', 0):>7.0f}"
+            f"{scores.get('Seated view out', 0):>7.0f}"
+            f"{scores.get('Acoustic comfort', 0):>7.0f}"
+            f"{scores.get('Accessible circulation', 0):>7.0f}"
+            f"{scores.get('Staff working conditions', 0):>7.0f}"
+            f"{scores.get('Outdoor access', 0):>7.0f}"
+            f"{p.blended:>7.0f}"
+        )
+
+    for p in profiles:
+        print(f"\n{THIN}")
+        print(f"{p.program_label.upper()}   mean {p.blended:.0f}/100")
+        print(THIN)
+        for d in sorted(p.dimensions, key=lambda x: x.score):
+            flag = " [hard requirement]" if d.is_hard_requirement else ""
+            print(f"\n  {d.name}  {_bar(d.score)}  {d.score:.0f}  ({d.band}){flag}")
+            print(f"    {d.basis}")
+            if d.affected_groups:
+                print(f"    Affected user groups: {', '.join(d.affected_groups)}")
+
+        if p.conflicts:
+            print(f"\n  CONFLICTING OBJECTIVES ({len(p.conflicts)}) — recorded, not resolved:")
+            for c in p.conflicts:
+                print(f"\n    {c.between[0]}  vs  {c.between[1]}")
+                print(f"      {c.description}")
+                print(f"      Owner: {c.resolution_owner}")
+        print()
+
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # layout
 # ---------------------------------------------------------------------------
 
@@ -358,6 +421,63 @@ def cmd_layout(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+# cad
+# ---------------------------------------------------------------------------
+
+
+def cmd_cad(args) -> int:
+    from . import bridge
+
+    print(RULE)
+    print("CAD BRIDGE")
+    print(RULE)
+    print(f"\n  rhino3dm .... {'available' if bridge.RHINO_AVAILABLE else 'NOT INSTALLED'}")
+    print(f"  ifcopenshell  {'available' if bridge.IFC_AVAILABLE else 'NOT INSTALLED'}")
+    if not bridge.IFC_AVAILABLE:
+        print(f"\n  {bridge.IFC_INSTALL_HINT}")
+
+    if args.read:
+        print(f"\n{THIN}")
+        print(f"MEASURING PLATE FROM {args.read}")
+        print(THIN)
+        plate = bridge.read_plate_from_3dm(args.read, layer_name=args.layer)
+        print(f"""
+  Closed curves found .... {plate.curve_count}
+  Measured area .......... {plate.area_m2:,.1f} m²
+  Measured perimeter ..... {plate.perimeter_m:,.1f} m
+  Bounding box ........... {plate.bounding_width_m:.1f} x {plate.bounding_depth_m:.1f} m
+  Compactness ............ {plate.compactness:.2f}
+
+  {plate.inferred_vs_measured_note}""")
+        if plate.warning:
+            print(f"\n  WARNING: {plate.warning}")
+        print("\n  Patch for data/building/marievik_shell.json:")
+        print(json.dumps(plate.as_shell_patch(), indent=4))
+        return 0
+
+    programs = [args.program] if args.program else list(loader.use_programs())
+    print(f"\n{THIN}")
+    print("EXPORTING LAYOUTS")
+    print(THIN)
+    for program_id in programs:
+        written = bridge.export_all(program_id)
+        print(f"\n  {program_id}")
+        for kind, path in written.items():
+            print(f"    {kind:<5} {path.relative_to(ROOT)}  ({path.stat().st_size:,} bytes)")
+
+    print("""
+  Rhino layers written:
+    Zone_<id>    one layer per programme zone, bay rectangles
+    Partitions   lines where zones meet — this is the quantity that
+                 becomes cost and carbon
+    Core         the fixed core
+  The CSV is flat and unnested on purpose: one row per bay, absolute
+  coordinates, ready for Grasshopper without any parsing gymnastics.
+""")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # all
 # ---------------------------------------------------------------------------
 
@@ -427,6 +547,16 @@ def main(argv: list[str] | None = None) -> int:
 
     compare = sub.add_parser("compare", help="compare use timelines on cost and carbon")
     compare.set_defaults(func=cmd_compare)
+
+    cad = sub.add_parser("cad", help="import geometry from / export layouts to CAD")
+    cad.add_argument("-p", "--program", help="single programme id to export")
+    cad.add_argument("-r", "--read", help="measure a floor plate from a .3dm file")
+    cad.add_argument("-l", "--layer", help="restrict --read to this Rhino layer")
+    cad.set_defaults(func=cmd_cad)
+
+    exp = sub.add_parser("experience", help="score experience and social value")
+    exp.add_argument("-p", "--program", help="single programme id")
+    exp.set_defaults(func=cmd_experience)
 
     layout_parser = sub.add_parser("layout", help="generate parametric bay layouts")
     layout_parser.add_argument("-p", "--program", help="single programme id")

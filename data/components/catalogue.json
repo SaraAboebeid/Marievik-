@@ -236,7 +236,7 @@
       "recovery_rate": 0.90,
       "cost_sek": { "material": 6800, "labour_install": 0, "labour_demount": 0, "provenance": "PLACEHOLDER" },
       "carbon_kgco2e": { "A1A3": 92.0, "A4": 4.0, "A5": 0.0, "C1C4": 7.0, "D": -18.0, "provenance": "PLACEHOLDER" },
-      "performance": { "length_mm": 1600, "height_mm": 1600, "Rw_dB": 8, "provides_visual_separation": true },
+      "performance": { "length_mm": 1600, "height_mm": 1600, "Rw_dB": 8, "provides_visual_separation": true, "stored_footprint_m2": 0.72 },
       "notes": "Furniture doing the work of a wall. Where the brief needs territory rather than acoustic privacy, this substitutes for a partition at zero transformation cost — the highest-leverage move available in the fast layer."
     },
     {

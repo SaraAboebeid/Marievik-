@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://marievik-plus.chalmers.se/schema/supplier_submission.schema.json",
+  "title": "Marievik+ component submission",
+  "description": "One object per product. Send this file to suppliers as the specification — it is self-documenting. The three fields most suppliers cannot fill (reversibility, recovery_rate, and the C1-C4 / D carbon modules) are the three that decide whether a reuse argument holds, which is exactly why they are required here.",
+
+  "type": "object",
+  "required": [
+    "id", "name", "supplier", "layer", "unit",
+    "service_life_years", "fixing", "reversibility", "recovery_rate",
+    "cost_sek", "carbon_kgco2e"
+  ],
+  "additionalProperties": true,
+
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z]+\\.[a-z0-9._]+$",
+      "description": "Stable identifier, dotted lowercase. Convention: <family>.<type>.<variant>.<size>, e.g. part.demount.glass.100",
+      "examples": ["part.demount.glass.100", "furn.chair.stacking"]
+    },
+    "name": { "type": "string", "minLength": 3, "description": "Human-readable product name including the defining dimension." },
+    "supplier": { "type": "string", "minLength": 2, "description": "Company name. Use GENERIC for a market-average product rather than a specific one." },
+    "product_url": { "type": "string", "description": "Link to the product page or technical datasheet." },
+    "epd_reference": {
+      "type": "string",
+      "description": "EPD registration number and programme operator, e.g. 'S-P-05421, EPD International'. Leave empty only if no EPD exists — and say so rather than omitting the field."
+    },
+
+    "layer": {
+      "enum": ["site", "structure", "skin", "services", "space_plan", "stuff"],
+      "description": "Shearing layer. Determines expected rate of change. If a product could sit in two layers, choose the FASTER one — that is where it will actually be disturbed."
+    },
+    "unit": {
+      "enum": ["m2", "m", "m3", "each", "kg"],
+      "description": "Declared unit. All cost and carbon figures below are PER THIS UNIT."
+    },
+    "service_life_years": {
+      "type": "number", "minimum": 1, "maximum": 200,
+      "description": "Reference service life in the intended application. Not the warranty period."
+    },
+
+    "fixing": {
+      "enum": [
+        "loose_laid", "clamped", "bolted", "bolted_track", "screwed",
+        "screwed_and_skimmed", "nailed", "glued", "welded", "cast_in_situ"
+      ],
+      "description": "How the product is fixed in place. This is a physical fact and should not be negotiable."
+    },
+    "reversibility": {
+      "type": "number", "minimum": 0, "maximum": 1,
+      "description": "Fraction of installed quantity that can be DETACHED without destroying it. Guide: loose_laid 1.0, clamped 0.90, bolted 0.85, screwed 0.70, nailed 0.30, glued 0.10, welded 0.05, cast_in_situ 0.0."
+    },
+    "recovery_rate": {
+      "type": "number", "minimum": 0, "maximum": 1,
+      "description": "Fraction of installed quantity that survives removal in REUSABLE condition. Must be <= reversibility: you cannot recover more than you can detach. Tiles that lift out but break have high reversibility and low recovery — keeping these two numbers apart is what stops circularity claims flattering themselves."
+    },
+
+    "cost_sek": {
+      "type": "object",
+      "required": ["material", "labour_install", "labour_demount", "provenance"],
+      "properties": {
+        "material": { "type": "number", "minimum": 0, "description": "Supply cost per declared unit, excluding VAT." },
+        "labour_install": { "type": "number", "minimum": 0, "description": "Installed cost per declared unit, excluding supply." },
+        "labour_demount": {
+          "type": "number", "minimum": 0,
+          "description": "Cost to REMOVE per declared unit, in reusable condition where the product allows it. Almost nobody publishes this. It is the weakest number in the whole model and the one an adaptability case depends on most — an estimate with a stated basis beats a blank."
+        },
+        "maintenance_sek_per_year": { "type": "number", "minimum": 0, "description": "Annual maintenance per declared unit, where applicable (moving parts, plant)." },
+        "provenance": {
+          "type": "string",
+          "description": "Where these figures come from: 'quotation 2026-03, project-specific', 'list price 2026', 'PLACEHOLDER'. Anything marked PLACEHOLDER is excluded from publishable results."
+        }
+      }
+    },
+
+    "carbon_kgco2e": {
+      "type": "object",
+      "required": ["A1A3", "A4", "A5", "C1C4", "provenance"],
+      "description": "Per declared unit, per EN 15804+A2. Biogenic carbon reported separately, not netted.",
+      "properties": {
+        "A1A3": { "type": "number", "description": "Product stage: raw material supply, transport, manufacturing." },
+        "A4": { "type": "number", "minimum": 0, "description": "Transport to site. State the assumed distance in transport_distance_km." },
+        "A5": { "type": "number", "minimum": 0, "description": "Installation, including wastage of the product itself." },
+        "C1C4": {
+          "type": "number", "minimum": 0,
+          "description": "Deconstruction, transport, waste processing and disposal. Most EPDs stop at A1-A3; this module is not optional here."
+        },
+        "D": {
+          "type": "number", "maximum": 0,
+          "description": "Benefits beyond the system boundary — reuse and recycling potential, reported as a NEGATIVE number. It is recorded and reported separately and is never netted into any headline total, per EN 15978."
+        },
+        "biogenic_kgco2e": { "type": "number", "description": "Biogenic carbon content, reported separately and never netted into A1-A3." },
+        "transport_distance_km": { "type": "number", "minimum": 0, "description": "Assumed distance to a Stockholm site, underlying A4." },
+        "provenance": { "type": "string", "description": "'EPD S-P-xxxxx', 'manufacturer LCA 2026', 'generic dataset Boverket', or 'PLACEHOLDER'." }
+      }
+    },
+
+    "performance": {
+      "type": "object",
+      "description": "Whatever is relevant to the product type. These feed the requirement checks, so use these exact keys where they apply.",
+      "properties": {
+        "Rw_dB": { "type": "number", "description": "Weighted sound reduction index." },
+        "absorption_class": { "enum": ["A", "B", "C", "D", "E", "none"] },
+        "fire_class": { "type": "string", "description": "EI30 / EI60 / A2-s1,d0 / none." },
+        "load_bearing": { "type": "boolean" },
+        "light_transmission": { "type": "number", "minimum": 0, "maximum": 1 },
+        "impact_sound_improvement_dB": { "type": "number" },
+        "slip_resistance": { "type": "string" },
+        "cleanability": { "enum": ["high", "medium", "low"] },
+        "stored_footprint_m2": {
+          "type": "number", "minimum": 0,
+          "description": "Floor area one unit occupies in storage. Required for anything stackable or movable: a reconfigurable programme must store what it is not currently using, and that storage is real floor area. Flexibility has a footprint and this is how it gets counted."
+        }
+      }
+    },
+
+    "structural_demand": {
+      "type": "object",
+      "description": "Where installing this product imposes a demand on the STRUCTURE layer. Top-hung tracks, ceiling hoists and slab coring all belong here. These are the items that turn a cheap space-plan decision into an expensive structural one, and discovering them late is the single most common cost surprise in adaptive reuse.",
+      "properties": {
+        "track_line_load_kn_m": { "type": "number", "minimum": 0 },
+        "point_load_kn": { "type": "number", "minimum": 0 },
+        "requires_slab_coring": { "type": "boolean" },
+        "note": { "type": "string" }
+      }
+    },
+
+    "reuse_offer": {
+      "type": "object",
+      "description": "Optional but valuable: does the supplier take the product back? A take-back scheme with a stated residual value changes the economics of adaptability more than any material improvement, and it is a commercial commitment rather than a technical claim.",
+      "properties": {
+        "takeback_scheme": { "type": "boolean" },
+        "residual_value_share": { "type": "number", "minimum": 0, "maximum": 1, "description": "Fraction of original supply cost credited on return in good condition." },
+        "refurbishment_available": { "type": "boolean" },
+        "conditions": { "type": "string" }
+      }
+    },
+
+    "notes": { "type": "string" }
+  }
+}

@@ -1,0 +1,442 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "units": "Areas in m² unless suffixed. Heights in mm. Ventilation in l/s.",
+    "purpose": "Use programs decomposed into space units with measurable requirements. This is the ADAPT layer: it is what a shell is tested against. A use program is deliberately NOT a layout — it is a demand profile, so the same shell can be scored against many programs without redrawing anything.",
+    "provenance_policy": "Seeded values are 'indicative' working figures for model development. Verify each against BBR, SS 91 42 21, SS 25268, Boverket guidance, or municipal programme requirements (Stockholms stad) before publishing any result.",
+    "verification_status": "UNVERIFIED — seeded for model development 2026-09-22",
+    "binding_constraint_field": "Each space unit names its 'binding_constraint' — the requirement most likely to fail first in a reuse test. This is the field that makes the fit engine fast and the conversation with clients honest: you lead with what breaks, not with what fits."
+  },
+
+  "use_programs": [
+
+    {
+      "id": "elderly_care",
+      "label_en": "Residential care home",
+      "label_sv": "Särskilt boende för äldre (SÄBO)",
+      "time_horizon": "long",
+      "primary_user_groups": ["older_adult_rollator", "care_resident_assisted", "wheelchair_manual", "staff_care"],
+      "occupancy_pattern": "24/7, high staff ratio, low mobility, long dwell time",
+      "regulatory_class_sv": "Vårdmiljö / boende — verksamhetsklass 5B",
+      "space_units": [
+        {
+          "id": "care_apartment",
+          "label": "Care apartment (one resident)",
+          "area_m2": 35.0,
+          "area_range_m2": [30.0, 45.0],
+          "count_rule": "per_resident",
+          "min_clear_width_mm": 3600,
+          "min_ceiling_height_mm": 2400,
+          "daylight_required": true,
+          "min_daylight_factor_pct": 1.5,
+          "facade_required": true,
+          "ventilation_ls_per_person": 10,
+          "ventilation_ls_per_m2": 0.35,
+          "acoustic_class": "B",
+          "max_reverberation_time_s": 0.6,
+          "fire_compartment": true,
+          "wet_room_required": true,
+          "binding_constraint": "facade_and_clear_width",
+          "notes": "3600 mm clear width is the practical minimum for a bed with 900 mm working space on one side and transfer space on the other. Deep office plans fail this by producing rooms that are long and narrow rather than square.",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: Socialstyrelsen SOSFS", "VERIFY: municipal SÄBO programme"]
+        },
+        {
+          "id": "care_common_living",
+          "label": "Shared living / dining per unit group",
+          "area_m2_per_resident": 4.0,
+          "count_rule": "per_group_of_8_to_10",
+          "daylight_required": true,
+          "min_daylight_factor_pct": 2.0,
+          "facade_required": true,
+          "ventilation_ls_per_person": 10,
+          "acoustic_class": "B",
+          "max_reverberation_time_s": 0.6,
+          "binding_constraint": "acoustics",
+          "notes": "Reverberation control here is the difference between a dining room people use and one they avoid. Hard surfaces chosen for cleanability make it worse.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "care_staff_base",
+          "label": "Staff base / medication room",
+          "area_m2": 12.0,
+          "count_rule": "per_group_of_8_to_10",
+          "daylight_required": false,
+          "illuminance_lux_task": 1000,
+          "security_required": true,
+          "binding_constraint": "none",
+          "confidence": "indicative"
+        },
+        {
+          "id": "care_aid_storage",
+          "label": "Assistive-device store & charging",
+          "area_m2_per_resident": 1.2,
+          "count_rule": "per_group_of_8_to_10",
+          "daylight_required": false,
+          "power_outlets_required": 6,
+          "binding_constraint": "none",
+          "notes": "Chronically omitted from briefs. Without it, corridors become storage and egress width is lost — a compliance failure that appears only in operation.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "care_corridor",
+          "label": "Circulation, bed-transport rated",
+          "min_clear_width_mm": 1800,
+          "count_rule": "derived",
+          "area_factor_of_net": 0.30,
+          "handrail_both_sides": true,
+          "rest_seat_interval_mm": 25000,
+          "binding_constraint": "corridor_width",
+          "notes": "1800 mm is the usual failure point in converted office and residential stock, where 1200–1400 mm is typical.",
+          "confidence": "indicative"
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 3200,
+        "min_slab_live_load_kn_m2": 2.0,
+        "hoist_point_load_kn": 3.0,
+        "min_facade_ratio_m_per_m2": 0.06,
+        "max_plan_depth_from_facade_mm": 7000,
+        "lift_required": true,
+        "lift_size_mm": [1400, 2400],
+        "note_lift": "Stretcher/bed lift. Existing passenger lifts in office stock are almost never deep enough — a core intervention, high cost and carbon, and frequently the item that decides feasibility."
+      }
+    },
+
+    {
+      "id": "student_housing",
+      "label_en": "Student housing",
+      "label_sv": "Studentbostäder",
+      "time_horizon": "long",
+      "primary_user_groups": ["youth_13_18", "adult", "wheelchair_manual"],
+      "occupancy_pattern": "High density, peaked evening/night, seasonal vacancy, high turnover",
+      "regulatory_class_sv": "Bostad — verksamhetsklass 3",
+      "space_units": [
+        {
+          "id": "student_studio",
+          "label": "Self-contained studio",
+          "area_m2": 22.0,
+          "area_range_m2": [18.0, 28.0],
+          "count_rule": "per_resident",
+          "min_clear_width_mm": 2700,
+          "min_ceiling_height_mm": 2400,
+          "daylight_required": true,
+          "min_daylight_factor_pct": 1.0,
+          "facade_required": true,
+          "ventilation_ls_per_person": 7,
+          "ventilation_ls_per_m2": 0.35,
+          "acoustic_class": "B",
+          "wet_room_required": true,
+          "kitchenette_required": true,
+          "binding_constraint": "wet_room_drainage",
+          "notes": "One wet room per resident is the cost and carbon driver, and drainage routing through an existing slab is the technical one. Corridor-room typologies avoid this and are far cheaper to retrofit — but are less lettable. A genuine EVALUATE-stage conflict worth modelling explicitly.",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: BBR 3:22 bostadsutformning", "VERIFY: SS 91 42 21"]
+        },
+        {
+          "id": "student_corridor_room",
+          "label": "Room in shared corridor unit",
+          "area_m2": 14.0,
+          "area_range_m2": [12.0, 18.0],
+          "count_rule": "per_resident",
+          "min_clear_width_mm": 2700,
+          "daylight_required": true,
+          "facade_required": true,
+          "wet_room_required": true,
+          "kitchenette_required": false,
+          "binding_constraint": "facade_length",
+          "confidence": "indicative"
+        },
+        {
+          "id": "student_shared_kitchen",
+          "label": "Shared kitchen / social space",
+          "area_m2_per_resident": 2.5,
+          "count_rule": "per_group_of_12",
+          "daylight_required": true,
+          "min_daylight_factor_pct": 2.0,
+          "facade_required": true,
+          "ventilation_ls_per_person": 10,
+          "acoustic_class": "C",
+          "binding_constraint": "none",
+          "notes": "The social-value generator in this programme. Under-provisioning it is the most common way student housing becomes lettable but unliveable — and it is a RETAIN-stage question about existing social value, not just an area calculation.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "student_study",
+          "label": "Quiet study / bookable room",
+          "area_m2": 10.0,
+          "count_rule": "per_group_of_24",
+          "daylight_required": true,
+          "illuminance_lux_task": 500,
+          "acoustic_class": "B",
+          "binding_constraint": "none",
+          "notes": "Strong candidate for a deep-plan zone with no façade — one of the few programme elements that converts an office shell's weakness into an asset.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "student_laundry_store",
+          "label": "Laundry, bike and bulk storage",
+          "area_m2_per_resident": 1.5,
+          "count_rule": "per_building",
+          "daylight_required": false,
+          "binding_constraint": "none",
+          "confidence": "indicative"
+        },
+        {
+          "id": "student_circulation",
+          "label": "Circulation",
+          "min_clear_width_mm": 1300,
+          "count_rule": "derived",
+          "area_factor_of_net": 0.20,
+          "binding_constraint": "none",
+          "confidence": "indicative"
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 2900,
+        "min_slab_live_load_kn_m2": 2.0,
+        "min_facade_ratio_m_per_m2": 0.08,
+        "max_plan_depth_from_facade_mm": 8000,
+        "lift_required": true,
+        "lift_size_mm": [1100, 1400],
+        "wet_room_stack_spacing_mm": 6000,
+        "note": "Facade demand per m² is the highest of any programme here, because every habitable room needs daylight and a small room consumes façade fast. Deep plans fail student housing before they fail almost anything else."
+      }
+    },
+
+    {
+      "id": "event_venue",
+      "label_en": "Event and assembly venue",
+      "label_sv": "Evenemangslokal / samlingslokal",
+      "time_horizon": "short",
+      "primary_user_groups": ["event_visitor", "adult", "wheelchair_manual", "hearing_impaired"],
+      "occupancy_pattern": "Intermittent, very high peak density, low annual hours, reconfigured between events",
+      "regulatory_class_sv": "Samlingslokal — verksamhetsklass 2A/2B",
+      "space_units": [
+        {
+          "id": "event_hall",
+          "label": "Main assembly space",
+          "area_m2_per_person_seated_rows": 0.8,
+          "area_m2_per_person_standing": 0.6,
+          "area_m2_per_person_banquet": 1.6,
+          "area_m2_per_person_exhibition": 2.0,
+          "count_rule": "per_building",
+          "min_clear_width_mm": 8000,
+          "min_ceiling_height_mm": 3000,
+          "column_free_preferred": true,
+          "daylight_required": false,
+          "blackout_capability": true,
+          "ventilation_ls_per_person": 10,
+          "acoustic_class": "event_specific",
+          "max_reverberation_time_s": 1.2,
+          "induction_loop_required": true,
+          "binding_constraint": "egress_capacity",
+          "notes": "Four different area-per-person figures for one room is the point: the SAME space serves 4× the people as standing event vs exhibition. Occupancy — not area — is the variable that drives egress, ventilation and licensing.",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: BBR 5:3", "VERIFY: BBR 6:2"]
+        },
+        {
+          "id": "event_foyer",
+          "label": "Foyer / arrival",
+          "area_m2_per_person": 0.35,
+          "count_rule": "derived_from_hall_capacity",
+          "daylight_required": true,
+          "binding_constraint": "egress_capacity",
+          "confidence": "indicative"
+        },
+        {
+          "id": "event_wc",
+          "label": "Sanitary provision",
+          "count_rule": "per_100_persons",
+          "wc_per_100_persons": 3,
+          "accessible_wc_min": 1,
+          "area_m2_per_wc": 2.5,
+          "binding_constraint": "drainage_capacity",
+          "notes": "Peak sanitary load for assembly use is far above residential or office. Existing drainage stacks are a common hard stop, and it is a SERVICES-layer fix with poor reversibility.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "event_back_of_house",
+          "label": "Store, catering, technical",
+          "area_factor_of_hall": 0.15,
+          "count_rule": "derived",
+          "daylight_required": false,
+          "binding_constraint": "none",
+          "notes": "Furniture storage between configurations. If a space is to be reconfigurable, the stored furniture must live somewhere — this is the area that flexibility actually costs, and it is almost always forgotten.",
+          "confidence": "indicative"
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 3600,
+        "min_slab_live_load_kn_m2": 5.0,
+        "min_facade_ratio_m_per_m2": 0.02,
+        "max_plan_depth_from_facade_mm": 30000,
+        "ground_floor_preferred": true,
+        "note_load": "5.0 kN/m² for assembly is roughly double a residential or office slab. Where an existing slab cannot be verified for it, assembly use is confined to ground floor or slab-on-grade — which is frequently the real answer for reuse projects, and worth reaching quickly."
+      }
+    },
+
+    {
+      "id": "office_flexible",
+      "label_en": "Flexible workplace",
+      "label_sv": "Flexibel arbetsplats",
+      "time_horizon": "medium",
+      "primary_user_groups": ["adult", "wheelchair_manual", "hearing_impaired"],
+      "occupancy_pattern": "Weekday daytime, 40–60% typical utilisation, low evening/weekend use",
+      "regulatory_class_sv": "Kontor — verksamhetsklass 1",
+      "space_units": [
+        {
+          "id": "office_open_work",
+          "label": "Open workspace",
+          "area_m2_per_workplace": 8.0,
+          "count_rule": "per_workplace",
+          "daylight_required": true,
+          "min_daylight_factor_pct": 2.0,
+          "facade_required": true,
+          "ventilation_ls_per_person": 7,
+          "acoustic_class": "C",
+          "binding_constraint": "none",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: AFS 2020:1", "VERIFY: SS-EN ISO 3382-3"]
+        },
+        {
+          "id": "office_focus_room",
+          "label": "Focus / call room",
+          "area_m2": 4.0,
+          "count_rule": "per_8_workplaces",
+          "daylight_required": false,
+          "acoustic_class": "B",
+          "ventilation_ls_per_person": 10,
+          "binding_constraint": "ventilation",
+          "notes": "Small enclosed rooms are where retrofit ventilation fails — high per-person rate in a low-volume space. Cheap to build, expensive to serve.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "office_meeting",
+          "label": "Meeting room",
+          "area_m2_per_person": 2.2,
+          "count_rule": "per_10_workplaces",
+          "daylight_required": false,
+          "acoustic_class": "B",
+          "induction_loop_required": true,
+          "binding_constraint": "none",
+          "confidence": "indicative"
+        },
+        {
+          "id": "office_support",
+          "label": "Kitchen, WC, store, circulation",
+          "area_factor_of_net": 0.35,
+          "count_rule": "derived",
+          "binding_constraint": "none",
+          "confidence": "indicative"
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 3000,
+        "min_slab_live_load_kn_m2": 2.5,
+        "min_facade_ratio_m_per_m2": 0.04,
+        "max_plan_depth_from_facade_mm": 9000,
+        "lift_required": true
+      }
+    },
+
+    {
+      "id": "preschool",
+      "label_en": "Preschool",
+      "label_sv": "Förskola",
+      "time_horizon": "medium",
+      "primary_user_groups": ["toddler_1_2", "child_3_5", "adult", "wheelchair_manual"],
+      "occupancy_pattern": "Weekday 06:30–18:00, high density, high acoustic and hygiene load, outdoor-dependent",
+      "regulatory_class_sv": "Förskola — verksamhetsklass 2A/5A",
+      "space_units": [
+        {
+          "id": "preschool_home_room",
+          "label": "Base room per group",
+          "area_m2_per_child": 4.5,
+          "count_rule": "per_group_of_15",
+          "daylight_required": true,
+          "min_daylight_factor_pct": 2.0,
+          "facade_required": true,
+          "ventilation_ls_per_person": 7,
+          "acoustic_class": "B",
+          "max_reverberation_time_s": 0.6,
+          "binding_constraint": "acoustics",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: SS 25268", "VERIFY: Skolverket / municipal förskoleprogram"]
+        },
+        {
+          "id": "preschool_support",
+          "label": "WC, changing, store, kitchen, staff",
+          "area_m2_per_child": 3.0,
+          "count_rule": "derived",
+          "binding_constraint": "drainage_capacity",
+          "confidence": "indicative"
+        },
+        {
+          "id": "preschool_outdoor",
+          "label": "Outdoor play area",
+          "area_m2_per_child": 30.0,
+          "area_range_m2_per_child": [20.0, 40.0],
+          "count_rule": "per_child",
+          "location": "outdoor",
+          "binding_constraint": "site_area",
+          "notes": "The decisive constraint for preschool in dense urban reuse, and the one that most often rules it out entirely. Boverket's guidance points to roughly 30 m²/child with a total-site friskyta minimum; dense sites rarely deliver it. Test this BEFORE any indoor layout work — it is a one-line site check that can save weeks.",
+          "confidence": "indicative",
+          "source_ref": ["VERIFY: Boverket allmänna råd om friyta för lek och utevistelse"]
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 3000,
+        "min_slab_live_load_kn_m2": 3.0,
+        "min_facade_ratio_m_per_m2": 0.05,
+        "max_plan_depth_from_facade_mm": 9000,
+        "ground_floor_required": true,
+        "site_outdoor_area_required": true
+      }
+    },
+
+    {
+      "id": "community_hybrid",
+      "label_en": "Community hybrid / neighbourhood local",
+      "label_sv": "Allaktivitetslokal",
+      "time_horizon": "short",
+      "primary_user_groups": ["adult", "older_adult_ambulant", "youth_13_18", "child_6_12", "wheelchair_manual"],
+      "occupancy_pattern": "Variable by hour and day — the programme is time-shared rather than space-shared",
+      "regulatory_class_sv": "Samlingslokal — verksamhetsklass 2A",
+      "space_units": [
+        {
+          "id": "hybrid_main_room",
+          "label": "Divisible main room",
+          "area_m2": 120.0,
+          "count_rule": "per_building",
+          "min_clear_width_mm": 6000,
+          "min_ceiling_height_mm": 2700,
+          "daylight_required": true,
+          "subdivisible": true,
+          "subdivision_element": "movable_acoustic_wall",
+          "acoustic_class_between_divisions": "Rw45",
+          "ventilation_ls_per_person": 10,
+          "binding_constraint": "ventilation_at_peak_occupancy",
+          "notes": "The purest test case for this lab: one room, several uses per week, reconfigured by a fast-layer element. Its whole value proposition rests on the reversibility of the dividing element — model that element carefully, because it carries the flexibility.",
+          "confidence": "indicative"
+        },
+        {
+          "id": "hybrid_support",
+          "label": "Kitchen, WC, store",
+          "area_factor_of_net": 0.30,
+          "count_rule": "derived",
+          "binding_constraint": "drainage_capacity",
+          "confidence": "indicative"
+        }
+      ],
+      "shell_demands": {
+        "min_floor_to_floor_mm": 3000,
+        "min_slab_live_load_kn_m2": 4.0,
+        "min_facade_ratio_m_per_m2": 0.03,
+        "max_plan_depth_from_facade_mm": 15000,
+        "ground_floor_preferred": true
+      }
+    }
+  ]
+}

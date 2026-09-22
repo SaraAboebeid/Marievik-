@@ -1,0 +1,216 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "reference_floor_area_m2": 1040.0,
+    "purpose": "Bills of quantities for one reference floor, per use, in two variants each: CONVENTIONAL (built as if it will never change) and ADAPTABLE (built to be taken apart). The comparison between the two variants, across a sequence of uses, is the lab's central experiment.",
+    "quantity_basis": "Partition quantities in m² of wall face, derived from typical partition density per use: care ≈ 0.55 m² wall per m² floor, student housing ≈ 0.70, office ≈ 0.25, event ≈ 0.06. Floor and ceiling quantities ≈ floor area. Replace with quantities taken from actual layouts once the layout engine is run against real plans.",
+    "provenance": "PLACEHOLDER — quantity ratios are informed estimates for model development."
+  },
+
+  "fitouts": {
+
+    "office_flexible__conventional": {
+      "use_id": "office_flexible",
+      "variant": "conventional",
+      "bill": {
+        "part.stud.gypsum.95": 260.0,
+        "floor.carpet.tile": 1040.0,
+        "ceiling.mineral.tile.grid": 1040.0,
+        "serv.vent.central.ducted": 1040.0,
+        "furn.chair.stacking": 60,
+        "furn.table.folding.1800": 10
+      }
+    },
+
+    "office_flexible__adaptable": {
+      "use_id": "office_flexible",
+      "variant": "adaptable",
+      "bill": {
+        "part.demount.solid.100": 150.0,
+        "part.demount.glass.100": 110.0,
+        "floor.raised.access.150": 1040.0,
+        "floor.carpet.tile": 1040.0,
+        "ceiling.acoustic.baffle": 420.0,
+        "serv.vent.unit.decentral": 4,
+        "furn.chair.stacking": 60,
+        "furn.table.folding.1800": 10,
+        "furn.storage.mobile.unit": 12
+      }
+    },
+
+    "student_housing__conventional": {
+      "use_id": "student_housing",
+      "variant": "conventional",
+      "bill": {
+        "part.stud.gypsum.95": 730.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.mineral.tile.grid": 1040.0,
+        "serv.vent.central.ducted": 1040.0,
+        "serv.drainage.stack.new": 6
+      }
+    },
+
+    "student_housing__adaptable": {
+      "use_id": "student_housing",
+      "variant": "adaptable",
+      "bill": {
+        "part.demount.solid.100": 620.0,
+        "part.stud.gypsum.95": 110.0,
+        "floor.raised.access.150": 1040.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.acoustic.baffle": 380.0,
+        "serv.vent.unit.decentral": 5,
+        "serv.drainage.stack.new": 4,
+        "furn.storage.mobile.unit": 20
+      },
+      "_note": "Wet-room walls stay as stud-and-board: tiled, sealed, waterproofed construction cannot be made reversible with current products, and pretending otherwise would flatter the result. Retained here as an honest residual — the ~15% of a fit-out that adaptability cannot reach."
+    },
+
+    "elderly_care__conventional": {
+      "use_id": "elderly_care",
+      "variant": "conventional",
+      "bill": {
+        "part.stud.gypsum.95": 570.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.mineral.tile.grid": 1040.0,
+        "serv.vent.central.ducted": 1040.0,
+        "serv.drainage.stack.new": 6
+      }
+    },
+
+    "elderly_care__adaptable": {
+      "use_id": "elderly_care",
+      "variant": "adaptable",
+      "bill": {
+        "part.demount.solid.100": 460.0,
+        "part.stud.gypsum.95": 110.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.acoustic.baffle": 400.0,
+        "floor.raised.access.150": 1040.0,
+        "serv.vent.unit.decentral": 5,
+        "serv.drainage.stack.new": 4,
+        "furn.storage.mobile.unit": 14
+      }
+    },
+
+    "event_venue__conventional": {
+      "use_id": "event_venue",
+      "variant": "conventional",
+      "bill": {
+        "part.stud.gypsum.95": 65.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.mineral.tile.grid": 1040.0,
+        "serv.vent.central.ducted": 1040.0,
+        "furn.chair.stacking": 400,
+        "furn.table.folding.1800": 60
+      }
+    },
+
+    "event_venue__adaptable": {
+      "use_id": "event_venue",
+      "variant": "adaptable",
+      "bill": {
+        "part.movable.acoustic.wall": 90.0,
+        "part.curtain.acoustic": 120.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.acoustic.baffle": 520.0,
+        "serv.vent.unit.decentral": 6,
+        "furn.chair.stacking": 400,
+        "furn.table.folding.1800": 60,
+        "furn.storage.mobile.unit": 8
+      }
+    },
+
+    "community_hybrid__adaptable": {
+      "use_id": "community_hybrid",
+      "variant": "adaptable",
+      "bill": {
+        "part.movable.acoustic.wall": 60.0,
+        "part.curtain.acoustic": 80.0,
+        "part.demount.solid.100": 90.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.acoustic.baffle": 420.0,
+        "serv.vent.unit.decentral": 4,
+        "furn.chair.stacking": 200,
+        "furn.table.folding.1800": 34,
+        "furn.storage.mobile.unit": 16
+      }
+    },
+
+    "preschool__adaptable": {
+      "use_id": "preschool",
+      "variant": "adaptable",
+      "bill": {
+        "part.demount.solid.100": 320.0,
+        "part.stud.gypsum.95": 90.0,
+        "floor.linoleum.2.5": 1040.0,
+        "ceiling.acoustic.baffle": 620.0,
+        "serv.vent.unit.decentral": 4,
+        "serv.drainage.stack.new": 3,
+        "furn.storage.mobile.unit": 24
+      },
+      "_note": "Highest acoustic-absorber quantity of any programme here — preschool acoustics are a design driver, not a finish. Worth noting that absorbers are a fast-layer, fully reversible component, so this requirement costs little in adaptability terms."
+    },
+
+    "vacant__interim": {
+      "use_id": "vacant",
+      "variant": "interim",
+      "bill": {},
+      "_note": "Empty. Kept as a scenario state so timelines can model vacancy honestly — a vacant year still emits (see operational.json) and still costs. Modelling vacancy is what makes the case for interim use visible."
+    }
+  },
+
+  "timelines": {
+    "_note": "A timeline is a sequence of (year, fitout) states. The lab's central claim is that the right way to compare construction strategies is across a SEQUENCE of uses, not a single one — because the conventional option usually wins the first fit-out and loses every one after it.",
+
+    "office_only_50yr": {
+      "label": "Business as usual — office throughout, refitted every 15 years",
+      "phases": [
+        { "year": 2026, "fitout": "office_flexible__conventional" },
+        { "year": 2041, "fitout": "office_flexible__conventional" },
+        { "year": 2056, "fitout": "office_flexible__conventional" },
+        { "year": 2071, "fitout": "office_flexible__conventional" }
+      ]
+    },
+
+    "conventional_change_of_use": {
+      "label": "Changing uses, conventional construction each time",
+      "phases": [
+        { "year": 2026, "fitout": "office_flexible__conventional" },
+        { "year": 2036, "fitout": "student_housing__conventional" },
+        { "year": 2056, "fitout": "elderly_care__conventional" },
+        { "year": 2071, "fitout": "event_venue__conventional" }
+      ]
+    },
+
+    "adaptable_change_of_use": {
+      "label": "Same use sequence, built to be taken apart",
+      "phases": [
+        { "year": 2026, "fitout": "office_flexible__adaptable" },
+        { "year": 2036, "fitout": "student_housing__adaptable" },
+        { "year": 2056, "fitout": "elderly_care__adaptable" },
+        { "year": 2071, "fitout": "event_venue__adaptable" }
+      ]
+    },
+
+    "interim_then_long": {
+      "label": "Interim community use first, long-term housing later",
+      "phases": [
+        { "year": 2026, "fitout": "community_hybrid__adaptable" },
+        { "year": 2033, "fitout": "student_housing__adaptable" },
+        { "year": 2061, "fitout": "elderly_care__adaptable" }
+      ],
+      "_note": "Tests whether a low-commitment interim use that keeps the building occupied and socially active beats holding it vacant while a long-term plan is developed. This is the short-term/long-term planning question the project is really asking."
+    },
+
+    "vacancy_then_convert": {
+      "label": "Held vacant, then converted",
+      "phases": [
+        { "year": 2026, "fitout": "vacant__interim" },
+        { "year": 2033, "fitout": "student_housing__conventional" },
+        { "year": 2061, "fitout": "elderly_care__conventional" }
+      ]
+    }
+  }
+}

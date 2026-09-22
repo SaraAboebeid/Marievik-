@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "status": "TEMPLATE — NOT SURVEY DATA",
+    "warning": "Every value below is a placeholder chosen to make the engine runnable. Replace with measured survey, structural verification and as-built documentation from the project Drive before drawing any conclusion about Marievik. The field names are the real deliverable here: they are the survey brief. If you cannot fill a field, that gap is itself a finding for the RETAIN stage.",
+    "purpose": "The RETAIN layer. What exists, what it can carry, what it already cost the atmosphere."
+  },
+
+  "building": {
+    "id": "marievik_plus",
+    "name": "Marievik+",
+    "location": { "city": "Stockholm", "country": "SE", "climate_zone_bbr": "III" },
+    "year_built": 1985,
+    "original_use": "office",
+    "protection_status": {
+      "listed": false,
+      "detaljplan_constraints": "UNKNOWN — check Stockholms stad detaljplan",
+      "note": "Planning status frequently decides ADAPT before any technical analysis does. Resolve this early; it is cheap to check and expensive to assume."
+    }
+  },
+
+  "structure": {
+    "system": "concrete_frame_flat_slab",
+    "grid_x_mm": 7200,
+    "grid_y_mm": 7200,
+    "column_size_mm": [400, 400],
+    "slab_type": "reinforced_concrete_flat_slab",
+    "slab_thickness_mm": 280,
+    "slab_is_post_tensioned": false,
+    "floor_to_floor_mm": 3300,
+    "clear_height_under_slab_mm": 3020,
+    "clear_height_under_services_mm": 2600,
+    "live_load_capacity_kn_m2": 2.5,
+    "live_load_verified": false,
+    "spare_capacity_kn_m2": 0.0,
+    "storeys_above_ground": 6,
+    "storeys_below_ground": 1,
+    "gross_floor_area_per_storey_m2": 1040.0,
+    "verification_note": "live_load_verified=false is the most consequential flag in this file. Until a structural engineer confirms capacity, every assembly-use and care-use result the engine produces is conditional. The engine propagates this flag into its output rather than hiding it."
+  },
+
+  "envelope": {
+    "facade_system": "precast_concrete_panel_with_ribbon_window",
+    "facade_perimeter_m_per_storey": 132.0,
+    "window_to_wall_ratio": 0.42,
+    "sill_height_mm": 900,
+    "head_height_mm": 2400,
+    "glazing": "double_1985",
+    "u_value_wall_w_m2k": 0.45,
+    "u_value_window_w_m2k": 2.8,
+    "airtightness_l_s_m2_at_50pa": 1.6,
+    "openable_windows": false,
+    "seated_view_available": false,
+    "seated_view_note": "Sill at 900 mm exceeds the ~700 mm needed for a seated view (wheelchair seated eye height ~1180 mm). Any care or long-dwell residential programme either accepts a poor outcome for seated users or takes on a SKIN-layer intervention. Flag this in EVALUATE as a social-value cost, not just a technical one — it is exactly the kind of trade-off that disappears from spreadsheets."
+  },
+
+  "core_and_circulation": {
+    "cores": [
+      {
+        "id": "core_a",
+        "position_mm": [14400, 7200],
+        "stairs": 1,
+        "stair_clear_width_mm": 1200,
+        "lifts": 2,
+        "lift_car_mm": [1100, 1400],
+        "lift_bed_capable": false,
+        "risers_available": true,
+        "riser_spare_capacity": "UNKNOWN"
+      }
+    ],
+    "escape_routes": 2,
+    "max_travel_distance_m": 30.0,
+    "corridor_clear_width_mm": 1400
+  },
+
+  "services": {
+    "ventilation_system": "central_ahu_cav",
+    "ahu_capacity_ls": 4200,
+    "heat_recovery_efficiency": 0.45,
+    "heating": "district_heating",
+    "cooling": "district_cooling_partial",
+    "distribution": "ceiling_void_ducted",
+    "drainage_stacks": [
+      { "id": "stack_1", "position_mm": [14400, 7200], "wet_rooms_served_max": 4 },
+      { "id": "stack_2", "position_mm": [21600, 7200], "wet_rooms_served_max": 4 }
+    ],
+    "electrical_capacity_kw": 250,
+    "remaining_service_life_years": 5,
+    "note": "Services at 5 years remaining life is an opportunity, not only a liability: replacement is due regardless, so the marginal cost of choosing an adaptable system over a like-for-like swap is small. Capture this in the ENABLE stage — timing is a design variable."
+  },
+
+  "site": {
+    "plot_area_m2": 3200.0,
+    "outdoor_area_available_m2": 850.0,
+    "outdoor_area_south_facing_m2": 420.0,
+    "parking_spaces": 40,
+    "note": "Outdoor area is the make-or-break variable for preschool (≈30 m²/child) and a strong social-value driver for elderly care. Also the cheapest adaptive-reuse resource in the whole project — reprogramming a car park needs no structural verification."
+  },
+
+  "existing_embodied_carbon": {
+    "total_kgco2e": 2184000,
+    "per_m2_kgco2e": 350.0,
+    "basis": "PLACEHOLDER — indicative 1980s concrete frame office",
+    "provenance": "PLACEHOLDER",
+    "note": "Carbon already emitted and unrecoverable. It is not counted in any scenario comparison — sunk emissions cannot be un-emitted. It is reported to frame the decision: demolition forfeits this investment AND spends new carbon to replace it. That framing is the strongest argument reuse has, and it belongs in EVALUATE as context rather than in the ledger as a credit."
+  },
+
+  "condition_survey": {
+    "structure": "UNKNOWN",
+    "envelope": "UNKNOWN",
+    "services": "UNKNOWN",
+    "asbestos_survey_done": false,
+    "note": "Pre-1990 Swedish stock: asbestos and PCB screening are prerequisites, not optional. An unscreened building cannot be costed honestly, and this is a recurring IMPLEMENT-stage blocker."
+  }
+}

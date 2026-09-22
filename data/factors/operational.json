@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "purpose": "Operational energy and carbon factors (LCA module B6), plus grid decarbonisation over the study period.",
+    "provenance_policy": "All values PLACEHOLDER. Replace energy use intensities with measured or simulated figures for the actual building, and grid factors with Energimyndigheten / Naturvårdsverket published trajectories.",
+    "critical_note": "The grid trajectory below is the reason operational and embodied carbon cannot be compared as a single number without stating a time horizon. Swedish electricity is already low-carbon and district heating is falling. Over a 50-year study period the embodied carbon of a transformation increasingly dominates the operational saving it delivers — so an energy retrofit that requires heavy new material can lose on carbon while winning on energy. The engine reports the two separately AND as a time-integrated total, and never lets one hide the other."
+  },
+
+  "energy_use_intensity_kwh_m2_yr": {
+    "_note": "Delivered energy after retrofit, by use. Care and event uses are higher than office per m² for different reasons: care runs 24/7, event runs at extreme peak density for few hours.",
+    "office_flexible": { "heating": 45, "cooling": 12, "electricity": 55, "provenance": "PLACEHOLDER" },
+    "student_housing": { "heating": 55, "cooling": 2, "electricity": 35, "provenance": "PLACEHOLDER" },
+    "elderly_care": { "heating": 75, "cooling": 10, "electricity": 70, "provenance": "PLACEHOLDER" },
+    "event_venue": { "heating": 40, "cooling": 18, "electricity": 45, "provenance": "PLACEHOLDER" },
+    "preschool": { "heating": 60, "cooling": 5, "electricity": 45, "provenance": "PLACEHOLDER" },
+    "community_hybrid": { "heating": 35, "cooling": 8, "electricity": 30, "provenance": "PLACEHOLDER" },
+    "vacant": { "heating": 20, "cooling": 0, "electricity": 8, "provenance": "PLACEHOLDER",
+      "_note": "Vacancy is not free. A building kept warm and empty between uses still emits — which is an argument for short-horizon interim uses and belongs in every scenario timeline." }
+  },
+
+  "carbon_intensity_kgco2e_per_kwh": {
+    "_note": "Year-indexed. Linear interpolation between anchor years; values held flat beyond the last anchor.",
+    "electricity_se": {
+      "2026": 0.045, "2030": 0.035, "2040": 0.020, "2050": 0.015,
+      "provenance": "PLACEHOLDER"
+    },
+    "district_heating_stockholm": {
+      "2026": 0.065, "2030": 0.048, "2040": 0.025, "2050": 0.012,
+      "provenance": "PLACEHOLDER"
+    },
+    "district_cooling_stockholm": {
+      "2026": 0.020, "2030": 0.015, "2040": 0.010, "2050": 0.008,
+      "provenance": "PLACEHOLDER"
+    }
+  },
+
+  "energy_price_sek_per_kwh": {
+    "_note": "Used for operational cost. Real terms, excluding inflation, so it is comparable with undiscounted capital cost.",
+    "electricity": { "2026": 1.45, "2040": 1.70, "2050": 1.85, "provenance": "PLACEHOLDER" },
+    "district_heating": { "2026": 0.95, "2040": 1.15, "2050": 1.30, "provenance": "PLACEHOLDER" },
+    "district_cooling": { "2026": 0.75, "2040": 0.90, "2050": 1.00, "provenance": "PLACEHOLDER" }
+  },
+
+  "study_period": {
+    "start_year": 2026,
+    "length_years": 50,
+    "discount_rate_real": 0.03,
+    "carbon_discounting": false,
+    "carbon_discounting_note": "Carbon is deliberately NOT discounted while money is. Discounting future emissions embeds an ethical assumption that a tonne emitted in 2070 matters less than one emitted today — defensible for capital, not for atmospheric physics. State this choice in any publication; reviewers will ask, and it is a position rather than an oversight."
+  }
+}

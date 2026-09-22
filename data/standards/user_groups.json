@@ -1,0 +1,405 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "units": "All linear dimensions in millimetres (mm). Areas in m². Illuminance in lux.",
+    "purpose": "Anthropometric and clearance requirements per user group. This is the layer that makes a single shell testable against different populations: the same 6.0 m bay is a generous student room, a tight care room with a ceiling hoist, and an undersized preschool play area — because the user group changes the requirement, not the geometry.",
+    "provenance_policy": "Every value carries a confidence and a source_ref. 'indicative' means it is a working value for model development and MUST be verified before any published result. Fill source_ref with the specific clause (BBR 3:1, SS 91 42 21, AFS 2020:1, EN 17210) or, for internal verification only, your own Neufert page reference. Do not paste Neufert tables into this file — it is a copyrighted work and this repository is intended to be shareable.",
+    "verification_status": "UNVERIFIED — seeded for model development 2026-09-22"
+  },
+
+  "groups": [
+    {
+      "id": "toddler_1_2",
+      "label_en": "Toddler, 1–2 years",
+      "label_sv": "Småbarn, 1–2 år",
+      "age_range_years": [1, 2],
+      "anthropometrics_mm": {
+        "stature_p50": 830,
+        "eye_height_standing": 740,
+        "shoulder_height": 630,
+        "reach_up_comfortable": 900,
+        "seat_height": 200,
+        "work_surface_height": 400
+      },
+      "clearances_mm": {
+        "turning_circle": 900,
+        "passage_width_single": 800,
+        "door_clear_width": 800,
+        "handrail_height_secondary": 500,
+        "guard_height_min": 1100,
+        "guard_opening_max": 100
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5,
+        "surface_temp_max_c": 60
+      },
+      "notes": "Drives guard geometry, glazing sightlines at 740 mm, and sanitary fixture heights. Floor is a primary activity surface — floor finish carbon and cleanability matter more than in adult uses.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: BBR 8:2 (barnsäkerhet)", "VERIFY: Neufert — child dimensions, p.___"]
+    },
+    {
+      "id": "child_3_5",
+      "label_en": "Child, 3–5 years (preschool)",
+      "label_sv": "Barn, 3–5 år (förskola)",
+      "age_range_years": [3, 5],
+      "anthropometrics_mm": {
+        "stature_p50": 1080,
+        "eye_height_standing": 970,
+        "shoulder_height": 840,
+        "reach_up_comfortable": 1200,
+        "seat_height": 280,
+        "work_surface_height": 510
+      },
+      "clearances_mm": {
+        "turning_circle": 1000,
+        "passage_width_single": 900,
+        "door_clear_width": 800,
+        "handrail_height_secondary": 600,
+        "guard_height_min": 1100,
+        "guard_opening_max": 100
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5
+      },
+      "notes": "Sightline at ~970 mm sets window sill and vision-panel heights. Acoustics are the binding constraint in preschool conversions, not area.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: SS 25268 ljudklass för förskola", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "child_6_12",
+      "label_en": "Child, 6–12 years",
+      "label_sv": "Barn, 6–12 år",
+      "age_range_years": [6, 12],
+      "anthropometrics_mm": {
+        "stature_p50": 1350,
+        "eye_height_standing": 1240,
+        "shoulder_height": 1070,
+        "reach_up_comfortable": 1550,
+        "seat_height": 350,
+        "work_surface_height": 590
+      },
+      "clearances_mm": {
+        "turning_circle": 1100,
+        "passage_width_single": 900,
+        "door_clear_width": 800,
+        "guard_height_min": 1100
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5
+      },
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: SS 25268", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "youth_13_18",
+      "label_en": "Youth, 13–18 years",
+      "label_sv": "Ungdom, 13–18 år",
+      "age_range_years": [13, 18],
+      "anthropometrics_mm": {
+        "stature_p50": 1680,
+        "eye_height_standing": 1560,
+        "shoulder_height": 1370,
+        "reach_up_comfortable": 1950,
+        "seat_height": 430,
+        "work_surface_height": 720
+      },
+      "clearances_mm": {
+        "turning_circle": 1200,
+        "passage_width_single": 900,
+        "door_clear_width": 800
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "max_reverberation_time_s": 0.8,
+        "min_daylight_factor_pct": 1.0
+      },
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "adult",
+      "label_en": "Adult, ambulant",
+      "label_sv": "Vuxen, gående",
+      "age_range_years": [19, 64],
+      "anthropometrics_mm": {
+        "stature_p50": 1720,
+        "eye_height_standing": 1600,
+        "shoulder_height": 1410,
+        "reach_forward_p5": 700,
+        "reach_up_comfortable": 2000,
+        "seated_eye_height": 1200,
+        "seat_height": 450,
+        "work_surface_height": 720
+      },
+      "clearances_mm": {
+        "turning_circle": 1200,
+        "passage_width_single": 900,
+        "passage_width_two_persons": 1500,
+        "door_clear_width": 800,
+        "counter_height_standing": 1050
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "max_reverberation_time_s": 0.8,
+        "min_daylight_factor_pct": 1.0
+      },
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: BBR 3:1", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "older_adult_ambulant",
+      "label_en": "Older adult, ambulant",
+      "label_sv": "Äldre, gående utan hjälpmedel",
+      "age_range_years": [65, 120],
+      "anthropometrics_mm": {
+        "stature_p50": 1650,
+        "eye_height_standing": 1530,
+        "shoulder_height": 1340,
+        "reach_forward_p5": 620,
+        "reach_up_comfortable": 1750,
+        "seated_eye_height": 1160,
+        "seat_height": 480,
+        "work_surface_height": 720
+      },
+      "clearances_mm": {
+        "turning_circle": 1300,
+        "passage_width_single": 1000,
+        "passage_width_two_persons": 1600,
+        "door_clear_width": 850,
+        "handrail_height": 900,
+        "seat_height_preferred": 480,
+        "rest_seat_interval": 25000
+      },
+      "environment": {
+        "illuminance_lux_general": 500,
+        "illuminance_lux_task": 750,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5,
+        "luminance_contrast_min": 0.4,
+        "notes": "Roughly 2–3× the illuminance of a young adult for equivalent visual performance, with tighter glare control. Reverberation matters disproportionately — age-related hearing loss makes speech intelligibility, not loudness, the constraint."
+      },
+      "notes": "Higher seat height and a rest-seat interval are what separate an age-friendly circulation route from a merely compliant one. These are design drivers for the ADAPT stage, rarely code minima.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: EN 17210 accessibility & usability of the built environment", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "older_adult_rollator",
+      "label_en": "Older adult with rollator / walking frame",
+      "label_sv": "Äldre med rollator",
+      "age_range_years": [65, 120],
+      "anthropometrics_mm": {
+        "stature_p50": 1620,
+        "eye_height_standing": 1500,
+        "reach_forward_p5": 550,
+        "reach_up_comfortable": 1600,
+        "seat_height": 480
+      },
+      "clearances_mm": {
+        "turning_circle": 1500,
+        "passage_width_single": 1000,
+        "passage_width_two_persons": 1800,
+        "door_clear_width": 850,
+        "device_footprint_l_w": [700, 650],
+        "parking_space_per_device_m2": 0.8
+      },
+      "environment": {
+        "illuminance_lux_general": 500,
+        "illuminance_lux_task": 750,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5
+      },
+      "notes": "Rollator parking is the most commonly missed requirement in elderly-housing conversion — it consumes real area at every entrance, dining room and lift lobby, and it is almost never in the brief.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: SS 91 42 21", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "wheelchair_manual",
+      "label_en": "Manual wheelchair user",
+      "label_sv": "Manuell rullstol",
+      "age_range_years": [5, 120],
+      "anthropometrics_mm": {
+        "seated_eye_height": 1180,
+        "reach_forward_p5": 600,
+        "reach_up_comfortable": 1300,
+        "reach_down_min": 400,
+        "knee_clearance_height": 700,
+        "knee_clearance_depth": 600,
+        "armrest_height": 720
+      },
+      "clearances_mm": {
+        "turning_circle": 1500,
+        "turning_circle_dwelling_min": 1300,
+        "passage_width_single": 900,
+        "passage_width_two_persons": 1800,
+        "door_clear_width": 850,
+        "door_side_clearance_pull": 500,
+        "counter_height_max": 800,
+        "wc_side_transfer": 900,
+        "device_footprint_l_w": [1200, 700]
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_task": 500,
+        "min_daylight_factor_pct": 1.0,
+        "sill_height_max_for_seated_view": 700
+      },
+      "notes": "Seated eye height of ~1180 mm is the single most consequential number for adaptive reuse of an office shell: existing spandrel/sill heights above ~700 mm deny the view entirely, and changing them is a SKIN-layer intervention with high cost and carbon. Check this early — it often decides whether a residential-care conversion is viable at all.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: BBR 3:1, 3:14", "VERIFY: SS 91 42 21 (normalnivå 1300 mm / höjd nivå 1500 mm)", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "wheelchair_powered",
+      "label_en": "Powered wheelchair user",
+      "label_sv": "Eldriven rullstol",
+      "age_range_years": [5, 120],
+      "anthropometrics_mm": {
+        "seated_eye_height": 1220,
+        "reach_forward_p5": 600,
+        "reach_up_comfortable": 1250,
+        "knee_clearance_height": 730,
+        "knee_clearance_depth": 600
+      },
+      "clearances_mm": {
+        "turning_circle": 1800,
+        "passage_width_single": 1000,
+        "passage_width_two_persons": 2000,
+        "door_clear_width": 900,
+        "device_footprint_l_w": [1400, 750],
+        "charging_point_required": 1
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "min_daylight_factor_pct": 1.0
+      },
+      "notes": "The 1800 mm turning circle is what breaks most corridor-based conversions of 1960s–80s office and housing stock. Charging points are an unbudgeted SERVICES-layer cost.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: ISO 7176 / outdoor powerchair envelope", "VERIFY: Neufert p.___"]
+    },
+    {
+      "id": "care_resident_assisted",
+      "label_en": "Care resident requiring staff assistance / hoist",
+      "label_sv": "Vårdtagare med personalstöd / lyft",
+      "age_range_years": [40, 120],
+      "anthropometrics_mm": {
+        "seated_eye_height": 1180,
+        "bed_height_working": 700
+      },
+      "clearances_mm": {
+        "turning_circle": 1800,
+        "bed_side_clearance": 900,
+        "bed_foot_clearance": 1200,
+        "passage_width_single": 1300,
+        "corridor_width_bed_transport": 1800,
+        "door_clear_width": 1000,
+        "wc_both_sides_transfer": 900,
+        "ceiling_hoist_clear_height": 2400
+      },
+      "structural": {
+        "ceiling_hoist_point_load_kn": 3.0,
+        "note": "A ceiling hoist is a STRUCTURE-layer demand arriving from a SPACE_PLAN-layer decision. This is the classic adaptive-reuse trap: the brief change is cheap, the slab check is not. Flag it in the IMPLEMENT stage every time."
+      },
+      "environment": {
+        "illuminance_lux_general": 300,
+        "illuminance_lux_examination": 1000,
+        "max_reverberation_time_s": 0.6,
+        "min_daylight_factor_pct": 1.5
+      },
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: AFS 2020:1 arbetsmiljö", "VERIFY: Neufert — care/hospital, p.___"]
+    },
+    {
+      "id": "staff_care",
+      "label_en": "Care staff at work",
+      "label_sv": "Vårdpersonal i arbete",
+      "age_range_years": [18, 70],
+      "anthropometrics_mm": {
+        "stature_p50": 1700,
+        "work_surface_height": 900,
+        "reach_up_comfortable": 1900
+      },
+      "clearances_mm": {
+        "working_space_at_bed": 900,
+        "passage_width_single": 900,
+        "door_clear_width": 900
+      },
+      "environment": {
+        "illuminance_lux_task": 500,
+        "illuminance_lux_medication": 1000,
+        "max_reverberation_time_s": 0.6
+      },
+      "notes": "Staff are a user group with legal standing in Sweden (arbetsmiljölagen). Working space around a bed is an occupational-health requirement, not a comfort preference, and it cannot be value-engineered away.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: AFS 2020:1", "VERIFY: AFS 2012:2 belastningsergonomi"]
+    },
+    {
+      "id": "vision_impaired",
+      "label_en": "Person with visual impairment",
+      "label_sv": "Person med synnedsättning",
+      "age_range_years": [5, 120],
+      "clearances_mm": {
+        "passage_width_single": 900,
+        "guide_path_width": 900,
+        "protruding_object_max": 100,
+        "headroom_min": 2100
+      },
+      "environment": {
+        "illuminance_lux_general": 500,
+        "luminance_contrast_min": 0.4,
+        "contrast_marking_required": true,
+        "glare_index_max": 19,
+        "tactile_wayfinding_required": true
+      },
+      "notes": "Drives finish selection (contrast, reflectance) rather than geometry — which means it is a cheap, reversible, fast-layer requirement. One of the few accessibility gains available without touching structure.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: BBR 3:1424", "VERIFY: EN 17210"]
+    },
+    {
+      "id": "hearing_impaired",
+      "label_en": "Person with hearing impairment",
+      "label_sv": "Person med hörselnedsättning",
+      "age_range_years": [5, 120],
+      "environment": {
+        "max_reverberation_time_s": 0.5,
+        "min_speech_transmission_index": 0.6,
+        "background_noise_max_dba": 30,
+        "induction_loop_required": true,
+        "sightline_to_speaker_required": true
+      },
+      "notes": "Acoustic requirements conflict directly with the exposed-thermal-mass strategy used for operational-carbon reduction. This is a real, recurring EVALUATE-stage conflict: absorbers cover the mass that provides free cooling. Record it as a trade-off, do not resolve it silently.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: SS 25268", "VERIFY: EN 17210"]
+    },
+    {
+      "id": "event_visitor",
+      "label_en": "Event visitor (transient, mixed ability)",
+      "label_sv": "Evenemangsbesökare",
+      "age_range_years": [0, 120],
+      "clearances_mm": {
+        "passage_width_single": 1200,
+        "egress_width_per_150_persons": 1200,
+        "door_clear_width": 900,
+        "seating_row_clearance": 450
+      },
+      "environment": {
+        "illuminance_lux_general": 200,
+        "illuminance_lux_egress": 10,
+        "max_reverberation_time_s": 1.2
+      },
+      "notes": "Occupant density, not area, is the binding constraint for event use — egress capacity and ventilation scale with people, and both are typically the first hard stop when an office or residential shell is tested for assembly use.",
+      "confidence": "indicative",
+      "source_ref": ["VERIFY: BBR 5:3 utrymning", "VERIFY: BBR 6:2 ventilation"]
+    }
+  ]
+}

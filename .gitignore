@@ -1,0 +1,21 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Raw source material pulled from the project Drive: drawings, surveys,
+# spreadsheets. The repository carries the STRUCTURED EXTRACT of these
+# (data/building/*.json), not the originals — keeping CAD and PDFs out of
+# git keeps the history readable and the clone small.
+data/source/
+
+# Run records are outputs, not source. Keep the ones you cite by copying
+# them into docs/ deliberately rather than committing every run.
+runs/*.json
+!runs/.gitkeep
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

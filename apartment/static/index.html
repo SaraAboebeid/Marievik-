@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marievik+ Apartment Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Apartment Lab<span>Marievik+</span></h1>
+
+  <div class="ctl">
+    <label for="config">Config</label>
+    <select id="config"></select>
+  </div>
+  <div class="ctl">
+    <label for="use">Use</label>
+    <select id="use"></select>
+  </div>
+  <div class="ctl">
+    <label for="group">User</label>
+    <select id="group"></select>
+  </div>
+  <div class="ctl">
+    <label for="occupants">Occupants</label>
+    <input type="number" id="occupants" min="1" max="6" value="1">
+  </div>
+  <div class="ctl">
+    <label for="years">Years</label>
+    <input type="number" id="years" min="5" max="60" step="5" value="50">
+  </div>
+
+  <div id="status">ready</div>
+</header>
+
+<main>
+  <!-- ---------------- left: tools + palette ---------------- -->
+  <aside>
+    <div class="sect">
+      <h3>Tool</h3>
+      <div class="tools" id="tools">
+        <button data-tool="select" aria-pressed="true">Select</button>
+        <button data-tool="wall">Wall</button>
+        <button data-tool="door">Door</button>
+      </div>
+    </div>
+
+    <div class="sect">
+      <h3>Wall type</h3>
+      <div class="palette" id="wall-types"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Add furniture</h3>
+      <div class="palette" id="furniture-palette"></div>
+    </div>
+
+    <div class="sect">
+      <h3>Show</h3>
+      <div class="toggles">
+        <label><input type="checkbox" id="t-clearance"> Clearance zones</label>
+        <label><input type="checkbox" id="t-turn" checked> Where the turning circle fits</label>
+        <label><input type="checkbox" id="t-rooms" checked> Room areas</label>
+        <label><input type="checkbox" id="t-grid"> 100 mm grid</label>
+      </div>
+      <p class="note">
+        The turning wash shows every point where a circle of this user group's
+        turning diameter fits. It is the fastest way to see whether a plan works
+        for a wheelchair before anything else is measured.
+      </p>
+    </div>
+
+    <div class="sect">
+      <h3>Compare</h3>
+      <button class="wide" id="set-baseline">Set current as baseline</button>
+      <button class="wide" id="clear-baseline" disabled>Clear baseline</button>
+      <p class="note" id="baseline-note">
+        Set a baseline, then change the plan: every figure shows the difference.
+      </p>
+    </div>
+
+    <div class="sect">
+      <h3>Plan</h3>
+      <button class="wide" id="reset">Reset to configuration</button>
+      <button class="wide" id="export">Copy plan JSON</button>
+    </div>
+  </aside>
+
+  <!-- ---------------- centre: the plan ---------------- -->
+  <section id="stage">
+    <div id="planwrap">
+      <svg id="plan" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+    <div id="hint">
+      <b>Select</b> — click an item to select it. Drag to move. <b>R</b> rotates,
+      <b>Delete</b> removes, <b>Esc</b> deselects. Everything snaps to 50 mm.
+    </div>
+  </section>
+
+  <!-- ---------------- right: KPIs ---------------- -->
+  <div id="panel">
+    <div class="kpi">
+      <h4>Financial</h4>
+      <div id="k-financial"></div>
+    </div>
+    <div class="kpi">
+      <h4>Environmental</h4>
+      <div id="k-environmental"></div>
+    </div>
+    <div class="kpi">
+      <h4>Social</h4>
+      <div id="k-social"></div>
+    </div>
+    <div class="kpi">
+      <h4>Issues</h4>
+      <div id="k-issues"></div>
+    </div>
+    <div class="kpi">
+      <h4>Rooms</h4>
+      <div id="k-rooms"></div>
+    </div>
+  </div>
+</main>
+
+<footer id="provenance"></footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

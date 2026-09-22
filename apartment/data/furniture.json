@@ -1,0 +1,220 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-09-22",
+    "units": "Dimensions in mm (w = width along local x, d = depth along local y). Cost in SEK. Carbon in kg CO2e per item.",
+    "purpose": "Dimensioned loose items for the apartment model. Every item carries the clearance it needs in front of it — the zone you must be able to stand, turn or transfer in for the item to actually be usable. That clearance is the difference between furniture that fits on a drawing and furniture that works in a room, and it is what makes a plan testable against a user group rather than just against an area figure.",
+    "clearance_note": "clearance_front_mm is measured from the item's front face along its facing direction. clearance_side_mm, where present, is a transfer zone required on at least one side (WC, bed in care use). These zones may overlap each other — two chairs can share circulation — but may not be blocked by walls or by items that are not themselves clearance-sharing.",
+    "provenance": "PLACEHOLDER — indicative Swedish 2026 figures for model development. Replace with supplier data via the intake schema."
+  },
+
+  "items": [
+    {
+      "id": "bed.single.900",
+      "name": "Single bed 900×2000",
+      "category": "bedroom",
+      "w": 900, "d": 2000, "h": 500,
+      "clearance_front_mm": 700,
+      "clearance_side_mm": 0,
+      "cost_sek": 4200, "carbon_kgco2e": 78, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "sleeps": 1,
+      "notes": "In care use this item's side clearance rises to 900 mm on both sides for staff working space — a requirement under arbetsmiljölagen, not a comfort preference. The model raises it automatically when the user group is a care resident."
+    },
+    {
+      "id": "bed.double.1600",
+      "name": "Double bed 1600×2000",
+      "category": "bedroom",
+      "w": 1600, "d": 2000, "h": 500,
+      "clearance_front_mm": 700,
+      "clearance_side_mm": 600,
+      "cost_sek": 7400, "carbon_kgco2e": 132, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "sleeps": 2
+    },
+    {
+      "id": "bed.care.profiling",
+      "name": "Profiling care bed 1000×2100",
+      "category": "bedroom",
+      "w": 1000, "d": 2100, "h": 700,
+      "clearance_front_mm": 1200,
+      "clearance_side_mm": 900,
+      "cost_sek": 28000, "carbon_kgco2e": 340, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.7,
+      "sleeps": 1,
+      "notes": "900 mm clear on both sides and 1200 mm at the foot. This single item is why a care apartment cannot be a student studio with a different sign on the door — it consumes roughly three times the floor area of a single bed once its working space is counted."
+    },
+    {
+      "id": "wardrobe.1000",
+      "name": "Wardrobe 1000×600",
+      "category": "storage",
+      "w": 1000, "d": 600, "h": 2000,
+      "clearance_front_mm": 750,
+      "cost_sek": 3400, "carbon_kgco2e": 96, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.8,
+      "storage_m3": 1.2
+    },
+    {
+      "id": "shelf.800",
+      "name": "Shelving unit 800×400",
+      "category": "storage",
+      "w": 800, "d": 400, "h": 1800,
+      "clearance_front_mm": 600,
+      "cost_sek": 1600, "carbon_kgco2e": 42, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "storage_m3": 0.58
+    },
+    {
+      "id": "sofa.2seat",
+      "name": "Sofa, 2 seat 1600×850",
+      "category": "living",
+      "w": 1600, "d": 850, "h": 850,
+      "clearance_front_mm": 900,
+      "cost_sek": 8900, "carbon_kgco2e": 185, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.7,
+      "seats": 2
+    },
+    {
+      "id": "armchair.800",
+      "name": "Armchair 800×800",
+      "category": "living",
+      "w": 800, "d": 800, "h": 900,
+      "clearance_front_mm": 750,
+      "cost_sek": 4600, "carbon_kgco2e": 72, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.75,
+      "seats": 1
+    },
+    {
+      "id": "table.dining.1200",
+      "name": "Dining table 1200×800",
+      "category": "living",
+      "w": 1200, "d": 800, "h": 740,
+      "clearance_front_mm": 800,
+      "clearance_side_mm": 800,
+      "cost_sek": 4800, "carbon_kgco2e": 88, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "seats": 4,
+      "notes": "Clearance is required on all sides here — 800 mm to push a chair back and stand. Dining tables are the item most often drawn without it."
+    },
+    {
+      "id": "desk.1200",
+      "name": "Desk 1200×600",
+      "category": "work",
+      "w": 1200, "d": 600, "h": 720,
+      "clearance_front_mm": 900,
+      "cost_sek": 3200, "carbon_kgco2e": 64, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "workplaces": 1
+    },
+    {
+      "id": "chair.dining",
+      "name": "Dining chair",
+      "category": "living",
+      "w": 450, "d": 500, "h": 850,
+      "clearance_front_mm": 0,
+      "cost_sek": 1100, "carbon_kgco2e": 14, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.9,
+      "seats": 1,
+      "shares_clearance": true
+    },
+    {
+      "id": "kitchen.run.2400",
+      "name": "Kitchen run 2400, sink + hob + units",
+      "category": "kitchen",
+      "w": 2400, "d": 600, "h": 900,
+      "clearance_front_mm": 1200,
+      "cost_sek": 46000, "carbon_kgco2e": 620, "service_life_years": 20,
+      "reversibility": 0.6, "recovery_rate": 0.35,
+      "needs_water": true,
+      "storage_m3": 1.6,
+      "notes": "1200 mm working clearance so two people can pass behind a person at the sink. Lower reversibility than loose furniture because it is plumbed and scribed to the wall."
+    },
+    {
+      "id": "kitchen.kitchenette.1200",
+      "name": "Kitchenette 1200, compact",
+      "category": "kitchen",
+      "w": 1200, "d": 600, "h": 900,
+      "clearance_front_mm": 1100,
+      "cost_sek": 24000, "carbon_kgco2e": 310, "service_life_years": 20,
+      "reversibility": 0.6, "recovery_rate": 0.35,
+      "needs_water": true,
+      "storage_m3": 0.5
+    },
+    {
+      "id": "fridge.600",
+      "name": "Fridge-freezer 600×600",
+      "category": "kitchen",
+      "w": 600, "d": 600, "h": 1800,
+      "clearance_front_mm": 1000,
+      "cost_sek": 7800, "carbon_kgco2e": 265, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.5,
+      "operational_kwh_yr": 180
+    },
+    {
+      "id": "wc.pan",
+      "name": "WC pan",
+      "category": "sanitary",
+      "w": 400, "d": 700, "h": 800,
+      "clearance_front_mm": 800,
+      "clearance_side_mm": 900,
+      "cost_sek": 5400, "carbon_kgco2e": 88, "service_life_years": 25,
+      "reversibility": 0.4, "recovery_rate": 0.2,
+      "needs_drainage": true,
+      "notes": "The 900 mm side zone is the wheelchair transfer space. Required on one side for accessible use, both sides for assisted care use. Omitting it is the single most common accessibility failure in small-apartment plans."
+    },
+    {
+      "id": "basin.600",
+      "name": "Wash basin 600",
+      "category": "sanitary",
+      "w": 600, "d": 500, "h": 800,
+      "clearance_front_mm": 900,
+      "cost_sek": 4200, "carbon_kgco2e": 62, "service_life_years": 25,
+      "reversibility": 0.4, "recovery_rate": 0.2,
+      "needs_drainage": true, "needs_water": true
+    },
+    {
+      "id": "shower.900",
+      "name": "Shower area 900×900",
+      "category": "sanitary",
+      "w": 900, "d": 900, "h": 2100,
+      "clearance_front_mm": 900,
+      "cost_sek": 12000, "carbon_kgco2e": 145, "service_life_years": 25,
+      "reversibility": 0.2, "recovery_rate": 0.05,
+      "needs_drainage": true, "needs_water": true,
+      "notes": "Low reversibility: the waterproof membrane and fall to gully cannot be lifted and reused. Wet rooms are the part of an apartment that adaptability cannot reach with current products."
+    },
+    {
+      "id": "washer.600",
+      "name": "Washing machine 600×600",
+      "category": "sanitary",
+      "w": 600, "d": 600, "h": 850,
+      "clearance_front_mm": 1000,
+      "cost_sek": 6800, "carbon_kgco2e": 310, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.4,
+      "needs_drainage": true, "needs_water": true,
+      "operational_kwh_yr": 150
+    },
+    {
+      "id": "space.rollator",
+      "name": "Rollator parking (space only)",
+      "category": "clearance",
+      "w": 700, "d": 650, "h": 900,
+      "clearance_front_mm": 600,
+      "cost_sek": 0, "carbon_kgco2e": 0, "service_life_years": 100,
+      "reversibility": 1.0, "recovery_rate": 1.0,
+      "is_space_reservation": true,
+      "notes": "Costs nothing and takes real area. Included because it is the requirement most reliably missing from briefs — without it the rollator is parked in the circulation route and the escape width is gone."
+    },
+    {
+      "id": "space.wheelchair.turn",
+      "name": "Wheelchair turning space (space only)",
+      "category": "clearance",
+      "w": 1500, "d": 1500, "h": 0,
+      "clearance_front_mm": 0,
+      "cost_sek": 0, "carbon_kgco2e": 0, "service_life_years": 100,
+      "reversibility": 1.0, "recovery_rate": 1.0,
+      "is_space_reservation": true,
+      "notes": "Place it where the brief says turning must be possible. The model also finds turning space automatically — this item is for when you want to guarantee it somewhere specific."
+    }
+  ]
+}

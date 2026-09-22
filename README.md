@@ -84,6 +84,21 @@ python -m tests.test_engine          # 29 checks incl. ledger conservation
 
 Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
 
+## Apartment Lab — the interactive model
+
+```powershell
+python -m apartment.server     # http://127.0.0.1:8000
+```
+
+Local, parametric, one apartment. Drag walls and furniture; capex, opex, LCC,
+LCA and the six social metrics update together on every edit. See
+[apartment/README.md](apartment/README.md).
+
+This is where the project's argument becomes something you can feel: switch the
+user group from `adult` to `care_resident_assisted` and watch a comfortable plan
+stop working, because the bed's staff working space and the 1800 mm turning
+circle are not negotiable.
+
 ## Published dashboard
 
 https://claude.ai/artifact/8Pz3DFeq814iwewoRzMcyR — private until shared from the

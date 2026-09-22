@@ -1,0 +1,147 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "note": "One shell, several fit-outs. The shell is fixed: structure, facade, entry and the drainage stack cannot move, exactly as in a real conversion. Everything else is yours to change. Coordinates in mm, origin top-left, x right, y down. The facade runs along y=0; the corridor is at the bottom.",
+    "shell_origin": "One structural bay of the Marievik+ template plus half a bay, at 8400 x 7200 mm."
+  },
+
+  "shell": {
+    "width_mm": 8400,
+    "depth_mm": 7200,
+    "ceiling_mm": 2500,
+    "external_wall_thickness_mm": 250,
+    "structural_walls": [],
+    "windows": [
+      { "x1": 1200, "y1": 125, "x2": 3400, "y2": 125, "sill_mm": 900, "head_mm": 2400 },
+      { "x1": 5000, "y1": 125, "x2": 7400, "y2": 125, "sill_mm": 900, "head_mm": 2400 }
+    ],
+    "entry": { "x": 800, "y": 6700 },
+    "drainage_stack": { "x": 7900, "y": 6600 }
+  },
+
+  "configurations": {
+
+    "studio_open": {
+      "label": "Open studio",
+      "use": "student_housing",
+      "occupants": 1,
+      "user_group": "adult",
+      "description": "One undivided space plus a wet room. The cheapest thing to build and the least adaptable thing to live in — no acoustic privacy at all, which the model scores rather than glosses over.",
+      "walls": [
+        { "id": "w1", "x1": 5550, "y1": 4350, "x2": 5550, "y2": 6950, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w2", "x1": 5550, "y1": 4350, "x2": 8150, "y2": 4350, "thickness": 100, "component": "part.stud.gypsum.95" }
+      ],
+      "doors": [
+        { "id": "d1", "wall_id": "w1", "t": 0.71, "clear_mm": 850 }
+      ],
+      "furniture": [
+        { "id": "f1", "type": "bed.single.900", "x": 1200, "y": 1500, "rot": 0 },
+        { "id": "f2", "type": "wardrobe.1000", "x": 2700, "y": 700, "rot": 0 },
+        { "id": "f3", "type": "desk.1200", "x": 4400, "y": 700, "rot": 0 },
+        { "id": "f4", "type": "sofa.2seat", "x": 2000, "y": 5200, "rot": 0 },
+        { "id": "f5", "type": "table.dining.1200", "x": 4200, "y": 5200, "rot": 0 },
+        { "id": "f6", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
+        { "id": "f7", "type": "chair.dining", "x": 5050, "y": 5200, "rot": 0 },
+        { "id": "f8", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
+        { "id": "f9", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f10", "type": "shower.900", "x": 6100, "y": 4900, "rot": 0 },
+        { "id": "f11", "type": "basin.600", "x": 6300, "y": 6600, "rot": 180 },
+        { "id": "f12", "type": "wc.pan", "x": 7900, "y": 6550, "rot": 180 }
+      ]
+    },
+
+    "studio_divided": {
+      "label": "Divided studio, demountable",
+      "use": "student_housing",
+      "occupants": 1,
+      "user_group": "adult",
+      "description": "The same apartment with the sleeping area separated by a demountable partition. More money and more carbon upfront, and it buys acoustic privacy plus the option to take the wall out again. Compare the LCC, not the capex.",
+      "walls": [
+        { "id": "w1", "x1": 5550, "y1": 4350, "x2": 5550, "y2": 6950, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w2", "x1": 5550, "y1": 4350, "x2": 8150, "y2": 4350, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w3", "x1": 250, "y1": 3100, "x2": 3600, "y2": 3100, "thickness": 100, "component": "part.demount.solid.100" },
+        { "id": "w4", "x1": 3600, "y1": 250, "x2": 3600, "y2": 3100, "thickness": 100, "component": "part.demount.solid.100" }
+      ],
+      "doors": [
+        { "id": "d1", "wall_id": "w1", "t": 0.71, "clear_mm": 850 },
+        { "id": "d2", "wall_id": "w3", "t": 0.82, "clear_mm": 850 }
+      ],
+      "furniture": [
+        { "id": "f1", "type": "bed.single.900", "x": 1200, "y": 1500, "rot": 0 },
+        { "id": "f2", "type": "wardrobe.1000", "x": 2700, "y": 700, "rot": 0 },
+        { "id": "f3", "type": "desk.1200", "x": 2900, "y": 2600, "rot": 180 },
+        { "id": "f4", "type": "sofa.2seat", "x": 2000, "y": 5200, "rot": 0 },
+        { "id": "f5", "type": "table.dining.1200", "x": 4200, "y": 5200, "rot": 0 },
+        { "id": "f6", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
+        { "id": "f7", "type": "chair.dining", "x": 5050, "y": 5200, "rot": 0 },
+        { "id": "f8", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
+        { "id": "f9", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f10", "type": "shower.900", "x": 6100, "y": 4900, "rot": 0 },
+        { "id": "f11", "type": "basin.600", "x": 6300, "y": 6600, "rot": 180 },
+        { "id": "f12", "type": "wc.pan", "x": 7900, "y": 6550, "rot": 180 }
+      ]
+    },
+
+    "care_apartment": {
+      "label": "Care apartment, assisted",
+      "use": "elderly_care",
+      "occupants": 1,
+      "user_group": "care_resident_assisted",
+      "description": "The same shell as a care apartment. The profiling bed needs 900 mm of working space on both sides and 1200 mm at the foot, and the user group's turning circle rises to 1800 mm. Watch what that does to the furniture usability and accessibility scores — this is why a care apartment is not a studio with a different sign on the door.",
+      "walls": [
+        { "id": "w1", "x1": 5550, "y1": 4350, "x2": 5550, "y2": 6950, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w2", "x1": 5550, "y1": 4350, "x2": 8150, "y2": 4350, "thickness": 100, "component": "part.stud.gypsum.95" }
+      ],
+      "doors": [
+        { "id": "d1", "wall_id": "w1", "t": 0.71, "clear_mm": 1000 }
+      ],
+      "furniture": [
+        { "id": "f1", "type": "bed.care.profiling", "x": 2200, "y": 1600, "rot": 0 },
+        { "id": "f2", "type": "wardrobe.1000", "x": 4600, "y": 700, "rot": 0 },
+        { "id": "f3", "type": "armchair.800", "x": 1400, "y": 4600, "rot": 0 },
+        { "id": "f4", "type": "table.dining.1200", "x": 3800, "y": 5400, "rot": 0 },
+        { "id": "f5", "type": "chair.dining", "x": 2950, "y": 5400, "rot": 0 },
+        { "id": "f6", "type": "space.rollator", "x": 900, "y": 6500, "rot": 180 },
+        { "id": "f7", "type": "kitchen.kitchenette.1200", "x": 6300, "y": 700, "rot": 0 },
+        { "id": "f8", "type": "fridge.600", "x": 7300, "y": 700, "rot": 0 },
+        { "id": "f9", "type": "shower.900", "x": 6100, "y": 4900, "rot": 0 },
+        { "id": "f10", "type": "basin.600", "x": 6300, "y": 6600, "rot": 180 },
+        { "id": "f11", "type": "wc.pan", "x": 7900, "y": 6550, "rot": 180 }
+      ]
+    },
+
+    "shared_two": {
+      "label": "Shared, two bedrooms",
+      "use": "student_housing",
+      "occupants": 2,
+      "user_group": "adult",
+      "description": "Two small bedrooms off a shared living space. Doubles the occupancy on the same floor area, halves the space per person, and makes the acoustic performance of the partitions matter a great deal more.",
+      "walls": [
+        { "id": "w1", "x1": 5550, "y1": 4350, "x2": 5550, "y2": 6950, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w2", "x1": 5550, "y1": 4350, "x2": 8150, "y2": 4350, "thickness": 100, "component": "part.stud.gypsum.95" },
+        { "id": "w3", "x1": 250, "y1": 3500, "x2": 5550, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" },
+        { "id": "w4", "x1": 2800, "y1": 250, "x2": 2800, "y2": 3500, "thickness": 100, "component": "part.demount.solid.100" }
+      ],
+      "doors": [
+        { "id": "d1", "wall_id": "w1", "t": 0.71, "clear_mm": 850 },
+        { "id": "d2", "wall_id": "w3", "t": 0.18, "clear_mm": 850 },
+        { "id": "d3", "wall_id": "w3", "t": 0.72, "clear_mm": 850 }
+      ],
+      "furniture": [
+        { "id": "f1", "type": "bed.single.900", "x": 800, "y": 1400, "rot": 0 },
+        { "id": "f2", "type": "wardrobe.1000", "x": 2200, "y": 700, "rot": 0 },
+        { "id": "f4", "type": "bed.single.900", "x": 3400, "y": 1400, "rot": 0 },
+        { "id": "f5", "type": "wardrobe.1000", "x": 4800, "y": 700, "rot": 0 },
+        { "id": "f7", "type": "sofa.2seat", "x": 2000, "y": 5200, "rot": 0 },
+        { "id": "f8", "type": "table.dining.1200", "x": 4200, "y": 5200, "rot": 0 },
+        { "id": "f9", "type": "chair.dining", "x": 3350, "y": 5200, "rot": 0 },
+        { "id": "f10", "type": "chair.dining", "x": 5050, "y": 5200, "rot": 0 },
+        { "id": "f11", "type": "kitchen.run.2400", "x": 6900, "y": 700, "rot": 0 },
+        { "id": "f12", "type": "fridge.600", "x": 5250, "y": 700, "rot": 0 },
+        { "id": "f13", "type": "shower.900", "x": 6100, "y": 4900, "rot": 0 },
+        { "id": "f14", "type": "basin.600", "x": 6300, "y": 6600, "rot": 180 },
+        { "id": "f15", "type": "wc.pan", "x": 7900, "y": 6550, "rot": 180 }
+      ]
+    }
+  }
+}

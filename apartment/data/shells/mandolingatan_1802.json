@@ -1,0 +1,404 @@
+{
+ "_meta": {
+  "version": "0.1.0",
+  "updated": "2026-10-03",
+  "source": "Sales plan, Mandolingatan 13 - 1802 (Poseidon, object 58800032), 1 RoK 34 m², floor 8, scale 1:100. Traced from 2000.jpg at 67.2 px per metre (14.88 mm per px) from the drawing's scale bar.",
+  "accuracy": "About ±50 mm on wall faces, ±100 mm on fixture positions. The drawing states 'Vissa avvikelser kan förekomma'. Measure on site before ordering anything.",
+  "orientation": "North is up on the drawing, so the window wall faces south. Plan y runs from the facade (y=0) towards the corridor.",
+  "assumptions": "Window sill and head heights are not on the drawing: 800 / 2300 mm assumed for the living room window, 900 / 2100 for the storage window, a full-height balcony door. The balcony is outside the thermal envelope and not modelled. Side walls and the corridor wall are party walls, treated as adiabatic.",
+  "provenance": "TRACED",
+  "location": "Poseidon is Gothenburg's municipal housing company and Mandolingatan is in Västra Frölunda, so Gothenburg weather is used. Existing glazing assumed openable double glazing, U 2.0 (not on the drawing)."
+ },
+ "label": "Mandolingatan 13 · 1802 (1 RoK, 34 m²)",
+ "shell": {
+  "width_mm": 7320,
+  "depth_mm": 7150,
+  "ceiling_mm": 2500,
+  "external_wall_thickness_mm": 250,
+  "facade_y_mm": 340,
+  "outline": [
+   [
+    180,
+    340
+   ],
+   [
+    7140,
+    340
+   ],
+   [
+    7140,
+    4690
+   ],
+   [
+    1970,
+    4690
+   ],
+   [
+    1970,
+    6960
+   ],
+   [
+    180,
+    6960
+   ]
+  ],
+  "structural_walls": [],
+  "windows": [
+   {
+    "id": "win_store",
+    "x1": 1010,
+    "y1": 170,
+    "x2": 1610,
+    "y2": 170,
+    "sill_mm": 900,
+    "head_mm": 2100
+   },
+   {
+    "id": "win_living",
+    "x1": 2800,
+    "y1": 170,
+    "x2": 4880,
+    "y2": 170,
+    "sill_mm": 800,
+    "head_mm": 2300
+   },
+   {
+    "id": "door_balcony",
+    "x1": 5210,
+    "y1": 170,
+    "x2": 6200,
+    "y2": 170,
+    "sill_mm": 0,
+    "head_mm": 2100,
+    "door": true
+   }
+  ],
+  "entry": {
+   "x": 6530,
+   "y": 4400
+  },
+  "drainage_stack": {
+   "x": 1000,
+   "y": 6200
+  },
+  "wet": {
+   "x0": 180,
+   "y0": 3750,
+   "x1": 1970,
+   "y1": 6960
+  },
+  "fixed_walls": [
+   "w_wc",
+   "w_wc_r"
+  ],
+  "location": "Gothenburg (Västra Frölunda)",
+  "climate_epw": "SWE_VG_Goteborg.025130_TMYx.2011-2025.epw",
+  "facade_azimuth_deg": 180,
+  "existing_glazing": {
+   "window_u": 2.0,
+   "window_g": 0.6,
+   "window_vt": 0.7,
+   "openable": true
+  }
+ },
+ "configurations": {
+  "as_drawn": {
+   "label": "As drawn (fitted only)",
+   "use": "student_housing",
+   "occupants": 1,
+   "user_group": "adult",
+   "description": "The flat as sold: bathroom, storage room, fitted kitchen along the corridor wall, one open living room with balcony door. No loose furniture yet.",
+   "walls": [
+    {
+     "id": "w_wc",
+     "x1": 180,
+     "y1": 3750,
+     "x2": 2020,
+     "y2": 3750,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95",
+     "wet": true,
+     "fixed": true
+    },
+    {
+     "id": "w_wc_r",
+     "x1": 2020,
+     "y1": 3750,
+     "x2": 2020,
+     "y2": 4690,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95",
+     "wet": true,
+     "fixed": true
+    },
+    {
+     "id": "w_st_top",
+     "x1": 180,
+     "y1": 2370,
+     "x2": 2080,
+     "y2": 2370,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95"
+    },
+    {
+     "id": "w_st_r",
+     "x1": 2080,
+     "y1": 2370,
+     "x2": 2080,
+     "y2": 340,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95"
+    }
+   ],
+   "doors": [
+    {
+     "id": "d_wc",
+     "wall_id": "w_wc",
+     "t": 0.25,
+     "clear_mm": 800
+    },
+    {
+     "id": "d_st",
+     "wall_id": "w_st_r",
+     "t": 0.69,
+     "clear_mm": 800
+    }
+   ],
+   "furniture": [
+    {
+     "id": "fx_shower",
+     "type": "shower.900",
+     "x": 1490,
+     "y": 6500,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_wc",
+     "type": "wc.pan",
+     "x": 1620,
+     "y": 5790,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_basin",
+     "type": "basin.600",
+     "x": 1720,
+     "y": 5010,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_washer",
+     "type": "washer.600",
+     "x": 1670,
+     "y": 4190,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_kitchen",
+     "type": "kitchen.run.1800",
+     "x": 3180,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_fridge",
+     "type": "fridge.600",
+     "x": 4390,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_wardrobe",
+     "type": "wardrobe.600",
+     "x": 5020,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_linen",
+     "type": "shelf.800",
+     "x": 1530,
+     "y": 2120,
+     "rot": 180
+    }
+   ]
+  },
+  "furnished_one": {
+   "label": "Furnished for one (engine-arranged)",
+   "use": "student_housing",
+   "occupants": 1,
+   "user_group": "adult",
+   "description": "Bed, sofa, table and desk added to the open room and arranged by the annealer around the fitted kitchen. A starting point to edit, not a design.",
+   "walls": [
+    {
+     "id": "w_wc",
+     "x1": 180,
+     "y1": 3750,
+     "x2": 2020,
+     "y2": 3750,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95",
+     "wet": true,
+     "fixed": true
+    },
+    {
+     "id": "w_wc_r",
+     "x1": 2020,
+     "y1": 3750,
+     "x2": 2020,
+     "y2": 4690,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95",
+     "wet": true,
+     "fixed": true
+    },
+    {
+     "id": "w_st_top",
+     "x1": 180,
+     "y1": 2370,
+     "x2": 2080,
+     "y2": 2370,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95"
+    },
+    {
+     "id": "w_st_r",
+     "x1": 2080,
+     "y1": 2370,
+     "x2": 2080,
+     "y2": 340,
+     "thickness": 100,
+     "component": "part.stud.gypsum.95"
+    }
+   ],
+   "doors": [
+    {
+     "id": "d_wc",
+     "wall_id": "w_wc",
+     "t": 0.25,
+     "clear_mm": 800
+    },
+    {
+     "id": "d_st",
+     "wall_id": "w_st_r",
+     "t": 0.69,
+     "clear_mm": 800
+    }
+   ],
+   "furniture": [
+    {
+     "id": "fx_shower",
+     "type": "shower.900",
+     "x": 1490,
+     "y": 6500,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_wc",
+     "type": "wc.pan",
+     "x": 1620,
+     "y": 5790,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_basin",
+     "type": "basin.600",
+     "x": 1720,
+     "y": 5010,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_washer",
+     "type": "washer.600",
+     "x": 1670,
+     "y": 4190,
+     "rot": 90,
+     "fixed": true
+    },
+    {
+     "id": "fx_kitchen",
+     "type": "kitchen.run.1800",
+     "x": 3180,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_fridge",
+     "type": "fridge.600",
+     "x": 4390,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_wardrobe",
+     "type": "wardrobe.600",
+     "x": 5020,
+     "y": 4390,
+     "rot": 180,
+     "fixed": true
+    },
+    {
+     "id": "fx_linen",
+     "type": "shelf.800",
+     "x": 400,
+     "y": 1550,
+     "rot": 270
+    },
+    {
+     "id": "f1",
+     "type": "bed.single.900",
+     "x": 5350,
+     "y": 1350,
+     "rot": 0
+    },
+    {
+     "id": "f2",
+     "type": "sofa.2seat",
+     "x": 6700,
+     "y": 3150,
+     "rot": 90
+    },
+    {
+     "id": "f3",
+     "type": "table.dining.1200",
+     "x": 3750,
+     "y": 800,
+     "rot": 0
+    },
+    {
+     "id": "f4",
+     "type": "chair.dining",
+     "x": 450,
+     "y": 750,
+     "rot": 270
+    },
+    {
+     "id": "f5",
+     "type": "chair.dining",
+     "x": 6900,
+     "y": 2100,
+     "rot": 90
+    },
+    {
+     "id": "f6",
+     "type": "desk.1200",
+     "x": 6500,
+     "y": 1550,
+     "rot": 180
+    }
+   ]
+  }
+ }
+}

@@ -37,6 +37,21 @@ BASIC_PASSAGE_MM = 600
 # ---------------------------------------------------------------------------
 
 
+def interior_polygon(shell: dict) -> Polygon:
+    """The floor inside the external walls.
+
+    A shell may give its interior outline explicitly (`outline`, a list of
+    [x, y] in mm) for real plans that are not rectangles: an L-shaped flat,
+    a bathroom wing, a recessed entrance. Without one, the shell is the
+    rectangle inset by the external wall thickness, as before.
+    """
+    outline = shell.get("outline")
+    if outline:
+        return Polygon(outline)
+    ext = shell.get("external_wall_thickness_mm", 250)
+    return box(0, 0, shell["width_mm"], shell["depth_mm"]).buffer(-ext, join_style="mitre")
+
+
 def wall_polygon(x1, y1, x2, y2, thickness) -> Polygon:
     """A wall segment as a rectangle, square-capped so corners close."""
     line = shapely.LineString([(x1, y1), (x2, y2)])
@@ -240,7 +255,7 @@ def find_placement(plan: dict, specs: dict, type_id: str,
     shell = plan["shell"]
     raster = Raster(shell["width_mm"], shell["depth_mm"])
     ext = shell.get("external_wall_thickness_mm", 250)
-    interior = raster.fill(box(0, 0, shell["width_mm"], shell["depth_mm"]).buffer(-ext))
+    interior = raster.fill(interior_polygon(shell))
 
     geoms = []
     for wall in plan.get("walls", []) + shell.get("structural_walls", []):
@@ -377,9 +392,8 @@ def analyse(plan: dict, specs: dict, turning_circle_mm: float,
     result = GeometryResult(raster=raster)
 
     # --- interior envelope -------------------------------------------------
-    outer = box(0, 0, shell["width_mm"], shell["depth_mm"])
     ext_t = shell.get("external_wall_thickness_mm", 250)
-    interior_poly = outer.buffer(-ext_t)
+    interior_poly = interior_polygon(shell)
     interior = raster.fill(interior_poly)
     result.total_floor_m2 = raster.area_m2(interior)
 

@@ -289,6 +289,27 @@
       "storage_m3": 0.95
     },
     {
+      "id": "kitchen.run.1800",
+      "name": "Kitchen run 1800×600 (sink, hob, dishwasher)",
+      "category": "kitchen",
+      "w": 1800, "d": 600, "h": 900,
+      "clearance_front_mm": 1200,
+      "cost_sek": 38000, "carbon_kgco2e": 500, "service_life_years": 20,
+      "reversibility": 0.6, "recovery_rate": 0.3,
+      "needs_water": true, "needs_drainage": true,
+      "storage_m3": 1.2
+    },
+    {
+      "id": "wardrobe.600",
+      "name": "Wardrobe 600×600",
+      "category": "storage",
+      "w": 600, "d": 600, "h": 2100,
+      "clearance_front_mm": 750,
+      "cost_sek": 2600, "carbon_kgco2e": 64, "service_life_years": 25,
+      "reversibility": 1.0, "recovery_rate": 0.8,
+      "storage_m3": 0.7
+    },
+    {
       "id": "lockers.900",
       "name": "Personal lockers, 3 units, 900×500",
       "category": "storage",

@@ -1,4 +1,4 @@
-"""Thermal comfort by EnergyPlus, one apartment layout per case.
+﻿"""Thermal comfort by EnergyPlus, one apartment layout per case.
 
 Runs in the simulation venv, not the engine's interpreter:
 
@@ -44,6 +44,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EPW = ROOT / "data" / "climate" / "SWE_ST_Stockholm.024850_TMYx.2011-2025.epw"
 DDY = EPW.with_suffix(".ddy")
+
+
+def _weather(case: dict) -> tuple[Path, Path]:
+    """The case's weather file (by name, in data/climate), Stockholm by default."""
+    name = case.get("epw")
+    epw = EPW.parent / name if name else EPW
+    return epw, epw.with_suffix(".ddy")
+
+
+def _envelopes(case: dict) -> dict:
+    """Glazing options, with the shell's own description of what exists."""
+    out = {k: dict(v) for k, v in ENVELOPES.items()}
+    out["existing"].update(case.get("existing_glazing") or {})
+    return out
 CASE_TIMEOUT_S = 300  # a normal case takes 3-10 s
 
 
@@ -106,7 +120,7 @@ ENVELOPES = {
 # ---------------------------------------------------------------------------
 
 
-def _constructions(envelope: str):
+def _constructions(envelope: str, env: dict | None = None):
     from honeybee_energy.construction.opaque import OpaqueConstruction
     from honeybee_energy.construction.window import WindowConstruction
     from honeybee_energy.construction.windowshade import WindowConstructionShade
@@ -115,7 +129,7 @@ def _constructions(envelope: str):
     from honeybee_energy.material.shade import EnergyWindowMaterialBlind
     from honeybee_energy.material.opaque import EnergyMaterial
 
-    env = ENVELOPES[envelope]
+    env = env or ENVELOPES[envelope]
     concrete = EnergyMaterial("Concrete 150", 0.15, 1.7, 2300, 880)
     slab = EnergyMaterial("Slab 280", 0.28, 1.7, 2300, 880)
     # Insulation thickness chosen to land the 1985 sandwich panel on U 0.45.
@@ -232,11 +246,14 @@ def build_model(case: dict):
 
     shell = case["shell"]
     depth_m = shell["depth_mm"] / 1000.0
-    ext = shell.get("external_wall_thickness_mm", 250) / 1000.0
+    # Inside face of the facade; traced shells state it, the bay uses its wall.
+    facade_mm = shell.get("facade_y_mm", shell.get("external_wall_thickness_mm", 250))
     height = shell.get("ceiling_mm", 2500) / 1000.0
-    facade_y = depth_m - ext  # plan y=ext (inside of facade) -> model Y
-    envelope = ENVELOPES[case["envelope"]]
-    cset, shaded_window = _constructions(case["envelope"])
+    facade_y = depth_m - facade_mm / 1000.0  # plan y (inside of facade) -> model Y
+    # Each window may carry its own glazing; the case default covers the rest.
+    envelopes = _envelopes(case)
+    built = {k: _constructions(k, envelopes[k]) for k in envelopes}
+    cset = built[case["envelope"]][0]
 
     rooms = []
     for spec in case["rooms"]:
@@ -311,11 +328,13 @@ def build_model(case: dict):
                 ])
                 if geo.normal.y < 0:
                     geo = geo.flip()
-                aperture = Aperture(f"{spec['id']}_win{n}", geo, is_operable=envelope["openable"])
-                aperture.properties.energy.construction = shaded_window
+                glazing = win.get("glazing", case["envelope"])
+                aperture = Aperture(f"{spec['id']}_win{n}", geo,
+                                    is_operable=envelopes[glazing]["openable"])
+                aperture.properties.energy.construction = built[glazing][1]
                 face.add_aperture(aperture)
 
-        if envelope["openable"]:
+        if any(ap.is_operable for f in room.faces for ap in f.apertures):
             room.properties.energy.window_vent_control = VentilationControl(
                 min_indoor_temperature=24.0, max_indoor_temperature=100.0,
                 min_outdoor_temperature=12.0, max_outdoor_temperature=100.0,
@@ -352,7 +371,8 @@ def simulate(case: dict) -> dict:
     sim_par.output.add_output("Zone Operative Temperature")
     sim_par.output.add_output("Zone Ideal Loads Supply Air Total Heating Energy")
     sim_par.output.add_output("Zone Ideal Loads Supply Air Total Cooling Energy")
-    sim_par.sizing_parameter.add_from_ddy_996_004(str(DDY))
+    epw_path, ddy_path = _weather(case)
+    sim_par.sizing_parameter.add_from_ddy_996_004(str(ddy_path))
     sim_par.terrain_type = "City"
 
     folder = Path(tempfile.mkdtemp(prefix=f"mv_{case['id']}_"))
@@ -366,7 +386,7 @@ def simulate(case: dict) -> dict:
     with open(folder / "console.txt", "w") as console:
         try:
             subprocess.run(
-                [str(exe), "-w", str(EPW), "-d", str(folder), "-x", str(idf)],
+                [str(exe), "-w", str(epw_path), "-d", str(folder), "-x", str(idf)],
                 stdout=console, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
                 timeout=CASE_TIMEOUT_S, cwd=str(folder),
             )
@@ -396,7 +416,7 @@ def simulate(case: dict) -> dict:
         hours = profile["occupancy_weekend"] if weekend else profile["occupancy"]
         schedule_mask.extend(v > 0.01 for v in hours)
 
-    epw = LBEPW(str(EPW))
+    epw = LBEPW(str(epw_path))
     outdoor = epw.dry_bulb_temperature
     # EN 16798-1, category II: +/- 3 K around the neutral temperature.
     parameter = AdaptiveParameter(ashrae_or_en=False, avg_month_or_running_mean=False)

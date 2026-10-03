@@ -1,4 +1,4 @@
-"""Local server for the apartment model.
+﻿"""Local server for the apartment model.
 
     python -m apartment.server            ->  http://127.0.0.1:8000
 
@@ -21,14 +21,19 @@ from pydantic import BaseModel
 from engine import loader
 from standards import rules
 
-from . import evaluate, geometry
+from explore.search import SPEC_VARIANTS
+from optimise import programs
+from optimise.pipeline import CRITERIA, PRODUCT_STRATEGIES
+from optimise.selection import STAKEHOLDERS
+
+from . import evaluate, geometry, shells, tool_api
 
 
 def specs_for(user_group: str) -> dict[str, dict]:
     """Furniture specs with clearances resolved by the standards engine.
 
     The flat numbers in furniture.json are a fallback. Where the standards
-    layer has an activity mapping for an item, it wins — that is what makes
+    layer has an activity mapping for an item, it wins â€” that is what makes
     a wardrobe need 750 mm for an ambulant adult and 1200 mm for a wheelchair
     user without anyone editing the furniture record.
     """
@@ -51,6 +56,15 @@ STATIC = HERE / "static"
 DATA = HERE / "data"
 
 app = FastAPI(title="Marievik+ Apartment Lab", docs_url="/api/docs")
+app.include_router(tool_api.router)
+
+
+@app.on_event("startup")
+def _warm_scenarios():
+    # Start working out every use's best layouts for the default flat before
+    # anyone asks, so the editor opens on scenarios rather than on a button.
+    default = "mandolingatan_1802" if "mandolingatan_1802" in shells.all_shells() else "marievik_bay"
+    tool_api.ensure_scenarios(default)
 
 # Wall types offered in the palette, drawn from the main component catalogue
 # so cost and carbon come from one place.
@@ -143,12 +157,26 @@ def bootstrap():
             for g in groups.values()
             if g.get("clearances_mm", {}).get("turning_circle")
         ],
-        "uses": [
-            {"id": "student_housing", "label": "Student housing"},
-            {"id": "elderly_care", "label": "Residential care"},
-            {"id": "office_flexible", "label": "Flexible workplace"},
-            {"id": "community_hybrid", "label": "Community hybrid"},
+        "uses": [{"id": b.id, "label": b.label} for b in programs.BRIEFS.values()],
+        "briefs": [
+            {"id": b.id, "label": b.label, "target_area_m2": b.target_area_m2,
+             "densities": [{"occupants": d.occupants, "user_group": d.user_group, "label": d.label}
+                           for d in b.densities]}
+            for b in programs.BRIEFS.values()
         ],
+        "shells": {
+            sid: {"label": s["label"], "shell": s["shell"], "configurations": s["configurations"],
+                  "meta": s.get("_meta", {})}
+            for sid, s in shells.all_shells().items()
+        },
+        "default_shell": "mandolingatan_1802" if "mandolingatan_1802" in shells.all_shells() else "marievik_bay",
+        "products": list(evaluate.PRODUCTS.values()),
+        "product_strategies": PRODUCT_STRATEGIES,
+        "partition_specs": {k: {"label": v["label"], "component": v["partition"], "note": v["note"]}
+                            for k, v in SPEC_VARIANTS.items()},
+        "parameters": tool_api.PARAMETERS,
+        "stakeholders": STAKEHOLDERS,
+        "criteria": CRITERIA,
         "provenance": loader.provenance_report().caveat(),
     })
 
@@ -170,11 +198,18 @@ def api_evaluate(req: EvaluateRequest):
         door_clear_mm=clearances.get("door_clear_width", 800),
     )
     result = evaluate.evaluate(req.plan, geo, settings)
+    return _json(evaluation_payload(result, geo, settings))
 
+
+def evaluation_payload(result, geo, settings: dict) -> dict:
+    """Every KPI the editor shows, from one evaluation."""
+    groups = loader.user_groups()
+    group = groups.get(settings.get("user_group", "adult"), groups["adult"])
+    clearances = group.get("clearances_mm", {})
     money, carbon = result.money, result.carbon
     area = max(1.0, result.area_m2)
 
-    return _json({
+    return {
         "area_m2": round(result.area_m2, 1),
         "free_floor_m2": round(geo.free_floor_m2, 1),
         "furnished_m2": round(geo.furnished_m2, 1),
@@ -218,7 +253,7 @@ def api_evaluate(req: EvaluateRequest):
             "coverage": round(geo.turn_coverage, 3),
         },
         "clearance_grid": _clearance_grid(geo),
-    })
+    }
 
 
 def _clearance_grid(geo: geometry.GeometryResult, step_mm: int = 200) -> dict:
@@ -277,7 +312,7 @@ def api_arrange(req: ArrangeRequest):
 
     Items stay in the room they started in and sanitary fixtures do not move
     at all. The weights are the design opinions and are deliberately
-    adjustable — you tune an architectural objective by rejecting output,
+    adjustable â€” you tune an architectural objective by rejecting output,
     not by specifying it in the abstract.
     """
     from apartment import anneal
@@ -303,7 +338,7 @@ def api_arrange(req: ArrangeRequest):
         ],
         "weights": weights.as_dict(),
         "weight_help": {
-            "overlap": "items colliding, or sitting in a wall — should always reach zero",
+            "overlap": "items colliding, or sitting in a wall â€” should always reach zero",
             "clearance": "the space each item needs to be usable, from the standards engine",
             "door_swing": "blocking a door",
             "wall_backing": "reward for backs against walls (negative = reward)",
@@ -326,7 +361,7 @@ class ExploreRequest(BaseModel):
 def api_explore(req: ExploreRequest):
     """Search partition schemes x furnishings x specifications.
 
-    Returns every feasible option plus the Pareto front — the set that
+    Returns every feasible option plus the Pareto front â€” the set that
     nothing beats on cost, carbon AND experience at once. See
     docs/02_how_to_think_about_the_search.md.
     """
@@ -395,19 +430,25 @@ app.mount("/static", StaticFiles(directory=str(STATIC)), name="static")
 
 
 def main() -> None:
+    import argparse
     import uvicorn
+
+    parser = argparse.ArgumentParser(prog="python -m apartment.server")
+    parser.add_argument("--port", type=int, default=8000,
+                        help="port to serve on (use another if 8000 is taken)")
+    port = parser.parse_args().port
 
     built = (STATIC / "dist" / "index.html").exists()
     print("\n  Marievik+ Apartment Lab")
-    print("  http://127.0.0.1:8000")
+    print(f"  http://127.0.0.1:{port}")
     if built:
         print("  serving the built frontend from apartment/static/dist")
     else:
-        print("  NO BUILD FOUND — run `npm run build` in frontend/")
+        print("  NO BUILD FOUND â€” run `npm run build` in frontend/")
     print("\n  For frontend development, leave this running and start Vite:")
     print("      cd frontend && npm run dev     ->  http://localhost:5173")
     print("  Vite proxies /api here, so both halves hot-reload independently.\n")
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+    uvicorn.run(app, host="127.0.0.1", port=port, log_level="warning")
 
 
 if __name__ == "__main__":

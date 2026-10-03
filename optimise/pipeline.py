@@ -163,15 +163,25 @@ def _usability(brief: programs.Brief, social: dict) -> float:
     return round(sum(values) / len(values), 1) if values else 0.0
 
 
-def _functionality(brief: programs.Brief, density: programs.Density, scheme: schemes.Scheme,
-                   plan: dict, geo: geometry.GeometryResult, social: dict) -> tuple[float, dict]:
-    """Does the layout do what the use needs, beyond fitting on the floor?"""
+def _functionality(brief: programs.Brief, density, scheme, plan: dict,
+                   geo: geometry.GeometryResult, social: dict) -> tuple[float, dict]:
+    """Does the layout do what the use needs, beyond fitting on the floor?
+
+    Read entirely from the plan, so it scores a hand-drawn layout in the
+    editor exactly as it scores a generated one. `density` may be a Density
+    or a plain head count; `scheme` is unused and kept for callers.
+    """
+    return functionality(brief, getattr(density, "occupants", density), plan, geo, social)
+
+
+def functionality(brief: programs.Brief, occupants: int, plan: dict,
+                  geo: geometry.GeometryResult, social: dict) -> tuple[float, dict]:
     furniture = apt_evaluate.FURNITURE
-    items = plan["furniture"]
+    items = [i for i in plan["furniture"] if i["type"] in furniture]
     count = defaultdict(int)
     for item in items:
         count[item["type"]] += 1
-    occupants = density.occupants
+    occupants = max(1, int(occupants))
     parts: dict[str, float] = {}
 
     # 1. Capacity: a place to sleep, sit and work for everyone the use claims.
@@ -195,7 +205,10 @@ def _functionality(brief: programs.Brief, density: programs.Density, scheme: sch
                         if furniture[i["type"]].get("sleeps") and room_of.get(i["id"]) not in living_rooms)
         parts["Sleeping separated from living"] = min(1.0, separated / occupants) if occupants else 1.0
     else:
-        has_meeting = any(c["kind"] == "meeting" for c in scheme.cells)
+        # A meeting room is a meeting table in a room with no desks in it.
+        desk_rooms = {room_of.get(i["id"]) for i in items if furniture[i["type"]].get("workplaces")}
+        has_meeting = any(i["type"].startswith("table.meeting") and room_of.get(i["id"]) not in desk_rooms
+                          for i in items)
         needs_meeting = occupants >= brief.meeting_room_from > 0
         parts["Enclosed meeting room"] = 1.0 if has_meeting else (0.3 if needs_meeting else 0.7)
         # Desks with daylight: a workplace without a window is a storage room.
@@ -214,7 +227,8 @@ def _functionality(brief: programs.Brief, density: programs.Density, scheme: sch
 
     # 4. A seated view out, where the user sits.
     if brief.seated_view_matters:
-        parts["Seated view out"] = 1.0 if schemes.WINDOWS[scheme.window]["sill_mm"] <= 700 else 0.3
+        sills = [w["sill_mm"] for w in plan["shell"]["windows"] if not w.get("door")]
+        parts["Seated view out"] = 1.0 if sills and min(sills) <= 700 else 0.3
 
     # 5. What the products themselves do: adjustability, repairability.
     funcs = []
@@ -317,14 +331,15 @@ def respecify(option: Option, partition: str) -> Option:
 
 
 def screen(brief: programs.Brief, furnishings: int = 2, anneal_iterations: int = 1500,
-           max_geometries: int = 36, seed: int = 0, log=print) -> tuple[list[Option], dict]:
+           max_geometries: int = 36, seed: int = 0, log=print,
+           shell_id: str = schemes.DEFAULT_SHELL) -> tuple[list[Option], dict]:
     """Stage 1. Returns every feasible option (existing glazing) and the schemes by geometry."""
     from apartment.server import specs_for
 
     groups = loader.user_groups()
     door_clear = {k: g.get("clearances_mm", {}).get("door_clear_width", 850) for k, g in groups.items()}
     passage = {k: g.get("clearances_mm", {}).get("passage_width_single", 900) for k, g in groups.items()}
-    all_schemes = schemes.generate(brief, door_clear, passage_for=passage)
+    all_schemes = schemes.generate(brief, door_clear, passage_for=passage, shell_id=shell_id)
 
     by_geometry: dict[str, list[schemes.Scheme]] = defaultdict(list)
     for s in all_schemes:
@@ -425,13 +440,15 @@ def score_with_thermal(brief: programs.Brief, short: list[Option], by_geometry: 
 
     cases = {}
     for _option, variant in expanded:
-        cases[variant.thermal_key] = thermal.case_for(brief, variant, azimuth)
+        if variant.thermal_key not in cases:
+            cases[variant.thermal_key] = thermal.case_for(brief, variant, azimuth)
     log(f"  {brief.id}: {len(cases)} thermal cases for {len(expanded)} options")
-    results = thermal.run(list(cases.values()), log=log)
+    results = thermal.run([c for c, _z in cases.values()], log=log)
 
     scored: list[Option] = []
     for option, variant in expanded:
-        sim = results.get(cases[variant.thermal_key]["id"])
+        sim_case, zone_list = cases[variant.thermal_key]
+        sim = results.get(sim_case["id"])
         density = variant.density
         plan = deepcopy(option.plan)
         plan["shell"] = variant.plan["shell"]
@@ -443,6 +460,6 @@ def score_with_thermal(brief: programs.Brief, short: list[Option], by_geometry: 
         new = _evaluate(brief, density, variant, plan, option._geo, option.partition,
                         option.products, option.furnishing, heating, cooling)
         if sim and sim.get("ok"):
-            new.comfort, new.thermal = thermal.summarise(sim, variant.rooms)
+            new.comfort, new.thermal = thermal.summarise(sim, zone_list)
         scored.append(new)
     return [o for o in scored if o.feasible and o.comfort is not None]

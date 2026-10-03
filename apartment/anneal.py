@@ -151,7 +151,7 @@ class Scene:
             return shapely.contains_xy(geom, fx, fy).reshape(self.nrows, self.ncols)
 
         ext = shell.get("external_wall_thickness_mm", 250)
-        self.interior = fill(box(0, 0, self.width, self.depth).buffer(-ext))
+        self.interior = fill(geometry.interior_polygon(shell))
 
         walls = [
             geometry.wall_polygon(w["x1"], w["y1"], w["x2"], w["y2"], w.get("thickness", 100))
@@ -482,8 +482,10 @@ def arrange(
         ))
 
     # Sanitary fixtures are tied to drainage and do not move.
+    # So do fitted items: a built-in kitchen is plumbed where it is.
+    fixed_ids = {i.get("id") for i in plan.get("furniture", []) if i.get("fixed")}
     frozen = {p.item_id for p in placements
-              if specs[p.type].get("category") == "sanitary"}
+              if specs[p.type].get("category") == "sanitary" or p.item_id in fixed_ids}
     for p in placements:
         if p.item_id in frozen:
             p.room = 0
@@ -495,8 +497,11 @@ def arrange(
             scene, placements, weights, iterations=iterations,
             seed=seed + v * 17, room_bounds=bounds,
         )
+        extras = {i.get("id"): {k: v for k, v in i.items() if k in ("fixed", "product")}
+                  for i in plan.get("furniture", [])}
         furniture = [
-            {"id": p.item_id, "type": p.type, "x": int(p.x), "y": int(p.y), "rot": p.rot}
+            {"id": p.item_id, "type": p.type, "x": int(p.x), "y": int(p.y), "rot": p.rot,
+             **extras.get(p.item_id, {})}
             for p in best
         ]
         out.append({

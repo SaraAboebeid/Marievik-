@@ -154,6 +154,22 @@ BRIEFS: dict[str, Brief] = {
         meeting_room_from=6,
         densities=(
             Density(
+                2, "adult",
+                cell_sets=((), (_focus,)),
+                living_items=("desk.office.1400",) * 2 + ("storage.cabinet.1200", "kitchen.kitchenette.1200",
+                              "fridge.600", "armchair.800"),
+                wet_items=WET_BASE,
+                label="Two workplaces",
+            ),
+            Density(
+                3, "adult",
+                cell_sets=((), (_meeting,), (_focus,)),
+                living_items=("desk.office.1400",) * 3 + ("storage.cabinet.1200", "lockers.900",
+                              "kitchen.kitchenette.1200", "fridge.600"),
+                wet_items=WET_BASE,
+                label="Three workplaces",
+            ),
+            Density(
                 4, "adult",
                 cell_sets=((), (_meeting,), (_focus,)),
                 living_items=("desk.office.1400",) * 4 + ("storage.cabinet.1200", "lockers.900",

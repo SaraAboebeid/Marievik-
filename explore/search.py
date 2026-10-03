@@ -162,18 +162,18 @@ def generate_furnishings(
     arrangement. Items that fail to place are dropped and the arrangement is
     reported short, rather than being forced somewhere invalid.
     """
-    movable = [
-        item for item in base_plan.get("furniture", [])
-        if specs.get(item["type"], {}).get("category") not in FIXED_CATEGORIES
-    ]
-    fixed = [
-        item for item in base_plan.get("furniture", [])
-        if specs.get(item["type"], {}).get("category") in FIXED_CATEGORIES
-    ]
+    def is_fixed(item: dict) -> bool:
+        return item.get("fixed") or specs.get(item["type"], {}).get("category") in FIXED_CATEGORIES
 
-    shell = base_plan["shell"]
+    movable = [item for item in base_plan.get("furniture", []) if not is_fixed(item)]
+    fixed = [item for item in base_plan.get("furniture", []) if is_fixed(item)]
+
+    # Anchors spread over the actual floor, not the bounding box: an
+    # L-shaped flat has corners of its bounding box that are not inside it.
+    interior = geometry.interior_polygon(base_plan["shell"])
+    x0, y0, x1, y1 = interior.bounds
     corners = [
-        (shell["width_mm"] * fx, shell["depth_mm"] * fy)
+        (x0 + (x1 - x0) * fx, y0 + (y1 - y0) * fy)
         for fx in (0.25, 0.75) for fy in (0.25, 0.75)
     ]
 

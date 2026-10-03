@@ -1,12 +1,30 @@
+export interface Window {
+  id?: string
+  x1: number
+  y1: number
+  x2: number
+  y2: number
+  sill_mm: number
+  head_mm: number
+  glazing?: 'existing' | 'upgraded'
+  door?: boolean
+}
+
 export interface Shell {
   width_mm: number
   depth_mm: number
   ceiling_mm: number
   external_wall_thickness_mm: number
+  facade_y_mm?: number
+  outline?: [number, number][]
   structural_walls: WallSeg[]
-  windows: { x1: number; y1: number; x2: number; y2: number; sill_mm: number; head_mm: number }[]
+  windows: Window[]
   entry: { x: number; y: number }
   drainage_stack: { x: number; y: number }
+  wet?: { x0: number; y0: number; x1: number; y1: number }
+  fixed_walls?: string[]
+  location?: string
+  facade_azimuth_deg?: number
 }
 
 export interface WallSeg {
@@ -20,6 +38,8 @@ export interface WallSeg {
 export interface Wall extends WallSeg {
   id: string
   component: string
+  fixed?: boolean
+  wet?: boolean
 }
 
 export interface Door {
@@ -35,6 +55,8 @@ export interface FurnitureItem {
   x: number
   y: number
   rot: number
+  product?: string
+  fixed?: boolean
 }
 
 export interface Plan {
@@ -42,6 +64,7 @@ export interface Plan {
   walls: Wall[]
   doors: Door[]
   furniture: FurnitureItem[]
+  works?: { component: string; quantity: number; source?: string }[]
 }
 
 export interface WallType {
@@ -81,6 +104,20 @@ export interface FurnitureSpec {
   notes?: string
 }
 
+export interface Product {
+  id: string
+  type: string
+  strategy: string
+  name: string
+  supplier: string
+  cost_sek: number
+  carbon_kgco2e: number
+  service_life_years: number
+  recovery_rate: number
+  functionality: number
+  functionality_note: string
+}
+
 export interface UserGroup {
   id: string
   label: string
@@ -101,6 +138,25 @@ export interface Configuration {
   furniture: FurnitureItem[]
 }
 
+export interface ShellEntry {
+  label: string
+  shell: Shell
+  configurations: Record<string, Configuration>
+  meta: Record<string, string>
+}
+
+export interface ParameterMeta {
+  label: string
+  unit: string
+  values: (number | string)[]
+}
+
+export interface Criterion {
+  label: string
+  unit: string
+  sense: number
+}
+
 export interface Bootstrap {
   shell: Shell
   configurations: Record<string, Configuration>
@@ -108,6 +164,16 @@ export interface Bootstrap {
   furniture: FurnitureSpec[]
   user_groups: UserGroup[]
   uses: { id: string; label: string }[]
+  briefs: { id: string; label: string; target_area_m2: number;
+    densities: { occupants: number; user_group: string; label: string }[] }[]
+  shells: Record<string, ShellEntry>
+  default_shell: string
+  products: Product[]
+  product_strategies: Record<string, string>
+  partition_specs: Record<string, { label: string; component: string; note: string }>
+  parameters: Record<string, ParameterMeta>
+  stakeholders: Record<string, { label: string; w: Record<string, number> }>
+  criteria: Record<string, Criterion>
   provenance: string
 }
 
@@ -146,6 +212,8 @@ export interface BlockedItem {
   detail: string
 }
 
+export type Criteria = Partial<Record<'lcc' | 'carbon' | 'comfort' | 'usability' | 'functionality', number>>
+
 export interface EvalResult {
   area_m2: number
   free_floor_m2: number
@@ -181,6 +249,108 @@ export interface EvalResult {
   blocked: BlockedItem[]
   turning: { max_mm: number; required_mm: number; coverage: number }
   clearance_grid: { step_mm: number; cols: number; rows: number; values: number[] }
+  criteria?: Criteria
+  functionality_detail?: Record<string, number>
+  works?: { component: string; quantity: number }[]
+}
+
+export interface ThermalRoom {
+  space: string
+  label: string
+  kind: string
+  area_m2: number
+  comfort_pct: number
+  hot_pct: number
+  cold_pct: number
+  hours_over_26: number
+  max_c: number
+  zones: [number, number, number, number][]
+}
+
+export interface ThermalResult {
+  ok: boolean
+  error?: string
+  comfort?: number
+  comfort_pct?: number
+  hot_pct?: number
+  cold_pct?: number
+  worst_room?: string
+  worst_hours_over_26?: number
+  worst_max_c?: number
+  heating_kwh_m2?: number
+  cooling_kwh_m2?: number
+  rooms?: ThermalRoom[]
+  seconds?: number
+}
+
+export interface SweepFrame {
+  value: number | string
+  skipped?: string
+  plan?: Plan
+  settings?: Settings
+  criteria?: Criteria
+  kpis?: { capex: number; lcc: number; carbon_upfront: number; carbon_total: number; issues: number }
+  thermal?: ThermalResult
+}
+
+export interface SweepResult {
+  parameter: string
+  meta: ParameterMeta
+  frames: SweepFrame[]
+  least_regret: number | null
+  thermal: boolean
+}
+
+export interface OptionResult {
+  id: string
+  use: string
+  description: string
+  occupants: number
+  user_group: string
+  window: string
+  partition: string
+  products: string
+  lcc_per_person: number
+  carbon_per_person: number
+  m2_per_person: number
+  comfort: number
+  usability: number
+  functionality: number
+  plan: Plan
+  regret?: { max_regret: number; worst_for: string; regret: Record<string, number> }
+  thermal?: ThermalResult
+}
+
+export interface OptimiseResult {
+  shell_id: string
+  uses: Record<string, {
+    brief: { id: string; label: string }
+    options: OptionResult[]
+    recommended?: string
+    stats: Record<string, unknown>
+  }>
+  adaptability?: {
+    by_start_use: Record<string, { robust: string }>
+    candidates: Record<string, Record<string, { description: string; partition: string }>>
+  }
+  elapsed_s: number
+}
+
+export interface ScenarioState {
+  status: 'running' | 'ready' | 'failed'
+  log: string[]
+  elapsed_s: number
+  result?: OptimiseResult
+}
+
+export interface Job {
+  id: string
+  status: 'running' | 'done' | 'failed'
+  log: string[]
+  log_length: number
+  elapsed_s: number
+  result?: OptimiseResult
+  report?: string
 }
 
 export interface StandardsActivity {
@@ -238,11 +408,17 @@ export interface Settings {
   user_group: string
   occupants: number
   years: number
+  shell_id?: string
+  azimuth?: number
+  heating_kwh_m2?: number
+  cooling_kwh_m2?: number
+  comfort?: number
 }
 
-export type Tool = 'select' | 'wall' | 'door'
+export type Tool = 'select' | 'wall' | 'door' | 'window'
 export type Selection =
   | { kind: 'furniture'; id: string }
   | { kind: 'wall'; id: string }
   | { kind: 'door'; id: string }
+  | { kind: 'window'; index: number }
   | null

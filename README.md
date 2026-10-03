@@ -90,9 +90,24 @@ Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
 python -m apartment.server     # http://127.0.0.1:8000
 ```
 
-Local, parametric, one apartment. Drag walls and furniture; capex, opex, LCC,
-LCA and the six social metrics update together on every edit. See
+Local, parametric, one apartment. Drag walls, doors, windows and furniture;
+capex, opex, LCC, LCA and the social metrics update together on every edit. See
 [apartment/README.md](apartment/README.md).
+
+If port 8000 is taken, run `python -m apartment.server --port 8010`.
+
+- **Flat**: the Marievik+ bay, or a traced real plan from `apartment/data/shells/`
+  (Mandolingatan 13 · 1802 is there, traced from its 1:100 sales plan).
+- **Criteria strip**: LCC and carbon per person, thermal comfort, usability and
+  functionality, live, against a baseline you set. Comfort runs EnergyPlus on
+  the plan as drawn (~6 s); tick *auto* to re-simulate after every edit.
+- **Parameters**: glazing, sill height, window width, wall system, products,
+  people, wall position, furniture arrangement, orientation. Change one to apply
+  it, or press ▶ to play it through its range: the plan animates through every
+  scenario, a chart scores each on all five criteria, and it stops on the one
+  with the least regret.
+- **Optimise**: runs the full optimiser on the current flat in the background
+  and returns ten options per use; open any of them in the editor.
 
 This is where the project's argument becomes something you can feel: switch the
 user group from `adult` to `care_resident_assisted` and watch a comfortable plan

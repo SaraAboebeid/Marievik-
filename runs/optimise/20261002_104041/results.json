@@ -1,0 +1,5222 @@
+{
+ "generated": "2026-10-02T10:40:01",
+ "settings": {
+  "azimuth": 180.0,
+  "carbon_price": 1.5,
+  "furnishings": 1,
+  "max_geometries": 8,
+  "shortlist": 10
+ },
+ "criteria": {
+  "lcc": {
+   "label": "Life cycle cost per person",
+   "unit": "SEK",
+   "sense": -1
+  },
+  "carbon": {
+   "label": "Life cycle carbon per person",
+   "unit": "kg CO2e",
+   "sense": -1
+  },
+  "comfort": {
+   "label": "Thermal comfort",
+   "unit": "% hours",
+   "sense": 1
+  },
+  "usability": {
+   "label": "Usability",
+   "unit": "/100",
+   "sense": 1
+  },
+  "functionality": {
+   "label": "Functionality",
+   "unit": "/100",
+   "sense": 1
+  }
+ },
+ "stakeholders": {
+  "balanced": {
+   "label": "Balanced",
+   "w": {
+    "lcc": 0.2,
+    "carbon": 0.2,
+    "comfort": 0.2,
+    "usability": 0.2,
+    "functionality": 0.2
+   }
+  },
+  "investor": {
+   "label": "Investor (cost-led)",
+   "w": {
+    "lcc": 0.5,
+    "carbon": 0.1,
+    "comfort": 0.1,
+    "usability": 0.15,
+    "functionality": 0.15
+   }
+  },
+  "climate": {
+   "label": "Climate (carbon-led)",
+   "w": {
+    "lcc": 0.1,
+    "carbon": 0.5,
+    "comfort": 0.15,
+    "usability": 0.1,
+    "functionality": 0.15
+   }
+  },
+  "resident": {
+   "label": "Resident / user",
+   "w": {
+    "lcc": 0.1,
+    "carbon": 0.1,
+    "comfort": 0.3,
+    "usability": 0.25,
+    "functionality": 0.25
+   }
+  },
+  "operator": {
+   "label": "Long-term owner",
+   "w": {
+    "lcc": 0.35,
+    "carbon": 0.15,
+    "comfort": 0.2,
+    "usability": 0.1,
+    "functionality": 0.2
+   }
+  }
+ },
+ "windows": {
+  "existing": {
+   "label": "Existing 1985 glazing",
+   "envelope": "existing",
+   "sill_mm": 900,
+   "note": "Fixed double glazing, U 2.8. No cost, no carbon, and no way to open a window."
+  },
+  "upgraded": {
+   "label": "New openable triple glazing",
+   "envelope": "upgraded",
+   "sill_mm": 900,
+   "note": "Same openings, U 0.9, openable sashes for purge ventilation."
+  },
+  "lowered": {
+   "label": "Triple glazing, sill lowered to 600",
+   "envelope": "upgraded",
+   "sill_mm": 600,
+   "note": "Adds a seated view and daylight; costs a cut spandrel."
+  }
+ },
+ "partitions": {
+  "conventional": "Stud and gypsum",
+  "demountable": "Demountable solid",
+  "demountable_glass": "Demountable glazed",
+  "movable": "Movable acoustic wall"
+ },
+ "products": {
+  "standard": "New, mid-market",
+  "circular": "Refurbished / second-hand",
+  "durable": "Premium, durable",
+  "mixed": "Durable beds and desks, second-hand the rest"
+ },
+ "uses": {
+  "student_housing": {
+   "brief": {
+    "id": "student_housing",
+    "label": "Student housing",
+    "notes": "Private room per student is the norm; a studio is cheaper per bed but scores no acoustic privacy.",
+    "target_area_m2": 20.0,
+    "thermal_profile": "home",
+    "densities": [
+     {
+      "occupants": 1,
+      "user_group": "adult",
+      "label": "Single student"
+     },
+     {
+      "occupants": 2,
+      "user_group": "adult",
+      "label": "Two students sharing"
+     },
+     {
+      "occupants": 3,
+      "user_group": "adult",
+      "label": "Three students sharing"
+     }
+    ]
+   },
+   "stats": {
+    "schemes": 111,
+    "geometries": 37,
+    "geometries_furnished": 8,
+    "evaluated": 128,
+    "feasible": 64,
+    "infeasible_reasons": {
+     "Room": 96
+    },
+    "scored_with_thermal": 30
+   },
+   "options": [
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.existing.f0.conventional.circular",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.left.3000.b250-b2850.existing",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:250-2850,bedroom:2850-5450",
+     "thermal_key": "existing|900|3000|250-2850,2850-5450|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, left, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "left",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 250,
+       "x1": 2850
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2850,
+       "x1": 5450
+      }
+     ],
+     "window": "existing",
+     "partition": "conventional",
+     "products": "circular",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 166785,
+     "lcc": 608437,
+     "opex_annual": 10235,
+     "carbon_upfront": 1863,
+     "carbon_embodied": 5900,
+     "carbon_operational": 4610,
+     "carbon_total": 10510,
+     "money": {
+      "capex": 166785,
+      "opex_npv": 294225,
+      "replacement_npv": 155082,
+      "residual_npv": 7656,
+      "lcc": 608437
+     },
+     "carbon": {
+      "a1a3": 1726,
+      "a4": 50,
+      "a5": 87,
+      "b4": 3896,
+      "c1c4": 141,
+      "b6": 4610,
+      "d": -21,
+      "total": 10510
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 52.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "6 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 83.0,
+     "functionality": 95.6,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 78
+     },
+     "comfort": 53.8,
+     "thermal": {
+      "comfort_pct": 53.8,
+      "hot_pct": 46.2,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 4543,
+      "worst_max_c": 41.9,
+      "heating_kwh_m2": 15.6,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 45.3,
+        "hours_over_26": 4543,
+        "max_c": 41.9
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 51.6,
+        "hours_over_26": 4016,
+        "max_c": 37.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 55.1,
+        "hours_over_26": 3634,
+        "max_c": 36.7
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 56.1,
+        "hours_over_26": 3601,
+        "max_c": 34.6
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 57.1,
+        "hours_over_26": 3527,
+        "max_c": 33.6
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 79.1,
+        "hours_over_26": 2267,
+        "max_c": 29.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 40.6,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "major",
+       "title": "Room 2 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2850,
+        "y1": 250,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5450,
+        "y1": 250,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 250,
+        "y1": 3000,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 2850,
+        "y1": 3000,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.75,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.75,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#circular"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#circular"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#circular"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#circular"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 1250,
+        "y": 700,
+        "rot": 270,
+        "product": "bed.single.900#circular"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 1050,
+        "y": 2600,
+        "rot": 180,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 2500,
+        "y": 1850,
+        "rot": 90,
+        "product": "desk.1200#circular"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 4350,
+        "y": 1300,
+        "rot": 0,
+        "product": "bed.single.900#circular"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 3200,
+        "y": 2300,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 3550,
+        "y": 950,
+        "rot": 90,
+        "product": "desk.1200#circular"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 3800,
+        "y": 4200,
+        "rot": 0,
+        "product": "sofa.2seat#circular"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 6800,
+        "y": 3550,
+        "rot": 180,
+        "product": "table.dining.1200#circular"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 500,
+        "y": 3950,
+        "rot": 270,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 7550,
+        "y": 850,
+        "rot": 180,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 5850,
+        "y": 1650,
+        "rot": 270,
+        "product": "kitchen.run.2400#circular"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 550,
+        "y": 6350,
+        "rot": 270,
+        "product": "fridge.600#circular"
+       }
+      ],
+      "works": []
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2850,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2850,
+       "y0": 250,
+       "x1": 5450,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 5450,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.24807885065152022
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2771466755763448
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.474774473772135
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 304218,
+     "carbon_per_person": 5255,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.5821,
+       "investor": 0.7366,
+       "climate": 0.7366,
+       "resident": 0.4276,
+       "operator": 0.6821
+      },
+      "regret": {
+       "balanced": 0.1773,
+       "investor": 0.0404,
+       "climate": 0.0899,
+       "resident": 0.3088,
+       "operator": 0.143
+      },
+      "max_regret": 0.3088,
+      "worst_for": "resident"
+     },
+     "criterion_gaps": {
+      "lcc": 0.0,
+      "carbon": 0.0,
+      "comfort": 44.0,
+      "usability": 8.6,
+      "functionality": 4.4
+     },
+     "normalised": {
+      "lcc": 1.0,
+      "carbon": 1.0,
+      "comfort": 0.0,
+      "usability": 0.0,
+      "functionality": 0.9105691056910568
+     }
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.existing.f0.conventional.mixed",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.right.3000.b2650-b5550.existing",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:2650-5550,bedroom:5550-8150",
+     "thermal_key": "existing|900|3000|2650-5550,5550-8150|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, right, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "right",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2650,
+       "x1": 5550
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 5550,
+       "x1": 8150
+      }
+     ],
+     "window": "existing",
+     "partition": "conventional",
+     "products": "mixed",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 188092,
+     "lcc": 627236,
+     "opex_annual": 10235,
+     "carbon_upfront": 2202,
+     "carbon_embodied": 6423,
+     "carbon_operational": 4610,
+     "carbon_total": 11034,
+     "money": {
+      "capex": 188092,
+      "opex_npv": 294225,
+      "replacement_npv": 153769,
+      "residual_npv": 8851,
+      "lcc": 627236
+     },
+     "carbon": {
+      "a1a3": 2063,
+      "a4": 51,
+      "a5": 89,
+      "b4": 4078,
+      "c1c4": 144,
+      "b6": 4610,
+      "d": -21,
+      "total": 11034
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 60.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "5 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 84.6,
+     "functionality": 96.7,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 83
+     },
+     "comfort": 55.1,
+     "thermal": {
+      "comfort_pct": 55.1,
+      "hot_pct": 44.9,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 4664,
+      "worst_max_c": 43.1,
+      "heating_kwh_m2": 15.6,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 50.4,
+        "hours_over_26": 4117,
+        "max_c": 38.5
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 44.0,
+        "hours_over_26": 4664,
+        "max_c": 43.1
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 58.4,
+        "hours_over_26": 3394,
+        "max_c": 35.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 58.7,
+        "hours_over_26": 3349,
+        "max_c": 33.6
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 59.6,
+        "hours_over_26": 3292,
+        "max_c": 32.8
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 81.6,
+        "hours_over_26": 2099,
+        "max_c": 29.3
+       }
+      ]
+     },
+     "heating_kwh_m2": 40.6,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Kitchen run 2400, sink + hob + units"
+      },
+      {
+       "severity": "major",
+       "title": "Room 4 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2650,
+        "y1": 250,
+        "x2": 2650,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5550,
+        "y1": 250,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 2650,
+        "y1": 3000,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 5550,
+        "y1": 3000,
+        "x2": 8150,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.776,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.25,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#circular"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#circular"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#circular"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#circular"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 3750,
+        "y": 2450,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 3100,
+        "y": 1300,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 4900,
+        "y": 550,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 7100,
+        "y": 2200,
+        "rot": 90,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 7350,
+        "y": 1050,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 6400,
+        "y": 650,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 2150,
+        "y": 2150,
+        "rot": 90,
+        "product": "sofa.2seat#circular"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 3850,
+        "y": 6550,
+        "rot": 180,
+        "product": "table.dining.1200#circular"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 7050,
+        "y": 4400,
+        "rot": 0,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 3850,
+        "y": 3350,
+        "rot": 270,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 550,
+        "y": 3150,
+        "rot": 270,
+        "product": "kitchen.run.2400#circular"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 1350,
+        "y": 4700,
+        "rot": 0,
+        "product": "fridge.600#circular"
+       }
+      ],
+      "works": []
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2650,
+       "y0": 250,
+       "x1": 5550,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 5550,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2650,
+       "y1": 3000,
+       "people": 0.22676516062532212
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2850025768768253
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.4882322624978526
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 313618,
+     "carbon_per_person": 5517,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.6134,
+       "investor": 0.7497,
+       "climate": 0.7351,
+       "resident": 0.4804,
+       "operator": 0.6924
+      },
+      "regret": {
+       "balanced": 0.1461,
+       "investor": 0.0273,
+       "climate": 0.0914,
+       "resident": 0.256,
+       "operator": 0.1327
+      },
+      "max_regret": 0.256,
+      "worst_for": "resident"
+     },
+     "criterion_gaps": {
+      "lcc": 9399.5,
+      "carbon": 262.0,
+      "comfort": 42.7,
+      "usability": 7.0,
+      "functionality": 3.3
+     },
+     "normalised": {
+      "lcc": 0.9675848571847331,
+      "carbon": 0.9506777108433735,
+      "comfort": 0.029545454545454642,
+      "usability": 0.18604651162790645,
+      "functionality": 0.9329268292682927
+     }
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.right.3000.b2650-b5550.upgraded",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:2650-5550,bedroom:5550-8150",
+     "thermal_key": "upgraded|900|3000|2650-5550,5550-8150|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, right, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "right",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2650,
+       "x1": 5550
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 5550,
+       "x1": 8150
+      }
+     ],
+     "window": "upgraded",
+     "partition": "conventional",
+     "products": "circular",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 230902,
+     "lcc": 691873,
+     "opex_annual": 10230,
+     "carbon_upfront": 2582,
+     "carbon_embodied": 7432,
+     "carbon_operational": 4321,
+     "carbon_total": 11753,
+     "money": {
+      "capex": 230902,
+      "opex_npv": 292430,
+      "replacement_npv": 176930,
+      "residual_npv": 8389,
+      "lcc": 691873
+     },
+     "carbon": {
+      "a1a3": 2398,
+      "a4": 68,
+      "a5": 116,
+      "b4": 4662,
+      "c1c4": 188,
+      "b6": 4321,
+      "d": -83,
+      "total": 11753
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 60.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "5 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 84.6,
+     "functionality": 95.6,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 78
+     },
+     "comfort": 96.1,
+     "thermal": {
+      "comfort_pct": 96.1,
+      "hot_pct": 3.9,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 1155,
+      "worst_max_c": 33.7,
+      "heating_kwh_m2": 10.7,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 94.9,
+        "hours_over_26": 268,
+        "max_c": 29.0
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 82.5,
+        "hours_over_26": 1155,
+        "max_c": 33.7
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 99.2,
+        "hours_over_26": 76,
+        "max_c": 28.2
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 100.0,
+        "hours_over_26": 46,
+        "max_c": 27.0
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 100.0,
+        "hours_over_26": 73,
+        "max_c": 27.0
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 100.0,
+        "hours_over_26": 0,
+        "max_c": 25.6
+       }
+      ]
+     },
+     "heating_kwh_m2": 35.7,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Kitchen run 2400, sink + hob + units"
+      },
+      {
+       "severity": "major",
+       "title": "Room 4 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2650,
+        "y1": 250,
+        "x2": 2650,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5550,
+        "y1": 250,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 2650,
+        "y1": 3000,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 5550,
+        "y1": 3000,
+        "x2": 8150,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.776,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.25,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#circular"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#circular"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#circular"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#circular"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 3750,
+        "y": 2450,
+        "rot": 270,
+        "product": "bed.single.900#circular"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 3100,
+        "y": 1300,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 4900,
+        "y": 550,
+        "rot": 0,
+        "product": "desk.1200#circular"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 7100,
+        "y": 2200,
+        "rot": 90,
+        "product": "bed.single.900#circular"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 7350,
+        "y": 1050,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 6400,
+        "y": 650,
+        "rot": 0,
+        "product": "desk.1200#circular"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 2150,
+        "y": 2150,
+        "rot": 90,
+        "product": "sofa.2seat#circular"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 3850,
+        "y": 6550,
+        "rot": 180,
+        "product": "table.dining.1200#circular"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 7050,
+        "y": 4400,
+        "rot": 0,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 3850,
+        "y": 3350,
+        "rot": 270,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 550,
+        "y": 3150,
+        "rot": 270,
+        "product": "kitchen.run.2400#circular"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 1350,
+        "y": 4700,
+        "rot": 0,
+        "product": "fridge.600#circular"
+       }
+      ],
+      "works": [
+       {
+        "component": "skin.window.triple.openable",
+        "quantity": 6.9
+       }
+      ]
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2650,
+       "y0": 250,
+       "x1": 5550,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 5550,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2650,
+       "y1": 3000,
+       "people": 0.22676516062532212
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2850025768768253
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.4882322624978526
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 345936,
+     "carbon_per_person": 5876,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.7594,
+       "investor": 0.777,
+       "climate": 0.8265,
+       "resident": 0.7365,
+       "operator": 0.8251
+      },
+      "regret": {
+       "balanced": 0.0,
+       "investor": 0.0,
+       "climate": 0.0,
+       "resident": 0.0,
+       "operator": 0.0
+      },
+      "max_regret": 0.0,
+      "worst_for": "balanced"
+     },
+     "criterion_gaps": {
+      "lcc": 41718.0,
+      "carbon": 621.5,
+      "comfort": 1.7,
+      "usability": 7.0,
+      "functionality": 4.4
+     },
+     "normalised": {
+      "lcc": 0.8561311848537361,
+      "carbon": 0.8830007530120482,
+      "comfort": 0.9613636363636363,
+      "usability": 0.18604651162790645,
+      "functionality": 0.9105691056910568
+     }
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.upgraded.f0.conventional.mixed",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.left.3000.b250-b2850.upgraded",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:250-2850,bedroom:2850-5450",
+     "thermal_key": "upgraded|900|3000|250-2850,2850-5450|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, left, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "left",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 250,
+       "x1": 2850
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2850,
+       "x1": 5450
+      }
+     ],
+     "window": "upgraded",
+     "partition": "conventional",
+     "products": "mixed",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 249555,
+     "lcc": 706303,
+     "opex_annual": 10220,
+     "carbon_upfront": 2884,
+     "carbon_embodied": 7872,
+     "carbon_operational": 4309,
+     "carbon_total": 12182,
+     "money": {
+      "capex": 249555,
+      "opex_npv": 292103,
+      "replacement_npv": 174226,
+      "residual_npv": 9581,
+      "lcc": 706303
+     },
+     "carbon": {
+      "a1a3": 2703,
+      "a4": 67,
+      "a5": 115,
+      "b4": 4802,
+      "c1c4": 186,
+      "b6": 4309,
+      "d": -83,
+      "total": 12182
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 52.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "6 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 83.0,
+     "functionality": 96.7,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 83
+     },
+     "comfort": 96.7,
+     "thermal": {
+      "comfort_pct": 96.7,
+      "hot_pct": 3.3,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 892,
+      "worst_max_c": 32.1,
+      "heating_kwh_m2": 10.5,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 85.3,
+        "hours_over_26": 892,
+        "max_c": 32.1
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 96.8,
+        "hours_over_26": 164,
+        "max_c": 28.3
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 97.5,
+        "hours_over_26": 154,
+        "max_c": 29.2
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 99.9,
+        "hours_over_26": 66,
+        "max_c": 27.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 100.0,
+        "hours_over_26": 134,
+        "max_c": 27.3
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 100.0,
+        "hours_over_26": 0,
+        "max_c": 25.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 35.5,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "major",
+       "title": "Room 2 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2850,
+        "y1": 250,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5450,
+        "y1": 250,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 250,
+        "y1": 3000,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 2850,
+        "y1": 3000,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.75,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.75,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#circular"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#circular"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#circular"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#circular"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 1250,
+        "y": 700,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 1050,
+        "y": 2600,
+        "rot": 180,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 2500,
+        "y": 1850,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 4350,
+        "y": 1300,
+        "rot": 0,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 3200,
+        "y": 2300,
+        "rot": 270,
+        "product": "wardrobe.1000#circular"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 3550,
+        "y": 950,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 3800,
+        "y": 4200,
+        "rot": 0,
+        "product": "sofa.2seat#circular"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 6800,
+        "y": 3550,
+        "rot": 180,
+        "product": "table.dining.1200#circular"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 500,
+        "y": 3950,
+        "rot": 270,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 7550,
+        "y": 850,
+        "rot": 180,
+        "product": "chair.dining#circular"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 5850,
+        "y": 1650,
+        "rot": 270,
+        "product": "kitchen.run.2400#circular"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 550,
+        "y": 6350,
+        "rot": 270,
+        "product": "fridge.600#circular"
+       }
+      ],
+      "works": [
+       {
+        "component": "skin.window.triple.openable",
+        "quantity": 6.9
+       }
+      ]
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2850,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2850,
+       "y0": 250,
+       "x1": 5450,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 5450,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.24807885065152022
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2771466755763448
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.474774473772135
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 353152,
+     "carbon_per_person": 6091,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.7164,
+       "investor": 0.7373,
+       "climate": 0.7906,
+       "resident": 0.6931,
+       "operator": 0.7989
+      },
+      "regret": {
+       "balanced": 0.0431,
+       "investor": 0.0397,
+       "climate": 0.0359,
+       "resident": 0.0434,
+       "operator": 0.0262
+      },
+      "max_regret": 0.0434,
+      "worst_for": "resident"
+     },
+     "criterion_gaps": {
+      "lcc": 48933.0,
+      "carbon": 836.0,
+      "comfort": 1.1,
+      "usability": 8.6,
+      "functionality": 3.3
+     },
+     "normalised": {
+      "lcc": 0.8312495150402193,
+      "carbon": 0.8426204819277109,
+      "comfort": 0.9750000000000001,
+      "usability": 0.0,
+      "functionality": 0.9329268292682927
+     }
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.existing.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.left.3000.b250-b2850.existing",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:250-2850,bedroom:2850-5450",
+     "thermal_key": "existing|900|3000|250-2850,2850-5450|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, left, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "left",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 250,
+       "x1": 2850
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2850,
+       "x1": 5450
+      }
+     ],
+     "window": "existing",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 321285,
+     "lcc": 728934,
+     "opex_annual": 10235,
+     "carbon_upfront": 4195,
+     "carbon_embodied": 9698,
+     "carbon_operational": 4610,
+     "carbon_total": 14309,
+     "money": {
+      "capex": 321285,
+      "opex_npv": 294225,
+      "replacement_npv": 144213,
+      "residual_npv": 30789,
+      "lcc": 728934
+     },
+     "carbon": {
+      "a1a3": 4058,
+      "a4": 50,
+      "a5": 87,
+      "b4": 5362,
+      "c1c4": 141,
+      "b6": 4610,
+      "d": -21,
+      "total": 14309
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 52.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "6 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 83.0,
+     "functionality": 100.0,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 100
+     },
+     "comfort": 53.8,
+     "thermal": {
+      "comfort_pct": 53.8,
+      "hot_pct": 46.2,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 4543,
+      "worst_max_c": 41.9,
+      "heating_kwh_m2": 15.6,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 45.3,
+        "hours_over_26": 4543,
+        "max_c": 41.9
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 51.6,
+        "hours_over_26": 4016,
+        "max_c": 37.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 55.1,
+        "hours_over_26": 3634,
+        "max_c": 36.7
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 56.1,
+        "hours_over_26": 3601,
+        "max_c": 34.6
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 57.1,
+        "hours_over_26": 3527,
+        "max_c": 33.6
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 79.1,
+        "hours_over_26": 2267,
+        "max_c": 29.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 40.6,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "major",
+       "title": "Room 2 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2850,
+        "y1": 250,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5450,
+        "y1": 250,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 250,
+        "y1": 3000,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 2850,
+        "y1": 3000,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.75,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.75,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#durable"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 1250,
+        "y": 700,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 1050,
+        "y": 2600,
+        "rot": 180,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 2500,
+        "y": 1850,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 4350,
+        "y": 1300,
+        "rot": 0,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 3200,
+        "y": 2300,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 3550,
+        "y": 950,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 3800,
+        "y": 4200,
+        "rot": 0,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 6800,
+        "y": 3550,
+        "rot": 180,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 500,
+        "y": 3950,
+        "rot": 270,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 7550,
+        "y": 850,
+        "rot": 180,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 5850,
+        "y": 1650,
+        "rot": 270,
+        "product": "kitchen.run.2400#durable"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 550,
+        "y": 6350,
+        "rot": 270,
+        "product": "fridge.600#durable"
+       }
+      ],
+      "works": []
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2850,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2850,
+       "y0": 250,
+       "x1": 5450,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 5450,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.24807885065152022
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2771466755763448
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.474774473772135
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 364467,
+     "carbon_per_person": 7154,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.4869,
+       "investor": 0.6104,
+       "climate": 0.5504,
+       "resident": 0.3935,
+       "operator": 0.5736
+      },
+      "regret": {
+       "balanced": 0.2725,
+       "investor": 0.1666,
+       "climate": 0.2761,
+       "resident": 0.343,
+       "operator": 0.2514
+      },
+      "max_regret": 0.343,
+      "worst_for": "resident"
+     },
+     "criterion_gaps": {
+      "lcc": 60248.5,
+      "carbon": 1899.5,
+      "comfort": 44.0,
+      "usability": 8.6,
+      "functionality": 0.0
+     },
+     "normalised": {
+      "lcc": 0.7922268490977593,
+      "carbon": 0.6424134036144578,
+      "comfort": 0.0,
+      "usability": 0.0,
+      "functionality": 1.0
+     }
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.existing.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.right.3000.b2650-b5550.existing",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:2650-5550,bedroom:5550-8150",
+     "thermal_key": "existing|900|3000|2650-5550,5550-8150|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, right, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "right",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2650,
+       "x1": 5550
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 5550,
+       "x1": 8150
+      }
+     ],
+     "window": "existing",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 322612,
+     "lcc": 730955,
+     "opex_annual": 10235,
+     "carbon_upfront": 4213,
+     "carbon_embodied": 9740,
+     "carbon_operational": 4610,
+     "carbon_total": 14350,
+     "money": {
+      "capex": 322612,
+      "opex_npv": 294225,
+      "replacement_npv": 144908,
+      "residual_npv": 30791,
+      "lcc": 730955
+     },
+     "carbon": {
+      "a1a3": 4074,
+      "a4": 51,
+      "a5": 89,
+      "b4": 5383,
+      "c1c4": 144,
+      "b6": 4610,
+      "d": -21,
+      "total": 14350
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 60.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "5 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 84.6,
+     "functionality": 100.0,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 100
+     },
+     "comfort": 55.1,
+     "thermal": {
+      "comfort_pct": 55.1,
+      "hot_pct": 44.9,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 4664,
+      "worst_max_c": 43.1,
+      "heating_kwh_m2": 15.6,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 50.4,
+        "hours_over_26": 4117,
+        "max_c": 38.5
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 44.0,
+        "hours_over_26": 4664,
+        "max_c": 43.1
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 58.4,
+        "hours_over_26": 3394,
+        "max_c": 35.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 58.7,
+        "hours_over_26": 3349,
+        "max_c": 33.6
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 59.6,
+        "hours_over_26": 3292,
+        "max_c": 32.8
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 81.6,
+        "hours_over_26": 2099,
+        "max_c": 29.3
+       }
+      ]
+     },
+     "heating_kwh_m2": 40.6,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Kitchen run 2400, sink + hob + units"
+      },
+      {
+       "severity": "major",
+       "title": "Room 4 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2650,
+        "y1": 250,
+        "x2": 2650,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5550,
+        "y1": 250,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 2650,
+        "y1": 3000,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 5550,
+        "y1": 3000,
+        "x2": 8150,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.776,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.25,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#durable"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 3750,
+        "y": 2450,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 3100,
+        "y": 1300,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 4900,
+        "y": 550,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 7100,
+        "y": 2200,
+        "rot": 90,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 7350,
+        "y": 1050,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 6400,
+        "y": 650,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 2150,
+        "y": 2150,
+        "rot": 90,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 3850,
+        "y": 6550,
+        "rot": 180,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 7050,
+        "y": 4400,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 3850,
+        "y": 3350,
+        "rot": 270,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 550,
+        "y": 3150,
+        "rot": 270,
+        "product": "kitchen.run.2400#durable"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 1350,
+        "y": 4700,
+        "rot": 0,
+        "product": "fridge.600#durable"
+       }
+      ],
+      "works": []
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2650,
+       "y0": 250,
+       "x1": 5550,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 5550,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2650,
+       "y1": 3000,
+       "people": 0.22676516062532212
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2850025768768253
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.4882322624978526
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 365478,
+     "carbon_per_person": 7175,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.5286,
+       "investor": 0.6391,
+       "climate": 0.5712,
+       "resident": 0.4481,
+       "operator": 0.5964
+      },
+      "regret": {
+       "balanced": 0.2308,
+       "investor": 0.1379,
+       "climate": 0.2553,
+       "resident": 0.2884,
+       "operator": 0.2287
+      },
+      "max_regret": 0.2884,
+      "worst_for": "resident"
+     },
+     "criterion_gaps": {
+      "lcc": 61259.0,
+      "carbon": 1920.0,
+      "comfort": 42.7,
+      "usability": 7.0,
+      "functionality": 0.0
+     },
+     "normalised": {
+      "lcc": 0.7887420358827131,
+      "carbon": 0.6385542168674698,
+      "comfort": 0.029545454545454642,
+      "usability": 0.18604651162790645,
+      "functionality": 1.0
+     }
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.upgraded.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.left.3000.b250-b2850.upgraded",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:250-2850,bedroom:2850-5450",
+     "thermal_key": "upgraded|900|3000|250-2850,2850-5450|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, left, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "left",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 250,
+       "x1": 2850
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2850,
+       "x1": 5450
+      }
+     ],
+     "window": "upgraded",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 384075,
+     "lcc": 810023,
+     "opex_annual": 10220,
+     "carbon_upfront": 4895,
+     "carbon_embodied": 11189,
+     "carbon_operational": 4309,
+     "carbon_total": 15498,
+     "money": {
+      "capex": 384075,
+      "opex_npv": 292103,
+      "replacement_npv": 165365,
+      "residual_npv": 31521,
+      "lcc": 810023
+     },
+     "carbon": {
+      "a1a3": 4714,
+      "a4": 67,
+      "a5": 115,
+      "b4": 6107,
+      "c1c4": 186,
+      "b6": 4309,
+      "d": -83,
+      "total": 15498
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 52.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "6 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 83.0,
+     "functionality": 100.0,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 100
+     },
+     "comfort": 96.7,
+     "thermal": {
+      "comfort_pct": 96.7,
+      "hot_pct": 3.3,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 892,
+      "worst_max_c": 32.1,
+      "heating_kwh_m2": 10.5,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 85.3,
+        "hours_over_26": 892,
+        "max_c": 32.1
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 96.8,
+        "hours_over_26": 164,
+        "max_c": 28.3
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 97.5,
+        "hours_over_26": 154,
+        "max_c": 29.2
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 99.9,
+        "hours_over_26": 66,
+        "max_c": 27.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 100.0,
+        "hours_over_26": 134,
+        "max_c": 27.3
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 100.0,
+        "hours_over_26": 0,
+        "max_c": 25.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 35.5,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Desk 1200\u00d7600"
+      },
+      {
+       "severity": "major",
+       "title": "Room 2 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2850,
+        "y1": 250,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5450,
+        "y1": 250,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 250,
+        "y1": 3000,
+        "x2": 2850,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 2850,
+        "y1": 3000,
+        "x2": 5450,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.75,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.75,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#durable"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 1250,
+        "y": 700,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 1050,
+        "y": 2600,
+        "rot": 180,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 2500,
+        "y": 1850,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 4350,
+        "y": 1300,
+        "rot": 0,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 3200,
+        "y": 2300,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 3550,
+        "y": 950,
+        "rot": 90,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 3800,
+        "y": 4200,
+        "rot": 0,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 6800,
+        "y": 3550,
+        "rot": 180,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 500,
+        "y": 3950,
+        "rot": 270,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 7550,
+        "y": 850,
+        "rot": 180,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 5850,
+        "y": 1650,
+        "rot": 270,
+        "product": "kitchen.run.2400#durable"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 550,
+        "y": 6350,
+        "rot": 270,
+        "product": "fridge.600#durable"
+       }
+      ],
+      "works": [
+       {
+        "component": "skin.window.triple.openable",
+        "quantity": 6.9
+       }
+      ]
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2850,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2850,
+       "y0": 250,
+       "x1": 5450,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 5450,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.24807885065152022
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2771466755763448
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.474774473772135
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 405012,
+     "carbon_per_person": 7749,
+     "m2_per_person": 26.4,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.6316,
+       "investor": 0.6268,
+       "climate": 0.6267,
+       "resident": 0.6608,
+       "operator": 0.7029
+      },
+      "regret": {
+       "balanced": 0.1278,
+       "investor": 0.1502,
+       "climate": 0.1998,
+       "resident": 0.0757,
+       "operator": 0.1222
+      },
+      "max_regret": 0.1998,
+      "worst_for": "climate"
+     },
+     "criterion_gaps": {
+      "lcc": 100793.0,
+      "carbon": 2494.0,
+      "comfort": 1.1,
+      "usability": 8.6,
+      "functionality": 0.0
+     },
+     "normalised": {
+      "lcc": 0.6524049694367569,
+      "carbon": 0.5304969879518072,
+      "comfort": 0.9750000000000001,
+      "usability": 0.0,
+      "functionality": 1.0
+     }
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.lowered.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.2adul.right.3000.b2650-b5550.lowered",
+     "geometry_key": "student_housing|2|adult|3000|bedroom:2650-5550,bedroom:5550-8150",
+     "thermal_key": "upgraded|600|3000|2650-5550,5550-8150|2|student_housing",
+     "description": "Two students sharing: Bedroom + Bedroom, right, 3.0 m deep",
+     "density_label": "Two students sharing",
+     "occupants": 2,
+     "user_group": "adult",
+     "side": "right",
+     "depth": 3000,
+     "cells": [
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 2650,
+       "x1": 5550
+      },
+      {
+       "kind": "bedroom",
+       "label": "Bedroom",
+       "x0": 5550,
+       "x1": 8150
+      }
+     ],
+     "window": "lowered",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 409138,
+     "lcc": 846306,
+     "opex_annual": 10300,
+     "carbon_upfront": 5110,
+     "carbon_embodied": 11672,
+     "carbon_operational": 4404,
+     "carbon_total": 16076,
+     "money": {
+      "capex": 409138,
+      "opex_npv": 294718,
+      "replacement_npv": 173972,
+      "residual_npv": 31523,
+      "lcc": 846306
+     },
+     "carbon": {
+      "a1a3": 4906,
+      "a4": 72,
+      "a5": 132,
+      "b4": 6349,
+      "c1c4": 213,
+      "b6": 4404,
+      "d": -89,
+      "total": 16076
+     },
+     "social": {
+      "Accessible circulation": 75.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 100.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 60.0,
+      "Storage": 100.0
+     },
+     "social_detail": {
+      "Accessible circulation": "1 room(s) reachable on foot but not at the 900 mm clear width adult, ambulant needs \u2014 a dimensional problem, not a layout one",
+      "Daylight": "3 of 3 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "sleeping is separated from living; weakest partition Rw 44 dB against 40 dB for 2 occupant(s)",
+      "Space per occupant": "26.5 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "5 item(s) lack the clearance to be used properly, 0 seriously",
+      "Storage": "4.0 m\u00b3 provided against ~4.0 m\u00b3 needed for 2 occupant(s)"
+     },
+     "usability": 84.6,
+     "functionality": 100.0,
+     "functionality_detail": {
+      "Sleeping places": 100,
+      "Dining places": 100,
+      "Sleeping separated from living": 100,
+      "Storage": 100,
+      "Product quality": 100
+     },
+     "comfort": 94.5,
+     "thermal": {
+      "comfort_pct": 94.5,
+      "hot_pct": 5.5,
+      "cold_pct": 0.0,
+      "worst_room": "Bedroom",
+      "worst_hours_over_26": 1594,
+      "worst_max_c": 36.7,
+      "heating_kwh_m2": 12.1,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Bedroom",
+        "comfort_pct": 90.2,
+        "hours_over_26": 535,
+        "max_c": 30.2
+       },
+       {
+        "label": "Bedroom",
+        "comfort_pct": 79.4,
+        "hours_over_26": 1594,
+        "max_c": 36.7
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 97.6,
+        "hours_over_26": 144,
+        "max_c": 29.0
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 99.9,
+        "hours_over_26": 56,
+        "max_c": 27.2
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 100.0,
+        "hours_over_26": 104,
+        "max_c": 27.2
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 100.0,
+        "hours_over_26": 0,
+        "max_c": 25.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 37.1,
+     "issues": [
+      {
+       "severity": "minor",
+       "title": "Shower area 900\u00d7900"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Single bed 900\u00d72000"
+      },
+      {
+       "severity": "minor",
+       "title": "Wardrobe 1000\u00d7600"
+      },
+      {
+       "severity": "minor",
+       "title": "Kitchen run 2400, sink + hob + units"
+      },
+      {
+       "severity": "major",
+       "title": "Room 4 too tight for this user"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 600,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 600,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "v0",
+        "x1": 2650,
+        "y1": 250,
+        "x2": 2650,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "v1",
+        "x1": 5550,
+        "y1": 250,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h0",
+        "x1": 2650,
+        "y1": 3000,
+        "x2": 5550,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       },
+       {
+        "id": "h1",
+        "x1": 5550,
+        "y1": 3000,
+        "x2": 8150,
+        "y2": 3000,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95"
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       },
+       {
+        "id": "d0",
+        "wall_id": "h0",
+        "t": 0.776,
+        "clear_mm": 850
+       },
+       {
+        "id": "d1",
+        "wall_id": "h1",
+        "t": 0.25,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f13",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f14",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f15",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f16",
+        "type": "washer.600",
+        "x": 5550,
+        "y": 6500,
+        "rot": 180,
+        "product": "washer.600#durable"
+       },
+       {
+        "id": "f1",
+        "type": "bed.single.900",
+        "x": 3750,
+        "y": 2450,
+        "rot": 270,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f2",
+        "type": "wardrobe.1000",
+        "x": 3100,
+        "y": 1300,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f3",
+        "type": "desk.1200",
+        "x": 4900,
+        "y": 550,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f4",
+        "type": "bed.single.900",
+        "x": 7100,
+        "y": 2200,
+        "rot": 90,
+        "product": "bed.single.900#durable"
+       },
+       {
+        "id": "f5",
+        "type": "wardrobe.1000",
+        "x": 7350,
+        "y": 1050,
+        "rot": 270,
+        "product": "wardrobe.1000#durable"
+       },
+       {
+        "id": "f6",
+        "type": "desk.1200",
+        "x": 6400,
+        "y": 650,
+        "rot": 0,
+        "product": "desk.1200#durable"
+       },
+       {
+        "id": "f7",
+        "type": "sofa.2seat",
+        "x": 2150,
+        "y": 2150,
+        "rot": 90,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f8",
+        "type": "table.dining.1200",
+        "x": 3850,
+        "y": 6550,
+        "rot": 180,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f9",
+        "type": "chair.dining",
+        "x": 7050,
+        "y": 4400,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f10",
+        "type": "chair.dining",
+        "x": 3850,
+        "y": 3350,
+        "rot": 270,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f11",
+        "type": "kitchen.run.2400",
+        "x": 550,
+        "y": 3150,
+        "rot": 270,
+        "product": "kitchen.run.2400#durable"
+       },
+       {
+        "id": "f12",
+        "type": "fridge.600",
+        "x": 1350,
+        "y": 4700,
+        "rot": 0,
+        "product": "fridge.600#durable"
+       }
+      ],
+      "works": [
+       {
+        "component": "skin.window.triple.openable",
+        "quantity": 6.9
+       },
+       {
+        "component": "skin.window.lowered.sill",
+        "quantity": 1.38
+       }
+      ]
+     },
+     "rooms": [
+      {
+       "id": "c0",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 2650,
+       "y0": 250,
+       "x1": 5550,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "c1",
+       "label": "Bedroom",
+       "kind": "bedroom",
+       "x0": 5550,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 3000,
+       "people": 0.5
+      },
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 2650,
+       "y1": 3000,
+       "people": 0.22676516062532212
+      },
+      {
+       "id": "open_mid",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 3000,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.2850025768768253
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.4882322624978526
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 423153,
+     "carbon_per_person": 8038,
+     "m2_per_person": 26.4,
+     "front": 2,
+     "regret": {
+      "utility": {
+       "balanced": 0.6354,
+       "investor": 0.6129,
+       "climate": 0.6044,
+       "resident": 0.6806,
+       "operator": 0.6815
+      },
+      "regret": {
+       "balanced": 0.124,
+       "investor": 0.1641,
+       "climate": 0.2221,
+       "resident": 0.0559,
+       "operator": 0.1436
+      },
+      "max_regret": 0.2221,
+      "worst_for": "climate"
+     },
+     "criterion_gaps": {
+      "lcc": 118934.5,
+      "carbon": 2783.0,
+      "comfort": 3.3,
+      "usability": 7.0,
+      "functionality": 0.0
+     },
+     "normalised": {
+      "lcc": 0.5898421402029503,
+      "carbon": 0.4760918674698795,
+      "comfort": 0.925,
+      "usability": 0.18604651162790645,
+      "functionality": 1.0
+     }
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.existing.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.1adul.open.0.open.existing",
+     "geometry_key": "student_housing|1|adult|0|",
+     "thermal_key": "existing|900|0||1|student_housing",
+     "description": "Single student: open plan, 0.0 m deep",
+     "density_label": "Single student",
+     "occupants": 1,
+     "user_group": "adult",
+     "side": "open",
+     "depth": 0,
+     "cells": [],
+     "window": "existing",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 167618,
+     "lcc": 515227,
+     "opex_annual": 10198,
+     "carbon_upfront": 2038,
+     "carbon_embodied": 4784,
+     "carbon_operational": 4670,
+     "carbon_total": 9455,
+     "money": {
+      "capex": 167618,
+      "opex_npv": 293341,
+      "replacement_npv": 74340,
+      "residual_npv": 20071,
+      "lcc": 515227
+     },
+     "carbon": {
+      "a1a3": 1989,
+      "a4": 18,
+      "a5": 31,
+      "b4": 2696,
+      "c1c4": 50,
+      "b6": 4670,
+      "d": -7,
+      "total": 9455
+     },
+     "social": {
+      "Accessible circulation": 100.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 70.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 100.0,
+      "Storage": 54.0
+     },
+     "social_detail": {
+      "Accessible circulation": "every room reachable; turning space 3400 mm available across 39% of free floor",
+      "Daylight": "1 of 1 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "no sleeping space in this plan, so there is nothing to separate",
+      "Space per occupant": "52.9 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "every item has its required approach and transfer space",
+      "Storage": "1.1 m\u00b3 provided against ~2.0 m\u00b3 needed for 1 occupant(s)"
+     },
+     "usability": 91.6,
+     "functionality": 50.8,
+     "functionality_detail": {
+      "Sleeping places": 0,
+      "Dining places": 100,
+      "Sleeping separated from living": 0,
+      "Storage": 54,
+      "Product quality": 100
+     },
+     "comfort": 54.1,
+     "thermal": {
+      "comfort_pct": 54.1,
+      "hot_pct": 45.9,
+      "cold_pct": 0.0,
+      "worst_room": "Living",
+      "worst_hours_over_26": 3787,
+      "worst_max_c": 37.7,
+      "heating_kwh_m2": 19.2,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Living",
+        "comfort_pct": 54.0,
+        "hours_over_26": 3787,
+        "max_c": 37.7
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 54.4,
+        "hours_over_26": 3759,
+        "max_c": 36.3
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 75.6,
+        "hours_over_26": 2612,
+        "max_c": 30.4
+       }
+      ]
+     },
+     "heating_kwh_m2": 44.2,
+     "issues": [
+      {
+       "severity": "major",
+       "title": "Not enough beds"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f8",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f9",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f10",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f1",
+        "type": "sofa.2seat",
+        "x": 3750,
+        "y": 2650,
+        "rot": 0,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f2",
+        "type": "table.dining.1200",
+        "x": 7700,
+        "y": 1500,
+        "rot": 90,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f3",
+        "type": "chair.dining",
+        "x": 6600,
+        "y": 550,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f4",
+        "type": "chair.dining",
+        "x": 3150,
+        "y": 500,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f5",
+        "type": "kitchen.kitchenette.1200",
+        "x": 600,
+        "y": 1700,
+        "rot": 270,
+        "product": "kitchen.kitchenette.1200#durable"
+       },
+       {
+        "id": "f6",
+        "type": "fridge.600",
+        "x": 2450,
+        "y": 1750,
+        "rot": 90,
+        "product": "fridge.600#durable"
+       },
+       {
+        "id": "f7",
+        "type": "shelf.800",
+        "x": 1900,
+        "y": 6200,
+        "rot": 90,
+        "product": "shelf.800#durable"
+       }
+      ],
+      "works": []
+     },
+     "rooms": [
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.6787248473886502
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.32127515261134976
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 515227,
+     "carbon_per_person": 9455,
+     "m2_per_person": 52.9,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.2977,
+       "investor": 0.3078,
+       "climate": 0.2329,
+       "resident": 0.3002,
+       "operator": 0.2281
+      },
+      "regret": {
+       "balanced": 0.4617,
+       "investor": 0.4692,
+       "climate": 0.5936,
+       "resident": 0.4363,
+       "operator": 0.597
+      },
+      "max_regret": 0.597,
+      "worst_for": "operator"
+     },
+     "criterion_gaps": {
+      "lcc": 211008.5,
+      "carbon": 4200.0,
+      "comfort": 43.7,
+      "usability": 0.0,
+      "functionality": 49.2
+     },
+     "normalised": {
+      "lcc": 0.2723154781918975,
+      "carbon": 0.2093373493975904,
+      "comfort": 0.006818181818181915,
+      "usability": 1.0,
+      "functionality": 0.0
+     }
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.upgraded.f0.conventional.durable",
+     "use": "student_housing",
+     "scheme_id": "student_housing.1adul.open.0.open.upgraded",
+     "geometry_key": "student_housing|1|adult|0|",
+     "thermal_key": "upgraded|900|0||1|student_housing",
+     "description": "Single student: open plan, 0.0 m deep",
+     "density_label": "Single student",
+     "occupants": 1,
+     "user_group": "adult",
+     "side": "open",
+     "depth": 0,
+     "cells": [],
+     "window": "upgraded",
+     "partition": "conventional",
+     "products": "durable",
+     "furnishing": 0,
+     "area_m2": 52.9,
+     "capex": 230408,
+     "lcc": 594191,
+     "opex_annual": 10118,
+     "carbon_upfront": 2738,
+     "carbon_embodied": 6275,
+     "carbon_operational": 4293,
+     "carbon_total": 10567,
+     "money": {
+      "capex": 230408,
+      "opex_npv": 289094,
+      "replacement_npv": 95492,
+      "residual_npv": 20803,
+      "lcc": 594191
+     },
+     "carbon": {
+      "a1a3": 2645,
+      "a4": 35,
+      "a5": 59,
+      "b4": 3441,
+      "c1c4": 95,
+      "b6": 4293,
+      "d": -69,
+      "total": 10567
+     },
+     "social": {
+      "Accessible circulation": 100.0,
+      "Daylight": 88.0,
+      "Acoustic privacy": 70.0,
+      "Space per occupant": 100.0,
+      "Furniture usability": 100.0,
+      "Storage": 54.0
+     },
+     "social_detail": {
+      "Accessible circulation": "every room reachable; turning space 3400 mm available across 39% of free floor",
+      "Daylight": "1 of 1 habitable rooms reach a window; 1 deeper than 6 m from the glazing",
+      "Acoustic privacy": "no sleeping space in this plan, so there is nothing to separate",
+      "Space per occupant": "52.9 m\u00b2 per occupant against ~20 m\u00b2 typical for this use",
+      "Furniture usability": "every item has its required approach and transfer space",
+      "Storage": "1.1 m\u00b3 provided against ~2.0 m\u00b3 needed for 1 occupant(s)"
+     },
+     "usability": 91.6,
+     "functionality": 50.8,
+     "functionality_detail": {
+      "Sleeping places": 0,
+      "Dining places": 100,
+      "Sleeping separated from living": 0,
+      "Storage": 54,
+      "Product quality": 100
+     },
+     "comfort": 97.8,
+     "thermal": {
+      "comfort_pct": 97.8,
+      "hot_pct": 2.2,
+      "cold_pct": 0.0,
+      "worst_room": "Living",
+      "worst_hours_over_26": 175,
+      "worst_max_c": 29.4,
+      "heating_kwh_m2": 12.8,
+      "cooling_kwh_m2": 0.0,
+      "rooms": [
+       {
+        "label": "Living",
+        "comfort_pct": 97.4,
+        "hours_over_26": 175,
+        "max_c": 29.4
+       },
+       {
+        "label": "Living",
+        "comfort_pct": 98.8,
+        "hours_over_26": 95,
+        "max_c": 28.1
+       },
+       {
+        "label": "Bathroom",
+        "comfort_pct": 100.0,
+        "hours_over_26": 0,
+        "max_c": 25.7
+       }
+      ]
+     },
+     "heating_kwh_m2": 37.8,
+     "issues": [
+      {
+       "severity": "major",
+       "title": "Not enough beds"
+      }
+     ],
+     "feasible": true,
+     "plan": {
+      "shell": {
+       "width_mm": 8400,
+       "depth_mm": 7200,
+       "ceiling_mm": 2500,
+       "external_wall_thickness_mm": 250,
+       "structural_walls": [],
+       "windows": [
+        {
+         "x1": 1200,
+         "y1": 125,
+         "x2": 3400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        },
+        {
+         "x1": 5000,
+         "y1": 125,
+         "x2": 7400,
+         "y2": 125,
+         "sill_mm": 900,
+         "head_mm": 2400
+        }
+       ],
+       "entry": {
+        "x": 800,
+        "y": 6700
+       },
+       "drainage_stack": {
+        "x": 7900,
+        "y": 6600
+       }
+      },
+      "walls": [
+       {
+        "id": "wet1",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 5150,
+        "y2": 6950,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       },
+       {
+        "id": "wet2",
+        "x1": 5150,
+        "y1": 4050,
+        "x2": 8150,
+        "y2": 4050,
+        "thickness": 100,
+        "component": "part.stud.gypsum.95",
+        "wet": true
+       }
+      ],
+      "doors": [
+       {
+        "id": "dwet",
+        "wall_id": "wet1",
+        "t": 0.81,
+        "clear_mm": 850
+       }
+      ],
+      "furniture": [
+       {
+        "id": "f8",
+        "type": "shower.900",
+        "x": 5750,
+        "y": 4650,
+        "rot": 0,
+        "product": "shower.900#durable"
+       },
+       {
+        "id": "f9",
+        "type": "basin.600",
+        "x": 7700,
+        "y": 4550,
+        "rot": 0,
+        "product": "basin.600#durable"
+       },
+       {
+        "id": "f10",
+        "type": "wc.pan",
+        "x": 7750,
+        "y": 6500,
+        "rot": 180,
+        "product": "wc.pan#durable"
+       },
+       {
+        "id": "f1",
+        "type": "sofa.2seat",
+        "x": 3750,
+        "y": 2650,
+        "rot": 0,
+        "product": "sofa.2seat#durable"
+       },
+       {
+        "id": "f2",
+        "type": "table.dining.1200",
+        "x": 7700,
+        "y": 1500,
+        "rot": 90,
+        "product": "table.dining.1200#durable"
+       },
+       {
+        "id": "f3",
+        "type": "chair.dining",
+        "x": 6600,
+        "y": 550,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f4",
+        "type": "chair.dining",
+        "x": 3150,
+        "y": 500,
+        "rot": 0,
+        "product": "chair.dining#durable"
+       },
+       {
+        "id": "f5",
+        "type": "kitchen.kitchenette.1200",
+        "x": 600,
+        "y": 1700,
+        "rot": 270,
+        "product": "kitchen.kitchenette.1200#durable"
+       },
+       {
+        "id": "f6",
+        "type": "fridge.600",
+        "x": 2450,
+        "y": 1750,
+        "rot": 90,
+        "product": "fridge.600#durable"
+       },
+       {
+        "id": "f7",
+        "type": "shelf.800",
+        "x": 1900,
+        "y": 6200,
+        "rot": 90,
+        "product": "shelf.800#durable"
+       }
+      ],
+      "works": [
+       {
+        "component": "skin.window.triple.openable",
+        "quantity": 6.9
+       }
+      ]
+     },
+     "rooms": [
+      {
+       "id": "open_f0",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 250,
+       "x1": 8150,
+       "y1": 4050,
+       "people": 0.6787248473886502
+      },
+      {
+       "id": "open_back",
+       "space": "open",
+       "label": "Living",
+       "kind": "open",
+       "x0": 250,
+       "y0": 4050,
+       "x1": 5150,
+       "y1": 6950,
+       "people": 0.32127515261134976
+      },
+      {
+       "id": "wet",
+       "label": "Bathroom",
+       "kind": "wet",
+       "x0": 5150,
+       "y0": 4050,
+       "x1": 8150,
+       "y1": 6950,
+       "people": 0.0
+      }
+     ],
+     "lcc_per_person": 594191,
+     "carbon_per_person": 10567,
+     "m2_per_person": 52.9,
+     "front": 1,
+     "regret": {
+      "utility": {
+       "balanced": 0.4,
+       "investor": 0.25,
+       "climate": 0.25,
+       "resident": 0.55,
+       "operator": 0.3
+      },
+      "regret": {
+       "balanced": 0.3594,
+       "investor": 0.527,
+       "climate": 0.5765,
+       "resident": 0.1865,
+       "operator": 0.5251
+      },
+      "max_regret": 0.5765,
+      "worst_for": "climate"
+     },
+     "criterion_gaps": {
+      "lcc": 289972.5,
+      "carbon": 5312.0,
+      "comfort": 0.0,
+      "usability": 0.0,
+      "functionality": 49.2
+     },
+     "normalised": {
+      "lcc": 0.0,
+      "carbon": 0.0,
+      "comfort": 1.0,
+      "usability": 1.0,
+      "functionality": 0.0
+     }
+    }
+   ],
+   "recommended": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+   "favourites": {
+    "balanced": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+    "investor": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+    "climate": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+    "resident": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+    "operator": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular"
+   },
+   "all": [
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.existing.f0.conventional.durable",
+     "front": 1,
+     "lcc": 365477.5,
+     "carbon": 7175.0,
+     "comfort": 55.1,
+     "usability": 84.6,
+     "functionality": 100.0,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.durable",
+     "front": 1,
+     "lcc": 406185.5,
+     "carbon": 7776.0,
+     "comfort": 96.1,
+     "usability": 84.6,
+     "functionality": 100.0,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.lowered.f0.conventional.durable",
+     "front": 2,
+     "lcc": 423153.0,
+     "carbon": 8038.0,
+     "comfort": 94.5,
+     "usability": 84.6,
+     "functionality": 100.0,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.existing.f0.conventional.durable",
+     "front": 1,
+     "lcc": 364467.0,
+     "carbon": 7154.5,
+     "comfort": 53.8,
+     "usability": 83.0,
+     "functionality": 100.0,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.upgraded.f0.conventional.durable",
+     "front": 1,
+     "lcc": 405011.5,
+     "carbon": 7749.0,
+     "comfort": 96.7,
+     "usability": 83.0,
+     "functionality": 100.0,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.lowered.f0.conventional.durable",
+     "front": 2,
+     "lcc": 422224.0,
+     "carbon": 8020.0,
+     "comfort": 94.4,
+     "usability": 83.0,
+     "functionality": 100.0,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.existing.f0.conventional.mixed",
+     "front": 1,
+     "lcc": 313618.0,
+     "carbon": 5517.0,
+     "comfort": 55.1,
+     "usability": 84.6,
+     "functionality": 96.7,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.mixed",
+     "front": 1,
+     "lcc": 354325.5,
+     "carbon": 6117.5,
+     "comfort": 96.1,
+     "usability": 84.6,
+     "functionality": 96.7,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.lowered.f0.conventional.mixed",
+     "front": 2,
+     "lcc": 371293.0,
+     "carbon": 6379.5,
+     "comfort": 94.5,
+     "usability": 84.6,
+     "functionality": 96.7,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.existing.f0.conventional.circular",
+     "front": 1,
+     "lcc": 305229.0,
+     "carbon": 5276.0,
+     "comfort": 55.1,
+     "usability": 84.6,
+     "functionality": 95.6,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.upgraded.f0.conventional.circular",
+     "front": 1,
+     "lcc": 345936.5,
+     "carbon": 5876.5,
+     "comfort": 96.1,
+     "usability": 84.6,
+     "functionality": 95.6,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.right.3000.b2650-b5550.lowered.f0.conventional.circular",
+     "front": 2,
+     "lcc": 362904.5,
+     "carbon": 6138.5,
+     "comfort": 94.5,
+     "usability": 84.6,
+     "functionality": 95.6,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.existing.f0.conventional.mixed",
+     "front": 1,
+     "lcc": 312607.5,
+     "carbon": 5496.0,
+     "comfort": 53.8,
+     "usability": 83.0,
+     "functionality": 96.7,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.upgraded.f0.conventional.mixed",
+     "front": 1,
+     "lcc": 353151.5,
+     "carbon": 6091.0,
+     "comfort": 96.7,
+     "usability": 83.0,
+     "functionality": 96.7,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.lowered.f0.conventional.mixed",
+     "front": 2,
+     "lcc": 370364.5,
+     "carbon": 6362.0,
+     "comfort": 94.4,
+     "usability": 83.0,
+     "functionality": 96.7,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.existing.f0.conventional.circular",
+     "front": 1,
+     "lcc": 304218.5,
+     "carbon": 5255.0,
+     "comfort": 53.8,
+     "usability": 83.0,
+     "functionality": 95.6,
+     "window": "existing",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.upgraded.f0.conventional.circular",
+     "front": 1,
+     "lcc": 344762.5,
+     "carbon": 5850.0,
+     "comfort": 96.7,
+     "usability": 83.0,
+     "functionality": 95.6,
+     "window": "upgraded",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.2adul.left.3000.b250-b2850.lowered.f0.conventional.circular",
+     "front": 2,
+     "lcc": 361975.5,
+     "carbon": 6121.0,
+     "comfort": 94.4,
+     "usability": 83.0,
+     "functionality": 95.6,
+     "window": "lowered",
+     "occupants": 2
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.existing.f0.conventional.durable",
+     "front": 1,
+     "lcc": 515227.0,
+     "carbon": 9455.0,
+     "comfort": 54.1,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "existing",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.upgraded.f0.conventional.durable",
+     "front": 1,
+     "lcc": 594191.0,
+     "carbon": 10567.0,
+     "comfort": 97.8,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "upgraded",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.lowered.f0.conventional.durable",
+     "front": 2,
+     "lcc": 627963.0,
+     "carbon": 11086.0,
+     "comfort": 94.7,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "lowered",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.existing.f0.demountable.durable",
+     "front": 1,
+     "lcc": 515227.0,
+     "carbon": 9455.0,
+     "comfort": 54.1,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "existing",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.upgraded.f0.demountable.durable",
+     "front": 1,
+     "lcc": 594191.0,
+     "carbon": 10567.0,
+     "comfort": 97.8,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "upgraded",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.lowered.f0.demountable.durable",
+     "front": 2,
+     "lcc": 627963.0,
+     "carbon": 11086.0,
+     "comfort": 94.7,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "lowered",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.existing.f0.demountable_glass.durable",
+     "front": 1,
+     "lcc": 515227.0,
+     "carbon": 9455.0,
+     "comfort": 54.1,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "existing",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.upgraded.f0.demountable_glass.durable",
+     "front": 1,
+     "lcc": 594191.0,
+     "carbon": 10567.0,
+     "comfort": 97.8,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "upgraded",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.lowered.f0.demountable_glass.durable",
+     "front": 2,
+     "lcc": 627963.0,
+     "carbon": 11086.0,
+     "comfort": 94.7,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "lowered",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.existing.f0.movable.durable",
+     "front": 1,
+     "lcc": 515227.0,
+     "carbon": 9455.0,
+     "comfort": 54.1,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "existing",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.upgraded.f0.movable.durable",
+     "front": 1,
+     "lcc": 594191.0,
+     "carbon": 10567.0,
+     "comfort": 97.8,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "upgraded",
+     "occupants": 1
+    },
+    {
+     "id": "student_housing.1adul.open.0.open.lowered.f0.movable.durable",
+     "front": 2,
+     "lcc": 627963.0,
+     "carbon": 11086.0,
+     "comfort": 94.7,
+     "usability": 91.6,
+     "functionality": 50.8,
+     "window": "lowered",
+     "occupants": 1
+    }
+   ]
+  }
+ },
+ "elapsed_s": 40
+}

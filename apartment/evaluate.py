@@ -44,6 +44,38 @@ def _furniture_specs() -> dict[str, dict]:
 FURNITURE = _furniture_specs()
 
 
+def _products() -> dict[str, dict]:
+    """Purchasable alternatives for each furniture type, keyed by product id.
+
+    A plan item may name a `product`; its cost, carbon, life and recovery then
+    replace the generic figures for that type. Geometry and clearance always
+    come from the type, so swapping a product never moves anything.
+    """
+    from pathlib import Path
+    import json
+
+    path = Path(__file__).resolve().parents[1] / "data" / "products" / "furniture_products.json"
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return {p["id"]: p for p in raw["products"]}
+
+
+PRODUCTS = _products()
+PRODUCT_FIELDS = ("cost_sek", "carbon_kgco2e", "service_life_years", "recovery_rate")
+
+
+def item_spec(item: dict) -> dict | None:
+    """The furniture spec for a plan item, with its product applied."""
+    spec = FURNITURE.get(item["type"])
+    if not spec:
+        return None
+    product = PRODUCTS.get(item.get("product", ""))
+    if product and product["type"] == item["type"]:
+        spec = {**spec, **{k: product[k] for k in PRODUCT_FIELDS}}
+    return spec
+
+
 @dataclass
 class Money:
     capex: float = 0.0
@@ -155,8 +187,9 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
     ceiling_m = plan["shell"].get("ceiling_mm", 2500) / 1000.0
 
     # -----------------------------------------------------------------
-    # Walls
+    # Walls, and envelope works (window replacement, lowered sills)
     # -----------------------------------------------------------------
+    quantities: list[tuple[dict, float]] = []
     for wall in plan.get("walls", []):
         component = catalogue.get(wall.get("component"))
         if not component:
@@ -164,8 +197,13 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
         length_m = (
             (wall["x2"] - wall["x1"]) ** 2 + (wall["y2"] - wall["y1"]) ** 2
         ) ** 0.5 / 1000.0
-        area = length_m * ceiling_m
+        quantities.append((component, length_m * ceiling_m))
+    for work in plan.get("works", []):
+        component = catalogue.get(work.get("component"))
+        if component:
+            quantities.append((component, float(work.get("quantity", 0.0))))
 
+    for component, area in quantities:
         cost, carbon = component["cost_sek"], component["carbon_kgco2e"]
         result.money.capex += (cost["material"] + cost["labour_install"]) * area
         result.money.opex_annual += cost.get("maintenance_sek_per_year", 0.0) * area
@@ -216,7 +254,7 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
     seats = beds = workplaces = 0
 
     for item in plan.get("furniture", []):
-        spec = FURNITURE.get(item["type"])
+        spec = item_spec(item)
         if not spec:
             continue
         result.money.capex += spec["cost_sek"]
@@ -248,8 +286,10 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
     eui = factors["energy_use_intensity_kwh_m2_yr"].get(
         use_id, factors["energy_use_intensity_kwh_m2_yr"]["student_housing"]
     )
-    heating_kwh = eui["heating"] * area
-    cooling_kwh = eui["cooling"] * area
+    # A simulated demand, where one exists, replaces the per-use placeholder.
+    # That is what lets a window upgrade pay back in B6 rather than only cost.
+    heating_kwh = float(settings.get("heating_kwh_m2", eui["heating"])) * area
+    cooling_kwh = float(settings.get("cooling_kwh_m2", eui["cooling"])) * area
     elec_kwh = eui["electricity"] * area + appliance_kwh
 
     carbon_factors = factors["carbon_intensity_kgco2e_per_kwh"]
@@ -411,7 +451,10 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
 
     # 4. Space adequacy
     per_person = geo.total_floor_m2 / max(1, occupants)
-    target_area = {"student_housing": 20.0, "elderly_care": 32.0}.get(use_id, 25.0)
+    target_area = float(settings.get(
+        "target_area_m2",
+        {"student_housing": 20.0, "elderly_care": 32.0}.get(use_id, 25.0),
+    ))
     score = _clamp(100.0 * min(1.4, per_person / target_area) / 1.0)
     result.social.append(SocialMetric(
         "Space per occupant", min(100.0, score),
@@ -480,7 +523,7 @@ def evaluate(plan: dict, geo: geometry.GeometryResult, settings: dict) -> Result
                 "will not fix this — the room or the route has to get bigger."
             ),
         })
-    if beds < occupants:
+    if beds < occupants and settings.get("needs_beds", True):
         result.issues.append({
             "severity": "major",
             "title": "Not enough beds",

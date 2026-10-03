@@ -99,6 +99,32 @@ user group from `adult` to `care_resident_assisted` and watch a comfortable plan
 stop working, because the bed's staff working space and the 1800 mm turning
 circle are not negotiable.
 
+## Optimiser — ten options per use, and the one to regret least
+
+```powershell
+python -m optimise                                    # all four uses, ~10 min
+python -m optimise --uses student_housing family_housing
+python -m optimise --azimuth 90 --carbon-price 2.0    # east facade, dearer carbon
+python -m optimise --quick                            # small search, for testing
+```
+
+No dragging: pick the uses and the engine does the rest. For each use it
+generates partition layouts on the shell (`optimise/schemes.py`, briefs in
+`optimise/programs.py`), furnishes them with the annealer, specifies every
+combination of partition system, product strategy and window intervention, and
+simulates thermal comfort in EnergyPlus (`optimise/thermal_sim.py`, run in
+`.venv-sim`, Stockholm weather in `data/climate/`). It keeps ten options that
+span the trade-off and recommends the one with the least **maximum regret**
+across five stakeholder weightings (`optimise/selection.py`). With more than one
+use it also asks which option today you would regret least if the use changes
+in year 10 or 20, costing each conversion wall by wall (`optimise/adapt.py`).
+
+Output: `runs/optimise/<timestamp>/report.html` (self-contained) and
+`results.json`. Furniture alternatives live in
+`data/products/furniture_products.json` — dummy data until suppliers replace it.
+Thermal results are cached in `runs/optimise/thermal_cache.json`, so re-running
+after a cost change does not re-simulate.
+
 ## Published dashboard
 
 https://claude.ai/artifact/8Pz3DFeq814iwewoRzMcyR — private until shared from the

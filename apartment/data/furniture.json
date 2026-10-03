@@ -215,6 +215,88 @@
       "reversibility": 1.0, "recovery_rate": 1.0,
       "is_space_reservation": true,
       "notes": "Place it where the brief says turning must be possible. The model also finds turning space automatically — this item is for when you want to guarantee it somewhere specific."
+    },
+    {
+      "id": "bed.bunk.900",
+      "name": "Bunk bed 900×2000",
+      "category": "bedroom",
+      "w": 900, "d": 2000, "h": 1600,
+      "clearance_front_mm": 700,
+      "cost_sek": 6900, "carbon_kgco2e": 124, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.8,
+      "sleeps": 2,
+      "notes": "Two children in one footprint. Only valid for the family use — the model does not offer it to adults or care residents."
+    },
+    {
+      "id": "desk.child.1000",
+      "name": "Child desk 1000×550",
+      "category": "work",
+      "w": 1000, "d": 550, "h": 640,
+      "clearance_front_mm": 800,
+      "cost_sek": 2100, "carbon_kgco2e": 41, "service_life_years": 10,
+      "reversibility": 1.0, "recovery_rate": 0.7,
+      "workplaces": 1
+    },
+    {
+      "id": "desk.office.1400",
+      "name": "Workstation 1400×700 with task chair",
+      "category": "work",
+      "w": 1400, "d": 700, "h": 740,
+      "clearance_front_mm": 1000,
+      "cost_sek": 7600, "carbon_kgco2e": 142, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.75,
+      "workplaces": 1, "operational_kwh_yr": 60,
+      "notes": "Desk, task chair and screen arm counted as one workplace. 1000 mm behind the desk is the chair zone plus a passing route."
+    },
+    {
+      "id": "table.meeting.2000",
+      "name": "Meeting table 2000×1000, six chairs",
+      "category": "work",
+      "w": 2000, "d": 1000, "h": 740,
+      "clearance_front_mm": 900, "clearance_side_mm": 900,
+      "cost_sek": 14500, "carbon_kgco2e": 230, "service_life_years": 15,
+      "reversibility": 1.0, "recovery_rate": 0.8,
+      "seats": 6
+    },
+    {
+      "id": "table.dining.1800",
+      "name": "Dining table 1800×900, six chairs",
+      "category": "living",
+      "w": 1800, "d": 900, "h": 740,
+      "clearance_front_mm": 800,
+      "cost_sek": 9800, "carbon_kgco2e": 170, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "seats": 6
+    },
+    {
+      "id": "sofa.3seat",
+      "name": "Three-seat sofa",
+      "category": "living",
+      "w": 2200, "d": 900, "h": 820,
+      "clearance_front_mm": 900,
+      "cost_sek": 12400, "carbon_kgco2e": 240, "service_life_years": 12,
+      "reversibility": 1.0, "recovery_rate": 0.4,
+      "seats": 3
+    },
+    {
+      "id": "storage.cabinet.1200",
+      "name": "Storage cabinet 1200×450",
+      "category": "storage",
+      "w": 1200, "d": 450, "h": 1900,
+      "clearance_front_mm": 750,
+      "cost_sek": 4400, "carbon_kgco2e": 105, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "storage_m3": 0.95
+    },
+    {
+      "id": "lockers.900",
+      "name": "Personal lockers, 3 units, 900×500",
+      "category": "storage",
+      "w": 900, "d": 500, "h": 1900,
+      "clearance_front_mm": 800,
+      "cost_sek": 5200, "carbon_kgco2e": 118, "service_life_years": 20,
+      "reversibility": 1.0, "recovery_rate": 0.85,
+      "storage_m3": 0.8
     }
   ]
 }

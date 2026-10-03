@@ -284,6 +284,36 @@
       "performance": { "serves_wet_rooms_max": 4 },
       "structural_demand": { "requires_slab_coring": true, "note": "Coring through post-tensioned slabs may be prohibited outright. This is a hard IMPLEMENT-stage blocker, not a cost line — if the shell is PT, wet-room-intensive programmes may simply be unavailable away from existing stacks." },
       "notes": "Usually the single most decisive cost in converting office shells to any residential or care programme. Position of existing stacks effectively pre-selects which uses are affordable."
+    },
+    {
+      "id": "skin.window.triple.openable",
+      "name": "Replacement window, triple glazed, openable sash, in existing opening",
+      "supplier": "GENERIC",
+      "layer": "skin",
+      "unit": "m2",
+      "service_life_years": 40,
+      "fixing": "screwed_and_sealed",
+      "reversibility": 0.4,
+      "recovery_rate": 0.1,
+      "cost_sek": { "material": 6200, "labour_install": 2900, "labour_demount": 900, "maintenance_sek_per_year": 35, "provenance": "PLACEHOLDER" },
+      "carbon_kgco2e": { "A1A3": 95.0, "A4": 2.5, "A5": 4.0, "C1C4": 6.5, "D": -9.0, "provenance": "PLACEHOLDER" },
+      "performance": { "u_value_w_m2k": 0.9, "g_value": 0.45, "openable": true },
+      "notes": "Replaces the 1985 fixed double glazing (U 2.8). Cuts heating demand and makes natural purge ventilation possible, which is what keeps a free-running dwelling out of overheating. Unit is m² of glazing."
+    },
+    {
+      "id": "skin.window.lowered.sill",
+      "name": "Spandrel lowered from 900 to 600 mm, new glazing below transom",
+      "supplier": "GENERIC",
+      "layer": "skin",
+      "unit": "m2",
+      "service_life_years": 40,
+      "fixing": "cast_and_sealed",
+      "reversibility": 0.05,
+      "recovery_rate": 0.0,
+      "cost_sek": { "material": 7400, "labour_install": 9800, "labour_demount": 1500, "provenance": "PLACEHOLDER" },
+      "carbon_kgco2e": { "A1A3": 128.0, "A4": 3.0, "A5": 11.0, "C1C4": 18.0, "D": -4.0, "provenance": "PLACEHOLDER" },
+      "performance": { "u_value_w_m2k": 0.9, "g_value": 0.45, "seated_view": true },
+      "notes": "Cutting down the precast spandrel to give a seated view (eye height ~1180 mm). A SKIN-layer intervention: expensive, irreversible, and the only way a wheelchair user or a care resident in bed sees out. Unit is m² of new glazing added below the old sill."
     }
   ]
 }

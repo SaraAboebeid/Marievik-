@@ -275,11 +275,13 @@ def run_daylight(case, model, folder: Path) -> dict:
     recipe.input_value_by_name("model", model)
     settings = RecipeSettings(folder=str(folder), workers=max(1, (os.cpu_count() or 2) - 1), reload_old=False)
     project = recipe.run(settings, radiance_check=True, silent=True)
-    res_folder = Path(recipe.output_value_by_name("results", project))
+    # Newer lbt-recipes return result values, not a folder, from output_value_by_name("results"),
+    # so read the per-grid .res files from the recipe's results folder directly.
+    found = {p.stem: p for p in Path(folder).rglob("*.res") if p.parent.name == "results"}
     units = {}
     for g in grids:
-        f = res_folder / ("%s.res" % g.identifier)
-        if not f.is_file():
+        f = found.get(g.identifier)
+        if f is None:
             continue
         vals = [float(v) for v in f.read_text().split()]
         pts = [[round(s.pos[0], 2), round(s.pos[1], 2), round(v, 2)] for s, v in zip(g.sensors, vals)]

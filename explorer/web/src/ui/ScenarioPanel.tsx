@@ -15,9 +15,11 @@ interface Props {
   view: ViewOptions
   setView: (v: ViewOptions) => void
   onSave: (name: string) => void
+  onResetBuilding: () => void
+  onResetSite: () => void
 }
 
-export function ScenarioPanel({ site, level, building, settings, loading, onChange, onGo, view, setView, onSave }: Props) {
+export function ScenarioPanel({ site, level, building, settings, loading, onChange, onGo, view, setView, onSave, onResetBuilding, onResetSite }: Props) {
   const [added, setAdded] = useState(settings?.added_floors ?? 0)
   const [name, setName] = useState('')
   useEffect(() => setAdded(settings?.added_floors ?? 0), [settings?.added_floors, building?.id])
@@ -37,6 +39,9 @@ export function ScenarioPanel({ site, level, building, settings, loading, onChan
           <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Scenario name"
             className="min-w-0 flex-1 rounded border border-line bg-surface px-2 py-1 text-[12px] outline-none focus:border-accent" />
           <Button onClick={() => { onSave(name || `Scenario ${new Date().toLocaleTimeString('sv-SE')}`); setName('') }}>Save</Button>
+        </div>
+        <div className="mt-2">
+          <Button onClick={onResetSite}>Reset whole site</Button>
         </div>
       </Card>
     )
@@ -70,10 +75,10 @@ export function ScenarioPanel({ site, level, building, settings, loading, onChan
               options={[['same', USE_LABEL.same], ...useOpts.filter(([u]) => u !== 'site')]} />
           </Field>
         )}
-        <div className="flex items-center justify-between">
-          <Toggle on={settings.facade} onChange={(v) => onChange({ facade: v })} label="Facade & roof detail" />
-          <button className="text-[11px] text-accent hover:underline"
-            onClick={() => onChange({ ...site.defaults })}>Reset to today</button>
+        <Toggle on={settings.facade} onChange={(v) => onChange({ facade: v })} label="Facade & roof detail" />
+        <div className="mt-2 flex gap-1.5">
+          <Button onClick={onResetBuilding}>Reset building</Button>
+          <Button onClick={onResetSite}>Reset whole site</Button>
         </div>
       </Card>
 

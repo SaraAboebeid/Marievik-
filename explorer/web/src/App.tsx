@@ -342,6 +342,15 @@ export default function App() {
     }
   }
 
+  // every building back to today's defaults, back to the site view, analyses and exploded view cleared
+  const resetSite = () => {
+    if (!site) return
+    for (const id of site.buildings.map((x) => x.id)) updateScenario(id, { ...site.defaults })
+    setView((v) => ({ ...v, explode: 0 }))
+    setFloorData(null)
+    go({ kind: 'site' })
+  }
+
   // ------------------------------------------------------------ Rhino
   const loadRhino = async (src: string | ArrayBuffer, label: string) => {
     setBusy(`Loading ${label}…`)
@@ -424,6 +433,8 @@ export default function App() {
             onChange={(patch) => buildingId && updateScenario(buildingId, patch)}
             onGo={go} view={view} setView={setView}
             onSave={saveScenario}
+            onResetBuilding={() => buildingId && updateScenario(buildingId, { ...site.defaults })}
+            onResetSite={resetSite}
           />
         )}
         <RhinoPanel models={models} layers={rhinoLayers}

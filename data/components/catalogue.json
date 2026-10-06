@@ -314,6 +314,51 @@
       "carbon_kgco2e": { "A1A3": 128.0, "A4": 3.0, "A5": 11.0, "C1C4": 18.0, "D": -4.0, "provenance": "PLACEHOLDER" },
       "performance": { "u_value_w_m2k": 0.9, "g_value": 0.45, "seated_view": true },
       "notes": "Cutting down the precast spandrel to give a seated view (eye height ~1180 mm). A SKIN-layer intervention: expensive, irreversible, and the only way a wheelchair user or a care resident in bed sees out. Unit is m² of new glazing added below the old sill."
+    },
+    {
+      "id": "door.int.timber.900",
+      "name": "Interior door set, timber, 900 x 2100, with frame",
+      "supplier": "GENERIC",
+      "layer": "space_plan",
+      "unit": "each",
+      "service_life_years": 30,
+      "fixing": "screwed",
+      "reversibility": 0.7,
+      "recovery_rate": 0.5,
+      "cost_sek": { "material": 4200, "labour_install": 2300, "labour_demount": 600, "provenance": "PLACEHOLDER" },
+      "carbon_kgco2e": { "A1A3": 45.0, "A4": 1.5, "A5": 2.0, "C1C4": 4.0, "D": -3.0, "provenance": "PLACEHOLDER" },
+      "performance": { "clear_width_mm": 800 },
+      "notes": "Added for the Grasshopper building model (mvk). One leaf plus frame per piece."
+    },
+    {
+      "id": "door.glass.1000",
+      "name": "Glazed door set, 1000 x 2100, in demountable frame",
+      "supplier": "GENERIC",
+      "layer": "space_plan",
+      "unit": "each",
+      "service_life_years": 30,
+      "fixing": "bolted",
+      "reversibility": 0.85,
+      "recovery_rate": 0.7,
+      "cost_sek": { "material": 7800, "labour_install": 3200, "labour_demount": 700, "provenance": "PLACEHOLDER" },
+      "carbon_kgco2e": { "A1A3": 70.0, "A4": 2.0, "A5": 2.5, "C1C4": 5.0, "D": -6.0, "provenance": "PLACEHOLDER" },
+      "performance": { "clear_width_mm": 900 },
+      "notes": "Added for the Grasshopper building model (mvk). Pairs with part.demount.glass.100."
+    },
+    {
+      "id": "door.fire.ei60.1000",
+      "name": "Fire and sound rated entrance door EI60 / Rw 35, 1000 x 2100",
+      "supplier": "GENERIC",
+      "layer": "space_plan",
+      "unit": "each",
+      "service_life_years": 30,
+      "fixing": "screwed",
+      "reversibility": 0.6,
+      "recovery_rate": 0.4,
+      "cost_sek": { "material": 11500, "labour_install": 4500, "labour_demount": 900, "provenance": "PLACEHOLDER" },
+      "carbon_kgco2e": { "A1A3": 95.0, "A4": 3.0, "A5": 3.0, "C1C4": 7.0, "D": -5.0, "provenance": "PLACEHOLDER" },
+      "performance": { "clear_width_mm": 900, "fire_class": "EI60", "Rw_dB": 35 },
+      "notes": "Added for the Grasshopper building model (mvk). Apartment, hotel-room and core doors."
     }
   ]
 }

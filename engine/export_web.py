@@ -14,7 +14,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from . import evaluate, experience, fit, intake, layout, loader, scenarios
+from . import evaluate, experience, fit, grasshopper, intake, layout, loader, scenarios
 
 OUT = loader.ROOT / "runs" / "dashboard_data.json"
 
@@ -227,6 +227,8 @@ def build() -> dict:
             "reversibility": component["reversibility"],
             "recovery_rate": component["recovery_rate"],
             "a1a3": component["carbon_kgco2e"]["A1A3"],
+            "a4": component["carbon_kgco2e"].get("A4", 0),
+            "a5": component["carbon_kgco2e"].get("A5", 0),
             "c1c4": component["carbon_kgco2e"]["C1C4"],
             "d_credit": component["carbon_kgco2e"].get("D", 0),
             "cost_material": component["cost_sek"]["material"],
@@ -238,6 +240,11 @@ def build() -> dict:
             "warnings": [i.message for i in validation.warnings] if validation else [],
             "notes": component.get("notes", ""),
         })
+
+    # --- Grasshopper building models ---------------------------------------
+    # Written by the Grasshopper "MVK Building" component (Export = true) and
+    # re-priced here with evaluate_bill, so both routes share one method.
+    payload["models"] = grasshopper.payload()
 
     payload["schema"] = json.loads(
         (loader.DATA / "schema" / "supplier_submission.schema.json").read_text(encoding="utf-8")
@@ -254,7 +261,8 @@ def main() -> Path:
     size = OUT.stat().st_size
     print(f"Wrote {OUT.relative_to(loader.ROOT)}  ({size:,} bytes)")
     print(f"  {len(payload['fit'])} fit results, {len(payload['layouts'])} layouts, "
-          f"{len(payload['timelines'])} timelines, {len(payload['components'])} components")
+          f"{len(payload['timelines'])} timelines, {len(payload['components'])} components, "
+          f"{len(payload['models'])} Grasshopper model(s)")
     print(f"  {payload['provenance']['caveat']}")
     return OUT
 

@@ -78,8 +78,10 @@ python -m engine.cli cad -r plan.3dm # measure a real floor plate, replacing the
 python -m engine.cli all             # everything, written to runs/
 
 python -m engine.intake file.json    # validate a supplier submission (no dependencies)
+python -m engine.grasshopper         # list + re-price Grasshopper exports (runs/grasshopper/)
 python -m engine.build_web           # rebuild the published dashboard
 python -m tests.test_engine          # 29 checks incl. ledger conservation
+python -m tests.test_explorer        # explorer: scenarios, added floors, daylight, comfort
 ```
 
 Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
@@ -114,6 +116,22 @@ user group from `adult` to `care_resident_assisted` and watch a comfortable plan
 stop working, because the bed's staff working space and the 1800 mm turning
 circle are not negotiable.
 
+## Explorer — the site in 3D, from site to unit
+
+```powershell
+python -m explorer.server      # http://127.0.0.1:8020   (or double-click run_explorer.bat)
+```
+
+A rendered three.js view of the Marievik site, with sky, sun and shadows, built on the SB-Chalmers
+threejsEditor stack. Go from **site → building → floor → unit**. For each building, set the ground- and
+upper-floor uses, the partition system and the windows, or **add floors on top**. KPIs update at every
+level: area, units, cost, carbon, retained share and blockers.
+
+On any floor you can run **daylight factor** and **thermal comfort**. The quick method takes seconds. The
+Ladybug Tools method runs Honeybee with EnergyPlus and Radiance in `.venv-sim`. Rhino `.3dm` files open in
+the same view, with their layers. Saved scenarios sit side by side in a comparison table. The layouts come
+from the Marievik_parametric engine (the Grasshopper model's code). See [explorer/README.md](explorer/README.md).
+
 ## Optimiser — ten options per use, and the one to regret least
 
 ```powershell
@@ -139,6 +157,15 @@ Output: `runs/optimise/<timestamp>/report.html` (self-contained) and
 `data/products/furniture_products.json` — dummy data until suppliers replace it.
 Thermal results are cached in `runs/optimise/thermal_cache.json`, so re-running
 after a cost change does not re-simulate.
+
+## Grasshopper building model
+
+The Rhino/Grasshopper definition in `Desktop\Marievik_parametric` (component *MVK Building*) generates
+floor-by-floor layouts per use on a real footprint and prices them from **this** catalogue. With
+*Export = true* it writes `runs/grasshopper/<building>.json` (every use x partition system, plus plan
+geometry). `engine/grasshopper.py` prices each bill again with `evaluate.evaluate_bill`, so dashboard
+figures from the bay engine and from the Rhino model share one method. Rebuild with
+`python -m engine.build_web` and the *Model* section of the dashboard updates.
 
 ## Published dashboard
 

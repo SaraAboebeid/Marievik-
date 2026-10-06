@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* Design tokens as Tailwind theme variables, so `bg-surface`, `text-ink`,
+   `border-line` etc. are real utilities. Concrete neutrals biased slightly
+   cool-green; the categorical hues are the CVD-validated set from the
+   project's palette. */
+@theme {
+  --color-bg: #eef0ee;
+  --color-surface: #fbfcfb;
+  --color-raised: #ffffff;
+  --color-sunken: #e5e8e6;
+  --color-line: #d6dad7;
+  --color-line-strong: #bbc1bd;
+  --color-ink: #161918;
+  --color-ink-2: #454c49;
+  --color-muted: #727a76;
+  --color-accent: #1f6e9e;
+  --color-accent-soft: #e2edf5;
+
+  --color-c1: #3d8fd1;
+  --color-c2: #d2601a;
+  --color-c3: #128f6e;
+  --color-c4: #c46ba4;
+  --color-c5: #dfa00c;
+  --color-c6: #8a72d8;
+
+  --color-good: #2e7d4f;
+  --color-good-bg: #e4f0e9;
+  --color-warn: #9c6708;
+  --color-warn-bg: #f7eedc;
+  --color-serious: #b2551b;
+  --color-serious-bg: #f8e8de;
+  --color-critical: #ac2e23;
+  --color-critical-bg: #f8e3e1;
+
+  --font-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-bg: #0f1110;
+    --color-surface: #181a19;
+    --color-raised: #212422;
+    --color-sunken: #151716;
+    --color-line: #2d3230;
+    --color-line-strong: #424846;
+    --color-ink: #ebeeec;
+    --color-ink-2: #b0b7b4;
+    --color-muted: #808884;
+    --color-accent: #58a8de;
+    --color-accent-soft: #15303e;
+
+    --color-c1: #4a97d6;
+    --color-c2: #de6f2e;
+    --color-c3: #169b72;
+    --color-c4: #c767ac;
+    --color-c5: #b88609;
+    --color-c6: #9782de;
+
+    --color-good: #4fae77;
+    --color-good-bg: #152920;
+    --color-warn: #d39a22;
+    --color-warn-bg: #2a2213;
+    --color-serious: #e0793b;
+    --color-serious-bg: #2d1d12;
+    --color-critical: #e0655a;
+    --color-critical-bg: #2f1a18;
+  }
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+* { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+
+/* unit labels drawn by three's CSS2DRenderer */
+.unit-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #1c1f1e;
+  background: rgba(255, 255, 255, 0.82);
+  border-radius: 3px;
+  padding: 1px 4px;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+.panel-scroll { max-height: calc(100vh - 7.5rem); overflow-y: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}

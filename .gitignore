@@ -34,3 +34,9 @@ apartment/static/dist/
 
 # Isolated simulation environment (Honeybee/Ladybug/Dragonfly)
 .venv-sim/
+
+# Explorer
+explorer/web/node_modules/
+explorer/web/dist/
+explorer/web/public/rhino3dm/
+explorer/models/*.3dm

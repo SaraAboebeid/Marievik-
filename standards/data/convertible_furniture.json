@@ -1,0 +1,141 @@
+{
+  "_meta": {
+    "version": "0.1.0",
+    "updated": "2026-10-06",
+    "units": "mm",
+    "purpose": "Furniture that changes a room's function without changing the room. This is the STUFF layer doing adaptability, and it is the cheapest adaptability there is: no demolition, no carbon, no permit, measured in seconds rather than weeks.",
+    "why_this_matters_here": "The project's thesis is usually argued at the space_plan layer — demountable partitions, movable walls. This dataset is the layer below it. A studio with a fold-away bed is literally a different room by day and by night, and the engine can test BOTH states against the standards. A plan that works deployed and fails stowed is not a flexible plan.",
+    "modelling_note": "Each item carries two footprints. `deployed` is the in-use size; `stowed` is what it occupies the rest of the time. The clearance an item needs applies to its DEPLOYED state; the circulation it frees up applies to its stowed state. Testing only one state is how convertible furniture gets credited for flexibility it does not deliver.",
+    "source": "Neufert, Architects' Data, 3rd English ed., printed p.158 (Rooms / Living Areas).",
+    "verification": "Read directly from the rendered page 2026-10-06."
+  },
+
+  "reference_bed_sizes": {
+    "single_width_mm": 900,
+    "length_mm": 2000,
+    "width_range_mm": [900, 2000],
+    "neufert_ref": "p.158 figs.1,3,4 — 900 x 2000 mm is the recurring single bed; mattress widths run 900-2000 mm",
+    "source_ref": ["Neufert p.158"]
+  },
+
+  "items": [
+    {
+      "id": "conv.sofa_bed",
+      "name": "Sofa bed, bedding stored in the covers",
+      "category": "living",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 2000, "d": 800 },
+      "converts_between": ["living", "bedroom"],
+      "sleeps": 1,
+      "seats": 2,
+      "conversion_seconds": 60,
+      "neufert_ref": "p.158 fig.5 — sofa bed 2.00 m long, 800 mm deep as a sofa; duvet and pillows roll up during the daytime and zip into the covers",
+      "source_ref": ["Neufert p.158"],
+      "note": "Storing the bedding inside the sofa is the detail that decides whether it gets used daily. Without it the bedding needs a cupboard, and the flexibility costs floor area somewhere else."
+    },
+    {
+      "id": "conv.sofa_bed_pullout",
+      "name": "Sofa bed with pull-out mattress unit",
+      "category": "living",
+      "deployed": { "w": 1900, "d": 1600 },
+      "stowed": { "w": 1900, "d": 700 },
+      "converts_between": ["living", "bedroom"],
+      "sleeps": 2,
+      "seats": 3,
+      "neufert_ref": "p.158 figs.8,14 — sofa bed (fold-out), 1.60 m deep deployed from 700 mm stowed, 1.90 m long",
+      "source_ref": ["Neufert p.158"]
+    },
+    {
+      "id": "conv.armchair_bed",
+      "name": "Armchair bed, fold-out",
+      "category": "living",
+      "deployed": { "w": 2000, "d": 700 },
+      "stowed": { "w": 1400, "d": 700 },
+      "converts_between": ["living", "bedroom"],
+      "sleeps": 1,
+      "seats": 1,
+      "requires_separate_bedding_store": true,
+      "neufert_ref": "p.158 fig.13 — armchair bed (fold-out), 1.40 m stowed to 2.00 m deployed; a separate container is required for the bedding",
+      "source_ref": ["Neufert p.158"],
+      "note": "Neufert flags the bedding container explicitly. Flexibility that displaces storage has not removed the requirement, only moved it."
+    },
+    {
+      "id": "conv.frankfurt_bed_side",
+      "name": "Frankfurt bed, folds away sideways",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 2000, "d": 400 },
+      "stowed_height_mm": 1100,
+      "converts_between": ["bedroom", "empty"],
+      "sleeps": 1,
+      "conversion_seconds": 30,
+      "neufert_ref": "p.158 fig.15 — Frankfurt bed folding away sideways, 1.10 m high cupboard, 2.00 x 900 mm deployed",
+      "source_ref": ["Neufert p.158"],
+      "note": "Frees the entire bed footprint plus its 1.20-1.50 m access zone. In a studio that is the difference between a room that can hold a table and one that cannot."
+    },
+    {
+      "id": "conv.frankfurt_bed_vertical",
+      "name": "Frankfurt bed, folds away vertically",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 950, "d": 400 },
+      "stowed_height_mm": 2000,
+      "converts_between": ["bedroom", "empty"],
+      "sleeps": 1,
+      "can_pair_as_double": true,
+      "neufert_ref": "p.158 fig.16 — Frankfurt bed folding away vertically, 2.00 m high, 950 mm wide stowed; two adjacent units form a double bed",
+      "source_ref": ["Neufert p.158"]
+    },
+    {
+      "id": "conv.cupboard_bed",
+      "name": "Cupboard-bed with clothes cupboard beneath",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 800 },
+      "stowed": { "w": 2000, "d": 800 },
+      "stowed_height_mm": 1500,
+      "converts_between": ["bedroom", "storage"],
+      "sleeps": 1,
+      "neufert_ref": "p.158 fig.10 — cupboard-bed with low cupboard for clothes, 1.50 m high, 2.00 x 800 mm; suitable for very small rooms, ship's cabins and studio rooms",
+      "source_ref": ["Neufert p.158"],
+      "note": "Does not fold away — it stacks sleeping on top of storage. A different strategy: it buys storage rather than floor area, and the floor stays committed."
+    },
+    {
+      "id": "conv.high_bed_drawers",
+      "name": "High bed with deep drawers and slide-out board",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 2000, "d": 900 },
+      "stowed_height_mm": 1100,
+      "converts_between": ["bedroom", "storage"],
+      "sleeps": 1,
+      "neufert_ref": "p.158 fig.9 — high bed with deep drawers and a slide-out board on top, 1.10 m high, 2.00 x 900 mm",
+      "source_ref": ["Neufert p.158"]
+    },
+    {
+      "id": "conv.roller_bed",
+      "name": "Fold-up bed on rollers, stored in a cupboard",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 720, "d": 680 },
+      "stowed_height_mm": 1500,
+      "converts_between": ["bedroom", "empty"],
+      "sleeps": 2,
+      "neufert_ref": "p.158 figs.17,18 — fold-up bed on rollers for one or two people, rolled into a cupboard during the daytime; wall cupboard 1.50 m with a narrow door opening, 720 + 680 mm",
+      "source_ref": ["Neufert p.158"],
+      "note": "The largest ratio of deployed to stowed footprint here, and the only one that can leave the room entirely — which makes the cupboard, not the bed, the thing to design."
+    },
+    {
+      "id": "conv.bunk_three_level",
+      "name": "Three-level bunks",
+      "category": "bedroom",
+      "deployed": { "w": 2000, "d": 900 },
+      "stowed": { "w": 2000, "d": 900 },
+      "stowed_height_mm": 1850,
+      "sleeps": 3,
+      "area_per_bed_m2": 0.338,
+      "neufert_ref": "p.158 fig.11 — three-level bunks for dormobiles, weekend houses and children's rooms; space required 0.338 m2 per bed",
+      "source_ref": ["Neufert p.158"],
+      "note": "0.338 m2 per bed is the densest sleeping provision in the reference, and a useful floor for any density argument — it is what space costs when comfort is not the objective."
+    }
+  ]
+}

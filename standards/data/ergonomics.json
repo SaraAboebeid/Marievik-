@@ -11,11 +11,17 @@
       "pages_read": [
         23,
         29,
+        40,
         150,
+        153,
+        154,
+        157,
+        158,
+        161,
+        169,
         175
       ],
-      "method": "Pages rendered and read directly. OCR text was used only to locate pages, never to harvest numbers — digits are exactly what OCR of a scanned technical reference gets wrong, and a silently wrong dimension is the worst failure mode this model has.",
-      "records_verified": 18
+      "method": "Pages rendered and read directly. OCR used only to locate pages, never to harvest numbers."
     }
   },
   "envelopes": [
@@ -279,8 +285,10 @@
         "label": "Stand at an open drawer",
         "width": 700,
         "depth": 900,
-        "source_ref": [],
-        "neufert_ref": ""
+        "source_ref": [
+          "Neufert p.154"
+        ],
+        "neufert_ref": "p.154 fig.4 — space for drawers and doors, 600 + 400 + 350 + 500 mm; in a kitchen with two workplaces the movement zone is 800-1100 mm (p.153 fig.1)"
       },
       {
         "id": "open_wardrobe",
@@ -297,8 +305,10 @@
         "label": "Seated at a table, chair pushed back to stand",
         "width": 700,
         "depth": 800,
-        "source_ref": [],
-        "neufert_ref": ""
+        "source_ref": [
+          "Neufert p.154"
+        ],
+        "neufert_ref": "p.154 — a person needs a table area of approx 600 x 400 mm to eat comfortably, and a movement area of 800 mm is required to the left and right of the table"
       },
       {
         "id": "work_at_counter",
@@ -315,9 +325,12 @@
         "id": "bend_to_oven",
         "label": "Bending to a low oven or appliance",
         "width": 800,
-        "depth": 1100,
-        "source_ref": [],
-        "neufert_ref": ""
+        "depth": 1200,
+        "source_ref": [
+          "Neufert p.153"
+        ],
+        "neufert_ref": "p.153 fig.3 — low-level ovens require appropriate room for movement, 1.20/1.50 m",
+        "note": "Turn-bounded. The 1.20/1.50 pair appears throughout Neufert for exactly the ambulant and wheelchair cases, which is the same pair as the turning circles — because to use a low appliance you have to turn to it."
       },
       {
         "id": "make_bed",
@@ -371,9 +384,10 @@
         "depth": 800,
         "note": "Per seat along a table edge. Below 700 mm of width per person, elbows collide.",
         "source_ref": [
+          "Neufert p.154",
           "Neufert p.175"
         ],
-        "neufert_ref": "p.175 fig.3 and table 12 — 1.4-1.6 m2 per dining place; chair band 85 cm, table 80-90 cm"
+        "neufert_ref": "p.154 table 11 — width of places 550-700 mm, plus 100-200 mm extra for head-of-table places"
       },
       {
         "id": "pass_behind_seated",
@@ -382,9 +396,10 @@
         "depth": 1100,
         "note": "Measured from the table edge: 800 mm for the chair pushed back, plus 300 mm to squeeze past. Make it 1200 mm where people pass often, and 1500 mm where a wheelchair passes. This is the dimension that decides whether a dining area works, and it is almost never drawn.",
         "source_ref": [
+          "Neufert p.154",
           "Neufert p.175"
         ],
-        "neufert_ref": "p.175 fig.13 — aisle widths: main 2.00 m, intermediate 0.90 m, side 1.20 m"
+        "neufert_ref": "p.154 fig.6 — minimum distance of table from wall 900-1100 mm; p.175 fig.13 gives restaurant aisles main 2.00, intermediate 0.90, side 1.20 m"
       },
       {
         "id": "sofa_legroom",
@@ -421,18 +436,23 @@
         "id": "at_sink",
         "label": "Working at a sink",
         "width": 900,
-        "depth": 1100,
-        "source_ref": [],
-        "neufert_ref": ""
+        "depth": 1200,
+        "source_ref": [
+          "Neufert p.153",
+          "Neufert p.150"
+        ],
+        "neufert_ref": "p.153 figs.2,4,11 — 1.20/1.50 m clear in front of a 600 mm run; worktop 850-950 mm, 850-920 typical; sink at about 900 mm"
       },
       {
         "id": "at_hob",
         "label": "Working at a hob",
         "width": 900,
-        "depth": 1100,
+        "depth": 1200,
         "note": "Needs a heat-safe landing surface each side; the depth is for turning with a hot pan.",
-        "source_ref": [],
-        "neufert_ref": ""
+        "source_ref": [
+          "Neufert p.153"
+        ],
+        "neufert_ref": "p.153 figs.2,10 — 1.20/1.50 m clear; extractor fan required above the cooker"
       },
       {
         "id": "galley_between_runs",
@@ -451,8 +471,10 @@
         "label": "Loading a dishwasher",
         "width": 800,
         "depth": 1200,
-        "source_ref": [],
-        "neufert_ref": ""
+        "source_ref": [
+          "Neufert p.153"
+        ],
+        "neufert_ref": "p.153 fig.3 — appliances at low level need the same 1.20/1.50 m movement zone as an oven"
       },
       {
         "_section": "Sanitary"
@@ -558,9 +580,14 @@
         "note": "For a seated user this must be a knee-clearance counter, not just a lower one: the height means nothing without 700 mm of clear space beneath it to get your knees under.",
         "requires_knee_clearance_when_seated": true,
         "source_ref": [
+          "Neufert p.153",
           "BBR 3:22"
         ],
-        "neufert_ref": ""
+        "neufert_ref": "p.153 figs.1,2,11 — worktop 850-950 mm, 850-920 typical; set to the activity, since breadmaking wants 750 and the sink 900",
+        "range_mm": [
+          850,
+          950
+        ]
       },
       {
         "id": "dining_table",
@@ -714,6 +741,45 @@
           "BBR 3:14"
         ],
         "neufert_ref": ""
+      },
+      {
+        "id": "seated_worktop",
+        "label": "Pull-out worktop for seated working",
+        "absolute_mm": 675,
+        "range_mm": [
+          650,
+          700
+        ],
+        "seated_only": false,
+        "source_ref": [
+          "Neufert p.153"
+        ],
+        "neufert_ref": "p.153 fig.13 — pull-out worktop intended for seated working, 650-700 mm, against 850-950 mm standing",
+        "note": "A seated worktop is not simply a lower one: it also needs knee clearance beneath, or the user cannot get close enough to use it."
+      },
+      {
+        "id": "kitchen_bar",
+        "label": "Breakfast / snack bar",
+        "absolute_mm": 1125,
+        "range_mm": [
+          1100,
+          1150
+        ],
+        "source_ref": [
+          "Neufert p.153",
+          "Neufert p.154"
+        ],
+        "neufert_ref": "p.153 fig.16 — breakfast/snack bar at 1100-1150 mm, needing bar stools; p.154 fig.3 bar depth 400 mm with a 150 mm projection"
+      },
+      {
+        "id": "plinth_recess",
+        "label": "Plinth recess beneath base units",
+        "absolute_mm": 100,
+        "is_minimum": true,
+        "source_ref": [
+          "Neufert p.153"
+        ],
+        "neufert_ref": "p.153 fig.14 — correct installation of cupboard base for comfortable cleaning and working, recess at least 100 mm"
       }
     ]
   },
@@ -729,16 +795,66 @@
       "area_m2_per_seat": 1.6,
       "note": "Area per seat covers the table share plus the chair plus getting out of it. 1.6 m² is a banquet figure; tight domestic dining runs at 1.2 and feels it.",
       "source_ref": [
+        "Neufert p.154",
         "Neufert p.175"
       ],
-      "neufert_ref": "p.175 tables 11-13 — 1.4-1.6 m2 per place; aisles main 2.00 m, intermediate 0.90 m, side 1.20 m; emergency exits 1.0 m per 150 persons",
+      "neufert_ref": "p.154 figs.6,8 and tables 11-12 — place 600 x 400 mm with a 200 mm centre strip; 800 mm movement each side; round table min 900 mm diameter, 1100-1250 preferable; minimum table sizes by number of people; a dining area should always seat at least 4",
       "area_m2_per_seat_range": [
         1.4,
         1.6
       ],
       "aisle_main_mm": 2000,
       "aisle_intermediate_mm": 900,
-      "aisle_side_mm": 1200
+      "aisle_side_mm": 1200,
+      "place_setting_mm": [
+        600,
+        400
+      ],
+      "table_centre_strip_mm": 200,
+      "movement_each_side_of_table_mm": 800,
+      "place_width_range_mm": [
+        550,
+        700
+      ],
+      "head_of_table_extra_mm": [
+        100,
+        200
+      ],
+      "table_width_range_mm": [
+        550,
+        1100
+      ],
+      "round_table_min_diameter_mm": 900,
+      "round_table_preferred_mm": [
+        1100,
+        1250
+      ],
+      "round_table_formula": "diameter = place_width * seats / pi",
+      "corner_bench_extra_per_seat_mm": 800,
+      "min_seats": 4,
+      "table_envelope_m2": {
+        "4": [
+          2.34,
+          2.6
+        ],
+        "5": [
+          3.24,
+          3.8
+        ],
+        "6": [
+          3.51,
+          3.9
+        ],
+        "7": [
+          4.41,
+          5.1
+        ],
+        "8": [
+          4.68,
+          5.2
+        ]
+      },
+      "table_envelope_note": "First value excludes space for pulling out a chair, second includes it. Depth 1800 mm without, 2000 mm with."
     },
     "living": {
       "sofa_to_table_mm": 450,
@@ -756,10 +872,10 @@
       "counter_run_min_mm": 1800,
       "note": "The work triangle is sink-hob-fridge. Under 3.6 m total you are cramped, over 6.6 m you are walking. Landing surfaces beside hob and sink are where hot pans and wet dishes go, and omitting them is why some kitchens feel unusable despite plenty of counter.",
       "source_ref": [
-        "Neufert p.150",
-        "BBR 3:22"
+        "Neufert p.153",
+        "Neufert p.150"
       ],
-      "neufert_ref": "p.150 — working kitchen 5.5-9.5 m2; with dining area from approx 10 m2, good L-shape approx 14 m2; 1.20/1.50 m clear in front of a 600 mm run",
+      "neufert_ref": "p.153 figs.1-16 — worktops 600 mm deep at 850-950 mm; wall units 350 mm deep; 1.20/1.50 m clear in front; pull-out worktop for seated working 650-700 mm; plinth recess at least 100 mm for comfortable cleaning and working; normal work-table height 850 mm lies between the best height for breadmaking (750) and the sink (900)",
       "working_kitchen_area_m2": [
         5.5,
         9.5
@@ -768,7 +884,39 @@
       "kitchen_with_dining_good_m2": 14.0,
       "clear_in_front_of_run_mm": 1200,
       "clear_in_front_of_run_generous_mm": 1500,
-      "counter_depth_mm": 600
+      "counter_depth_mm": 600,
+      "worktop_depth_mm": 600,
+      "wall_cupboard_depth_mm": 350,
+      "worktop_height_range_mm": [
+        850,
+        950
+      ],
+      "worktop_height_typical_mm": [
+        850,
+        920
+      ],
+      "seated_pullout_worktop_mm": [
+        650,
+        700
+      ],
+      "snack_pullout_table_mm": [
+        700,
+        750
+      ],
+      "kitchen_bar_height_mm": [
+        800,
+        850
+      ],
+      "kitchen_bar_depth_mm": 400,
+      "kitchen_bar_projection_mm": 150,
+      "work_table_height_mm": 850,
+      "breadmaking_height_mm": 750,
+      "sink_height_mm": 900,
+      "bucket_sink_height_mm": [
+        500,
+        600
+      ],
+      "plinth_recess_mm": 100
     },
     "bedroom": {
       "clear_one_side_of_bed_mm": 1200,
@@ -871,5 +1019,28 @@
         "neufert_ref": ""
       }
     ]
+  },
+  "vision": {
+    "_note": "Field of view, which decides what a window actually shows and how a room is perceived. Separate from reach: these are the numbers behind sill heights, vision panels and ceiling-height judgements.",
+    "field_of_view": {
+      "horizontal_deg": 54,
+      "upward_deg": 27,
+      "downward_deg": 10,
+      "condition": "steady head, moving eye",
+      "detailed_vision_deg": 0.0167,
+      "neufert_ref": "p.40 figs.3,4 — the human field of view with steady head and moving eye is 54 deg horizontally, 27 deg upwards, 10 deg downwards; the fixed normal eye covers 1 minute of arc for detailed vision",
+      "source_ref": [
+        "Neufert p.40"
+      ],
+      "design_note": "The 10 degree downward figure is why a high sill removes the near ground from view without the occupant noticing they are missing it — the eye simply never scans there from a resting posture. It complements rather than replaces the geometric sightline test used for max_sill_for_view, which asks a different question: whether the ground is visible AT ALL."
+    },
+    "room_perception": {
+      "still_image_note": "A room whose ceiling is within the still image is taken in at a glance and reads as secure; a higher ceiling must be scanned and reads as free or exalted. Neufert gives 3.00 m depth against a 3.00 m ceiling as the comparison.",
+      "long_low_room_warning": "Long rooms with low ceilings read as depressing even when they meet every dimensional standard — relevant to deep-plan office conversion, where both conditions arrive together.",
+      "neufert_ref": "p.40 figs.1,2 and text",
+      "source_ref": [
+        "Neufert p.40"
+      ]
+    }
   }
 }

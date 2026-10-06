@@ -213,6 +213,18 @@ ABSOLUTE_ZONES = {
 # dimension and the user's turning circle.
 TURN_BOUNDED_ZONES = {
     "galley_between_runs", "dry_and_dress", "shower_entry",
+    # Neufert gives 1.20/1.50 m for every one of these - in front of a run,
+    # at a low oven, at the sink, at the hob. That is the same ambulant /
+    # wheelchair pair as the turning circles, because to use a low appliance
+    # or an opposing run you have to turn to it. Resolving them to the
+    # turning circle reproduces the published pair exactly.
+    "at_sink", "at_hob", "at_dishwasher", "bend_to_oven",
+    # Neufert gives 1.20/1.50 m for every one of these - in front of a run,
+    # at a low oven, at the sink, at the hob. That is the same ambulant /
+    # wheelchair pair as the turning circles, because to use a low appliance
+    # or an opposing run you have to turn to it. Resolving them to the
+    # turning circle reproduces the published pair exactly.
+    "at_sink", "at_hob", "at_dishwasher", "bend_to_oven",
     # Bed access reproduces Neufert p.23 fig.9 exactly when turn-bounded:
     # 1.20 m along the access side of an ambulant user's bed, 1.50 m along
     # the long side of a wheelchair user's. Those are the two turning

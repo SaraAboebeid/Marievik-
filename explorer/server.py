@@ -2,6 +2,10 @@
 
     python -m explorer.server              ->  http://127.0.0.1:8020
 
+Pages
+  /             the Digital Lab landing page (web/landing.html)
+  /explorer     the 3D explorer
+
 Serves the 3D explorer (explorer/web/dist, built with `npm run build` in explorer/web) and the
 API it calls. Like the Apartment Lab, the browser only draws and asks: every layout, quantity,
 cost, carbon, daylight and comfort figure is computed here in Python, from one implementation.
@@ -15,8 +19,7 @@ API (all JSON)
   POST /api/analysis/full                {... , daylight: bool, energy: bool} -> job id (Ladybug Tools)
   GET  /api/jobs/{job}                   status / result of a Ladybug Tools run
   GET  /api/capabilities                 which simulation engines are installed
-  GET  /api/models                       Rhino .3dm files in explorer/models (loaded in the viewer)
-"""
+  GET  /api/models                       Rhino .3dm files in explorer/models (loaded in the viewer)"""
 from __future__ import annotations
 
 import argparse
@@ -41,6 +44,7 @@ HERE = Path(__file__).resolve().parent
 DIST = HERE / "web" / "dist"
 MODELS = HERE / "models"
 SIM_SCRIPT = HERE / "sim" / "full_sim.py"
+LANDING = HERE.parent / "web" / "landing.html"           # the Digital Lab front door
 
 app = FastAPI(title="Marievik+ Explorer", docs_url="/api/docs")
 SITE: M.Site | None = None
@@ -251,6 +255,11 @@ for _sub in ("assets", "rhino3dm"):               # the built app and the rhino3
 
 
 @app.get("/", response_class=HTMLResponse)
+def landing():
+    return LANDING.read_text(encoding="utf-8")
+
+
+@app.get("/explorer", response_class=HTMLResponse)
 def index():
     f = DIST / "index.html"
     if f.is_file():
@@ -279,7 +288,7 @@ def main():
     ap.add_argument("--host", default="127.0.0.1")
     a = ap.parse_args()
     import uvicorn
-    print("Marievik+ Explorer  ->  http://%s:%d" % (a.host, a.port))
+    print("Marievik+ Digital Lab  ->  http://%s:%d   (explorer: /explorer)" % (a.host, a.port))
     uvicorn.run(app, host=a.host, port=a.port, log_level="warning")
 
 

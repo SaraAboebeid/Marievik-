@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marievik+ Digital Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Palette: Chalk #F4F2EB, Mist #D7DFDA, Deep pine #1E3434, Regenerative lime #B9D35B, Terracotta #C97855 */
+:root{
+  --chalk:#F4F2EB; --mist:#D7DFDA; --pine:#1E3434; --lime:#B9D35B; --terra:#C97855;
+  --bg:var(--chalk); --card:#FAF9F5; --ink:var(--pine); --ink-2:#3E5352; --muted:#627370;
+  --line:var(--mist);
+  --sans:"Archivo", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0F1C1C; --card:#152525; --ink:var(--chalk); --ink-2:#C3CDC8; --muted:#869793; --line:#26393A; }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased}
+a{color:inherit; text-decoration:none}
+.wrap{max-width:1160px; margin:0 auto; padding-inline:24px}
+.mono{font-family:var(--mono); text-transform:uppercase; letter-spacing:.09em; font-size:11px}
+
+/* ---------- hero ---------- */
+.hero{background:var(--pine); color:var(--chalk); border-bottom:4px solid var(--lime); position:relative; overflow:hidden}
+.hero::after{ /* a quiet floor-plan grid, the shell everything starts from */
+  content:""; position:absolute; inset:0; pointer-events:none; opacity:.09;
+  background-image:linear-gradient(var(--mist) 1px, transparent 1px), linear-gradient(90deg, var(--mist) 1px, transparent 1px);
+  background-size:48px 48px; mask-image:linear-gradient(100deg, transparent 35%, #000 90%);
+}
+.top{display:flex; align-items:baseline; gap:12px; padding-block:22px}
+.top b{font-size:30px; font-weight:800; letter-spacing:-.03em}
+.top .mono{color:var(--lime); font-size:16px}
+.top .who{margin-left:auto; color:var(--chalk); font-size:15px; font-weight:500}
+.hero-body{padding:56px 0 64px; position:relative; z-index:1; max-width:780px}
+.hero h1{font-size:clamp(32px, 5vw, 54px); line-height:1.05; letter-spacing:-.035em; font-weight:800; margin:0 0 20px}
+.hero h1 em{font-style:normal; color:var(--lime)}
+.hero p{font-size:18px; line-height:1.55; color:var(--mist); margin:0; max-width:620px}
+
+/* ---------- profiles ---------- */
+.start{padding:56px 0 24px}
+.start-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px}
+.start h2{font-size:28px; letter-spacing:-.025em; margin:0; font-weight:800}
+.start-head p{margin:0; color:var(--muted); font-size:14.5px}
+.grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px}
+@media (max-width:1040px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+@media (max-width:600px){ .grid{grid-template-columns:1fr} }
+
+.card{
+  display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:24px 22px 20px; min-height:330px; position:relative; overflow:hidden;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card::before{content:""; position:absolute; left:0; right:0; top:0; height:5px; background:var(--c)}
+.card:hover{transform:translateY(-4px); border-color:var(--c); box-shadow:0 14px 32px rgba(30,52,52,.13)}
+.card:focus-visible{outline:2px solid var(--c); outline-offset:3px}
+.icon{width:48px; height:48px; border-radius:12px; display:grid; place-items:center; background:var(--c); color:var(--on-c); margin-bottom:18px}
+.icon svg{width:24px; height:24px}
+.card h3{font-size:21px; letter-spacing:-.02em; margin:0 0 8px; font-weight:700; line-height:1.2}
+.card .q{color:var(--ink-2); line-height:1.5; font-size:14.5px; margin:0 0 16px}
+.card ul{margin:0 0 20px; padding:0; list-style:none; font-size:13px; color:var(--ink-2)}
+.card li{padding:7px 0 7px 16px; border-top:1px dashed var(--line); position:relative}
+.card li::before{content:""; position:absolute; left:1px; top:13px; width:6px; height:6px; border-radius:50%; background:var(--c)}
+.go{margin-top:auto; display:flex; align-items:center; justify-content:space-between; font-weight:600; font-size:14px}
+.arrow{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--c); color:var(--on-c); transition:transform .18s ease}
+.card:hover .arrow{transform:translateX(4px)}
+
+.p-investor{--c:var(--pine);  --on-c:var(--chalk)}
+.p-supplier{--c:var(--terra); --on-c:#fff}
+.p-finance {--c:var(--mist);  --on-c:var(--pine)}
+.p-environ {--c:var(--lime);  --on-c:var(--pine)}
+@media (prefers-color-scheme: dark){
+  .p-investor{--c:var(--chalk); --on-c:var(--pine)}
+  .p-finance{--c:#5E7A76; --on-c:var(--chalk)}
+}
+
+/* ---------- projects ---------- */
+.projects{margin-bottom:52px}
+.step{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--pine); color:var(--lime);
+  font-family:var(--mono); font-size:14px; font-weight:500; margin-right:12px; vertical-align:4px}
+@media (prefers-color-scheme: dark){ .step{background:var(--lime); color:var(--pine)} }
+.proj-grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:12px}
+@media (max-width:1040px){ .proj-grid{grid-template-columns:repeat(3, 1fr)} }
+@media (max-width:600px){ .proj-grid{grid-template-columns:1fr 1fr} }
+.proj{
+  font:inherit; color:inherit; text-align:left; cursor:pointer; position:relative;
+  display:flex; flex-direction:column; gap:3px; padding:16px 16px 14px;
+  background:var(--card); border:1px solid var(--line); border-radius:10px;
+  transition:border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.proj:hover{border-color:var(--ink-2); transform:translateY(-2px)}
+.proj:focus-visible{outline:2px solid var(--lime); outline-offset:3px}
+.proj b{font-size:17px; letter-spacing:-.015em}
+.proj .city{font-size:13px; color:var(--muted)}
+.proj .pin{width:12px; height:12px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--terra); margin-bottom:8px}
+.proj .tag{position:absolute; top:12px; right:12px; font-family:var(--mono); font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:2px 7px}
+.proj[aria-checked="true"]{background:var(--pine); border-color:var(--pine); color:var(--chalk)}
+.proj[aria-checked="true"] .city{color:var(--mist)}
+.proj[aria-checked="true"] .pin{background:var(--lime)}
+.proj[aria-checked="true"] .tag{color:var(--mist); border-color:rgba(215,223,218,.35)}
+@media (prefers-color-scheme: dark){
+  .proj[aria-checked="true"]{background:var(--lime); border-color:var(--lime); color:var(--pine)}
+  .proj[aria-checked="true"] .city, .proj[aria-checked="true"] .tag{color:var(--pine)}
+  .proj[aria-checked="true"] .pin{background:var(--pine)}
+}
+.chosen{color:var(--ink); font-weight:600}
+
+.skip{margin:26px 0 0; font-size:14px; color:var(--muted)}
+.skip a{color:var(--ink); font-weight:600; border-bottom:1px solid var(--line)}
+.skip a:hover{border-color:var(--ink)}
+
+footer{padding:30px 0 44px; color:var(--muted); font-size:13px; display:flex; gap:16px; flex-wrap:wrap; border-top:1px solid var(--line); margin-top:40px}
+footer .mono{color:var(--muted)}
+footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform:uppercase; letter-spacing:.09em; font-size:14px; font-weight:500; color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <b>Marievik+</b><span class="mono">Digital Lab</span>
+      <span class="mono who">Chalmers Next Labs</span>
+    </div>
+    <div class="hero-body">
+      <h1>What can this building <em>become</em>, and what does becoming it cost?</h1>
+      <p>A computational lab for flexibility, circularity and adaptive reuse.</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap start">
+  <section class="projects" aria-labelledby="proj-h">
+    <div class="start-head">
+      <h2 id="proj-h"><span class="step">1</span>Choose a project</h2>
+      <p>Placeholder projects open the Marievik model until their own is added.</p>
+    </div>
+    <div class="proj-grid" role="radiogroup" aria-labelledby="proj-h">
+      <button type="button" class="proj" role="radio" data-project="marievik" aria-checked="true">
+        <span class="pin" aria-hidden="true"></span><b>Marievik</b><span class="city">Stockholm</span>
+      </button>
+      <button type="button" class="proj" role="radio" data-project="lindangen" aria-checked="false">
+        <span class="pin" aria-hidden="true"></span><b>Lindängen</b><span class="city">Malmö</span><span class="tag">Placeholder</span>
+      </button>
+      <button type="button" class="proj" role="radio" data-project="sandvangen" aria-checked="false">
+        <span class="pin" aria-hidden="true"></span><b>Sandvången</b><span class="city">Malmö</span><span class="tag">Placeholder</span>
+      </button>
+      <button type="button" class="proj" role="radio" data-project="uppsala" aria-checked="false">
+        <span class="pin" aria-hidden="true"></span><b>Uppsala</b><span class="city">Uppsala</span><span class="tag">Placeholder</span>
+      </button>
+      <button type="button" class="proj" role="radio" data-project="gothenburg" aria-checked="false">
+        <span class="pin" aria-hidden="true"></span><b>Gothenburg</b><span class="city">Göteborg</span><span class="tag">Placeholder</span>
+      </button>
+    </div>
+  </section>
+
+  <div class="start-head">
+    <h2><span class="step">2</span>Start as…</h2>
+    <p>Pick the profile closest to your role, for <span class="chosen" id="chosen">Marievik, Stockholm</span>.</p>
+  </div>
+
+  <div class="grid">
+
+    <a class="card p-investor" href="/explorer?profile=investor">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>
+      </span>
+      <h3>Real estate investor</h3>
+      <p class="q">Which new use makes the most of this building, and what stands in the way?</p>
+      <ul>
+        <li>Lettable area and units per use</li>
+        <li>Conversion cost per scenario</li>
+        <li>Blockers and added floors</li>
+      </ul>
+      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+
+    <a class="card p-supplier" href="/explorer?profile=supplier">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+      </span>
+      <h3>Material supplier</h3>
+      <p class="q">What do these conversions need, in what quantities, and where do my products fit?</p>
+      <ul>
+        <li>Partition systems, doors and windows</li>
+        <li>Quantities per building and floor</li>
+        <li>Demountable and reusable components</li>
+      </ul>
+      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+
+    <a class="card p-finance" href="/explorer?profile=finance">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+      </span>
+      <h3>Financial consultant</h3>
+      <p class="q">What does each scenario cost now, and how do the options compare side by side?</p>
+      <ul>
+        <li>Capital cost per scenario</li>
+        <li>Retained versus new elements</li>
+        <li>Saved scenarios compared in a table</li>
+      </ul>
+      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+
+    <a class="card p-environ" href="/explorer?profile=environmental">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 12-4 16-9 16z"/><path d="M4 21c3-4 6-7 10-9"/></svg>
+      </span>
+      <h3>Environmental consultant</h3>
+      <p class="q">How much carbon does reuse save, and do the new spaces work for the people in them?</p>
+      <ul>
+        <li>Embodied carbon and retained share</li>
+        <li>Daylight factor per floor</li>
+        <li>Thermal comfort per unit</li>
+      </ul>
+      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+
+  </div>
+
+  <p class="skip">Just looking? <a href="/explorer">Open the 3D Explorer without a profile →</a></p>
+</main>
+
+<footer class="wrap">
+  <span class="mono">Marievik+ Digital Lab</span>
+  <span>Figures are placeholders until verified data replaces them.</span>
+  <span>Chalmers Next Labs</span>
+</footer>
+
+<script>
+// Step 1 picks the project; every link into the explorer carries it (and the profile) in the URL.
+(function () {
+  var projects = document.querySelectorAll('.proj')
+  var links = document.querySelectorAll('a[href^="/explorer"]')
+  var chosen = document.getElementById('chosen')
+  links.forEach(function (a) { a.dataset.base = a.getAttribute('href') })
+
+  function select(btn) {
+    projects.forEach(function (p) { p.setAttribute('aria-checked', p === btn ? 'true' : 'false'); p.tabIndex = p === btn ? 0 : -1 })
+    var key = btn.dataset.project
+    chosen.textContent = btn.querySelector('b').textContent + ', ' + btn.querySelector('.city').textContent
+    links.forEach(function (a) {
+      var base = a.dataset.base
+      a.setAttribute('href', base + (base.indexOf('?') < 0 ? '?' : '&') + 'project=' + key)
+    })
+  }
+
+  projects.forEach(function (p, i) {
+    p.addEventListener('click', function () { select(p) })
+    p.addEventListener('keydown', function (e) {   // arrow keys move through the radio group
+      var d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
+      if (!d) return
+      e.preventDefault()
+      var n = projects[(i + d + projects.length) % projects.length]
+      select(n); n.focus()
+    })
+  })
+  select(document.querySelector('.proj[aria-checked="true"]'))
+})()
+</script>
+
+</body>
+</html>

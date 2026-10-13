@@ -339,7 +339,7 @@ else:
             path = X.export(fp, BUILDING, SB["name"] if SB else BUILDING, n, uses[0], (hs[0], hs[-1]), overrides=ov,
                             mvplus=MVPLUS, mode=MODE, site_building=SB,
                             current={"use": uses[-1], "ground_use": uses[0], "partition_system": SYSTEM})
-            summary += "\nExported for the dashboard: %s\nThen run:  python -m engine.build_web   (in Marievik+)" % path
+            summary += "\nExported: %s\nRe-price with:  python -m engine.grasshopper   (in Marievik+)" % path
         except Exception as e:
             summary += "\nDashboard export failed: %s" % e
 

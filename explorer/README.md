@@ -32,7 +32,8 @@ cd explorer\web; npm install; npm run build; cd ..\..
 python -m explorer.server          # or double-click run_explorer.bat
 ```
 
-Then open http://127.0.0.1:8020. The server lays out all 13 buildings at start (about 30 s). The page fills
+Then open http://127.0.0.1:8020 (the Digital Lab landing page) and choose the 3D Explorer, or go straight to
+http://127.0.0.1:8020/explorer. The server lays out all 13 buildings at start (about 30 s). The page fills
 in as each building arrives.
 
 For development, run `npm run dev` in `explorer/web` (http://localhost:5174, hot reload), with the

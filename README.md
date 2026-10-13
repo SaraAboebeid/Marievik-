@@ -121,7 +121,6 @@ python -m engine.cli all             # everything, written to runs/
 
 python -m engine.intake file.json    # validate a supplier submission (no dependencies)
 python -m engine.grasshopper         # list + re-price Grasshopper exports (runs/grasshopper/)
-python -m engine.build_web           # rebuild the published dashboard
 python -m tests.test_engine          # 29 checks incl. ledger conservation
 python -m tests.test_explorer        # explorer: scenarios, added floors, daylight, comfort
 ```
@@ -161,7 +160,7 @@ circle are not negotiable.
 ## Explorer — the site in 3D, from site to unit
 
 ```bash
-python -m explorer.server      # http://127.0.0.1:8020   (on Windows you can also double-click run_explorer.bat)
+python -m explorer.server      # http://127.0.0.1:8020/explorer   (on Windows you can also double-click run_explorer.bat)
 ```
 
 A rendered three.js view of the Marievik site, with sky, sun and shadows, built on the SB-Chalmers
@@ -205,18 +204,8 @@ after a cost change does not re-simulate.
 The Rhino/Grasshopper definition in [`parametric/`](parametric/README.md) (component *MVK Building*) generates
 floor-by-floor layouts per use on a real footprint and prices them from **this** catalogue. With
 *Export = true* it writes `runs/grasshopper/<building>.json` (every use x partition system, plus plan
-geometry). `engine/grasshopper.py` prices each bill again with `evaluate.evaluate_bill`, so dashboard
-figures from the bay engine and from the Rhino model share one method. Rebuild with
-`python -m engine.build_web` and the *Model* section of the dashboard updates.
-
-## Published dashboard
-
-https://claude.ai/artifact/8Pz3DFeq814iwewoRzMcyR — private until shared from the
-page's Share menu. Rebuild with `python -m engine.build_web`, then republish.
-
-The page embeds a timestamped snapshot of the engine's output, carrying its own
-placeholder share in a banner. That is deliberate: a published figure should say
-how much of itself is real.
+geometry). `engine/grasshopper.py` prices each bill again with `evaluate.evaluate_bill`, so figures
+from the bay engine and from the Rhino model share one method.
 
 ## Data honesty rule
 

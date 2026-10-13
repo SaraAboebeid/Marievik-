@@ -59,12 +59,12 @@ Keys are `"*"` (all floors) or a floor (`"F02"`). Everything is optional.
 * Wall junctions overlap slightly (about half a wall thickness), so wall areas are overstated by roughly 1–2 %.
 * Footprints are straight-edged polygons. Curves are approximated as polylines.
 
-## Link to the Marievik+ dashboard (added 2026-10-05)
+## Link to Marievik+ (added 2026-10-05)
 * **Prices come from the Marievik+ catalogue** (`Marievik+\data\components\catalogue.json`, two folders up from `mvk/`). `components_db.csv` now only holds geometry and a `catalogue_id` link per type. Types without a link are priced from the CSV and flagged `mock_csv`.
 * **Existing shell** (toggle, default on): facade, core, slabs and existing windows are *retained*, so they carry no new cost or carbon. Partitions, doors, floor and ceiling finishes, and changed windows are *new* and priced (capex = material + install; carbon = A1–A5; C1–C4 and D reported separately). An atrium cut into a retained slab shows as *not priced* until the catalogue has an entry for it.
 * **Partition system** (value list): as profile / conventional stud / demountable / glazed. It switches every new wall type at once.
-* **Export = true** also writes `Marievik+\runs\grasshopper\<Building id>.json`: every use × {conventional, demountable}, with plan geometry. Then run `python -m engine.build_web` in Marievik+ and republish. The dashboard prices the bill again with the engine's own `evaluate_bill`.
-* Code: `mvk/pricing.py` (catalogue pricing), `mvk/export.py` (dashboard file).
+* **Export = true** also writes `Marievik+\runs\grasshopper\<Building id>.json`: every use × {conventional, demountable}, with plan geometry. `python -m engine.grasshopper` in Marievik+ prices the bill again with the engine's own `evaluate_bill`.
+* Code: `mvk/pricing.py` (catalogue pricing), `mvk/export.py` (export file).
 
 ## Marievik site (added 2026-10-05)
 * `site/marievik_site.json` holds 13 buildings (B01–B13) with footprints and storey counts from OpenStreetMap (ODbL, © OpenStreetMap contributors), plus the streets. Coordinates are SWEREF 99 TM minus origin E 672400 / N 6578480 (metres). Names and today's use are assumptions from aerial photos; edit the file when real data arrives. Raw downloads: `site/osm_marievik_*.json`.

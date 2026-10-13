@@ -1,0 +1,29 @@
+id,catalogue_id,category,name,unit,thickness_m,width_m,height_m,cost_sek_per_unit,gwp_kgco2e_per_unit,u_value,notes
+EW_CONC_INSUL_400,,ext_wall,Concrete sandwich wall 400 mm (insulated),m2,0.40,,,6200,110,0.18,MOCK value - replace from database
+EW_BRICK_450,,ext_wall,Brick facade on concrete 450 mm,m2,0.45,,,7400,135,0.17,MOCK value - replace from database
+EW_TIMBER_CLT_380,,ext_wall,CLT wall with wood fibre insulation 380 mm,m2,0.38,,,6800,45,0.16,MOCK value - replace from database
+EW_CURTAIN_GLASS,,ext_wall,Curtain wall (opaque spandrel part),m2,0.25,,,9500,160,0.60,MOCK value - replace from database
+IW_GYPSUM_STEEL_100,part.stud.gypsum.95,int_wall,Steel stud partition 2x13 gypsum 100 mm,m2,0.10,,,950,18,,Priced from the Marievik+ catalogue (part.stud.gypsum.95); CSV cost/GWP only used if the catalogue is not found
+IW_GYPSUM_ACOUSTIC_170,,int_wall,Acoustic double-stud partition 170 mm,m2,0.17,,,1650,30,,MOCK value - replace from database
+IW_TIMBER_STUD_120,,int_wall,Timber stud partition 120 mm,m2,0.12,,,1050,9,,MOCK value - replace from database
+IW_GLASS_PARTITION,part.demount.glass.100,int_wall,Glazed office partition,m2,0.08,,,3400,42,,Priced from the Marievik+ catalogue (part.demount.glass.100); CSV cost/GWP only used if the catalogue is not found
+IW_CONCRETE_200,part.cast.concrete.200,int_wall,Cast-in-place concrete wall 200 mm (core/separating),m2,0.20,,,2500,88,,Priced from the Marievik+ catalogue (part.cast.concrete.200); CSV cost/GWP only used if the catalogue is not found
+IW_CLT_100,,int_wall,CLT wall 100 mm (separating),m2,0.10,,,1900,22,,MOCK value - replace from database
+D_INT_SINGLE_900,door.int.timber.900,door,Interior door 900x2100,pcs,0.05,0.9,2.1,6500,45,,Priced from the Marievik+ catalogue (door.int.timber.900); CSV cost/GWP only used if the catalogue is not found
+D_INT_GLASS_1000,door.glass.1000,door,Glass door 1000x2100,pcs,0.02,1.0,2.1,11000,70,,Priced from the Marievik+ catalogue (door.glass.1000); CSV cost/GWP only used if the catalogue is not found
+D_FIRE_EI60_1000,door.fire.ei60.1000,door,Fire/sound-rated entrance door EI60 1000x2100,pcs,0.07,1.0,2.1,16000,95,,Priced from the Marievik+ catalogue (door.fire.ei60.1000); CSV cost/GWP only used if the catalogue is not found
+D_EXT_DOUBLE_1800,,door,Exterior double entrance door 1800x2400,pcs,0.08,1.8,2.4,48000,320,1.0,MOCK value - replace from database
+W_TRIPLE_ALU,skin.window.triple.openable,window,Triple-glazed aluminium window,m2,0.10,,,8200,105,0.90,Priced from the Marievik+ catalogue (skin.window.triple.openable); CSV cost/GWP only used if the catalogue is not found
+W_TRIPLE_ALU_WOOD,skin.window.triple.openable,window,Triple-glazed alu-clad timber window,m2,0.10,,,7200,62,0.85,Priced from the Marievik+ catalogue (skin.window.triple.openable); CSV cost/GWP only used if the catalogue is not found
+W_TRIPLE_TIMBER,skin.window.triple.openable,window,Triple-glazed timber window,m2,0.10,,,6400,48,0.90,Priced from the Marievik+ catalogue (skin.window.triple.openable); CSV cost/GWP only used if the catalogue is not found
+W_STOREFRONT,,window,Storefront glazing (ground floor),m2,0.10,,,9800,120,1.10,MOCK value - replace from database
+SL_CONCRETE_250,,slab,Concrete slab 250 mm,m2,0.25,,,1900,98,,MOCK value - replace from database
+SL_HOLLOWCORE_270,,slab,Hollow-core slab 270 mm + topping,m2,0.27,,,1650,78,,MOCK value - replace from database
+SL_CLT_240,,slab,CLT slab 240 mm + screed,m2,0.24,,,2300,42,,MOCK value - replace from database
+IW_DEMOUNT_SOLID_100,part.demount.solid.100,int_wall,Demountable solid partition 100 mm,m2,0.10,,,,,,Priced from the Marievik+ catalogue (part.demount.solid.100); CSV cost/GWP only used if the catalogue is not found
+IW_MOVABLE_ACOUSTIC,part.movable.acoustic.wall,int_wall,Movable acoustic wall,m2,0.12,,,,,,Priced from the Marievik+ catalogue (part.movable.acoustic.wall); CSV cost/GWP only used if the catalogue is not found
+FL_LINOLEUM,floor.linoleum.2.5,floor,Linoleum 2.5 mm,m2,0.003,,,,,,Priced from the Marievik+ catalogue (floor.linoleum.2.5); CSV cost/GWP only used if the catalogue is not found
+FL_CARPET_TILE,floor.carpet.tile,floor,Carpet tile,m2,0.008,,,,,,Priced from the Marievik+ catalogue (floor.carpet.tile); CSV cost/GWP only used if the catalogue is not found
+FL_RAISED_ACCESS,floor.raised.access.150,floor,Raised access floor 150 mm,m2,0.15,,,,,,Priced from the Marievik+ catalogue (floor.raised.access.150); CSV cost/GWP only used if the catalogue is not found
+CE_MINERAL_GRID,ceiling.mineral.tile.grid,ceiling,Mineral tile suspended ceiling,m2,0.02,,,,,,Priced from the Marievik+ catalogue (ceiling.mineral.tile.grid); CSV cost/GWP only used if the catalogue is not found
+CE_ACOUSTIC_BAFFLE,ceiling.acoustic.baffle,ceiling,Acoustic baffles,m2,0.05,,,,,,Priced from the Marievik+ catalogue (ceiling.acoustic.baffle); CSV cost/GWP only used if the catalogue is not found

@@ -1,0 +1,7971 @@
+{
+ "name": "Marievik, Liljeholmen (Stockholm)",
+ "crs": "EPSG:3006 SWEREF 99 TM",
+ "origin_E": 672400.0,
+ "origin_N": 6578480.0,
+ "note": "Model coordinates = SWEREF 99 TM minus origin (metres). Footprints and storey counts from OpenStreetMap (ODbL, © OpenStreetMap contributors), downloaded 2026-10-05. Uses and names are assumptions from aerial images until plans arrive.",
+ "buildings": [
+  {
+   "id": "B01",
+   "name": "Marievik 27 - vaulted-roof office (the study building)",
+   "osm_id": "way/42231117",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "7",
+    "name": "Marievik 27"
+   },
+   "levels": 7,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "study",
+   "footprint": [
+    [
+     25.81,
+     -24.86
+    ],
+    [
+     -18.67,
+     4.82
+    ],
+    [
+     5.4,
+     40.75
+    ],
+    [
+     49.88,
+     11.07
+    ],
+    [
+     25.81,
+     -24.86
+    ]
+   ],
+   "holes": [],
+   "area_m2": 2312.4,
+   "facade": {
+    "material": "render_light",
+    "base_material": "brick_red",
+    "base_floors": 2,
+    "window": "punched",
+    "module": 1.35,
+    "wwr": 0.4,
+    "sill": 0.9,
+    "head": 2.4,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.9,
+     "features": [
+      {
+       "kind": "barrel_vault",
+       "along": 0.55,
+       "across": 0.35,
+       "rise": 2.5,
+       "material": "metal_light"
+      },
+      {
+       "kind": "plant",
+       "along": 0.25,
+       "across": 0.2,
+       "h": 2.5,
+       "offset": 0.32
+      }
+     ]
+    },
+    "notes": "Red brick two-storey base, light rendered upper floors with a regular grid of punched windows; flat roof with a central metal barrel vault over plant.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B02",
+   "name": "Marievik 19 - H&M office",
+   "osm_id": "way/42231115",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "8",
+    "name": "Marievik 19"
+   },
+   "levels": 8,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     25.66,
+     44.72
+    ],
+    [
+     56.2,
+     89.96
+    ],
+    [
+     107.89,
+     55.19
+    ],
+    [
+     104.88,
+     50.74
+    ],
+    [
+     122.93,
+     38.6
+    ],
+    [
+     98.89,
+     3.0
+    ],
+    [
+     80.96,
+     15.06
+    ],
+    [
+     77.46,
+     9.87
+    ],
+    [
+     25.66,
+     44.72
+    ]
+   ],
+   "holes": [],
+   "area_m2": 4335.4,
+   "facade": {
+    "material": "brick_dark",
+    "window": "punched",
+    "module": 1.5,
+    "wwr": 0.45,
+    "sill": 0.8,
+    "head": 2.5,
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 1.0,
+     "features": [
+      {
+       "kind": "skylight",
+       "along": 0.35,
+       "across": 0.35,
+       "h": 1.2
+      },
+      {
+       "kind": "plant_u",
+       "along": 0.6,
+       "across": 0.55,
+       "h": 2.8,
+       "width": 4.0
+      },
+      {
+       "kind": "pv",
+       "share": 0.12
+      }
+     ]
+    },
+    "notes": "Dark brown brick facade, deep punched windows; flat roof with a large glazed skylight over the atrium, U-shaped rooftop plant and some PV.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B03",
+   "name": "Marievik 26 - Roots & Soil / Cisco / SATS block",
+   "osm_id": "rel/7930674",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "7",
+    "name": "Marievik 26"
+   },
+   "levels": 7,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     0.09,
+     -68.23
+    ],
+    [
+     -4.5,
+     -75.14
+    ],
+    [
+     1.21,
+     -79.21
+    ],
+    [
+     -1.56,
+     -83.83
+    ],
+    [
+     5.32,
+     -88.4
+    ],
+    [
+     -5.48,
+     -105.42
+    ],
+    [
+     -66.03,
+     -65.45
+    ],
+    [
+     -59.75,
+     -56.32
+    ],
+    [
+     -57.31,
+     -57.69
+    ],
+    [
+     -55.45,
+     -54.64
+    ],
+    [
+     -50.57,
+     -50.6
+    ],
+    [
+     -46.22,
+     -44.89
+    ],
+    [
+     -37.83,
+     -32.17
+    ],
+    [
+     -35.0,
+     -26.86
+    ],
+    [
+     -33.74,
+     -22.0
+    ],
+    [
+     -31.66,
+     -19.01
+    ],
+    [
+     -33.95,
+     -17.29
+    ],
+    [
+     -32.64,
+     -15.07
+    ],
+    [
+     -27.67,
+     -7.98
+    ],
+    [
+     32.54,
+     -48.28
+    ],
+    [
+     20.66,
+     -66.38
+    ],
+    [
+     12.94,
+     -61.28
+    ],
+    [
+     10.06,
+     -65.57
+    ],
+    [
+     4.3,
+     -61.99
+    ],
+    [
+     0.09,
+     -68.23
+    ]
+   ],
+   "holes": [
+    [
+     [
+      -21.5,
+      -46.88
+     ],
+     [
+      -26.6,
+      -43.53
+     ],
+     [
+      -33.14,
+      -53.47
+     ],
+     [
+      -14.18,
+      -65.89
+     ],
+     [
+      -7.65,
+      -55.95
+     ],
+     [
+      -21.5,
+      -46.88
+     ]
+    ]
+   ],
+   "area_m2": 4168.3,
+   "facade": {
+    "material": "render_white",
+    "window": "ribbon",
+    "module": 1.2,
+    "wwr": 0.5,
+    "sill": 0.8,
+    "head": 2.6,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.8,
+     "features": [
+      {
+       "kind": "pv",
+       "share": 0.45
+      }
+     ]
+    },
+    "notes": "White/light-grey rendered office block around a courtyard, horizontal window bands; roof largely covered with PV.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B04",
+   "name": "The Absolut Group / Plåtparken (glass atrium)",
+   "osm_id": "way/42231113",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "9"
+   },
+   "levels": 9,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     114.98,
+     -85.65
+    ],
+    [
+     54.84,
+     -45.08
+    ],
+    [
+     82.39,
+     -3.33
+    ],
+    [
+     133.48,
+     -37.26
+    ],
+    [
+     114.98,
+     -85.65
+    ]
+   ],
+   "holes": [],
+   "area_m2": 3364.1,
+   "facade": {
+    "material": "stone_light",
+    "window": "punched",
+    "module": 1.5,
+    "wwr": 0.45,
+    "sill": 0.8,
+    "head": 2.6,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 1.0,
+     "features": [
+      {
+       "kind": "glass_roof",
+       "side": "water",
+       "depth": 0.38,
+       "rise": 6.0
+      }
+     ]
+    },
+    "notes": "Light stone-clad office; the waterfront end has a large curved glazed atrium roof (Plåtparken).",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B05",
+   "name": "Marieviksgatan slab, east (Heidelberg Materials)",
+   "osm_id": "way/551093073",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "7"
+   },
+   "levels": 7,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     114.48,
+     -103.19
+    ],
+    [
+     106.16,
+     -116.75
+    ],
+    [
+     92.38,
+     -111.43
+    ],
+    [
+     88.95,
+     -116.06
+    ],
+    [
+     82.33,
+     -113.8
+    ],
+    [
+     75.4,
+     -109.45
+    ],
+    [
+     79.45,
+     -103.35
+    ],
+    [
+     61.92,
+     -91.97
+    ],
+    [
+     57.58,
+     -98.19
+    ],
+    [
+     55.56,
+     -96.8
+    ],
+    [
+     48.03,
+     -88.09
+    ],
+    [
+     46.64,
+     -87.35
+    ],
+    [
+     49.67,
+     -83.08
+    ],
+    [
+     38.37,
+     -70.6
+    ],
+    [
+     43.98,
+     -65.12
+    ],
+    [
+     48.34,
+     -58.73
+    ],
+    [
+     57.24,
+     -64.64
+    ],
+    [
+     62.75,
+     -71.27
+    ],
+    [
+     90.01,
+     -89.76
+    ],
+    [
+     98.26,
+     -95.28
+    ],
+    [
+     105.64,
+     -97.24
+    ],
+    [
+     114.48,
+     -103.19
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1601.9,
+   "facade": {
+    "material": "render_white",
+    "window": "punched",
+    "module": 1.35,
+    "wwr": 0.42,
+    "sill": 0.8,
+    "head": 2.5,
+    "roof": {
+     "shape": "setback",
+     "membrane": "dark",
+     "parapet": 0.9,
+     "setback": 2.0,
+     "features": []
+    },
+    "notes": "White rendered slab, regular punched windows, recessed top floor with dark roof.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B06",
+   "name": "Marieviksgatan slab, west",
+   "osm_id": "way/551093072",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "7"
+   },
+   "levels": 7,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     74.71,
+     -159.27
+    ],
+    [
+     63.82,
+     -148.6
+    ],
+    [
+     60.22,
+     -145.39
+    ],
+    [
+     40.62,
+     -132.61
+    ],
+    [
+     34.78,
+     -128.5
+    ],
+    [
+     22.51,
+     -124.02
+    ],
+    [
+     10.28,
+     -115.76
+    ],
+    [
+     14.3,
+     -109.67
+    ],
+    [
+     17.42,
+     -102.01
+    ],
+    [
+     38.58,
+     -110.44
+    ],
+    [
+     44.94,
+     -100.97
+    ],
+    [
+     50.85,
+     -103.62
+    ],
+    [
+     52.87,
+     -105.01
+    ],
+    [
+     54.74,
+     -106.79
+    ],
+    [
+     48.03,
+     -116.69
+    ],
+    [
+     62.31,
+     -126.35
+    ],
+    [
+     68.51,
+     -116.68
+    ],
+    [
+     73.85,
+     -118.58
+    ],
+    [
+     77.48,
+     -123.52
+    ],
+    [
+     71.2,
+     -132.44
+    ],
+    [
+     85.47,
+     -147.62
+    ],
+    [
+     81.88,
+     -151.51
+    ],
+    [
+     82.29,
+     -152.76
+    ],
+    [
+     81.96,
+     -154.29
+    ],
+    [
+     80.91,
+     -155.47
+    ],
+    [
+     79.41,
+     -155.95
+    ],
+    [
+     78.04,
+     -155.66
+    ],
+    [
+     74.71,
+     -159.27
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1649.7,
+   "facade": {
+    "material": "render_white",
+    "window": "punched",
+    "module": 1.35,
+    "wwr": 0.42,
+    "sill": 0.8,
+    "head": 2.5,
+    "roof": {
+     "shape": "setback",
+     "membrane": "dark",
+     "parapet": 0.9,
+     "setback": 2.0,
+     "features": []
+    },
+    "notes": "As B05 (same development).",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B07",
+   "name": "East waterfront office (rounded corners)",
+   "osm_id": "way/140393451",
+   "osm_tags": {
+    "building": "commercial",
+    "building:levels": "9"
+   },
+   "levels": 9,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     140.05,
+     113.88
+    ],
+    [
+     147.83,
+     108.67
+    ],
+    [
+     149.21,
+     110.19
+    ],
+    [
+     150.86,
+     110.82
+    ],
+    [
+     152.91,
+     110.98
+    ],
+    [
+     155.39,
+     110.17
+    ],
+    [
+     173.12,
+     97.87
+    ],
+    [
+     174.52,
+     95.96
+    ],
+    [
+     174.9,
+     93.12
+    ],
+    [
+     174.12,
+     90.67
+    ],
+    [
+     175.74,
+     88.42
+    ],
+    [
+     176.59,
+     85.77
+    ],
+    [
+     176.0,
+     83.0
+    ],
+    [
+     174.36,
+     80.58
+    ],
+    [
+     172.18,
+     79.74
+    ],
+    [
+     169.56,
+     79.25
+    ],
+    [
+     166.35,
+     81.08
+    ],
+    [
+     163.68,
+     76.81
+    ],
+    [
+     172.79,
+     70.79
+    ],
+    [
+     161.52,
+     53.24
+    ],
+    [
+     163.34,
+     49.74
+    ],
+    [
+     163.44,
+     47.44
+    ],
+    [
+     162.38,
+     44.83
+    ],
+    [
+     160.84,
+     43.22
+    ],
+    [
+     158.58,
+     42.12
+    ],
+    [
+     155.56,
+     41.57
+    ],
+    [
+     142.26,
+     50.0
+    ],
+    [
+     139.11,
+     45.17
+    ],
+    [
+     132.06,
+     49.69
+    ],
+    [
+     133.79,
+     52.19
+    ],
+    [
+     118.57,
+     62.69
+    ],
+    [
+     118.19,
+     63.88
+    ],
+    [
+     118.59,
+     65.64
+    ],
+    [
+     110.87,
+     70.97
+    ],
+    [
+     140.05,
+     113.88
+    ]
+   ],
+   "holes": [],
+   "area_m2": 2853.7,
+   "facade": {
+    "material": "metal_panel_light",
+    "window": "ribbon",
+    "module": 1.5,
+    "wwr": 0.55,
+    "sill": 0.8,
+    "head": 2.7,
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.8,
+     "features": [
+      {
+       "kind": "barrel_vault",
+       "along": 0.6,
+       "across": 0.3,
+       "rise": 3.0,
+       "material": "metal_light"
+      },
+      {
+       "kind": "roof_garden",
+       "along": 0.2,
+       "across": 0.2
+      }
+     ]
+    },
+    "notes": "Light metal-panel and glass office with rounded corner towers (WSP); barrel-vaulted roofs and a small roof garden. Identification uncertain.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B08",
+   "name": "Årstaängsvägen west office (Alstom)",
+   "osm_id": "way/105136251",
+   "osm_tags": {
+    "building": "office",
+    "building:levels": "7"
+   },
+   "levels": 7,
+   "height_m": null,
+   "current_use": "office",
+   "ground_use": "retail",
+   "role": "context",
+   "footprint": [
+    [
+     -71.88,
+     -73.42
+    ],
+    [
+     -38.23,
+     -97.59
+    ],
+    [
+     -53.01,
+     -119.12
+    ],
+    [
+     -90.32,
+     -174.93
+    ],
+    [
+     -117.4,
+     -157.04
+    ],
+    [
+     -104.85,
+     -136.12
+    ],
+    [
+     -111.12,
+     -132.13
+    ],
+    [
+     -71.88,
+     -73.42
+    ]
+   ],
+   "holes": [],
+   "area_m2": 3672.9,
+   "facade": {
+    "material": "brick_dark",
+    "window": "punched",
+    "module": 1.35,
+    "wwr": 0.4,
+    "sill": 0.8,
+    "head": 2.4,
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.9,
+     "features": [
+      {
+       "kind": "pv",
+       "share": 0.35
+      }
+     ]
+    },
+    "notes": "Dark brick office along Årstaängsvägen (Alstom), punched windows; dark roof with PV.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B09",
+   "name": "West end block (Nordic Wellness + apartments)",
+   "osm_id": "way/1192831977",
+   "osm_tags": {
+    "building": "yes",
+    "building:levels": "1",
+    "height": "30"
+   },
+   "levels": 8,
+   "height_m": 30.0,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "context",
+   "footprint": [
+    [
+     -28.12,
+     -111.76
+    ],
+    [
+     -26.28,
+     -112.99
+    ],
+    [
+     -24.35,
+     -110.07
+    ],
+    [
+     -12.12,
+     -118.1
+    ],
+    [
+     -14.72,
+     -121.96
+    ],
+    [
+     -16.19,
+     -120.99
+    ],
+    [
+     -33.6,
+     -147.25
+    ],
+    [
+     -31.94,
+     -148.35
+    ],
+    [
+     -36.46,
+     -154.92
+    ],
+    [
+     -38.11,
+     -153.81
+    ],
+    [
+     -43.08,
+     -161.44
+    ],
+    [
+     -56.14,
+     -180.04
+    ],
+    [
+     -54.66,
+     -181.05
+    ],
+    [
+     -59.33,
+     -187.57
+    ],
+    [
+     -60.67,
+     -186.75
+    ],
+    [
+     -62.87,
+     -190.31
+    ],
+    [
+     -69.21,
+     -185.99
+    ],
+    [
+     -71.5,
+     -189.23
+    ],
+    [
+     -89.9,
+     -174.41
+    ],
+    [
+     -53.01,
+     -119.12
+    ],
+    [
+     -49.33,
+     -119.84
+    ],
+    [
+     -38.17,
+     -116.56
+    ],
+    [
+     -32.33,
+     -108.67
+    ],
+    [
+     -28.12,
+     -111.76
+    ]
+   ],
+   "holes": [],
+   "area_m2": 2648.7,
+   "facade": {
+    "material": "render_light",
+    "base_material": "brick_red",
+    "base_floors": 1,
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.32,
+    "sill": 0.6,
+    "head": 2.4,
+    "balconies": true,
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.9,
+     "features": [
+      {
+       "kind": "pv",
+       "share": 0.3
+      }
+     ]
+    },
+    "notes": "Brick-based block with gym at street level and housing above; dark roof with PV.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B10",
+   "name": "Liljeholmskajen apartments, north slab",
+   "osm_id": "way/191550981",
+   "osm_tags": {
+    "building": "apartments",
+    "building:levels": "8",
+    "start_date": "2012"
+   },
+   "levels": 8,
+   "height_m": null,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "context",
+   "footprint": [
+    [
+     1.1,
+     -127.59
+    ],
+    [
+     11.31,
+     -134.15
+    ],
+    [
+     -7.12,
+     -161.41
+    ],
+    [
+     25.54,
+     -183.42
+    ],
+    [
+     18.47,
+     -194.51
+    ],
+    [
+     -5.31,
+     -178.56
+    ],
+    [
+     -24.35,
+     -165.44
+    ],
+    [
+     -10.47,
+     -144.48
+    ],
+    [
+     1.1,
+     -127.59
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1078.2,
+   "facade": {
+    "material": "render_light",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.32,
+    "sill": 0.6,
+    "head": 2.4,
+    "balconies": true,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.6,
+     "features": []
+    },
+    "notes": "Light rendered housing slab with balconies (Liljeholmskajen).",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B11",
+   "name": "Liljeholmskajen apartments, south slab",
+   "osm_id": "way/59304347",
+   "osm_tags": {
+    "building": "apartments",
+    "building:levels": "8"
+   },
+   "levels": 8,
+   "height_m": null,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "context",
+   "footprint": [
+    [
+     22.84,
+     -196.83
+    ],
+    [
+     46.93,
+     -172.12
+    ],
+    [
+     8.74,
+     -148.0
+    ],
+    [
+     15.83,
+     -137.62
+    ],
+    [
+     66.24,
+     -171.31
+    ],
+    [
+     34.28,
+     -204.4
+    ],
+    [
+     22.84,
+     -196.83
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1168.7,
+   "facade": {
+    "material": "render_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.32,
+    "sill": 0.6,
+    "head": 2.4,
+    "balconies": true,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.6,
+     "features": []
+    },
+    "notes": "Yellow/light rendered housing with balconies.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B12",
+   "name": "Small apartment block",
+   "osm_id": "way/109238030",
+   "osm_tags": {
+    "building": "apartments",
+    "building:levels": "8",
+    "height": "26"
+   },
+   "levels": 8,
+   "height_m": 26.0,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "context",
+   "footprint": [
+    [
+     -62.87,
+     -190.31
+    ],
+    [
+     -61.66,
+     -191.16
+    ],
+    [
+     -71.67,
+     -205.39
+    ],
+    [
+     -97.71,
+     -186.23
+    ],
+    [
+     -89.9,
+     -174.41
+    ],
+    [
+     -71.5,
+     -189.23
+    ],
+    [
+     -69.21,
+     -185.99
+    ],
+    [
+     -62.87,
+     -190.31
+    ]
+   ],
+   "holes": [],
+   "area_m2": 476.5,
+   "facade": {
+    "material": "render_light",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.32,
+    "sill": 0.6,
+    "head": 2.4,
+    "balconies": true,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.6,
+     "features": []
+    },
+    "notes": "Small rendered housing block.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  },
+  {
+   "id": "B13",
+   "name": "Liljeholmskajen courtyard block",
+   "osm_id": "rel/13165190",
+   "osm_tags": {
+    "building": "residential",
+    "building:levels": "8"
+   },
+   "levels": 8,
+   "height_m": null,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "context",
+   "footprint": [
+    [
+     -48.24,
+     -201.04
+    ],
+    [
+     -32.27,
+     -177.8
+    ],
+    [
+     22.94,
+     -215.09
+    ],
+    [
+     -9.04,
+     -248.75
+    ],
+    [
+     -19.8,
+     -240.91
+    ],
+    [
+     -10.66,
+     -231.93
+    ],
+    [
+     2.53,
+     -218.04
+    ],
+    [
+     -28.71,
+     -196.86
+    ],
+    [
+     -36.61,
+     -208.75
+    ],
+    [
+     -48.24,
+     -201.04
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1517.9,
+   "facade": {
+    "material": "render_white",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.32,
+    "sill": 0.6,
+    "head": 2.4,
+    "balconies": true,
+    "roof": {
+     "shape": "flat",
+     "membrane": "light",
+     "parapet": 0.6,
+     "features": []
+    },
+    "notes": "White rendered courtyard housing with balconies.",
+    "source": "Visual estimate from Google 3D aerial views supplied by Sara, 2026-10-05 - not surveyed"
+   }
+  }
+ ],
+ "roads": [
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -175.19,
+     -171.64
+    ],
+    [
+     -177.87,
+     -166.06
+    ],
+    [
+     -178.37,
+     -157.45
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -139.54,
+     18.39
+    ],
+    [
+     -154.94,
+     19.53
+    ],
+    [
+     -165.92,
+     19.24
+    ],
+    [
+     -172.98,
+     15.52
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -170.32,
+     9.9
+    ],
+    [
+     -156.49,
+     10.7
+    ],
+    [
+     -147.37,
+     9.4
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -110.66,
+     39.57
+    ],
+    [
+     -142.0,
+     -11.42
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -277.82,
+     -330.0
+    ],
+    [
+     -217.75,
+     -227.93
+    ],
+    [
+     -211.46,
+     -218.77
+    ],
+    [
+     -201.25,
+     -205.58
+    ],
+    [
+     -190.63,
+     -197.87
+    ],
+    [
+     -178.56,
+     -189.17
+    ],
+    [
+     -175.73,
+     -186.23
+    ],
+    [
+     -167.65,
+     -173.2
+    ],
+    [
+     -153.08,
+     -139.47
+    ],
+    [
+     -145.39,
+     -123.7
+    ],
+    [
+     -134.38,
+     -103.51
+    ],
+    [
+     -121.38,
+     -83.38
+    ],
+    [
+     -104.15,
+     -58.62
+    ],
+    [
+     -86.67,
+     -30.36
+    ],
+    [
+     -81.66,
+     -21.41
+    ],
+    [
+     -75.77,
+     -11.52
+    ],
+    [
+     -65.23,
+     3.88
+    ],
+    [
+     -40.0,
+     46.22
+    ],
+    [
+     -31.69,
+     62.3
+    ],
+    [
+     -11.36,
+     117.54
+    ],
+    [
+     -5.51,
+     128.71
+    ],
+    [
+     14.94,
+     161.45
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "Årstaängsvägen",
+   "pts": [
+    [
+     -30.1,
+     3.82
+    ],
+    [
+     -23.63,
+     -0.47
+    ],
+    [
+     -4.91,
+     -13.31
+    ],
+    [
+     29.62,
+     -36.81
+    ],
+    [
+     43.96,
+     -46.25
+    ],
+    [
+     70.01,
+     -64.67
+    ],
+    [
+     115.22,
+     -94.42
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -141.07,
+     -190.86
+    ],
+    [
+     -147.62,
+     -189.07
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -147.62,
+     -189.07
+    ],
+    [
+     -151.1,
+     -188.04
+    ],
+    [
+     -171.02,
+     -175.68
+    ],
+    [
+     -175.19,
+     -171.64
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Liljeholmstorget",
+   "pts": [
+    [
+     -299.08,
+     -19.97
+    ],
+    [
+     -266.6,
+     -48.46
+    ],
+    [
+     -248.38,
+     -65.02
+    ],
+    [
+     -243.58,
+     -69.24
+    ],
+    [
+     -235.87,
+     -75.03
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsavfarten",
+   "pts": [
+    [
+     -155.53,
+     -56.15
+    ],
+    [
+     -176.57,
+     -76.92
+    ],
+    [
+     -182.68,
+     -83.27
+    ],
+    [
+     -187.05,
+     -85.73
+    ],
+    [
+     -192.15,
+     -87.72
+    ],
+    [
+     -197.83,
+     -88.37
+    ],
+    [
+     -204.34,
+     -87.59
+    ],
+    [
+     -210.4,
+     -84.59
+    ],
+    [
+     -213.6,
+     -82.63
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmspåfarten",
+   "pts": [
+    [
+     -235.87,
+     -75.03
+    ],
+    [
+     -229.46,
+     -83.09
+    ],
+    [
+     -218.88,
+     -90.55
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Vinodlargatan",
+   "pts": [
+    [
+     187.37,
+     -330.0
+    ],
+    [
+     213.54,
+     -297.85
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Hägerstensvägen",
+   "pts": [
+    [
+     -295.86,
+     -282.58
+    ],
+    [
+     -317.62,
+     -305.68
+    ],
+    [
+     -330.0,
+     -316.33
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Marieviksgatan",
+   "pts": [
+    [
+     -112.3,
+     -254.73
+    ],
+    [
+     -102.88,
+     -252.17
+    ],
+    [
+     -82.63,
+     -235.62
+    ],
+    [
+     -76.22,
+     -227.4
+    ],
+    [
+     -71.07,
+     -220.8
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     62.87,
+     -109.07
+    ],
+    [
+     54.09,
+     -103.31
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     115.22,
+     -94.42
+    ],
+    [
+     119.58,
+     -97.24
+    ],
+    [
+     123.93,
+     -100.05
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "",
+   "pts": [
+    [
+     -48.05,
+     -37.31
+    ],
+    [
+     -43.33,
+     -40.53
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     62.87,
+     -109.07
+    ],
+    [
+     76.81,
+     -118.07
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -211.46,
+     -218.77
+    ],
+    [
+     -202.12,
+     -220.91
+    ],
+    [
+     -187.69,
+     -207.47
+    ],
+    [
+     -185.64,
+     -208.16
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -185.64,
+     -208.16
+    ],
+    [
+     -169.73,
+     -217.34
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -169.73,
+     -217.34
+    ],
+    [
+     -167.58,
+     -218.0
+    ],
+    [
+     -165.34,
+     -217.77
+    ],
+    [
+     -162.56,
+     -216.84
+    ],
+    [
+     -159.83,
+     -215.56
+    ],
+    [
+     -156.16,
+     -212.23
+    ],
+    [
+     -152.89,
+     -210.21
+    ],
+    [
+     -149.1,
+     -209.42
+    ],
+    [
+     -143.87,
+     -209.87
+    ],
+    [
+     -136.67,
+     -213.34
+    ],
+    [
+     -132.18,
+     -213.81
+    ],
+    [
+     -127.62,
+     -213.49
+    ],
+    [
+     -123.67,
+     -212.05
+    ],
+    [
+     -116.42,
+     -210.35
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsvägen",
+   "pts": [
+    [
+     -139.54,
+     18.39
+    ],
+    [
+     -150.27,
+     24.38
+    ],
+    [
+     -165.61,
+     28.34
+    ],
+    [
+     -170.65,
+     29.41
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -278.44,
+     -103.63
+    ],
+    [
+     -293.05,
+     -102.81
+    ],
+    [
+     -307.87,
+     -100.52
+    ],
+    [
+     -321.97,
+     -96.96
+    ],
+    [
+     -324.88,
+     -96.39
+    ],
+    [
+     -330.0,
+     -95.77
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -227.7,
+     -169.51
+    ],
+    [
+     -285.69,
+     -265.24
+    ],
+    [
+     -295.86,
+     -282.58
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -223.51,
+     -97.61
+    ],
+    [
+     -215.3,
+     -103.35
+    ],
+    [
+     -212.73,
+     -106.16
+    ],
+    [
+     -211.51,
+     -109.64
+    ],
+    [
+     -211.62,
+     -114.64
+    ],
+    [
+     -214.25,
+     -120.83
+    ],
+    [
+     -229.53,
+     -150.74
+    ],
+    [
+     -285.36,
+     -237.21
+    ],
+    [
+     -296.79,
+     -259.14
+    ],
+    [
+     -296.69,
+     -264.05
+    ],
+    [
+     -304.13,
+     -277.17
+    ],
+    [
+     -322.43,
+     -304.05
+    ],
+    [
+     -330.0,
+     -311.12
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "Årstaängsvägen",
+   "pts": [
+    [
+     3.31,
+     49.84
+    ],
+    [
+     16.81,
+     40.94
+    ],
+    [
+     54.14,
+     15.54
+    ],
+    [
+     69.61,
+     4.82
+    ],
+    [
+     72.8,
+     0.05
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -155.53,
+     -56.15
+    ],
+    [
+     -181.76,
+     -98.68
+    ],
+    [
+     -211.99,
+     -146.9
+    ],
+    [
+     -227.7,
+     -169.51
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -101.85,
+     34.36
+    ],
+    [
+     -133.06,
+     -16.69
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -90.04,
+     27.37
+    ],
+    [
+     -71.65,
+     56.6
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -133.06,
+     -16.69
+    ],
+    [
+     -155.53,
+     -56.15
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -121.38,
+     -23.63
+    ],
+    [
+     -90.04,
+     27.37
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -178.37,
+     -157.45
+    ],
+    [
+     -167.2,
+     -141.09
+    ],
+    [
+     -138.42,
+     -97.67
+    ],
+    [
+     -129.11,
+     -81.96
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -186.84,
+     -129.1
+    ],
+    [
+     -167.69,
+     -98.22
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Årstaängsvägen",
+   "pts": [
+    [
+     77.46,
+     159.19
+    ],
+    [
+     72.99,
+     152.19
+    ],
+    [
+     43.56,
+     108.69
+    ],
+    [
+     3.31,
+     49.84
+    ],
+    [
+     -3.79,
+     39.76
+    ],
+    [
+     -30.1,
+     3.82
+    ],
+    [
+     -37.45,
+     -5.04
+    ],
+    [
+     -42.3,
+     -10.45
+    ],
+    [
+     -46.17,
+     -15.65
+    ],
+    [
+     -65.86,
+     -43.44
+    ],
+    [
+     -96.41,
+     -88.24
+    ],
+    [
+     -111.88,
+     -113.7
+    ],
+    [
+     -117.79,
+     -123.89
+    ],
+    [
+     -121.73,
+     -131.49
+    ],
+    [
+     -124.55,
+     -138.01
+    ],
+    [
+     -127.74,
+     -148.69
+    ],
+    [
+     -129.76,
+     -166.38
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -159.83,
+     -215.56
+    ],
+    [
+     -159.66,
+     -219.25
+    ],
+    [
+     -160.34,
+     -222.3
+    ],
+    [
+     -163.25,
+     -226.95
+    ],
+    [
+     -175.69,
+     -245.13
+    ],
+    [
+     -178.67,
+     -250.61
+    ],
+    [
+     -181.13,
+     -256.3
+    ],
+    [
+     -183.45,
+     -264.8
+    ],
+    [
+     -183.46,
+     -273.61
+    ],
+    [
+     -183.58,
+     -279.35
+    ],
+    [
+     -184.38,
+     -282.69
+    ],
+    [
+     -187.24,
+     -286.12
+    ],
+    [
+     -188.53,
+     -290.12
+    ],
+    [
+     -188.44,
+     -298.68
+    ],
+    [
+     -185.98,
+     -309.05
+    ],
+    [
+     -178.31,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     43.56,
+     108.69
+    ],
+    [
+     56.28,
+     99.96
+    ],
+    [
+     60.04,
+     97.37
+    ],
+    [
+     63.93,
+     94.71
+    ],
+    [
+     102.5,
+     68.55
+    ],
+    [
+     109.56,
+     64.07
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     45.95,
+     -231.25
+    ],
+    [
+     34.83,
+     -249.94
+    ],
+    [
+     32.47,
+     -253.62
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Liljeholmstorget",
+   "pts": [
+    [
+     -316.78,
+     -3.35
+    ],
+    [
+     -318.82,
+     4.33
+    ],
+    [
+     -328.23,
+     15.82
+    ],
+    [
+     -330.0,
+     17.56
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Liljeholmstorget",
+   "pts": [
+    [
+     -330.0,
+     -14.41
+    ],
+    [
+     -316.78,
+     -3.35
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -194.46,
+     12.76
+    ],
+    [
+     -199.05,
+     15.33
+    ],
+    [
+     -211.98,
+     22.43
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -190.0,
+     -3.16
+    ],
+    [
+     -221.9,
+     -53.67
+    ],
+    [
+     -225.53,
+     -59.21
+    ],
+    [
+     -235.87,
+     -75.03
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -211.98,
+     22.43
+    ],
+    [
+     -264.24,
+     79.68
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -217.46,
+     17.41
+    ],
+    [
+     -202.14,
+     4.09
+    ],
+    [
+     -197.78,
+     1.85
+    ],
+    [
+     -193.55,
+     0.43
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -210.79,
+     -205.15
+    ],
+    [
+     -187.91,
+     -169.26
+    ],
+    [
+     -178.37,
+     -157.45
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -190.0,
+     -3.16
+    ],
+    [
+     -187.68,
+     -4.4
+    ],
+    [
+     -185.82,
+     -4.99
+    ],
+    [
+     -184.83,
+     -5.19
+    ],
+    [
+     -182.8,
+     -5.34
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -250.88,
+     -92.21
+    ],
+    [
+     -263.51,
+     -90.64
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -300.46,
+     28.81
+    ],
+    [
+     -299.15,
+     27.23
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -260.56,
+     -41.78
+    ],
+    [
+     -251.11,
+     -29.45
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -266.6,
+     -48.46
+    ],
+    [
+     -261.45,
+     -42.84
+    ],
+    [
+     -260.56,
+     -41.78
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -104.99,
+     59.69
+    ],
+    [
+     -127.0,
+     67.05
+    ],
+    [
+     -156.07,
+     82.01
+    ],
+    [
+     -179.1,
+     96.44
+    ],
+    [
+     -189.03,
+     103.74
+    ],
+    [
+     -196.04,
+     109.97
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -191.76,
+     16.57
+    ],
+    [
+     -197.94,
+     19.11
+    ],
+    [
+     -203.55,
+     22.09
+    ],
+    [
+     -207.9,
+     30.49
+    ],
+    [
+     -234.8,
+     61.33
+    ],
+    [
+     -239.09,
+     62.02
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -239.09,
+     62.02
+    ],
+    [
+     -244.67,
+     60.66
+    ],
+    [
+     -267.21,
+     43.43
+    ],
+    [
+     -268.42,
+     36.35
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     55.57,
+     2.17
+    ],
+    [
+     53.6,
+     -0.78
+    ],
+    [
+     32.11,
+     -32.81
+    ],
+    [
+     29.62,
+     -36.81
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -206.01,
+     50.27
+    ],
+    [
+     -202.9,
+     44.42
+    ],
+    [
+     -193.16,
+     35.78
+    ],
+    [
+     -187.63,
+     30.94
+    ],
+    [
+     -186.8,
+     27.74
+    ],
+    [
+     -186.21,
+     23.74
+    ],
+    [
+     -185.43,
+     19.91
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -120.38,
+     56.02
+    ],
+    [
+     -128.04,
+     49.07
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Buteljgatan",
+   "pts": [
+    [
+     -34.43,
+     -92.06
+    ],
+    [
+     -28.16,
+     -96.27
+    ],
+    [
+     -3.84,
+     -112.63
+    ],
+    [
+     -0.28,
+     -115.03
+    ],
+    [
+     4.82,
+     -118.46
+    ],
+    [
+     18.35,
+     -127.58
+    ],
+    [
+     39.94,
+     -142.12
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Marieviksgatan",
+   "pts": [
+    [
+     -71.07,
+     -220.8
+    ],
+    [
+     -65.97,
+     -213.3
+    ],
+    [
+     -52.2,
+     -193.07
+    ],
+    [
+     -35.19,
+     -168.05
+    ],
+    [
+     -27.76,
+     -156.78
+    ],
+    [
+     -7.53,
+     -126.04
+    ],
+    [
+     -4.93,
+     -122.08
+    ],
+    [
+     -0.28,
+     -115.03
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     134.85,
+     -198.03
+    ],
+    [
+     112.25,
+     -221.04
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Karaffgatan",
+   "pts": [
+    [
+     -35.19,
+     -168.05
+    ],
+    [
+     -30.48,
+     -171.11
+    ],
+    [
+     15.51,
+     -200.97
+    ],
+    [
+     33.71,
+     -212.79
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     30.65,
+     -256.45
+    ],
+    [
+     27.69,
+     -261.14
+    ],
+    [
+     21.05,
+     -270.9
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -119.46,
+     -199.26
+    ],
+    [
+     -119.24,
+     -195.24
+    ],
+    [
+     -120.41,
+     -191.38
+    ],
+    [
+     -122.82,
+     -188.14
+    ],
+    [
+     -126.19,
+     -185.92
+    ],
+    [
+     -130.11,
+     -184.96
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -93.6,
+     -12.54
+    ],
+    [
+     -99.53,
+     -5.13
+    ],
+    [
+     -139.54,
+     18.39
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -251.11,
+     -29.45
+    ],
+    [
+     -232.4,
+     0.58
+    ],
+    [
+     -255.77,
+     37.08
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "",
+   "pts": [
+    [
+     -43.33,
+     -40.53
+    ],
+    [
+     -30.14,
+     -48.94
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "",
+   "pts": [
+    [
+     0.09,
+     -68.23
+    ],
+    [
+     14.43,
+     -77.38
+    ],
+    [
+     19.14,
+     -80.39
+    ],
+    [
+     21.08,
+     -81.63
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Sjövikstorget",
+   "pts": [
+    [
+     45.05,
+     -295.82
+    ],
+    [
+     51.86,
+     -289.6
+    ],
+    [
+     59.47,
+     -282.13
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -235.87,
+     -75.03
+    ],
+    [
+     -243.0,
+     -84.4
+    ],
+    [
+     -250.88,
+     -92.21
+    ],
+    [
+     -254.78,
+     -94.92
+    ],
+    [
+     -262.84,
+     -98.73
+    ],
+    [
+     -270.43,
+     -100.48
+    ],
+    [
+     -278.44,
+     -103.63
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -278.44,
+     -103.63
+    ],
+    [
+     -271.66,
+     -105.12
+    ],
+    [
+     -259.75,
+     -104.34
+    ],
+    [
+     -251.3,
+     -100.63
+    ],
+    [
+     -241.33,
+     -94.0
+    ],
+    [
+     -236.81,
+     -89.88
+    ],
+    [
+     -229.46,
+     -83.09
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -229.46,
+     -83.09
+    ],
+    [
+     -223.25,
+     -76.13
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     109.56,
+     64.07
+    ],
+    [
+     111.05,
+     56.56
+    ],
+    [
+     130.12,
+     42.84
+    ],
+    [
+     151.2,
+     29.72
+    ],
+    [
+     156.51,
+     28.45
+    ],
+    [
+     161.83,
+     30.65
+    ],
+    [
+     166.06,
+     35.83
+    ],
+    [
+     184.79,
+     92.52
+    ],
+    [
+     183.35,
+     95.81
+    ],
+    [
+     179.77,
+     98.68
+    ],
+    [
+     139.88,
+     123.91
+    ],
+    [
+     101.29,
+     149.66
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsvägen",
+   "pts": [
+    [
+     -174.72,
+     17.26
+    ],
+    [
+     -170.65,
+     29.41
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     70.01,
+     -64.67
+    ],
+    [
+     72.1,
+     -73.8
+    ],
+    [
+     88.19,
+     -84.66
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     39.94,
+     -142.12
+    ],
+    [
+     43.26,
+     -137.34
+    ],
+    [
+     54.62,
+     -145.07
+    ],
+    [
+     60.22,
+     -145.39
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "Buteljgatan",
+   "pts": [
+    [
+     39.94,
+     -142.12
+    ],
+    [
+     56.49,
+     -153.28
+    ],
+    [
+     72.07,
+     -163.78
+    ],
+    [
+     84.1,
+     -171.88
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -263.51,
+     -90.64
+    ],
+    [
+     -303.55,
+     -83.53
+    ],
+    [
+     -310.36,
+     -84.75
+    ],
+    [
+     -317.58,
+     -89.94
+    ],
+    [
+     -330.0,
+     -117.89
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -330.0,
+     -143.3
+    ],
+    [
+     -328.48,
+     -144.02
+    ],
+    [
+     -314.83,
+     -116.48
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -325.43,
+     -243.48
+    ],
+    [
+     -296.79,
+     -259.14
+    ],
+    [
+     -285.69,
+     -265.24
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Blekegatan",
+   "pts": [
+    [
+     -119.93,
+     -326.27
+    ],
+    [
+     -118.99,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     113.61,
+     -224.94
+    ],
+    [
+     169.06,
+     -260.14
+    ],
+    [
+     218.59,
+     -290.97
+    ],
+    [
+     240.28,
+     -304.17
+    ],
+    [
+     258.81,
+     -315.74
+    ],
+    [
+     266.14,
+     -320.44
+    ],
+    [
+     281.31,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsvägen",
+   "pts": [
+    [
+     -170.65,
+     29.41
+    ],
+    [
+     -173.63,
+     36.36
+    ],
+    [
+     -176.52,
+     42.89
+    ],
+    [
+     -178.88,
+     47.97
+    ],
+    [
+     -183.8,
+     54.46
+    ],
+    [
+     -194.83,
+     62.18
+    ],
+    [
+     -204.69,
+     69.99
+    ],
+    [
+     -233.46,
+     96.6
+    ],
+    [
+     -258.15,
+     122.37
+    ],
+    [
+     -261.1,
+     126.01
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Vingårdsgatan",
+   "pts": [
+    [
+     102.15,
+     -330.0
+    ],
+    [
+     102.77,
+     -329.4
+    ],
+    [
+     109.53,
+     -323.17
+    ],
+    [
+     163.57,
+     -266.34
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Ingenjörsvägen",
+   "pts": [
+    [
+     -135.23,
+     -330.0
+    ],
+    [
+     -130.4,
+     -328.82
+    ],
+    [
+     -119.93,
+     -326.27
+    ],
+    [
+     -98.67,
+     -321.1
+    ],
+    [
+     -84.95,
+     -317.61
+    ],
+    [
+     -73.52,
+     -310.86
+    ],
+    [
+     -18.66,
+     -266.57
+    ],
+    [
+     -11.64,
+     -260.36
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     52.04,
+     -101.96
+    ],
+    [
+     21.08,
+     -81.63
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     54.09,
+     -103.31
+    ],
+    [
+     52.04,
+     -101.96
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -37.43,
+     134.6
+    ],
+    [
+     -101.85,
+     34.36
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -153.04,
+     47.68
+    ],
+    [
+     -149.79,
+     50.26
+    ],
+    [
+     -120.38,
+     56.02
+    ],
+    [
+     -104.99,
+     59.69
+    ],
+    [
+     -101.06,
+     59.43
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -162.0,
+     49.65
+    ],
+    [
+     -163.0,
+     45.18
+    ],
+    [
+     -164.03,
+     40.47
+    ],
+    [
+     -164.97,
+     37.12
+    ],
+    [
+     -169.45,
+     37.91
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -20.1,
+     31.73
+    ],
+    [
+     -11.02,
+     45.93
+    ],
+    [
+     -7.16,
+     56.72
+    ],
+    [
+     61.58,
+     160.34
+    ],
+    [
+     90.29,
+     202.13
+    ],
+    [
+     131.82,
+     263.86
+    ],
+    [
+     134.2,
+     272.05
+    ],
+    [
+     132.37,
+     282.2
+    ],
+    [
+     129.51,
+     287.88
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsavfarten",
+   "pts": [
+    [
+     -213.6,
+     -82.63
+    ],
+    [
+     -223.25,
+     -76.13
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmspåfarten",
+   "pts": [
+    [
+     -218.88,
+     -90.55
+    ],
+    [
+     -210.58,
+     -96.07
+    ],
+    [
+     -206.6,
+     -100.21
+    ],
+    [
+     -203.77,
+     -104.46
+    ],
+    [
+     -202.37,
+     -109.17
+    ],
+    [
+     -202.15,
+     -114.05
+    ],
+    [
+     -203.61,
+     -118.64
+    ],
+    [
+     -205.69,
+     -122.87
+    ],
+    [
+     -218.07,
+     -143.58
+    ],
+    [
+     -227.7,
+     -169.51
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -105.5,
+     -12.59
+    ],
+    [
+     -103.19,
+     -17.97
+    ],
+    [
+     -102.47,
+     -22.75
+    ],
+    [
+     -102.86,
+     -26.42
+    ],
+    [
+     -104.13,
+     -29.76
+    ],
+    [
+     -108.89,
+     -38.43
+    ],
+    [
+     -131.81,
+     -73.31
+    ],
+    [
+     -144.24,
+     -94.56
+    ],
+    [
+     -186.93,
+     -158.12
+    ],
+    [
+     -188.29,
+     -161.13
+    ],
+    [
+     -188.56,
+     -164.2
+    ],
+    [
+     -187.91,
+     -169.26
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -210.79,
+     -205.15
+    ],
+    [
+     -195.79,
+     -187.33
+    ],
+    [
+     -190.76,
+     -182.3
+    ],
+    [
+     -186.52,
+     -179.71
+    ],
+    [
+     -179.05,
+     -177.84
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -74.5,
+     8.48
+    ],
+    [
+     -64.89,
+     24.08
+    ],
+    [
+     -55.95,
+     41.1
+    ],
+    [
+     -38.83,
+     74.6
+    ],
+    [
+     -40.41,
+     76.86
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -231.09,
+     -55.41
+    ],
+    [
+     -225.53,
+     -59.21
+    ],
+    [
+     -216.41,
+     -65.09
+    ],
+    [
+     -211.99,
+     -67.81
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -187.91,
+     -169.26
+    ],
+    [
+     -179.05,
+     -177.84
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -150.42,
+     -195.43
+    ],
+    [
+     -140.65,
+     -203.11
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Årstadalsinfarten",
+   "pts": [
+    [
+     -179.05,
+     -177.84
+    ],
+    [
+     -153.98,
+     -192.62
+    ],
+    [
+     -150.42,
+     -195.43
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Liljeholmsavfarten",
+   "pts": [
+    [
+     -223.25,
+     -76.13
+    ],
+    [
+     -235.87,
+     -75.03
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -182.8,
+     -5.34
+    ],
+    [
+     -179.97,
+     -5.01
+    ],
+    [
+     -178.06,
+     -4.41
+    ],
+    [
+     -176.25,
+     -3.51
+    ],
+    [
+     -174.37,
+     -2.12
+    ],
+    [
+     -172.37,
+     0.12
+    ],
+    [
+     -171.47,
+     1.61
+    ],
+    [
+     -170.8,
+     3.19
+    ],
+    [
+     -170.2,
+     5.62
+    ],
+    [
+     -170.08,
+     7.77
+    ],
+    [
+     -170.32,
+     9.9
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -191.76,
+     16.57
+    ],
+    [
+     -193.14,
+     14.98
+    ],
+    [
+     -194.46,
+     12.76
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -193.55,
+     0.43
+    ],
+    [
+     -192.11,
+     -1.39
+    ],
+    [
+     -190.0,
+     -3.16
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -170.32,
+     9.9
+    ],
+    [
+     -171.19,
+     12.64
+    ],
+    [
+     -172.98,
+     15.52
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -223.25,
+     -76.13
+    ],
+    [
+     -216.41,
+     -65.09
+    ],
+    [
+     -204.69,
+     -46.74
+    ],
+    [
+     -187.11,
+     -19.21
+    ],
+    [
+     -183.92,
+     -10.98
+    ],
+    [
+     -182.8,
+     -5.34
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -172.98,
+     15.52
+    ],
+    [
+     -174.72,
+     17.26
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -185.43,
+     19.91
+    ],
+    [
+     -187.98,
+     19.11
+    ],
+    [
+     -189.97,
+     18.01
+    ],
+    [
+     -191.76,
+     16.57
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -194.46,
+     12.76
+    ],
+    [
+     -195.2,
+     10.69
+    ],
+    [
+     -195.55,
+     8.84
+    ],
+    [
+     -195.62,
+     6.96
+    ],
+    [
+     -195.33,
+     4.66
+    ],
+    [
+     -193.55,
+     0.43
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -174.72,
+     17.26
+    ],
+    [
+     -177.11,
+     18.81
+    ],
+    [
+     -178.78,
+     19.5
+    ],
+    [
+     -181.79,
+     20.12
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -105.5,
+     -12.59
+    ],
+    [
+     -98.81,
+     -13.4
+    ],
+    [
+     -93.6,
+     -12.54
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -141.07,
+     -190.86
+    ],
+    [
+     -142.26,
+     -193.84
+    ],
+    [
+     -142.6,
+     -197.04
+    ],
+    [
+     -142.05,
+     -200.21
+    ],
+    [
+     -140.65,
+     -203.11
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -140.65,
+     -203.11
+    ],
+    [
+     -137.47,
+     -206.33
+    ],
+    [
+     -133.31,
+     -208.09
+    ],
+    [
+     -128.78,
+     -208.16
+    ],
+    [
+     -124.57,
+     -206.51
+    ],
+    [
+     -121.3,
+     -203.38
+    ],
+    [
+     -119.46,
+     -199.26
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -253.12,
+     17.8
+    ],
+    [
+     -236.47,
+     32.77
+    ],
+    [
+     -217.46,
+     17.41
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -268.42,
+     36.35
+    ],
+    [
+     -253.12,
+     17.8
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -264.24,
+     79.68
+    ],
+    [
+     -322.73,
+     34.32
+    ],
+    [
+     -284.06,
+     -10.0
+    ],
+    [
+     -253.12,
+     17.8
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Sjöviksvägen",
+   "pts": [
+    [
+     -119.46,
+     -199.26
+    ],
+    [
+     -113.12,
+     -200.93
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -65.23,
+     3.88
+    ],
+    [
+     -61.98,
+     1.35
+    ],
+    [
+     -55.15,
+     12.63
+    ],
+    [
+     -52.59,
+     14.47
+    ],
+    [
+     -50.05,
+     15.26
+    ],
+    [
+     -48.26,
+     14.81
+    ],
+    [
+     -46.76,
+     13.73
+    ],
+    [
+     -46.27,
+     10.67
+    ],
+    [
+     -47.29,
+     7.31
+    ],
+    [
+     -54.38,
+     -3.39
+    ],
+    [
+     -49.27,
+     -5.92
+    ],
+    [
+     -46.45,
+     -7.76
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -104.41,
+     -238.33
+    ],
+    [
+     -103.89,
+     -225.81
+    ],
+    [
+     -104.73,
+     -222.49
+    ],
+    [
+     -106.25,
+     -220.36
+    ],
+    [
+     -108.46,
+     -218.59
+    ],
+    [
+     -113.46,
+     -216.61
+    ],
+    [
+     -114.99,
+     -215.49
+    ],
+    [
+     -115.85,
+     -213.63
+    ],
+    [
+     -116.42,
+     -210.35
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -314.83,
+     -116.48
+    ],
+    [
+     -307.87,
+     -100.52
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -229.56,
+     258.12
+    ],
+    [
+     -239.03,
+     236.4
+    ],
+    [
+     -248.2,
+     213.89
+    ],
+    [
+     -254.69,
+     191.47
+    ],
+    [
+     -257.14,
+     182.81
+    ],
+    [
+     -258.93,
+     174.22
+    ],
+    [
+     -259.18,
+     165.59
+    ],
+    [
+     -253.23,
+     152.11
+    ],
+    [
+     -251.78,
+     145.33
+    ],
+    [
+     -248.95,
+     129.48
+    ],
+    [
+     -240.34,
+     118.65
+    ],
+    [
+     -235.68,
+     112.53
+    ],
+    [
+     -230.38,
+     106.99
+    ],
+    [
+     -213.95,
+     94.35
+    ],
+    [
+     -190.06,
+     71.04
+    ],
+    [
+     -182.88,
+     61.42
+    ],
+    [
+     -172.33,
+     52.83
+    ],
+    [
+     -162.0,
+     49.65
+    ],
+    [
+     -153.04,
+     47.68
+    ],
+    [
+     -133.34,
+     40.54
+    ],
+    [
+     -117.08,
+     33.35
+    ],
+    [
+     -89.96,
+     17.52
+    ],
+    [
+     -74.5,
+     8.48
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -224.35,
+     -225.84
+    ],
+    [
+     -210.79,
+     -205.15
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -243.65,
+     -255.78
+    ],
+    [
+     -224.35,
+     -225.84
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -71.47,
+     7.0
+    ],
+    [
+     -49.44,
+     45.07
+    ],
+    [
+     -37.74,
+     69.44
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -93.6,
+     -12.54
+    ],
+    [
+     -83.61,
+     -8.88
+    ],
+    [
+     -78.56,
+     -3.39
+    ],
+    [
+     -71.47,
+     7.0
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Nybohovsbacken",
+   "pts": [
+    [
+     -147.37,
+     9.4
+    ],
+    [
+     -141.21,
+     6.89
+    ],
+    [
+     -108.01,
+     -10.78
+    ],
+    [
+     -105.5,
+     -12.59
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -92.9,
+     -23.25
+    ],
+    [
+     -83.61,
+     -8.88
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -129.11,
+     -81.96
+    ],
+    [
+     -96.42,
+     -29.5
+    ],
+    [
+     -92.9,
+     -23.25
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -92.9,
+     -23.25
+    ],
+    [
+     -92.25,
+     -19.05
+    ],
+    [
+     -93.6,
+     -12.54
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -149.77,
+     -69.32
+    ],
+    [
+     -121.38,
+     -23.63
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -167.69,
+     -98.22
+    ],
+    [
+     -149.77,
+     -69.32
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -311.4,
+     -330.0
+    ],
+    [
+     -311.02,
+     -329.34
+    ],
+    [
+     -283.42,
+     -282.99
+    ],
+    [
+     -186.84,
+     -129.1
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -71.65,
+     56.6
+    ],
+    [
+     -19.52,
+     139.78
+    ]
+   ]
+  },
+  {
+   "kind": "secondary",
+   "name": "Södertäljevägen",
+   "pts": [
+    [
+     -295.86,
+     -282.58
+    ],
+    [
+     -324.13,
+     -329.28
+    ],
+    [
+     -324.53,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -46.76,
+     13.73
+    ],
+    [
+     -45.19,
+     22.03
+    ],
+    [
+     -36.66,
+     39.1
+    ],
+    [
+     -38.34,
+     44.63
+    ],
+    [
+     -40.0,
+     46.22
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -120.03,
+     -267.92
+    ],
+    [
+     -115.62,
+     -264.55
+    ],
+    [
+     -112.3,
+     -254.73
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -111.8,
+     -288.86
+    ],
+    [
+     -113.57,
+     -287.88
+    ],
+    [
+     -117.26,
+     -288.27
+    ],
+    [
+     -130.94,
+     -280.93
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "Fredsborgstorget",
+   "pts": [
+    [
+     -86.98,
+     -310.97
+    ],
+    [
+     -88.1,
+     -307.3
+    ],
+    [
+     -104.7,
+     -294.52
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     87.46,
+     -208.91
+    ],
+    [
+     85.47,
+     -212.29
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     66.34,
+     -270.44
+    ],
+    [
+     68.98,
+     -272.21
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     64.47,
+     -203.1
+    ],
+    [
+     62.6,
+     -205.96
+    ],
+    [
+     60.69,
+     -208.79
+    ],
+    [
+     51.29,
+     -223.24
+    ],
+    [
+     49.17,
+     -226.51
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     3.38,
+     -245.27
+    ],
+    [
+     27.69,
+     -261.14
+    ],
+    [
+     59.47,
+     -282.13
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     48.57,
+     -221.62
+    ],
+    [
+     51.29,
+     -223.24
+    ],
+    [
+     53.14,
+     -224.34
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     98.34,
+     -231.65
+    ],
+    [
+     104.26,
+     -235.4
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -164.97,
+     37.12
+    ],
+    [
+     -159.85,
+     35.67
+    ],
+    [
+     -145.95,
+     30.87
+    ],
+    [
+     -128.18,
+     22.62
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -11.02,
+     45.93
+    ],
+    [
+     -3.79,
+     39.76
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     95.37,
+     -7.32
+    ],
+    [
+     130.12,
+     42.84
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     72.8,
+     0.05
+    ],
+    [
+     81.86,
+     0.95
+    ],
+    [
+     95.37,
+     -7.32
+    ],
+    [
+     145.52,
+     -38.44
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     56.28,
+     99.96
+    ],
+    [
+     16.81,
+     40.94
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     102.5,
+     68.55
+    ],
+    [
+     139.88,
+     123.91
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -111.47,
+     -129.67
+    ],
+    [
+     -119.18,
+     -141.68
+    ],
+    [
+     -121.8,
+     -144.76
+    ],
+    [
+     -123.75,
+     -155.69
+    ],
+    [
+     -123.44,
+     -165.74
+    ],
+    [
+     -122.52,
+     -175.78
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "Buteljgatan",
+   "pts": [
+    [
+     -70.54,
+     -68.55
+    ],
+    [
+     -34.43,
+     -92.06
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -8.86,
+     -19.78
+    ],
+    [
+     -10.85,
+     -22.87
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -4.91,
+     -13.31
+    ],
+    [
+     -8.86,
+     -19.78
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     166.06,
+     35.83
+    ],
+    [
+     170.74,
+     33.57
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "Årsta Hamnväg",
+   "pts": [
+    [
+     -124.55,
+     -138.01
+    ],
+    [
+     -119.18,
+     -141.68
+    ],
+    [
+     -115.4,
+     -144.4
+    ],
+    [
+     -117.78,
+     -149.26
+    ],
+    [
+     -119.47,
+     -155.9
+    ],
+    [
+     -119.57,
+     -160.24
+    ],
+    [
+     -118.17,
+     -164.84
+    ],
+    [
+     -100.42,
+     -178.42
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -20.69,
+     3.97
+    ],
+    [
+     -23.63,
+     -0.47
+    ],
+    [
+     -27.55,
+     -5.91
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -187.69,
+     -207.47
+    ],
+    [
+     -188.02,
+     -204.11
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -160.34,
+     -222.3
+    ],
+    [
+     -155.77,
+     -223.14
+    ],
+    [
+     -150.65,
+     -223.19
+    ],
+    [
+     -147.44,
+     -223.67
+    ],
+    [
+     -144.24,
+     -225.38
+    ],
+    [
+     -141.79,
+     -230.41
+    ],
+    [
+     -140.58,
+     -232.14
+    ],
+    [
+     -138.0,
+     -234.27
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "",
+   "pts": [
+    [
+     -30.14,
+     -48.94
+    ],
+    [
+     -11.05,
+     -61.12
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "",
+   "pts": [
+    [
+     -11.05,
+     -61.12
+    ],
+    [
+     0.09,
+     -68.23
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Sjövikstorget",
+   "pts": [
+    [
+     3.38,
+     -245.27
+    ],
+    [
+     -6.05,
+     -255.11
+    ],
+    [
+     -11.64,
+     -260.36
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "Sjövikstorget",
+   "pts": [
+    [
+     68.24,
+     -197.12
+    ],
+    [
+     55.82,
+     -189.52
+    ],
+    [
+     42.07,
+     -204.5
+    ],
+    [
+     38.88,
+     -207.81
+    ],
+    [
+     33.71,
+     -212.79
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "Marieviksstranden",
+   "pts": [
+    [
+     84.1,
+     -171.88
+    ],
+    [
+     68.24,
+     -197.12
+    ],
+    [
+     66.67,
+     -199.54
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     269.53,
+     -289.47
+    ],
+    [
+     257.19,
+     -310.26
+    ],
+    [
+     242.34,
+     -300.87
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     167.05,
+     -262.61
+    ],
+    [
+     169.06,
+     -260.14
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     216.91,
+     -293.68
+    ],
+    [
+     218.59,
+     -290.97
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     264.34,
+     -322.93
+    ],
+    [
+     266.14,
+     -320.44
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     260.83,
+     -312.43
+    ],
+    [
+     258.81,
+     -315.74
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "Marieviksstranden",
+   "pts": [
+    [
+     97.05,
+     -150.02
+    ],
+    [
+     84.1,
+     -171.88
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     242.34,
+     -300.87
+    ],
+    [
+     240.28,
+     -304.17
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -204.69,
+     -46.74
+    ],
+    [
+     -191.76,
+     -55.65
+    ],
+    [
+     -197.17,
+     -64.38
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -270.08,
+     -127.6
+    ],
+    [
+     -275.6,
+     -129.0
+    ],
+    [
+     -301.84,
+     -116.91
+    ],
+    [
+     -309.97,
+     -133.01
+    ],
+    [
+     -309.0,
+     -140.9
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -309.0,
+     -140.9
+    ],
+    [
+     -297.54,
+     -160.99
+    ],
+    [
+     -276.33,
+     -170.11
+    ],
+    [
+     -260.83,
+     -140.84
+    ],
+    [
+     -270.08,
+     -127.6
+    ],
+    [
+     -272.21,
+     -122.12
+    ],
+    [
+     -277.99,
+     -109.88
+    ],
+    [
+     -278.44,
+     -103.63
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -40.0,
+     46.22
+    ],
+    [
+     -43.38,
+     48.39
+    ],
+    [
+     -44.1,
+     47.19
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -32.77,
+     190.61
+    ],
+    [
+     -31.64,
+     185.55
+    ],
+    [
+     -31.49,
+     180.06
+    ],
+    [
+     -33.79,
+     168.96
+    ],
+    [
+     -40.41,
+     152.35
+    ],
+    [
+     -83.5,
+     83.3
+    ],
+    [
+     -92.35,
+     72.65
+    ],
+    [
+     -100.13,
+     60.84
+    ],
+    [
+     -101.06,
+     59.43
+    ],
+    [
+     -104.22,
+     54.48
+    ],
+    [
+     -105.56,
+     48.06
+    ],
+    [
+     -110.66,
+     39.57
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -306.17,
+     -1.99
+    ],
+    [
+     -261.45,
+     -42.84
+    ],
+    [
+     -238.42,
+     -62.61
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Liljeholmstorget",
+   "pts": [
+    [
+     -316.78,
+     -3.35
+    ],
+    [
+     -311.69,
+     -8.38
+    ],
+    [
+     -299.08,
+     -19.97
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -116.42,
+     -210.35
+    ],
+    [
+     -111.08,
+     -210.87
+    ],
+    [
+     -98.95,
+     -215.08
+    ],
+    [
+     -86.79,
+     -220.84
+    ],
+    [
+     -80.71,
+     -224.68
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -80.71,
+     -224.68
+    ],
+    [
+     -76.22,
+     -227.4
+    ],
+    [
+     -65.9,
+     -234.12
+    ],
+    [
+     -30.68,
+     -258.04
+    ],
+    [
+     -25.25,
+     -262.04
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -80.71,
+     -224.68
+    ],
+    [
+     -85.06,
+     -229.21
+    ],
+    [
+     -94.73,
+     -234.78
+    ],
+    [
+     -99.41,
+     -236.76
+    ],
+    [
+     -104.41,
+     -238.33
+    ],
+    [
+     -112.7,
+     -240.35
+    ],
+    [
+     -119.02,
+     -242.74
+    ],
+    [
+     -124.03,
+     -245.58
+    ],
+    [
+     -125.06,
+     -247.02
+    ],
+    [
+     -127.36,
+     -251.86
+    ],
+    [
+     -129.59,
+     -255.03
+    ],
+    [
+     -131.8,
+     -265.39
+    ],
+    [
+     -130.02,
+     -275.38
+    ],
+    [
+     -130.94,
+     -280.93
+    ],
+    [
+     -139.31,
+     -278.38
+    ],
+    [
+     -144.07,
+     -277.21
+    ],
+    [
+     -147.95,
+     -275.71
+    ],
+    [
+     -149.69,
+     -275.32
+    ],
+    [
+     -151.68,
+     -275.8
+    ],
+    [
+     -156.47,
+     -278.96
+    ],
+    [
+     -161.55,
+     -279.6
+    ],
+    [
+     -165.61,
+     -281.43
+    ],
+    [
+     -169.75,
+     -282.9
+    ],
+    [
+     -174.03,
+     -283.69
+    ],
+    [
+     -178.26,
+     -284.12
+    ],
+    [
+     -184.38,
+     -282.69
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     122.05,
+     -330.0
+    ],
+    [
+     109.53,
+     -323.17
+    ],
+    [
+     95.72,
+     -315.28
+    ],
+    [
+     58.05,
+     -293.32
+    ],
+    [
+     51.86,
+     -289.6
+    ],
+    [
+     42.38,
+     -283.57
+    ],
+    [
+     21.05,
+     -270.9
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Årstaängsvägen",
+   "pts": [
+    [
+     -129.76,
+     -166.38
+    ],
+    [
+     -129.67,
+     -180.22
+    ],
+    [
+     -130.11,
+     -184.96
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -77.37,
+     -205.91
+    ],
+    [
+     -82.26,
+     -213.65
+    ],
+    [
+     -86.79,
+     -220.84
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -55.91,
+     -220.33
+    ],
+    [
+     -61.07,
+     -227.45
+    ],
+    [
+     -65.9,
+     -234.12
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -20.87,
+     -245.19
+    ],
+    [
+     -25.46,
+     -251.2
+    ],
+    [
+     -30.68,
+     -258.04
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     0.29,
+     -258.81
+    ],
+    [
+     -4.09,
+     -265.14
+    ],
+    [
+     -9.34,
+     -272.74
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     21.05,
+     -270.9
+    ],
+    [
+     0.29,
+     -258.81
+    ],
+    [
+     -6.05,
+     -255.11
+    ],
+    [
+     -20.87,
+     -245.19
+    ],
+    [
+     -24.36,
+     -242.72
+    ],
+    [
+     -55.91,
+     -220.33
+    ],
+    [
+     -61.07,
+     -216.72
+    ],
+    [
+     -65.97,
+     -213.3
+    ],
+    [
+     -71.72,
+     -209.57
+    ],
+    [
+     -77.37,
+     -205.91
+    ],
+    [
+     -94.01,
+     -195.11
+    ],
+    [
+     -109.44,
+     -190.41
+    ],
+    [
+     -115.86,
+     -184.48
+    ],
+    [
+     -122.52,
+     -175.78
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     42.38,
+     -283.57
+    ],
+    [
+     37.55,
+     -291.11
+    ],
+    [
+     33.0,
+     -298.2
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     58.05,
+     -293.32
+    ],
+    [
+     53.18,
+     -300.76
+    ],
+    [
+     48.77,
+     -307.99
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     95.72,
+     -315.28
+    ],
+    [
+     91.46,
+     -322.96
+    ],
+    [
+     87.41,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -130.11,
+     -184.96
+    ],
+    [
+     -133.37,
+     -185.21
+    ],
+    [
+     -136.44,
+     -186.34
+    ],
+    [
+     -139.07,
+     -188.27
+    ],
+    [
+     -141.07,
+     -190.86
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Sjöviksvägen",
+   "pts": [
+    [
+     -113.12,
+     -200.93
+    ],
+    [
+     -104.59,
+     -203.4
+    ],
+    [
+     -97.06,
+     -206.31
+    ],
+    [
+     -82.26,
+     -213.65
+    ],
+    [
+     -71.07,
+     -220.8
+    ],
+    [
+     -61.07,
+     -227.45
+    ],
+    [
+     -25.46,
+     -251.2
+    ],
+    [
+     -11.64,
+     -260.36
+    ],
+    [
+     -4.09,
+     -265.14
+    ],
+    [
+     37.55,
+     -291.11
+    ],
+    [
+     45.05,
+     -295.82
+    ],
+    [
+     53.18,
+     -300.76
+    ],
+    [
+     91.46,
+     -322.96
+    ],
+    [
+     102.77,
+     -329.4
+    ],
+    [
+     103.83,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -223.51,
+     -97.61
+    ],
+    [
+     -232.59,
+     -93.64
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -232.59,
+     -93.64
+    ],
+    [
+     -236.81,
+     -89.88
+    ],
+    [
+     -243.0,
+     -84.4
+    ],
+    [
+     -247.66,
+     -80.25
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -247.66,
+     -80.25
+    ],
+    [
+     -248.48,
+     -74.45
+    ],
+    [
+     -316.31,
+     -14.09
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -238.42,
+     -62.61
+    ],
+    [
+     -235.35,
+     -62.16
+    ],
+    [
+     -231.09,
+     -55.41
+    ],
+    [
+     -200.24,
+     -6.47
+    ],
+    [
+     -200.43,
+     -4.45
+    ],
+    [
+     -203.45,
+     -0.66
+    ],
+    [
+     -202.84,
+     1.44
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -189.81,
+     -199.67
+    ],
+    [
+     -190.63,
+     -197.87
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -132.61,
+     42.23
+    ],
+    [
+     -133.34,
+     40.54
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     53.6,
+     -0.78
+    ],
+    [
+     46.58,
+     3.92
+    ],
+    [
+     52.05,
+     12.33
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -243.58,
+     -69.24
+    ],
+    [
+     -238.42,
+     -62.61
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -248.48,
+     -74.45
+    ],
+    [
+     -243.58,
+     -69.24
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -211.99,
+     -67.81
+    ],
+    [
+     -207.88,
+     -74.55
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -207.88,
+     -74.55
+    ],
+    [
+     -213.6,
+     -82.63
+    ],
+    [
+     -218.88,
+     -90.55
+    ],
+    [
+     -223.51,
+     -97.61
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -142.0,
+     -11.42
+    ],
+    [
+     -181.68,
+     -73.03
+    ],
+    [
+     -185.01,
+     -76.01
+    ],
+    [
+     -188.84,
+     -77.79
+    ],
+    [
+     -194.34,
+     -78.84
+    ],
+    [
+     -200.44,
+     -78.08
+    ],
+    [
+     -207.88,
+     -74.55
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -130.02,
+     -275.38
+    ],
+    [
+     -127.93,
+     -273.85
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -116.42,
+     -210.35
+    ],
+    [
+     -113.12,
+     -200.93
+    ],
+    [
+     -109.44,
+     -190.41
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -122.52,
+     -175.78
+    ],
+    [
+     -129.76,
+     -166.38
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     18.64,
+     -236.88
+    ],
+    [
+     32.18,
+     -247.76
+    ],
+    [
+     34.83,
+     -249.94
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     34.83,
+     -249.94
+    ],
+    [
+     37.32,
+     -252.74
+    ],
+    [
+     51.64,
+     -261.11
+    ],
+    [
+     66.34,
+     -270.44
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     14.31,
+     -233.61
+    ],
+    [
+     15.54,
+     -234.44
+    ],
+    [
+     16.39,
+     -235.18
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     85.47,
+     -212.29
+    ],
+    [
+     81.51,
+     -219.04
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     85.96,
+     -246.49
+    ],
+    [
+     89.97,
+     -250.43
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "Karaffgatan",
+   "pts": [
+    [
+     33.71,
+     -212.79
+    ],
+    [
+     35.65,
+     -213.92
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     81.51,
+     -219.04
+    ],
+    [
+     67.72,
+     -233.01
+    ],
+    [
+     51.64,
+     -261.11
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "Sjövikstorget",
+   "pts": [
+    [
+     68.24,
+     -197.12
+    ],
+    [
+     87.46,
+     -208.91
+    ],
+    [
+     110.43,
+     -222.88
+    ],
+    [
+     113.61,
+     -224.94
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     112.25,
+     -221.04
+    ],
+    [
+     110.43,
+     -222.88
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     113.61,
+     -224.94
+    ],
+    [
+     111.76,
+     -227.29
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -28.16,
+     -96.27
+    ],
+    [
+     -38.31,
+     -110.77
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     31.41,
+     -184.2
+    ],
+    [
+     22.2,
+     -178.16
+    ],
+    [
+     9.55,
+     -169.82
+    ],
+    [
+     3.09,
+     -165.53
+    ],
+    [
+     -2.68,
+     -161.69
+    ],
+    [
+     1.01,
+     -156.09
+    ],
+    [
+     5.11,
+     -149.9
+    ],
+    [
+     14.0,
+     -155.81
+    ],
+    [
+     17.34,
+     -158.03
+    ],
+    [
+     32.48,
+     -168.0
+    ],
+    [
+     41.06,
+     -173.64
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     56.49,
+     -153.28
+    ],
+    [
+     50.94,
+     -161.08
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     20.92,
+     -195.81
+    ],
+    [
+     31.41,
+     -184.2
+    ],
+    [
+     41.06,
+     -173.64
+    ],
+    [
+     44.04,
+     -170.34
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     9.93,
+     -206.3
+    ],
+    [
+     15.51,
+     -200.97
+    ],
+    [
+     20.92,
+     -195.81
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -24.36,
+     -242.72
+    ],
+    [
+     -21.26,
+     -239.5
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -35.14,
+     -212.96
+    ],
+    [
+     -26.57,
+     -201.66
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -21.26,
+     -239.5
+    ],
+    [
+     -10.88,
+     -228.74
+    ],
+    [
+     -0.86,
+     -218.36
+    ],
+    [
+     -26.57,
+     -201.66
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -49.85,
+     -203.4
+    ],
+    [
+     -35.14,
+     -212.96
+    ],
+    [
+     -10.88,
+     -228.74
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -218.17,
+     -330.0
+    ],
+    [
+     -218.67,
+     -329.23
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     53.14,
+     -224.34
+    ],
+    [
+     67.72,
+     -233.01
+    ],
+    [
+     85.96,
+     -246.49
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     35.65,
+     -213.92
+    ],
+    [
+     44.92,
+     -219.43
+    ],
+    [
+     48.57,
+     -221.62
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     9.55,
+     -169.82
+    ],
+    [
+     17.34,
+     -158.03
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     13.33,
+     -135.69
+    ],
+    [
+     14.47,
+     -133.98
+    ],
+    [
+     18.35,
+     -127.58
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     5.11,
+     -149.9
+    ],
+    [
+     5.61,
+     -147.45
+    ],
+    [
+     11.26,
+     -138.85
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -39.85,
+     -274.82
+    ],
+    [
+     -44.07,
+     -271.36
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -113.31,
+     -286.34
+    ],
+    [
+     -113.57,
+     -287.88
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -44.07,
+     -271.36
+    ],
+    [
+     -53.72,
+     -265.48
+    ],
+    [
+     -63.74,
+     -262.72
+    ],
+    [
+     -73.64,
+     -264.59
+    ],
+    [
+     -88.17,
+     -276.36
+    ],
+    [
+     -92.48,
+     -278.3
+    ],
+    [
+     -105.29,
+     -279.73
+    ],
+    [
+     -113.31,
+     -286.34
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -161.28,
+     -330.0
+    ],
+    [
+     -131.92,
+     -322.6
+    ],
+    [
+     -100.42,
+     -314.66
+    ],
+    [
+     -94.71,
+     -313.22
+    ],
+    [
+     -86.98,
+     -310.97
+    ],
+    [
+     -78.04,
+     -305.62
+    ],
+    [
+     -65.34,
+     -294.98
+    ],
+    [
+     -39.85,
+     -274.82
+    ],
+    [
+     -27.07,
+     -264.91
+    ],
+    [
+     -25.25,
+     -262.04
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -0.86,
+     -218.36
+    ],
+    [
+     0.64,
+     -216.76
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "",
+   "pts": [
+    [
+     -181.79,
+     20.12
+    ],
+    [
+     -185.43,
+     19.91
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -161.55,
+     -279.6
+    ],
+    [
+     -161.81,
+     -275.83
+    ],
+    [
+     -162.74,
+     -269.51
+    ],
+    [
+     -162.97,
+     -268.19
+    ],
+    [
+     -162.68,
+     -266.7
+    ],
+    [
+     -161.76,
+     -265.63
+    ],
+    [
+     -160.09,
+     -264.63
+    ],
+    [
+     -154.87,
+     -263.18
+    ],
+    [
+     -153.16,
+     -261.89
+    ],
+    [
+     -152.48,
+     -260.2
+    ],
+    [
+     -152.61,
+     -256.94
+    ],
+    [
+     -152.38,
+     -255.97
+    ],
+    [
+     -151.57,
+     -255.14
+    ],
+    [
+     -150.54,
+     -254.76
+    ],
+    [
+     -148.78,
+     -254.71
+    ],
+    [
+     -145.68,
+     -255.13
+    ],
+    [
+     -141.5,
+     -255.69
+    ],
+    [
+     -134.2,
+     -255.68
+    ],
+    [
+     -129.59,
+     -255.03
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -71.5,
+     -189.23
+    ],
+    [
+     -70.63,
+     -183.45
+    ],
+    [
+     -79.47,
+     -177.49
+    ],
+    [
+     -83.79,
+     -174.59
+    ],
+    [
+     -53.34,
+     -129.5
+    ],
+    [
+     -44.05,
+     -130.32
+    ],
+    [
+     -33.0,
+     -114.57
+    ],
+    [
+     -29.8,
+     -116.51
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -79.47,
+     -177.49
+    ],
+    [
+     -82.42,
+     -180.41
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -61.79,
+     -195.39
+    ],
+    [
+     -61.66,
+     -191.16
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -61.66,
+     -191.16
+    ],
+    [
+     -73.33,
+     -187.4
+    ],
+    [
+     -71.5,
+     -189.23
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     4.82,
+     -118.46
+    ],
+    [
+     0.05,
+     -125.58
+    ],
+    [
+     -14.17,
+     -146.78
+    ],
+    [
+     -30.48,
+     -171.11
+    ],
+    [
+     -51.45,
+     -202.37
+    ],
+    [
+     -61.07,
+     -216.72
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -51.45,
+     -202.37
+    ],
+    [
+     -49.85,
+     -203.4
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -71.72,
+     -209.57
+    ],
+    [
+     -61.79,
+     -195.39
+    ],
+    [
+     -8.63,
+     -119.48
+    ],
+    [
+     -3.84,
+     -112.63
+    ],
+    [
+     -0.44,
+     -110.25
+    ],
+    [
+     19.14,
+     -80.39
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -14.17,
+     -146.78
+    ],
+    [
+     -12.59,
+     -147.75
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -2.21,
+     -154.12
+    ],
+    [
+     1.01,
+     -156.09
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -12.59,
+     -147.75
+    ],
+    [
+     -7.35,
+     -150.96
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -7.35,
+     -150.96
+    ],
+    [
+     -2.21,
+     -154.12
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     0.05,
+     -125.58
+    ],
+    [
+     -4.93,
+     -122.08
+    ],
+    [
+     -8.63,
+     -119.48
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -0.36,
+     -100.86
+    ],
+    [
+     14.43,
+     -77.38
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -3.52,
+     -106.24
+    ],
+    [
+     -3.84,
+     -112.63
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -68.29,
+     5.4
+    ],
+    [
+     -58.59,
+     21.96
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -13.59,
+     -270.11
+    ],
+    [
+     -69.51,
+     -315.71
+    ],
+    [
+     -70.59,
+     -318.96
+    ],
+    [
+     -68.65,
+     -321.29
+    ],
+    [
+     -55.82,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -78.04,
+     -305.62
+    ],
+    [
+     -73.52,
+     -310.86
+    ],
+    [
+     -69.51,
+     -315.71
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -68.65,
+     -321.29
+    ],
+    [
+     -71.69,
+     -325.94
+    ],
+    [
+     -74.32,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -100.42,
+     -314.66
+    ],
+    [
+     -98.67,
+     -321.1
+    ],
+    [
+     -96.87,
+     -327.77
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -13.59,
+     -270.11
+    ],
+    [
+     -9.34,
+     -272.74
+    ],
+    [
+     33.0,
+     -298.2
+    ],
+    [
+     39.05,
+     -301.87
+    ],
+    [
+     48.77,
+     -307.99
+    ],
+    [
+     87.02,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -25.25,
+     -262.04
+    ],
+    [
+     -18.66,
+     -266.57
+    ],
+    [
+     -13.59,
+     -270.11
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -68.29,
+     5.4
+    ],
+    [
+     -65.23,
+     3.88
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -27.55,
+     -5.91
+    ],
+    [
+     -31.29,
+     -6.43
+    ],
+    [
+     -37.97,
+     -13.84
+    ],
+    [
+     -37.45,
+     -20.67
+    ],
+    [
+     -48.05,
+     -37.31
+    ],
+    [
+     -70.54,
+     -68.55
+    ],
+    [
+     -103.57,
+     -118.47
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -46.45,
+     -7.76
+    ],
+    [
+     -42.3,
+     -10.45
+    ],
+    [
+     -37.97,
+     -13.84
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -74.5,
+     8.48
+    ],
+    [
+     -71.47,
+     7.0
+    ],
+    [
+     -68.29,
+     5.4
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     66.02,
+     0.77
+    ],
+    [
+     72.8,
+     0.05
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     32.11,
+     -32.81
+    ],
+    [
+     -20.69,
+     3.97
+    ],
+    [
+     5.25,
+     43.51
+    ],
+    [
+     52.05,
+     12.33
+    ],
+    [
+     63.05,
+     5.01
+    ],
+    [
+     66.02,
+     0.77
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -169.45,
+     37.91
+    ],
+    [
+     -173.63,
+     36.36
+    ],
+    [
+     -182.32,
+     33.07
+    ],
+    [
+     -187.63,
+     30.94
+    ],
+    [
+     -190.65,
+     29.79
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -190.65,
+     29.79
+    ],
+    [
+     -195.05,
+     29.1
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -202.84,
+     1.44
+    ],
+    [
+     -202.14,
+     4.09
+    ],
+    [
+     -199.05,
+     15.33
+    ],
+    [
+     -197.94,
+     19.11
+    ],
+    [
+     -196.61,
+     23.44
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -196.61,
+     23.44
+    ],
+    [
+     -195.05,
+     29.1
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Fredsborgsgatan",
+   "pts": [
+    [
+     -84.95,
+     -317.61
+    ],
+    [
+     -71.69,
+     -325.94
+    ],
+    [
+     -66.06,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -131.92,
+     -322.6
+    ],
+    [
+     -130.4,
+     -328.82
+    ],
+    [
+     -130.11,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -77.24,
+     -330.0
+    ],
+    [
+     -84.49,
+     -325.43
+    ],
+    [
+     -88.29,
+     -325.57
+    ],
+    [
+     -96.87,
+     -327.77
+    ],
+    [
+     -105.56,
+     -330.0
+    ]
+   ]
+  },
+  {
+   "kind": "pedestrian",
+   "name": "Marieviksstranden",
+   "pts": [
+    [
+     178.86,
+     57.48
+    ],
+    [
+     176.16,
+     49.54
+    ],
+    [
+     170.74,
+     33.57
+    ],
+    [
+     164.37,
+     15.39
+    ],
+    [
+     145.52,
+     -38.44
+    ],
+    [
+     123.93,
+     -100.05
+    ],
+    [
+     112.91,
+     -126.05
+    ],
+    [
+     104.88,
+     -138.2
+    ],
+    [
+     102.81,
+     -141.31
+    ],
+    [
+     97.05,
+     -150.02
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -127.4,
+     -242.92
+    ],
+    [
+     -124.03,
+     -245.58
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -151.57,
+     -255.14
+    ],
+    [
+     -153.51,
+     -254.77
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     205.51,
+     9.21
+    ],
+    [
+     206.06,
+     10.24
+    ],
+    [
+     207.54,
+     10.46
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     190.21,
+     18.27
+    ],
+    [
+     190.83,
+     19.39
+    ],
+    [
+     188.53,
+     20.65
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     193.99,
+     -11.61
+    ],
+    [
+     194.5,
+     -10.73
+    ],
+    [
+     196.21,
+     -11.81
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     189.59,
+     -22.58
+    ],
+    [
+     173.16,
+     -13.22
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     196.71,
+     25.85
+    ],
+    [
+     190.92,
+     24.63
+    ],
+    [
+     188.53,
+     20.65
+    ],
+    [
+     187.91,
+     19.63
+    ],
+    [
+     182.09,
+     9.88
+    ],
+    [
+     181.55,
+     5.77
+    ],
+    [
+     180.73,
+     -0.45
+    ],
+    [
+     173.16,
+     -13.22
+    ],
+    [
+     161.35,
+     -33.12
+    ],
+    [
+     168.11,
+     -37.24
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     179.07,
+     6.33
+    ],
+    [
+     181.55,
+     5.77
+    ],
+    [
+     187.4,
+     4.44
+    ],
+    [
+     201.22,
+     -3.65
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     205.58,
+     23.38
+    ],
+    [
+     207.54,
+     10.46
+    ],
+    [
+     207.95,
+     7.79
+    ],
+    [
+     201.22,
+     -3.65
+    ],
+    [
+     196.21,
+     -11.81
+    ],
+    [
+     189.59,
+     -22.58
+    ],
+    [
+     188.77,
+     -23.92
+    ],
+    [
+     192.05,
+     -26.04
+    ],
+    [
+     178.82,
+     -47.11
+    ],
+    [
+     166.61,
+     -39.8
+    ],
+    [
+     155.28,
+     -33.18
+    ],
+    [
+     152.79,
+     -41.47
+    ],
+    [
+     145.52,
+     -38.44
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     175.6,
+     8.47
+    ],
+    [
+     164.37,
+     15.39
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     176.16,
+     49.54
+    ],
+    [
+     183.55,
+     47.27
+    ],
+    [
+     180.44,
+     38.07
+    ],
+    [
+     181.52,
+     37.44
+    ],
+    [
+     197.85,
+     27.89
+    ],
+    [
+     205.58,
+     23.38
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     81.63,
+     -122.55
+    ],
+    [
+     102.81,
+     -141.31
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -252.97,
+     91.81
+    ],
+    [
+     -258.66,
+     87.28
+    ],
+    [
+     -269.61,
+     78.58
+    ],
+    [
+     -289.41,
+     62.85
+    ],
+    [
+     -330.0,
+     30.58
+    ]
+   ]
+  }
+ ],
+ "water": [],
+ "materials": {
+  "brick_red": [
+   150,
+   72,
+   56
+  ],
+  "brick_dark": [
+   92,
+   62,
+   52
+  ],
+  "render_white": [
+   238,
+   236,
+   230
+  ],
+  "render_light": [
+   226,
+   221,
+   208
+  ],
+  "render_yellow": [
+   228,
+   204,
+   138
+  ],
+  "stone_light": [
+   214,
+   207,
+   190
+  ],
+  "metal_panel_light": [
+   196,
+   202,
+   208
+  ],
+  "metal_light": [
+   180,
+   186,
+   192
+  ],
+  "membrane_dark": [
+   88,
+   90,
+   96
+  ],
+  "membrane_light": [
+   196,
+   192,
+   184
+  ],
+  "pv": [
+   38,
+   48,
+   70
+  ],
+  "glass": [
+   140,
+   175,
+   200
+  ],
+  "green": [
+   110,
+   150,
+   90
+  ]
+ }
+}

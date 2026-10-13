@@ -2,7 +2,7 @@
 
     python -m engine.grasshopper          # list what is in runs/grasshopper/ and reconcile it
 
-The Grasshopper definition (Marievik_parametric, "MVK Building" component, Export = true)
+The Grasshopper definition (parametric/, "MVK Building" component, Export = true)
 writes one file per building to runs/grasshopper/<id>.json (schema "mvk.scenarios/1"):
 every use x partition system, with a bill of quantities keyed by catalogue ids.
 

@@ -25,7 +25,7 @@ explorer/
 
 ```powershell
 # once
-pip install fastapi uvicorn numpy shapely
+pip install -r requirements.txt   # see Setup in the main README; also needs Marievik_parametric
 cd explorer\web; npm install; npm run build; cd ..\..
 
 # every time

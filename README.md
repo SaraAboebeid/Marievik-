@@ -65,9 +65,58 @@ docs/
 runs/                 timestamped outputs — the LEARN layer
 ```
 
+## Setup
+
+Commands are for bash (Git Bash on Windows), run from the repository root. On Linux or macOS the
+virtual environment's scripts live in `bin/` rather than `Scripts/`.
+
+**1. Python packages** (main environment)
+
+```bash
+python -m venv .venv
+source .venv/Scripts/activate
+pip install -r requirements.txt
+```
+
+This covers the engine, the Apartment Lab, the Explorer and the optimiser. `rhino3dm` is only needed for
+the `.3dm` import and export. `engine.intake` and most of `engine.cli` need no packages at all.
+
+**2. Marievik_parametric** (needed by the Explorer)
+
+The Explorer imports the `mvk` package from the separate Marievik_parametric repository. By default it
+looks in `~/Desktop/Marievik_parametric`. If you keep it somewhere else, set the path first:
+
+```bash
+export MVK_PARAMETRIC="/c/path/to/Marievik_parametric"
+```
+
+**3. Simulation environment** (optional: EnergyPlus thermal comfort and Radiance daylight)
+
+The optimiser and the Explorer's Ladybug Tools method run their simulations in a second environment,
+`.venv-sim`. Without it the optimiser and the Explorer can't run the full simulations. The Explorer's quick
+method still works.
+
+```bash
+py -3.11 -m venv .venv-sim          # any Python 3.7-3.13; openstudio has no build for 3.14
+.venv-sim/Scripts/pip install -r requirements-sim.txt
+```
+
+EnergyPlus and Radiance themselves can't be installed with pip. The Ladybug Tools installer includes both.
+It puts them in `~/ladybug_tools`, which is where honeybee looks for them.
+
+**4. Web front ends** (needs Node.js)
+
+```bash
+(cd frontend && npm install && npm run build)              # Apartment Lab
+(cd explorer/web && npm install && npm run build)          # Explorer (run_explorer.bat does this if needed)
+```
+
+The Apartment Lab build writes to `apartment/static/dist`. Until it exists, `apartment.server` fails on
+import, and so do `tests.test_optimise` and `tests.test_tool`.
+
 ## Quick start
 
-```powershell
+```bash
 python -m engine.cli doctor          # data health + what is still unknown
 python -m engine.cli fit             # which uses the shell can host, and what stops it
 python -m engine.cli layout          # parametric bay layouts + partition demand per use
@@ -88,7 +137,7 @@ Add `-v` before the subcommand for detail: `python -m engine.cli -v compare`.
 
 ## Apartment Lab — the interactive model
 
-```powershell
+```bash
 python -m apartment.server     # http://127.0.0.1:8000
 ```
 
@@ -118,8 +167,8 @@ circle are not negotiable.
 
 ## Explorer — the site in 3D, from site to unit
 
-```powershell
-python -m explorer.server      # http://127.0.0.1:8020   (or double-click run_explorer.bat)
+```bash
+python -m explorer.server      # http://127.0.0.1:8020   (on Windows you can also double-click run_explorer.bat)
 ```
 
 A rendered three.js view of the Marievik site, with sky, sun and shadows, built on the SB-Chalmers
@@ -134,7 +183,7 @@ from the Marievik_parametric engine (the Grasshopper model's code). See [explore
 
 ## Optimiser — ten options per use, and the one to regret least
 
-```powershell
+```bash
 python -m optimise                                    # all four uses, ~10 min
 python -m optimise --uses student_housing family_housing
 python -m optimise --azimuth 90 --carbon-price 2.0    # east facade, dearer carbon
@@ -160,7 +209,7 @@ after a cost change does not re-simulate.
 
 ## Grasshopper building model
 
-The Rhino/Grasshopper definition in `Desktop\Marievik_parametric` (component *MVK Building*) generates
+The Rhino/Grasshopper definition in `~/Desktop/Marievik_parametric` (component *MVK Building*) generates
 floor-by-floor layouts per use on a real footprint and prices them from **this** catalogue. With
 *Export = true* it writes `runs/grasshopper/<building>.json` (every use x partition system, plus plan
 geometry). `engine/grasshopper.py` prices each bill again with `evaluate.evaluate_bill`, so dashboard

@@ -1,0 +1,23 @@
+# Simulation environment (.venv-sim): Ladybug Tools for EnergyPlus thermal
+# comfort (optimise/thermal_sim.py) and Radiance daylight (explorer/sim/full_sim.py).
+#
+# Needs Python 3.7-3.13. The openstudio package, which lbt-honeybee depends on,
+# has no build for 3.14 or newer. On Windows, pick an older Python with the py
+# launcher (py -0 lists the ones installed):
+#
+#   py -3.11 -m venv .venv-sim
+#   .venv-sim/Scripts/pip install -r requirements-sim.txt
+#
+# The code looks for .venv-sim/Scripts/python.exe (optimise/thermal.py), so keep
+# that name and location.
+#
+# pip does not install EnergyPlus or Radiance. The Ladybug Tools installer puts
+# them in ~/ladybug_tools, which is where honeybee looks for them.
+#
+# Every Ladybug package pins its dependencies to exact versions, and they release
+# often. If you list them separately and unpinned, pip backtracks through
+# hundreds of releases. lbt-honeybee is the meta-package that pins a matching
+# set: honeybee-energy, honeybee-radiance, ladybug-comfort and the rest.
+# lbt-recipes needs lbt-honeybee>=0.9.488. Upgrade the two together.
+lbt-honeybee==0.9.498
+lbt-recipes==0.29.1

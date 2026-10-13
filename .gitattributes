@@ -1,1 +1,6 @@
 * text=auto
+
+# cmd.exe needs CRLF; shell scripts break with it.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.sh  text eol=lf

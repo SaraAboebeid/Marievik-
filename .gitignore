@@ -44,3 +44,6 @@ explorer/models/*.3dm
 # Parametric (Rhino/Grasshopper) model
 *.3dmbak
 parametric/outputs/
+
+# pip install -e . metadata
+*.egg-info/

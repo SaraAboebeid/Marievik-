@@ -75,11 +75,13 @@ virtual environment's scripts live in `bin/` rather than `Scripts/`.
 ```bash
 python -m venv .venv
 source .venv/Scripts/activate
-pip install -r requirements.txt
+pip install -e ".[cad]"
 ```
 
-This covers the engine, the Apartment Lab, the Explorer and the optimiser. `rhino3dm` is only needed for
-the `.3dm` import and export. `engine.intake` and most of `engine.cli` need no packages at all.
+Dependencies and their versions are listed in [pyproject.toml](pyproject.toml). This covers the engine, the
+Apartment Lab, the Explorer and the optimiser. Needs Python 3.11 or newer. The `[cad]` extra adds `rhino3dm`,
+which is only needed for the `.3dm` import and export; use `pip install -e .` to leave it out.
+`engine.intake` and most of `engine.cli` need no packages at all.
 
 **2. Simulation environment** (optional: EnergyPlus thermal comfort and Radiance daylight)
 

@@ -1,0 +1,45 @@
+# Marievik+ Digital Lab: dependencies for the main environment
+# (engine, Apartment Lab, Explorer, optimiser).
+#
+#   python -m venv .venv
+#   source .venv/Scripts/activate
+#   pip install -e .            # add ".[cad]" for .3dm import/export
+#
+# The code runs from the repository root (python -m engine.cli, python -m explorer.server, ...),
+# so nothing is packaged: installing this project only installs its dependencies.
+#
+# The simulation environment (.venv-sim) is kept separate in requirements-sim.txt. It needs
+# Python 3.13 or older, because openstudio has no build for 3.14, and having it here would
+# make uv fail to resolve this project.
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marievik-lab"
+version = "0.1.0"
+description = "Marievik+ Digital Lab: adaptive reuse, cost and carbon of building transformations"
+requires-python = ">=3.11"
+# Lower bounds are major versions the code relies on (numpy 2, shapely 2, pydantic 2).
+# Last tested with numpy 2.5.4, scipy 1.18.1, shapely 2.2.0, fastapi 0.143.0,
+# pydantic 2.14.1 and uvicorn 0.54.0.
+dependencies = [
+    "numpy>=2",
+    "scipy>=1.13",
+    "shapely>=2",
+    "fastapi>=0.100",
+    "pydantic>=2",
+    "uvicorn>=0.20",
+]
+
+[project.optional-dependencies]
+# .3dm import/export in engine/bridge.py (python -m engine.cli cad).
+cad = ["rhino3dm>=8"]
+# IFC support in engine/bridge.py.
+ifc = ["ifcopenshell"]
+
+[tool.setuptools]
+# Nothing to package (see above); also stops setuptools from guessing at the many top-level folders.
+packages = []
+py-modules = []

@@ -1,0 +1,215 @@
+{
+  "_comment": "One entry per use. Lengths in metres. Type ids refer to components_db.csv, whose catalogue_id column links to the Marievik+ catalogue (cost and carbon). Edit freely - Grasshopper reloads on recompute.",
+  "office_open": {
+    "label": "Office - open plan",
+    "scheme": "open",
+    "room_name": "Open office",
+    "core": {
+      "width": 8.0,
+      "length": 14.0
+    },
+    "inner_zone": "support",
+    "support_depth": 3.0,
+    "wwr": 0.55,
+    "window_module": 1.35,
+    "sill": 0.8,
+    "head": 2.9,
+    "types": {
+      "ext_wall": "EW_CONC_INSUL_400",
+      "partition": "IW_GLASS_PARTITION",
+      "corridor": "IW_GLASS_PARTITION",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_TRIPLE_ALU",
+      "room_door": "D_INT_GLASS_1000",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_HOLLOWCORE_270"
+    },
+    "finishes": {
+      "floor": "FL_CARPET_TILE",
+      "ceiling": "CE_MINERAL_GRID"
+    }
+  },
+  "office_cellular": {
+    "label": "Office - cellular rooms",
+    "scheme": "corridor",
+    "room_depth": 5.4,
+    "corridor": 1.8,
+    "unit_width": 3.6,
+    "room_name": "Office",
+    "core": {
+      "width": 8.0,
+      "length": 14.0
+    },
+    "inner_zone": "support",
+    "wwr": 0.45,
+    "window_module": 1.2,
+    "sill": 0.8,
+    "head": 2.8,
+    "types": {
+      "ext_wall": "EW_CONC_INSUL_400",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_TRIPLE_ALU",
+      "room_door": "D_INT_SINGLE_900",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_HOLLOWCORE_270"
+    },
+    "finishes": {
+      "floor": "FL_CARPET_TILE",
+      "ceiling": "CE_MINERAL_GRID"
+    }
+  },
+  "residential": {
+    "label": "Residential - apartments",
+    "scheme": "corridor",
+    "room_depth": 9.0,
+    "corridor": 1.6,
+    "unit_width": 7.2,
+    "room_name": "Apartment",
+    "core": {
+      "width": 6.0,
+      "length": 9.0
+    },
+    "inner_zone": "atrium",
+    "subdivide": {
+      "depth": 4.8,
+      "bed_width": 3.0,
+      "bath": 2.4
+    },
+    "wwr": 0.3,
+    "window_module": 2.4,
+    "sill": 0.6,
+    "head": 2.4,
+    "types": {
+      "ext_wall": "EW_TIMBER_CLT_380",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GLASS_PARTITION",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_TRIPLE_TIMBER",
+      "room_door": "D_FIRE_EI60_1000",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_CLT_240"
+    },
+    "finishes": {
+      "floor": "FL_LINOLEUM",
+      "ceiling": null
+    }
+  },
+  "hotel": {
+    "label": "Hotel - guest rooms",
+    "scheme": "corridor",
+    "room_depth": 7.2,
+    "corridor": 1.8,
+    "unit_width": 3.9,
+    "room_name": "Guest room",
+    "core": {
+      "width": 6.0,
+      "length": 10.0
+    },
+    "inner_zone": "atrium",
+    "bathroom": 2.2,
+    "wwr": 0.35,
+    "window_module": 1.95,
+    "sill": 0.6,
+    "head": 2.5,
+    "types": {
+      "ext_wall": "EW_BRICK_450",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GLASS_PARTITION",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_TRIPLE_ALU_WOOD",
+      "room_door": "D_FIRE_EI60_1000",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_CONCRETE_250"
+    },
+    "finishes": {
+      "floor": "FL_CARPET_TILE",
+      "ceiling": "CE_MINERAL_GRID"
+    }
+  },
+  "school": {
+    "label": "School - classrooms",
+    "scheme": "corridor",
+    "room_depth": 8.0,
+    "corridor": 3.0,
+    "unit_width": 8.4,
+    "room_name": "Classroom",
+    "core": {
+      "width": 7.0,
+      "length": 12.0
+    },
+    "inner_zone": "support",
+    "wwr": 0.4,
+    "window_module": 1.4,
+    "sill": 0.9,
+    "head": 3.0,
+    "types": {
+      "ext_wall": "EW_TIMBER_CLT_380",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_TRIPLE_ALU_WOOD",
+      "room_door": "D_INT_SINGLE_900",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_CLT_240"
+    },
+    "finishes": {
+      "floor": "FL_LINOLEUM",
+      "ceiling": "CE_ACOUSTIC_BAFFLE"
+    }
+  },
+  "retail": {
+    "label": "Retail / restaurant (ground floor)",
+    "scheme": "open",
+    "room_name": "Retail",
+    "core": {
+      "width": 8.0,
+      "length": 14.0
+    },
+    "inner_zone": "support",
+    "support_depth": 4.0,
+    "wwr": 0.75,
+    "window_module": 3.0,
+    "sill": 0.1,
+    "head": 3.4,
+    "types": {
+      "ext_wall": "EW_CONC_INSUL_400",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_STOREFRONT",
+      "room_door": "D_INT_SINGLE_900",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_CONCRETE_250"
+    },
+    "finishes": {
+      "floor": "FL_LINOLEUM",
+      "ceiling": "CE_MINERAL_GRID"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-"""Checks for the 3D explorer (explorer/). Needs the Marievik_parametric engine and shapely.
+"""Checks for the 3D explorer (explorer/). Needs the parametric/ engine and shapely.
 
     python -m tests.test_explorer
 """

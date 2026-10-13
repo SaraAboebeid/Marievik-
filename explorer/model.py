@@ -15,7 +15,7 @@ The old roof slab becomes a floor and stays retained; the new roof is new.
 Whether the existing frame can carry them is NOT checked: every scenario with added floors
 carries a "structural verification" blocker until a structural assessment is in the data.
 
-Where the parametric model lives: env MVK_PARAMETRIC, else ~/Desktop/Marievik_parametric.
+Where the parametric model lives: env MVK_PARAMETRIC, else parametric/ in this repository.
 """
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ import threading
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]                     # the Marievik+ repository
-MVK = Path(os.environ.get("MVK_PARAMETRIC") or (Path.home() / "Desktop" / "Marievik_parametric"))
+MVK = Path(os.environ.get("MVK_PARAMETRIC") or (ROOT / "parametric"))
 if str(MVK) not in sys.path:
     sys.path.insert(0, str(MVK))
 

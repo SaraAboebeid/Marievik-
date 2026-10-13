@@ -40,3 +40,7 @@ explorer/web/node_modules/
 explorer/web/dist/
 explorer/web/public/rhino3dm/
 explorer/models/*.3dm
+
+# Parametric (Rhino/Grasshopper) model
+*.3dmbak
+parametric/outputs/

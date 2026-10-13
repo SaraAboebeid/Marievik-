@@ -130,7 +130,7 @@ level: area, units, cost, carbon, retained share and blockers.
 On any floor you can run **daylight factor** and **thermal comfort**. The quick method takes seconds. The
 Ladybug Tools method runs Honeybee with EnergyPlus and Radiance in `.venv-sim`. Rhino `.3dm` files open in
 the same view, with their layers. Saved scenarios sit side by side in a comparison table. The layouts come
-from the Marievik_parametric engine (the Grasshopper model's code). See [explorer/README.md](explorer/README.md).
+from the parametric engine in `parametric/` (the Grasshopper model's code). See [explorer/README.md](explorer/README.md).
 
 ## Optimiser — ten options per use, and the one to regret least
 
@@ -160,7 +160,7 @@ after a cost change does not re-simulate.
 
 ## Grasshopper building model
 
-The Rhino/Grasshopper definition in `Desktop\Marievik_parametric` (component *MVK Building*) generates
+The Rhino/Grasshopper definition in [`parametric/`](parametric/README.md) (component *MVK Building*) generates
 floor-by-floor layouts per use on a real footprint and prices them from **this** catalogue. With
 *Export = true* it writes `runs/grasshopper/<building>.json` (every use x partition system, plus plan
 geometry). `engine/grasshopper.py` prices each bill again with `evaluate.evaluate_bill`, so dashboard

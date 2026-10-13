@@ -38,8 +38,8 @@ in as each building arrives.
 For development, run `npm run dev` in `explorer/web` (http://localhost:5174, hot reload), with the
 server running.
 
-The layouts come from the **Marievik_parametric** engine: the same `mvk` code the Grasshopper component
-runs. The server looks for it in `%MVK_PARAMETRIC%`, else in `Desktop\Marievik_parametric`. Prices and carbon
+The layouts come from the parametric engine in [`parametric/`](../parametric/): the same `mvk` code the
+Grasshopper component runs. The server looks for it in `%MVK_PARAMETRIC%`, else in `parametric/`. Prices and carbon
 come from this repository's catalogue.
 
 ## What you can do

@@ -5,20 +5,20 @@
    cool-green; the categorical hues are the CVD-validated set from the
    project's palette. */
 @theme {
-  --color-bg: #eef0ee;
-  --color-surface: #fbfcfb;
+  --color-bg: #f4f2eb;
+  --color-surface: #faf9f5;
   --color-raised: #ffffff;
-  --color-sunken: #e5e8e6;
-  --color-line: #d6dad7;
-  --color-line-strong: #bbc1bd;
-  --color-ink: #161918;
-  --color-ink-2: #454c49;
-  --color-muted: #727a76;
-  --color-accent: #1f6e9e;
-  --color-accent-soft: #e2edf5;
+  --color-sunken: #eaede7;
+  --color-line: #d7dfda;
+  --color-line-strong: #b9c6bf;
+  --color-ink: #1e3434;
+  --color-ink-2: #3e5352;
+  --color-muted: #627370;
+  --color-accent: #1e3434;
+  --color-accent-soft: #e6efc4;
 
   --color-c1: #3d8fd1;
-  --color-c2: #d2601a;
+  --color-c2: #c97855;
   --color-c3: #128f6e;
   --color-c4: #c46ba4;
   --color-c5: #dfa00c;
@@ -39,20 +39,20 @@
 
 @media (prefers-color-scheme: dark) {
   @theme {
-    --color-bg: #0f1110;
-    --color-surface: #181a19;
-    --color-raised: #212422;
-    --color-sunken: #151716;
-    --color-line: #2d3230;
-    --color-line-strong: #424846;
-    --color-ink: #ebeeec;
-    --color-ink-2: #b0b7b4;
-    --color-muted: #808884;
-    --color-accent: #58a8de;
-    --color-accent-soft: #15303e;
+    --color-bg: #0f1c1c;
+    --color-surface: #152525;
+    --color-raised: #1c2e2e;
+    --color-sunken: #0c1818;
+    --color-line: #26393a;
+    --color-line-strong: #3a5050;
+    --color-ink: #f4f2eb;
+    --color-ink-2: #c3cdc8;
+    --color-muted: #869793;
+    --color-accent: #c97855;
+    --color-accent-soft: #2e3f24;
 
     --color-c1: #4a97d6;
-    --color-c2: #de6f2e;
+    --color-c2: #d0845f;
     --color-c3: #169b72;
     --color-c4: #c767ac;
     --color-c5: #b88609;

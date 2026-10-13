@@ -228,7 +228,7 @@ export class Viewer {
     const prevExplode = this.options.explode
     this.options = { ...this.options, ...o }
     this.sky.visible = this.options.sky
-    this.scene.background = this.options.sky ? null : new THREE.Color('#e9ece9')
+    this.scene.background = this.options.sky ? null : new THREE.Color('#d7dfda')
     this.renderer.shadowMap.enabled = this.options.shadows
     this.sunLight.castShadow = this.options.shadows
     this.scene.traverse((c) => {

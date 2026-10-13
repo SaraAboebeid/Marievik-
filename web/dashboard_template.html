@@ -6,14 +6,14 @@
 <style>
 :root{
   /* Neutrals: concrete, biased slightly cool-green rather than pure grey */
-  --bg:#F1F3F1; --surface:#FCFCFB; --raised:#FFFFFF; --sunken:#E7EAE8;
-  --border:#D8DCD9; --border-strong:#BFC5C1;
-  --ink:#171A19; --ink-2:#464D4A; --muted:#737B77;
+  --bg:#F4F2EB; --surface:#FAF9F5; --raised:#FFFFFF; --sunken:#EAEDE7;
+  --border:#D7DFDA; --border-strong:#B9C6BF;
+  --ink:#1E3434; --ink-2:#3E5352; --muted:#627370;
 
-  --accent:#1F6E9E; --accent-soft:#E3EEF6; --accent-ink:#14536F;
+  --accent:#1E3434; --accent-soft:#E6EFC4; --accent-ink:#142626;
 
   /* Categorical - validated (light, surface #fcfcfb): all checks pass */
-  --c1:#3D8FD1; --c2:#D2601A; --c3:#128F6E; --c4:#C46BA4; --c5:#DFA00C; --c6:#8A72D8;
+  --c1:#3D8FD1; --c2:#C97855; --c3:#128F6E; --c4:#C46BA4; --c5:#DFA00C; --c6:#8A72D8;
 
   /* Status - reserved, never used as a series colour */
   --good:#2E7D4F; --good-bg:#E4F0E9;
@@ -21,7 +21,7 @@
   --serious:#B2551B; --serious-bg:#F8E8DE;
   --critical:#AC2E23; --critical-bg:#F8E3E1;
 
-  --grid:#E4E8E5; --axis:#AFB6B2;
+  --grid:#E3E8E2; --axis:#A9B6B0;
   --shadow:0 1px 2px rgba(23,26,25,.06), 0 4px 14px rgba(23,26,25,.05);
   --mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
   --sans:"Archivo", "Helvetica Neue", Arial, sans-serif;
@@ -29,35 +29,35 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#101211; --surface:#1A1A19; --raised:#212422; --sunken:#171917;
-    --border:#2F3431; --border-strong:#434946;
-    --ink:#ECEFED; --ink-2:#B2B9B6; --muted:#828A86;
+    --bg:#0F1C1C; --surface:#152525; --raised:#1C2E2E; --sunken:#0C1818;
+    --border:#26393A; --border-strong:#3A5050;
+    --ink:#F4F2EB; --ink-2:#C3CDC8; --muted:#869793;
 
-    --accent:#58A8DE; --accent-soft:#16303E; --accent-ink:#8FC6EA;
+    --accent:#C97855; --accent-soft:#2E3F24; --accent-ink:#E3A486;
 
     /* Categorical - validated (dark, surface #1a1a19): all checks pass */
-    --c1:#4A97D6; --c2:#DE6F2E; --c3:#169B72; --c4:#C767AC; --c5:#B88609; --c6:#9782DE;
+    --c1:#4A97D6; --c2:#D0845F; --c3:#169B72; --c4:#C767AC; --c5:#B88609; --c6:#9782DE;
 
     --good:#4FAE77; --good-bg:#16291F;
     --warn:#D39A22; --warn-bg:#2B2313;
     --serious:#E0793B; --serious-bg:#2E1D13;
     --critical:#E0655A; --critical-bg:#301A18;
 
-    --grid:#282C2A; --axis:#4E5552;
+    --grid:#1E3030; --axis:#4A5F5D;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
   }
 }
 :root[data-theme="dark"]{
-  --bg:#101211; --surface:#1A1A19; --raised:#212422; --sunken:#171917;
-  --border:#2F3431; --border-strong:#434946;
-  --ink:#ECEFED; --ink-2:#B2B9B6; --muted:#828A86;
-  --accent:#58A8DE; --accent-soft:#16303E; --accent-ink:#8FC6EA;
-  --c1:#4A97D6; --c2:#DE6F2E; --c3:#169B72; --c4:#C767AC; --c5:#B88609; --c6:#9782DE;
+  --bg:#0F1C1C; --surface:#152525; --raised:#1C2E2E; --sunken:#0C1818;
+  --border:#26393A; --border-strong:#3A5050;
+  --ink:#F4F2EB; --ink-2:#C3CDC8; --muted:#869793;
+  --accent:#C97855; --accent-soft:#2E3F24; --accent-ink:#E3A486;
+  --c1:#4A97D6; --c2:#D0845F; --c3:#169B72; --c4:#C767AC; --c5:#B88609; --c6:#9782DE;
   --good:#4FAE77; --good-bg:#16291F;
   --warn:#D39A22; --warn-bg:#2B2313;
   --serious:#E0793B; --serious-bg:#2E1D13;
   --critical:#E0655A; --critical-bg:#301A18;
-  --grid:#282C2A; --axis:#4E5552;
+  --grid:#1E3030; --axis:#4A5F5D;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
 }
 
@@ -78,9 +78,10 @@ a:hover{border-bottom-color:currentColor}
 /* ---------- header ---------- */
 .topbar{
   position:sticky; top:env(safe-area-inset-top, 0px); z-index:50;
-  background:color-mix(in srgb, var(--surface) 88%, transparent);
+  background:color-mix(in srgb, #1E3434 94%, transparent);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--border);
+  border-bottom:3px solid #B9D35B;
+  color:#F4F2EB;
 }
 .topbar-in{
   max-width:var(--maxw); margin:0 auto; padding-inline:20px;
@@ -89,7 +90,7 @@ a:hover{border-bottom-color:currentColor}
 .brand{display:flex; align-items:baseline; gap:10px; min-width:0}
 .brand b{font-size:15px; font-weight:700; letter-spacing:-0.02em; white-space:nowrap}
 .brand span{
-  font-family:var(--mono); font-size:10.5px; color:var(--muted);
+  font-family:var(--mono); font-size:10.5px; color:#B9D35B;
   text-transform:uppercase; letter-spacing:.09em; white-space:nowrap;
 }
 .navstrip{
@@ -98,10 +99,10 @@ a:hover{border-bottom-color:currentColor}
 .navstrip::-webkit-scrollbar{display:none}
 .navstrip a{
   font-family:var(--mono); font-size:10.5px; letter-spacing:.07em;
-  text-transform:uppercase; color:var(--muted); padding:6px 9px; border-radius:4px;
+  text-transform:uppercase; color:#D7DFDA; padding:6px 9px; border-radius:4px;
   white-space:nowrap; border:none;
 }
-.navstrip a:hover{color:var(--ink); background:var(--sunken)}
+.navstrip a:hover{color:#1E3434; background:#B9D35B}
 
 /* ---------- provenance banner ---------- */
 .provenance{

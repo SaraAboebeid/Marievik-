@@ -377,7 +377,7 @@ export default function App() {
   return (
     <div className="flex h-full flex-col overflow-hidden">
       {/* ------------------------------------------------ header */}
-      <header className="flex flex-none flex-wrap items-center gap-3.5 border-b border-line bg-surface px-4 py-2">
+      <header className="flex flex-none flex-wrap items-center gap-3.5 border-b-[3px] border-b-[#b9d35b] bg-accent-soft px-4 py-2">
         <h1 className="whitespace-nowrap text-[14px] font-semibold">
           Apartment Lab
           <span className="ml-2 font-mono text-[10px] uppercase tracking-[0.08em] text-muted">Marievik+</span>

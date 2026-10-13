@@ -81,16 +81,7 @@ pip install -r requirements.txt
 This covers the engine, the Apartment Lab, the Explorer and the optimiser. `rhino3dm` is only needed for
 the `.3dm` import and export. `engine.intake` and most of `engine.cli` need no packages at all.
 
-**2. Marievik_parametric** (needed by the Explorer)
-
-The Explorer imports the `mvk` package from the separate Marievik_parametric repository. By default it
-looks in `~/Desktop/Marievik_parametric`. If you keep it somewhere else, set the path first:
-
-```bash
-export MVK_PARAMETRIC="/c/path/to/Marievik_parametric"
-```
-
-**3. Simulation environment** (optional: EnergyPlus thermal comfort and Radiance daylight)
+**2. Simulation environment** (optional: EnergyPlus thermal comfort and Radiance daylight)
 
 The optimiser and the Explorer's Ladybug Tools method run their simulations in a second environment,
 `.venv-sim`. Without it the optimiser and the Explorer can't run the full simulations. The Explorer's quick
@@ -104,7 +95,7 @@ py -3.11 -m venv .venv-sim          # any Python 3.7-3.13; openstudio has no bui
 EnergyPlus and Radiance themselves can't be installed with pip. The Ladybug Tools installer includes both.
 It puts them in `~/ladybug_tools`, which is where honeybee looks for them.
 
-**4. Web front ends** (needs Node.js)
+**3. Web front ends** (needs Node.js)
 
 ```bash
 (cd frontend && npm install && npm run build)              # Apartment Lab

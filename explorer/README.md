@@ -25,7 +25,7 @@ explorer/
 
 ```powershell
 # once
-pip install -r requirements.txt   # see Setup in the main README; also needs Marievik_parametric
+pip install -r requirements.txt   # see Setup in the main README
 cd explorer\web; npm install; npm run build; cd ..\..
 
 # every time

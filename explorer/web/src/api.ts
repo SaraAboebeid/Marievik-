@@ -1,5 +1,5 @@
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, Settings, SitePayload,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Methods, Settings, SitePayload,
 } from './types'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -30,6 +30,8 @@ export const api = {
   job: (id: string) => call<{ status: string; error?: string; result?: FullResult }>(`/api/jobs/${id}`),
   capabilities: () => call<Capabilities>('/api/capabilities'),
   models: () => call<{ models: { name: string; url: string; bytes: number }[] }>('/api/models'),
+  methods: () => call<Methods>('/api/methods'),
+  kpis: (id: string, settings: Partial<Settings>) => call<KpiResult>(`/api/kpis/${id}`, { settings }),
 }
 
 export interface FullResult {

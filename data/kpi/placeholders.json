@@ -1,0 +1,32 @@
+{
+  "_meta": {
+    "purpose": "Illustrative inputs for the KPIs the engine cannot compute yet. Every KPI built from these is tagged 'Placeholder value' in the explorer. Replace a value with a sourced one and change its provenance; the tag stays until the KPI's method is implemented.",
+    "currency": "SEK",
+    "updated": "2026-10-14",
+    "provenance": "PLACEHOLDER"
+  },
+  "market_value_sek_per_m2":            {"value": 38000, "unit": "SEK/m² GFA", "basis": "Illustrative Stockholm office market value; replace with a valuation or DCF."},
+  "opex_sek_per_m2_yr":                 {"value": 350,   "unit": "SEK/m²·yr", "basis": "Illustrative operating cost for the LCC sum."},
+  "npv_uplift_share":                   {"value": 0.06,  "unit": "share of asset value", "basis": "Illustrative incremental NPV of the alternative versus continuing as is."},
+  "flex_premium_sek_per_m2":            {"value": 1800,  "unit": "SEK/m² GFA", "basis": "Illustrative break-even flexibility premium."},
+  "option_value_share":                 {"value": 0.03,  "unit": "share of asset value", "basis": "Illustrative value of being able to switch use later."},
+  "value_retention_s2_y10":             {"value": 0.90,  "unit": "share", "basis": "Adaptable alternative, S2 adverse, year 10, from the worked example in the CAVF cheat sheet (A5)."},
+  "downside_loss_s2_y10":               {"value": 0.10,  "unit": "share", "basis": "Same worked example: DL% = 100 - VRR."},
+  "crrem_misalignment_year":            {"value": 2034,  "unit": "year", "basis": "Illustrative; use the official CRREM tool with the right pathway."},
+  "carbon_payback_years":               {"value": 14,    "unit": "years", "basis": "Illustrative payback of the extra upfront carbon of flexibility."},
+  "feasible_uses":                      {"value": 4,     "unit": "uses", "basis": "Illustrative count of the six use profiles the shell can host without a critical blocker."},
+  "replication_index":                  {"value": 0.6,   "unit": "0-1", "basis": "Illustrative share of the solution transferable to similar buildings."},
+  "transformation_months_base":         {"value": 6,     "unit": "months", "basis": "Illustrative fixed duration of a conversion."},
+  "transformation_months_per_1000m2":   {"value": 1.5,   "unit": "months per 1000 m²", "basis": "Illustrative duration that scales with floor area."},
+  "disruption_weeks":                   {"value": 10,    "unit": "weeks", "basis": "Illustrative period of reduced use during works."},
+  "utilization":                        {"value": 0.72,  "unit": "share of hours", "basis": "Illustrative occupied share of available hours."},
+  "delivered_services":                 {"value": 5,     "unit": "services", "basis": "Illustrative count of services the building delivers."},
+  "adaptability_grade":                 {"value": "B",   "unit": "A-E", "basis": "Illustrative adaptability profile grade."},
+  "energy_flexibility_share":           {"value": 0.18,  "unit": "share of peak", "basis": "Illustrative share of demand that can be moved in time."},
+  "shiftable_load_w_per_m2":            {"value": 6,     "unit": "W/m²", "basis": "Illustrative shiftable electrical load."},
+  "hazard_adaptation_score":            {"value": 0.55,  "unit": "0-1", "basis": "Illustrative climate-hazard adaptation performance."},
+  "component_mass_kg_per_m2":           {"value": 45,    "unit": "kg/m² GFA", "basis": "Illustrative mass of fit-out components."},
+  "recoverable_fraction":               {"value": 0.6,   "unit": "0-1", "basis": "Illustrative recoverable fraction q of that mass."},
+  "reuse_value_sek_per_kg":             {"value": 4,     "unit": "SEK/kg", "basis": "Illustrative net value (resale minus recovery cost)."},
+  "counterfactual_newbuild_kgco2e_per_m2": {"value": 380, "unit": "kg CO₂e/m²", "basis": "Illustrative upfront carbon (A1-A5) of demolish and rebuild, the counterfactual for avoided GWP."}
+}

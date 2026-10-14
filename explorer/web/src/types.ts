@@ -52,6 +52,36 @@ export interface SitePayload {
 
 export interface Blocker { kind: string; text: string; severity: string }
 
+// ---------------------------------------------------------------- CAVF KPIs (explorer/kpis.py)
+export type KpiStatus = 'computed' | 'partial' | 'placeholder'
+export interface KpiValue { value: number | string | null; display: string; status: KpiStatus; note: string }
+export interface KpiResult { building: string; key: string; kpis: Record<string, KpiValue> }
+export interface KpiDef {
+  name: string; group: string; scale: string; formula: string; definitions: string; meaning: string
+  status: string; notes: string; source: string; explorer: string
+}
+export interface ProfileDef { name: string; scale: string; kpis: string[]; provisional?: boolean }
+export interface CatalogueComponent {
+  id: string; name: string; supplier: string; layer: string; unit: string; service_life_years: number
+  reversibility: number; recovery_rate: number
+  cost_sek: { material: number; labour_install: number; labour_demount?: number; provenance: string }
+  carbon_kgco2e: { A1A3: number; A4: number; A5: number; C1C4: number; D: number; provenance: string }
+}
+export interface Methods {
+  kpis: Record<string, KpiDef>
+  profiles: Record<string, ProfileDef>
+  scenarios: {
+    scenarios: { id: string; name: string; meaning: string; driver: string }[]
+    years: number[]; rules: string[]; symbols: string
+    example: { note: string; columns: string[]; rows: (string | number)[][]; worked: string[] }
+  }
+  data: {
+    catalogue: { meta: Record<string, string>; file: string; components: CatalogueComponent[] }
+    study_period: { start_year: number; length_years: number; discount_rate_real: number; carbon_discounting: boolean; carbon_discounting_note: string; file: string }
+    placeholders: Record<string, { value: number | string; unit: string; basis: string } | Record<string, string> | string>
+  }
+}
+
 export interface BuildingKpi {
   gfa_m2: number
   nfa_m2: number

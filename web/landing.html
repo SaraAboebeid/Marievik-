@@ -23,7 +23,7 @@
 html,body{margin:0}
 body{background:var(--bg); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased}
 a{color:inherit; text-decoration:none}
-.wrap{max-width:1160px; margin:0 auto; padding-inline:24px}
+.wrap{max-width:1240px; margin:0 auto; padding-inline:24px}
 .mono{font-family:var(--mono); text-transform:uppercase; letter-spacing:.09em; font-size:11px}
 
 /* ---------- hero ---------- */
@@ -47,13 +47,14 @@ a{color:inherit; text-decoration:none}
 .start-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px}
 .start h2{font-size:28px; letter-spacing:-.025em; margin:0; font-weight:800}
 .start-head p{margin:0; color:var(--muted); font-size:14.5px}
-.grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px}
-@media (max-width:1040px){ .grid{grid-template-columns:repeat(2, 1fr)} }
-@media (max-width:600px){ .grid{grid-template-columns:1fr} }
+.grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:14px}
+@media (max-width:1180px){ .grid{grid-template-columns:repeat(3, 1fr)} }
+@media (max-width:760px){ .grid{grid-template-columns:repeat(2, 1fr)} }
+@media (max-width:520px){ .grid{grid-template-columns:1fr} }
 
 .card{
   display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:24px 22px 20px; min-height:330px; position:relative; overflow:hidden;
+  padding:24px 22px 20px; min-height:200px; position:relative; overflow:hidden;
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .card::before{content:""; position:absolute; left:0; right:0; top:0; height:5px; background:var(--c)}
@@ -70,6 +71,7 @@ a{color:inherit; text-decoration:none}
 .arrow{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--c); color:var(--on-c); transition:transform .18s ease}
 .card:hover .arrow{transform:translateX(4px)}
 
+.p-developer{--c:#5E7A76; --on-c:var(--chalk)}
 .p-investor{--c:var(--pine);  --on-c:var(--chalk)}
 .p-supplier{--c:var(--terra); --on-c:#fff}
 .p-finance {--c:var(--mist);  --on-c:var(--pine)}
@@ -167,17 +169,19 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
 
   <div class="grid">
 
+    <a class="card p-developer" href="/explorer?profile=developer">
+      <span class="icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V11h5v10"/><path d="M11 21V5h7v16"/><path d="M14 9h1M14 13h1M14 17h1"/><path d="M3 7l4-3 4 3"/></svg>
+      </span>
+      <h3>Project developer</h3>
+      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
+    </a>
+
     <a class="card p-investor" href="/explorer?profile=investor">
       <span class="icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>
       </span>
       <h3>Real estate investor</h3>
-      <p class="q">Which new use makes the most of this building, and what stands in the way?</p>
-      <ul>
-        <li>Lettable area and units per use</li>
-        <li>Conversion cost per scenario</li>
-        <li>Blockers and added floors</li>
-      </ul>
       <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
     </a>
 
@@ -186,12 +190,6 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
       </span>
       <h3>Material supplier</h3>
-      <p class="q">What do these conversions need, in what quantities, and where do my products fit?</p>
-      <ul>
-        <li>Partition systems, doors and windows</li>
-        <li>Quantities per building and floor</li>
-        <li>Demountable and reusable components</li>
-      </ul>
       <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
     </a>
 
@@ -200,12 +198,6 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
       </span>
       <h3>Financial consultant</h3>
-      <p class="q">What does each scenario cost now, and how do the options compare side by side?</p>
-      <ul>
-        <li>Capital cost per scenario</li>
-        <li>Retained versus new elements</li>
-        <li>Saved scenarios compared in a table</li>
-      </ul>
       <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
     </a>
 
@@ -214,12 +206,6 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 12-4 16-9 16z"/><path d="M4 21c3-4 6-7 10-9"/></svg>
       </span>
       <h3>Environmental consultant</h3>
-      <p class="q">How much carbon does reuse save, and do the new spaces work for the people in them?</p>
-      <ul>
-        <li>Embodied carbon and retained share</li>
-        <li>Daylight factor per floor</li>
-        <li>Thermal comfort per unit</li>
-      </ul>
       <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
     </a>
 

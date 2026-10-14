@@ -19,6 +19,8 @@ API (all JSON)
   POST /api/analysis/full                {... , daylight: bool, energy: bool} -> job id (Ladybug Tools)
   GET  /api/jobs/{job}                   status / result of a Ladybug Tools run
   GET  /api/capabilities                 which simulation engines are installed
+  GET  /api/methods                      CAVF KPI definitions, profiles, scenarios S0-S4, databases, constants
+  POST /api/kpis/{id}                    {settings}            -> every CAVF KPI for one building scenario
   GET  /api/models                       Rhino .3dm files in explorer/models (loaded in the viewer)"""
 from __future__ import annotations
 
@@ -38,7 +40,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import climate, comfort, daylight, model as M
+from . import climate, comfort, daylight, kpis, model as M
 
 HERE = Path(__file__).resolve().parent
 DIST = HERE / "web" / "dist"
@@ -98,6 +100,18 @@ def api_floor(bid: str, index: int, body: ScenarioBody):
     if not 0 <= index < len(sc["res"]["floors"]):
         raise HTTPException(404, "floor %d does not exist" % index)
     return site().floor_payload(bid, index, body.settings)
+
+
+# ---------------------------------------------------------------------------- CAVF KPIs per profile
+@app.get("/api/methods")
+def api_methods():
+    return kpis.methods_payload()
+
+
+@app.post("/api/kpis/{bid}")
+def api_kpis(bid: str, body: ScenarioBody):
+    _check(bid)
+    return kpis.building_kpis(site(), bid, body.settings)
 
 
 # ---------------------------------------------------------------------------- quick analysis

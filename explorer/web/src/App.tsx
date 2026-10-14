@@ -2,9 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, fmt, fmt1 } from './api'
 import type { FullResult } from './api'
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, Level, SavedScenario, Settings,
-  SitePayload, Unit, UnitComfort,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Level, Methods, SavedScenario,
+  Settings, SitePayload, Unit, UnitComfort,
 } from './types'
+import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
+import { ProfileKpis } from './ui/ProfileKpis'
+import { MethodsDrawer } from './ui/MethodsDrawer'
 import { Viewer, type Pick, type ViewOptions } from './viewer/Viewer'
 import { dayOfYear, sunPosition } from './viewer/sun'
 import { COMFORT_BINS, DF_BINS, comfortColor } from './viewer/colors'
@@ -49,9 +52,26 @@ export default function App() {
   const [rhinoLayers, setRhinoLayers] = useState<RhinoLayer[]>([])
   const [showGenerated, setShowGenerated] = useState(true)
   const [models, setModels] = useState<{ name: string; url: string; bytes: number }[]>([])
+  const [choice, setChoice] = useState(readChoice)
+  const [methods, setMethods] = useState<Methods | null>(null)
+  const [kpiResult, setKpiResult] = useState<KpiResult | null>(null)
+  const [explain, setExplain] = useState<string | null>(null)   // Methods panel open (KPI id to show, or '')
 
   const buildingId = level.kind === 'site' ? null : level.building
   const settingsOf = useCallback((id: string) => scen[id] ?? site?.defaults, [scen, site])
+
+  // ------------------------------------------------------------ profile KPIs and their methods
+  useEffect(() => { writeChoice(choice.profile, choice.project) }, [choice])
+  useEffect(() => { api.methods().then(setMethods).catch((e) => setError(String(e))) }, [])
+  const bkey = buildingId ? bdata[buildingId]?.key : undefined
+  useEffect(() => {
+    if (!buildingId || !bkey) return
+    let alive = true
+    api.kpis(buildingId, settingsOf(buildingId) ?? {})
+      .then((r) => { if (alive) setKpiResult(r) })
+      .catch((e) => { if (alive) setError(String(e)) })
+    return () => { alive = false }
+  }, [buildingId, bkey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ------------------------------------------------------------ viewer
   useEffect(() => {
@@ -214,6 +234,7 @@ export default function App() {
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'SELECT') return
+      if (explain !== null) return          // the Methods panel has the keyboard (Esc closes it)
       if (e.key === 'Escape' || e.key === 'Backspace') up()
       if (level.kind === 'floor' || level.kind === 'unit') {
         const b = bdata[level.building]
@@ -223,7 +244,7 @@ export default function App() {
     }
     window.addEventListener('keydown', k)
     return () => window.removeEventListener('keydown', k)
-  }, [up, level, bdata, go])
+  }, [up, level, bdata, go, explain])
 
   // ------------------------------------------------------------ analysis
   const context = useCallback(() => {
@@ -389,6 +410,7 @@ export default function App() {
       {/* top: title + breadcrumb */}
       <header className="pointer-events-none absolute left-3 right-3 top-3 z-10 flex items-start justify-between gap-3">
         <div className="pointer-events-auto flex items-center gap-2 rounded-md border border-line bg-raised/95 px-3 py-1.5 shadow-sm">
+          <a href="/" className="text-[12px] text-muted hover:text-ink" title="Back to the Digital Lab home page">←</a>
           <span className="text-[13px] font-semibold tracking-tight">Marievik+ Explorer</span>
           <span className="text-line-strong">|</span>
           <nav className="flex items-center gap-1 text-[12.5px]" aria-label="Level">
@@ -404,7 +426,23 @@ export default function App() {
             <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11px] text-muted hover:text-ink" title="Up one level (Esc)">↑ up</button>
           )}
         </div>
-        <div className="pointer-events-auto flex items-center gap-1.5">
+        <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-1.5">
+          <span className="flex items-center gap-1.5 rounded-md border border-line bg-raised/95 px-2.5 py-1 text-[12px] shadow-sm"
+            title={PROJECTS[choice.project].placeholder ? 'Placeholder project: shows the Marievik model until its own is added' : undefined}>
+            <span className="h-2 w-2 rounded-full bg-c2" aria-hidden />
+            {PROJECTS[choice.project].name}, {PROJECTS[choice.project].city}
+            {PROJECTS[choice.project].placeholder && <span className="rounded bg-warn-bg px-1 font-mono text-[9.5px] text-warn">placeholder</span>}
+          </span>
+          <select value={choice.profile ?? ''} onChange={(e) => setChoice((c) => ({ ...c, profile: e.target.value || null }))}
+            aria-label="Profile"
+            className="rounded-md border border-line bg-raised/95 px-2 py-1 text-[12px] shadow-sm outline-none focus:border-accent">
+            <option value="">No profile</option>
+            {Object.entries(PROFILE_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+          </select>
+          <button onClick={() => setExplain('')}
+            className="rounded-md border border-accent bg-accent px-2.5 py-1 text-[12px] font-medium text-white shadow-sm hover:brightness-110">
+            Methods & data
+          </button>
           {(busy || Object.values(loading).some(Boolean)) && (
             <span className="rounded-md border border-line bg-raised/95 px-2.5 py-1 font-mono text-[11px] text-ink-2 shadow-sm">
               {busy ?? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…`}
@@ -449,6 +487,10 @@ export default function App() {
 
       {/* right: KPIs and analysis for the current level */}
       <aside className="panel-scroll absolute right-3 top-14 z-10 w-[22rem]">
+        {site && choice.profile && (
+          <ProfileKpis profile={choice.profile} methods={methods} result={kpiResult} building={buildingId}
+            onExplain={(k) => setExplain(k)} />
+        )}
         {site && (
           <InfoPanel
             site={site} level={level} bdata={bdata} totals={totals} floor={floorData}
@@ -470,6 +512,11 @@ export default function App() {
       {showCompare && (
         <CompareDrawer saved={saved} current={totals} onClose={() => setShowCompare(false)}
           onRemove={removeSaved} onRestore={restoreSaved} onSave={saveScenario} />
+      )}
+
+      {explain !== null && methods && (
+        <MethodsDrawer methods={methods} profile={choice.profile} focus={explain}
+          result={kpiResult && kpiResult.building === buildingId ? kpiResult : null} onClose={() => setExplain(null)} />
       )}
 
       {hover && hoverText && (

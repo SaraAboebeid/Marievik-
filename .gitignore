@@ -47,3 +47,6 @@ parametric/outputs/
 
 # pip install -e . metadata
 *.egg-info/
+
+# KPI cheat sheet - kept local; its content is built into the explorer's Methods panel
+CAVF_KPI_Equations_and_Definitions_Updated.docx

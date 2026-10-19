@@ -1,0 +1,175 @@
+{
+  "id": "community_hybrid",
+  "label_en": "Community hybrid / shared multi-use space (meeting place)",
+  "label_sv": "Mötesplats / medborgarhus / träffpunkt / allaktivitetslokal",
+  "family": "community",
+  "summary": "One or a few divisible rooms that are time-shared rather than space-shared: meeting or conference room by day, associations, study circles, seniors' träffpunkt, youth activities and celebrations in the evening and at weekends. Swedish state support defines an 'allmän samlingslokal' (Förordning 2016:1367 1 §) as a premises kept open and accessible for associations' meetings, study activities, cultural activities, recreation and leisure. Regulation is generic: samlingslokal fire class (Vk 2A up to 150 persons, 2B above), hearing-aid system in samlingssalar (BFS 2024:12 3 kap. 6 §), accessible WC, sufficient toilets (FMH 35 §), and food rules if a kitchen serves the public. No size norm exists. Its value depends on the reversibility of the dividing element and on independent access when the rest of the building is closed.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (max 150 persons; normal case) or 2B (more than 150). BFS 2024:7 2 kap. 11–12 §§ (samlingslokaler named). With alcohol beyond a limited extent and more than 150 persons: 2C (2 kap. 13 §). See cross_cutting.json fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "Förordning (2016:1367) om statsbidrag till allmänna samlingslokaler, 1 § (definition), 2 § (Boverket administers grants)", "url": "https://lagen.nu/2016:1367" },
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 4, 11–13 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet: 2 kap. 1, 7 §§; 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "FMH (1998:899) 35 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" },
+      { "ref": "BFS 2024:10 buller: 2 kap. 2 § tabell 2:1, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a) when it becomes a samlingslokal open to the public.",
+      "Boverket grant for allmänna samlingslokaler (new build, conversion and accessibility measures) is available to non-profit owners under Förordning 2016:1367. Eligibility conditions (non-profit association, democracy condition) were not re-checked in detail.",
+      "Food served to the public on a regular basis requires registration of the food business with the municipality (EU Regulation 852/2004 art. 6 via Swedish food legislation). Occasional association use may be exempt (indicative, not verified).",
+      "Alcohol at private parties held by external renters: serveringstillstånd rules under Alkohollagen (2010:1622) depend on whether the event is closed or public (not verified)."
+    ],
+    "operator_oversight": "Municipality (kultur och fritid, stadsdel, äldreomsorg for träffpunkter); non-profit owners (Folkets Hus, Bygdegårdar, Våra Gårdar); Boverket (grants); räddningstjänst; miljöförvaltning (food registration, noise)"
+  },
+  "occupancy": {
+    "unit": "visitor",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish law, guidance or municipal programme found that gives m2 per visitor or a standard size for a träffpunkt or medborgarhus. The 120 m2 divisible main room in data/standards/space_requirements.json (community_hybrid) is an unsourced working value.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Often volunteer-run or with a host (värd)." },
+    "egress_design_density": {
+      "persons_per_m2": 2.5,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 §: samlingslokal default 2.5 persons/m2 if the maximum is not known. In practice a fixed maximum (e.g. 'max 150 personer') is posted to stay in Vk 2A. Daytime meeting mode: 0.7 p/m2 (repealed BBR general advice 'konferensrum', practice).",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.15, 0.35, 0.4, 0.35, 0.3, 0.35, 0.4, 0.3, 0.25, 0.4, 0.7, 0.8, 0.7, 0.4, 0.1, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Daytime: meetings, seniors' träffpunkt and parent groups at about 30–40 %. Evening: associations and study circles at 70–80 %. Weekend: celebrations and rentals."
+  },
+  "spaces": [
+    {
+      "id": "hybrid_main_room",
+      "label_en": "Divisible main room (meeting / assembly / activity)",
+      "label_sv": "Delbar samlingssal / allrum",
+      "required": { "strength": "law", "basis": "Defining space of an 'allmän samlingslokal' (Förordning 2016:1367 1 §). As a samlingssal it needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §), and its occupant number sets the fire class (BFS 2024:7 2 kap. 11–12 §§). No size is set.", "url": "https://lagen.nu/2016:1367" },
+      "size": {
+        "rule": "per_seat",
+        "value_m2": 0.4,
+        "range_m2": [0.4, 1.43],
+        "count": "design occupants: 0.4 m2/person at the legal default (2.5 p/m2); 0.59 seated, 1.0 dining, 1.43 meeting (repealed BBR advice, practice)",
+        "strength": "law",
+        "source": "BFS 2024:7 2 kap. 4 § and repealed BBR tabell 5:333 (consolidated BBR p. 52).",
+        "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": true, "facade_required": true },
+      "depends_on": ["hybrid_kitchen", "hybrid_storage", "hybrid_wc"],
+      "shareable_with": ["office", "coworking", "assembly_event", "library", "culture_makerspace", "school_compulsory", "preschool"],
+      "shareable_note": "By design: office or coworking meetings by day, associations in the evening, private rentals at weekends. The fire and ventilation design must cover the peak mode, usually an evening event.",
+      "binding_constraint": "ventilation",
+      "layer": "space_plan",
+      "notes": "Divider: movable acoustic wall. No Swedish requirement for its sound reduction was found; the Rw 45 in space_requirements.json is unsourced. For comparison, the Uppsala sports-hall curtain is required to reach at least 30 dB (sports_hall). Room height of 2,700 mm is guidance (AFS 2023:12 3 kap. 5 § allmänna råd for rooms for many persons; repealed BBR 3:3112 for publika lokaler); rooms for at most about 16 persons may be lower (repealed BBR allmänt råd). Daylight: BFS 2024:8 4 kap. 3 § for rooms where people stay more than temporarily. Floor: C1/C3 2.5–3.0 kN/m2; dancing at parties is C4 4.0 kN/m2 with dynamics (BFS 2024:6)."
+    },
+    {
+      "id": "hybrid_small_rooms",
+      "label_en": "Small group rooms (study circles, counselling, homework help)",
+      "label_sv": "Grupprum / cirkelrum",
+      "required": { "strength": "practice", "basis": "Typical in medborgarhus and study association premises; not regulated.", "url": "" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish public source found.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["office", "coworking", "library"],
+      "shareable_note": "Former cellular offices fit directly.",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Office meeting rooms can usually be reused unchanged."
+    },
+    {
+      "id": "hybrid_kitchen",
+      "label_en": "Kitchen / serving kitchen",
+      "label_sv": "Kök / serveringskök",
+      "required": { "strength": "practice", "basis": "Not required by law, but central to träffpunkt and celebration use. If used for regular food service to the public: food business registration (indicative, see permits).", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish source. The 0.30 x net factor for support spaces in space_requirements.json is unsourced.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "assembly_event", "restaurant_cafe", "office"],
+      "shareable_note": "Can be the building's shared kitchen (see shared_amenities.shared_kitchen), or a staff kitchen during office hours.",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Cooker hoods and extract are easier than commercial grease ducts if the kitchen stays at 'household-type' level (assessment)."
+    },
+    {
+      "id": "hybrid_storage",
+      "label_en": "Furniture and association storage (lockable lockers per group)",
+      "label_sv": "Möbelförråd / föreningsförråd",
+      "required": { "strength": "practice", "basis": "Necessary for reconfiguration and for several associations sharing one room; not regulated.", "url": "" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["hybrid_main_room"],
+      "shareable_with": ["assembly_event", "sports_hall"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": "Loads E1 5.0 kN/m2 for dense storage (BFS 2024:6 tabell 4:1)."
+    },
+    {
+      "id": "hybrid_wc",
+      "label_en": "WCs incl. accessible WC",
+      "label_sv": "Toaletter inkl. RWC",
+      "required": { "strength": "law", "basis": "FMH 35 § (sufficient toilets); BFS 2024:12 2 kap. 7 § (at least one accessible if public WCs exist). See cross_cutting.json san_public, access_public_premises_wc.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "no Swedish ratio found", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "library", "assembly_event"],
+      "shareable_note": "Must be reachable from the main room when the rest of the building is locked.",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "hybrid_entrance",
+      "label_en": "Independent entrance / access control",
+      "label_sv": "Egen entré / passersystem",
+      "required": { "strength": "practice", "basis": "Practice for after-hours use (cf. IFLA 3.10.3: meeting rooms with separate access to washrooms and exterior). Accessible main entrance is law (BFS 2024:12 2 kap. 1 §).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "Can be the shared lobby if it can be zoned so evening users do not reach other tenants.",
+      "binding_constraint": "accessibility",
+      "layer": "space_plan",
+      "notes": "Ground floor with a street entrance is the strongest enabler. Escape routes must remain usable when other zones are locked (assessment)."
+    }
+  ],
+  "variants": [
+    { "id": "hybrid_traffpunkt_seniors", "label": "Seniors' träffpunkt (municipal)", "changes": "Daytime profile, meals and coffee, accessibility emphasis (rollators, hearing). Kitchen central. Often co-located with a library or care services." },
+    { "id": "hybrid_medborgarhus", "label": "Medborgarhus / Folkets hus", "changes": "Larger: several rooms plus an event hall (see assembly_event), often with library and café. Eligible for Boverket grants (non-profit owners)." },
+    { "id": "hybrid_meeting_by_day", "label": "Office meeting suite by day, community by evening", "changes": "Booking and access control are critical. Furniture swaps are minimal if the room is fitted for both uses." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Fire class change Vk 1 to 2A: 30 m travel distance; above 150 persons 2B with alarms (cross_cutting fire_vk_2abc).",
+      "Peak ventilation in evening events with office AHUs scheduled and sized for daytime office density.",
+      "After-hours zoning: independent access to WC and exits without opening the whole building.",
+      "Noise from evening activities to dwellings, if the building is mixed (BFS 2024:10 tabell 2:1, 56 dB minimum)."
+    ],
+    "typical_enablers": [
+      "Ground-floor office units with a street door convert easily.",
+      "Existing conference suites with pantries and WC cores fit almost directly.",
+      "Up to 150 persons (2A) avoids fire alarm and evacuation alarm requirements.",
+      "Boverket grants for allmänna samlingslokaler (non-profit owners)."
+    ]
+  },
+  "sources": [
+    { "ref": "Förordning (2016:1367) om statsbidrag till allmänna samlingslokaler, 1–2 §§ (definition stable across consolidations 2018–2022 per lagen.nu)", "url": "https://lagen.nu/2016:1367", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7: 2 kap. 4, 11–13 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12: 2 kap. 1, 7 §§; 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8: 4 kap. 3 §, 5 kap. 1 §", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:10: 2 kap. 2 §, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf", "accessed": "2026-10-19" },
+    { "ref": "FMH (1998:899) 35 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/", "accessed": "2026-10-19" },
+    { "ref": "Repealed BBR tabell 5:333 and 3:3112 allmänt råd (consolidated BBR pp. 26, 52)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "IFLA Public Library Service Guidelines 2010, 3.10.3 (p. 59), meeting rooms with separate access", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No municipal funktionsprogram for träffpunkt or medborgarhus was found online (searched generally). Try specific cities (Stockholm äldreförvaltningen 'träffpunkter', Göteborg 'mötesplatser', Malmö) for a space list with m2.",
+    "Current consolidated text of Förordning 2016:1367 (amended by SFS 2025:390) not re-checked; the definition in 1 § is assumed unchanged.",
+    "Food-registration exemption for occasional association use is not verified against Livsmedelsverket guidance.",
+    "Sound reduction requirement for movable dividing walls has no Swedish legal source found; SS 25268 (removed from Boverket's rules) may still be used in practice."
+  ]
+}

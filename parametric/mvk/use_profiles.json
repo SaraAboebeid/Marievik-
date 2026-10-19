@@ -1,5 +1,6 @@
 {
   "_comment": "One entry per use. Lengths in metres. Type ids refer to components_db.csv, whose catalogue_id column links to the Marievik+ catalogue (cost and carbon). Edit freely - Grasshopper reloads on recompute.",
+  "_wall_requirements": "INDICATIVE, to be checked by the acoustics and fire consultants. Per use and wall category (P partition between units, C corridor, S support, I inside a unit, A added): minimum R'w in dB and fire class. Sound: SS 25267:2015 (dwellings) and SS 25268:2023 (offices, schools, hotels), class C, read as R'w; the standards use R'w + C50-3150 between dwellings, which is stricter for lightweight walls. Corridor walls carry the entrance door, which limits the wall to about 44 dB. Fire: Br1 assumed, every dwelling and every tenancy its own fire cell (BBR 5:2). Checked for every partition system; the requirement-based systems pick the cheapest build that meets it.",
   "office_open": {
     "label": "Office - open plan",
     "scheme": "open",
@@ -31,6 +32,24 @@
     "finishes": {
       "floor": "FL_CARPET_TILE",
       "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 35
+      },
+      "C": {
+        "Rw_dB": 30,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   },
   "office_cellular": {
@@ -66,6 +85,24 @@
     "finishes": {
       "floor": "FL_CARPET_TILE",
       "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 35
+      },
+      "C": {
+        "Rw_dB": 30,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   },
   "residential": {
@@ -106,6 +143,26 @@
     "finishes": {
       "floor": "FL_LINOLEUM",
       "ceiling": null
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 52,
+        "fire": "EI60"
+      },
+      "C": {
+        "Rw_dB": 44,
+        "fire": "EI60"
+      },
+      "S": {
+        "Rw_dB": 44,
+        "fire": "EI60"
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   },
   "hotel": {
@@ -142,6 +199,26 @@
     "finishes": {
       "floor": "FL_CARPET_TILE",
       "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 44,
+        "fire": "EI30"
+      },
+      "C": {
+        "Rw_dB": 35,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35,
+        "fire": "EI30"
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   },
   "school": {
@@ -177,6 +254,24 @@
     "finishes": {
       "floor": "FL_LINOLEUM",
       "ceiling": "CE_ACOUSTIC_BAFFLE"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 44
+      },
+      "C": {
+        "Rw_dB": 35,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   },
   "retail": {
@@ -210,6 +305,25 @@
     "finishes": {
       "floor": "FL_LINOLEUM",
       "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 44,
+        "fire": "EI60"
+      },
+      "C": {
+        "Rw_dB": 35,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
     }
   }
 }

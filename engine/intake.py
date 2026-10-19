@@ -182,6 +182,12 @@ def _apply_domain_rules(submission: dict, issues: list[Issue]) -> None:
                 "PLACEHOLDER carbon data — usable for model development, excluded from "
                 "publishable results.",
             ))
+        elif loader.is_placeholder(provenance):
+            issues.append(Issue(
+                "note", "carbon_kgco2e.provenance",
+                "ESTIMATE — derived by the lab, not stated by the supplier. Counted as "
+                "unverified until the supplier confirms it.",
+            ))
         elif "EPD" not in provenance:
             issues.append(Issue(
                 "note", "carbon_kgco2e.provenance",

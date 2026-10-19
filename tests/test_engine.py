@@ -10,6 +10,7 @@ Run:  python -m tests.test_engine
 
 from __future__ import annotations
 
+import json
 import sys
 
 from engine import evaluate, fit, loader, scenarios
@@ -184,6 +185,37 @@ def test_timelines_run() -> None:
         )
 
 
+def test_supplier_data() -> None:
+    """Supplier files merge into the catalogue; swapping a product conserves quantities."""
+    print("\nSupplier data")
+    check(loader.is_placeholder("PLACEHOLDER") and loader.is_placeholder("ESTIMATE: derived")
+          and not loader.is_placeholder("EPD S-P-07305"), "provenance markers: PLACEHOLDER and ESTIMATE are unverified")
+
+    bill = {"part.stud.gypsum.95": 100.0, "part.demount.solid.100": 50.0}
+    swapped = scenarios.swap_bill(bill, {"part.stud.gypsum.95": "part.demount.solid.100"})
+    check(swapped == {"part.demount.solid.100": 150.0}, "swap_bill merges quantities and keeps the total")
+
+    files = loader.supplier_files()
+    if not files:
+        print("  [skip] no local supplier files in data/components/suppliers/")
+        return
+    from engine import intake
+    for path in files:
+        rejected = [r.component_id for r in intake.validate_file(path) if not r.accepted]
+        check(not rejected, f"{path.name}: every entry passes the supplier schema {rejected or ''}")
+    catalogue = loader.catalogue()
+    ids = [c["id"] for p in files for c in json.loads(p.read_text(encoding="utf-8"))["components"]]
+    check(all(i in catalogue for i in ids), f"{len(ids)} supplier components merged into the catalogue")
+    if "part.smartax.70.ei60" in catalogue:
+        base = scenarios.run_timeline("conventional_change_of_use")
+        smartax = scenarios.run_timeline("conventional_change_of_use",
+                                         swap={"part.stud.gypsum.95": "part.smartax.70.ei60"})
+        check(smartax.initial.carbon.upfront < base.initial.carbon.upfront,
+              "Smartax EI60 lowers the upfront carbon of the conventional timeline")
+        check(len(smartax.transformations) == len(base.transformations),
+              "the swapped timeline has the same changes of use")
+
+
 def main() -> int:
     print("=" * 70)
     print("Marievik+ engine tests")
@@ -196,6 +228,7 @@ def main() -> int:
     test_module_d_excluded()
     test_fit_runs()
     test_timelines_run()
+    test_supplier_data()
 
     print("\n" + "=" * 70)
     if FAILURES:

@@ -102,6 +102,32 @@ def api_floor(bid: str, index: int, body: ScenarioBody):
     return site().floor_payload(bid, index, body.settings)
 
 
+# ---------------------------------------------------------------------------- parametric view + suppliers
+class ParametricBody(BaseModel):
+    settings: dict | None = None
+    floor: int = 1
+
+
+@app.post("/api/parametric/{bid}")
+def api_parametric(bid: str, body: ParametricBody):
+    _check(bid)
+    return site().parametric_payload(bid, body.settings, body.floor)
+
+
+@app.post("/api/parametric/{bid}/cell")
+def api_parametric_cell(bid: str, body: ScenarioBody):
+    _check(bid)
+    return site().parametric_cell(bid, body.settings)
+
+
+@app.post("/api/supplier/{sid}/compare/{bid}")
+def api_supplier_compare(sid: str, bid: str, body: ScenarioBody):
+    _check(bid)
+    if sid not in site().suppliers:
+        raise HTTPException(404, "unknown supplier %s (no data/components/suppliers/%s.json)" % (sid, sid))
+    return site().supplier_compare(sid, bid, body.settings)
+
+
 # ---------------------------------------------------------------------------- CAVF KPIs per profile
 @app.get("/api/methods")
 def api_methods():

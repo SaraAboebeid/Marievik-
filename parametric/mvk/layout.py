@@ -576,6 +576,95 @@ PARTITION_SYSTEMS = {               # one switch for every new wall that is not 
     "demountable": "IW_DEMOUNT_SOLID_100",
     "glass": "IW_GLASS_PARTITION",
 }
+# Requirement-based systems: a family of builds from one supplier. Each new wall (P, C, I, A, and the
+# support walls S, which carry requirements too) gets the cheapest build that meets its use profile's
+# wall_requirements, or the best one when none does.
+# Offered only when the catalogue has every build (supplier files are local, see pricing.load_catalogue).
+PARTITION_FAMILIES = {
+    "smartax": ["IW_SMARTAX_95_EI30", "IW_SMARTAX_95_EI60", "IW_SMARTAX_120_DBL", "IW_SMARTAX_120_DBL_WOOL",
+                "IW_SMARTAX_185_TWIN"],
+}
+SYSTEM_CATS = ("P", "C", "I", "A")
+FIRE_RANK = {"NONE": 0, "EI30": 1, "EI60": 2, "EI90": 3, "EI120": 4}
+
+
+def performance(t, db, catalogue):
+    """Catalogue performance of a components_db type, or None when it has no catalogue entry."""
+    cid = (db.get(t) or {}).get("catalogue_id")
+    c = (catalogue or {}).get(cid) if cid else None
+    return c.get("performance", {}) if c else None
+
+
+def _fire(f):
+    return FIRE_RANK.get(str(f or "none").upper(), 0)
+
+
+def _meets(perf, req):
+    """(sound ok, fire ok) of a performance dict against a requirement {Rw_dB, fire}."""
+    return ((perf.get("Rw_dB") or 0) >= (req.get("Rw_dB") or 0),
+            _fire(perf.get("fire_class")) >= _fire(req.get("fire")))
+
+
+def system_available(system, db, catalogue):
+    if system in PARTITION_FAMILIES:
+        return all((db.get(t) or {}).get("catalogue_id") in (catalogue or {}) for t in PARTITION_FAMILIES[system])
+    return system in PARTITION_SYSTEMS
+
+
+def pick_build(system, req, db, catalogue):
+    """Cheapest build of a family that meets req (capex per m2), else the best-performing one."""
+    builds = []
+    for t in PARTITION_FAMILIES[system]:
+        c = catalogue[db[t]["catalogue_id"]]
+        perf = c.get("performance", {})
+        builds.append((t, perf, c["cost_sek"]["material"] + c["cost_sek"]["labour_install"]))
+    ok = [b for b in builds if all(_meets(b[1], req))]
+    if ok:
+        return min(ok, key=lambda b: b[2])[0]
+    return max(builds, key=lambda b: ((b[1].get("Rw_dB") or 0), _fire(b[1].get("fire_class")), -b[2]))[0]
+
+
+def check_requirements(floors, db, catalogue):
+    """New walls against the use profiles' wall_requirements (indicative sound and fire), and stud heights."""
+    out = {"checked_m2": 0.0, "unknown_m2": 0.0, "sound_below_m2": 0.0, "fire_below_m2": 0.0,
+           "shortfalls": {}, "too_tall": {}}
+    for F in floors:
+        reqs = F.prof.get("wall_requirements") or {}
+        for w in F.walls:
+            if w["cat"] not in reqs:
+                continue                                    # retained shell (E, K) or no requirement
+            area = max(0.0, math.dist(w["a"], w["b"]) * F.wall_h - sum(
+                (o["s1"] - o["s0"]) * (o["z1"] - o["z0"]) for o in F.openings if o["wall"] == w["id"]))
+            perf = performance(w["type"], db, catalogue)
+            if perf is None:
+                out["unknown_m2"] += area
+                continue
+            out["checked_m2"] += area
+            req = reqs[w["cat"]]
+            sound, fire = _meets(perf, req)
+            out["sound_below_m2"] += 0.0 if sound else area
+            out["fire_below_m2"] += 0.0 if fire else area
+            if not (sound and fire):
+                k = "%s|%s|%s" % (F.use, w["cat"], w["type"])
+                s = out["shortfalls"].setdefault(k, {
+                    "use": F.use, "category": CATS[w["cat"]], "type": w["type"], "area_m2": 0.0,
+                    "sound_ok": sound, "fire_ok": fire,
+                    "required": "%s dB%s" % (req.get("Rw_dB") or 0, (" " + req["fire"]) if req.get("fire") else ""),
+                    "has": "%s dB %s" % (perf.get("Rw_dB", "?"), perf.get("fire_class", "?"))})
+                s["area_m2"] += area
+            mh = perf.get("max_height_m")
+            if mh and F.wall_h > mh + 1e-6:
+                t = out["too_tall"].setdefault(w["type"], {"type": w["type"], "max_height_m": mh, "wall_h": 0.0,
+                                                          "floors": []})
+                t["wall_h"] = max(t["wall_h"], round(F.wall_h, 2))
+                if F.index not in t["floors"]:
+                    t["floors"].append(F.index)
+    for k in ("checked_m2", "unknown_m2", "sound_below_m2", "fire_below_m2"):
+        out[k] = round(out[k], 1)
+    out["shortfalls"] = sorted(({**s, "area_m2": round(s["area_m2"], 1)} for s in out["shortfalls"].values()),
+                               key=lambda s: -s["area_m2"])
+    out["too_tall"] = list(out["too_tall"].values())
+    return out
 
 
 def quantities(F, catalogue=None, mode="conversion"):
@@ -620,7 +709,8 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
           catalogue=None, mvplus=None, facade=None):
     """footprint: shapely Polygon or list of (x,y); uses: str or list (one per floor, last repeats).
     mode: "conversion" (existing shell retained, fit-out priced) or "new_build" (everything priced).
-    partition_system: None (as in the use profile) | "conventional" | "demountable" | "glass".
+    partition_system: None (as in the use profile) | "conventional" | "demountable" | "glass", or a
+            requirement-based family ("smartax"): the cheapest build that meets each wall's requirement.
     facade: facade spec from the site file. The existing facade then sets windows and the exterior wall
             type, and a "setback" roof recesses the top floor.
     """
@@ -639,7 +729,15 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
     if partition_system in PARTITION_SYSTEMS:
         t = PARTITION_SYSTEMS[partition_system]
         star = ov.setdefault("*", {})
-        star["wall_types"] = dict({"P": t, "C": t, "I": t, "A": t}, **star.get("wall_types", {}))
+        star["wall_types"] = dict({c: t for c in SYSTEM_CATS}, **star.get("wall_types", {}))
+    elif partition_system in PARTITION_FAMILIES and system_available(partition_system, db, catalogue):
+        fixed = ov.get("*", {}).get("wall_types", {})
+        for i in range(n):
+            reqs = profiles[uses[min(i, len(uses) - 1)]].get("wall_requirements") or {}
+            fo = ov.setdefault("F%02d" % i, {})
+            picks = {c: pick_build(partition_system, reqs.get(c, {}), db, catalogue)
+                     for c in SYSTEM_CATS + ("S",) if c not in fixed}
+            fo["wall_types"] = dict(picks, **fo.get("wall_types", {}))
     if facade:
         try:
             from . import facade as FAC
@@ -678,6 +776,7 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
     rows.append(roof)
     return {"floors": floors, "rows": rows, "summary": summarise(rows), "height": z, "footprint": footprint,
             "top_footprint": top_fp, "facade": facade,
+            "requirements": check_requirements(floors, db, catalogue),
             "mode": mode, "partition_system": partition_system or "as_profile",
             "catalogue_path": catalogue.get("__path__") if catalogue else None}
 

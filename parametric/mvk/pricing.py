@@ -25,7 +25,8 @@ MARIEVIK_DEFAULT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspa
 
 
 def load_catalogue(root=None):
-    """Return {component_id: component} from <Marievik+>/data/components/catalogue.json, or {}."""
+    """Return {component_id: component} from <Marievik+>/data/components/catalogue.json, or {}.
+    Local supplier catalogues in data/components/suppliers/*.json (gitignored) are merged in."""
     for base in [root, os.environ.get("MARIEVIK_PLUS"), MARIEVIK_DEFAULT]:
         if not base:
             continue
@@ -34,13 +35,24 @@ def load_catalogue(root=None):
             with open(p, encoding="utf-8") as f:
                 raw = json.load(f)
             cat = {c["id"]: c for c in raw["components"]}
+            sup = os.path.join(base, "data", "components", "suppliers")
+            for name in sorted(os.listdir(sup)) if os.path.isdir(sup) else []:
+                if name.endswith(".json"):
+                    with open(os.path.join(sup, name), encoding="utf-8") as f:
+                        for c in json.load(f)["components"]:
+                            cat.setdefault(c["id"], c)
             cat["__path__"] = p
             return cat
     return {}
 
 
+PLACEHOLDER_MARKERS = ("PLACEHOLDER", "UNKNOWN", "GENERIC", "ESTIMATE")
+
+
 def _is_placeholder(block):
-    return str((block or {}).get("provenance", "")).upper() == "PLACEHOLDER"
+    """As engine/loader.is_placeholder: a marker, or a stated derivation such as 'ESTIMATE: ...'."""
+    head = str((block or {}).get("provenance", "")).split(":", 1)[0].strip().upper()
+    return head in PLACEHOLDER_MARKERS
 
 
 def price(qty, type_id, db, catalogue, state="new"):

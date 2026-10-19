@@ -1,5 +1,6 @@
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Methods, Settings, SitePayload,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Methods, ParametricCell,
+  ParametricPayload, Settings, SitePayload, SupplierCompare,
 } from './types'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -32,6 +33,11 @@ export const api = {
   models: () => call<{ models: { name: string; url: string; bytes: number }[] }>('/api/models'),
   methods: () => call<Methods>('/api/methods'),
   kpis: (id: string, settings: Partial<Settings>) => call<KpiResult>(`/api/kpis/${id}`, { settings }),
+  parametric: (id: string, settings: Partial<Settings>, floor: number) =>
+    call<ParametricPayload>(`/api/parametric/${id}`, { settings, floor }),
+  cell: (id: string, settings: Partial<Settings>) => call<ParametricCell>(`/api/parametric/${id}/cell`, { settings }),
+  supplierCompare: (sid: string, id: string, settings: Partial<Settings>) =>
+    call<SupplierCompare>(`/api/supplier/${sid}/compare/${id}`, { settings }),
 }
 
 export interface FullResult {
@@ -68,6 +74,12 @@ export const SYSTEM_LABEL: Record<string, string> = {
   conventional: 'Conventional stud',
   demountable: 'Demountable',
   glass: 'Glazed',
+  smartax: 'Smartax (supplier)',
+}
+/** Series colours per partition system: conventional, demountable, glazed, then supplier systems. */
+export const SYSTEM_COLOR: Record<string, string> = {
+  conventional: 'var(--color-c2)', demountable: 'var(--color-c3)', glass: 'var(--color-c1)',
+  as_profile: 'var(--color-c5)', smartax: 'var(--color-c6)',
 }
 export const WINDOW_LABEL: Record<string, string> = {
   existing: 'Keep existing (double, fixed)',

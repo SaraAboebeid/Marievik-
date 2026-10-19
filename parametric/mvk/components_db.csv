@@ -27,3 +27,8 @@ FL_CARPET_TILE,floor.carpet.tile,floor,Carpet tile,m2,0.008,,,,,,Priced from the
 FL_RAISED_ACCESS,floor.raised.access.150,floor,Raised access floor 150 mm,m2,0.15,,,,,,Priced from the Marievik+ catalogue (floor.raised.access.150); CSV cost/GWP only used if the catalogue is not found
 CE_MINERAL_GRID,ceiling.mineral.tile.grid,ceiling,Mineral tile suspended ceiling,m2,0.02,,,,,,Priced from the Marievik+ catalogue (ceiling.mineral.tile.grid); CSV cost/GWP only used if the catalogue is not found
 CE_ACOUSTIC_BAFFLE,ceiling.acoustic.baffle,ceiling,Acoustic baffles,m2,0.05,,,,,,Priced from the Marievik+ catalogue (ceiling.acoustic.baffle); CSV cost/GWP only used if the catalogue is not found
+IW_SMARTAX_95_EI30,part.smartax.70.ei30,int_wall,Smartax 1FST13 timber stud + fibre gypsum 95 mm (38 dB EI30),m2,0.095,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
+IW_SMARTAX_95_EI60,part.smartax.70.ei60,int_wall,Smartax 1FST22 timber stud + fibre gypsum + stone wool 95 mm (44 dB EI60),m2,0.095,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
+IW_SMARTAX_120_DBL,part.smartax.70.ei60.double,int_wall,Smartax 1FST21 double board 120 mm (45 dB EI60),m2,0.12,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
+IW_SMARTAX_120_DBL_WOOL,part.smartax.70.ei60.double.wool,int_wall,Smartax 1FST31 double board + stone wool 120 mm (52 dB EI60),m2,0.12,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
+IW_SMARTAX_185_TWIN,part.smartax.70x2.ei60,int_wall,Smartax double-stud wall 185 mm (57 dB EI60),m2,0.185,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json

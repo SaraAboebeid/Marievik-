@@ -17,6 +17,9 @@ import { InfoPanel } from './ui/InfoPanel'
 import { SunBar } from './ui/SunBar'
 import { RhinoPanel, type RhinoLayer } from './ui/RhinoPanel'
 import { CompareDrawer } from './ui/CompareDrawer'
+import { MapLegend } from './ui/MapLegend'
+import { ParametricDrawer } from './ui/ParametricDrawer'
+import { SupplierDrawer } from './ui/SupplierDrawer'
 
 export type Overlay = 'type' | 'daylight' | 'comfort'
 export type Method = 'quick' | 'ladybug'
@@ -49,6 +52,8 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? '[]') } catch { return [] }
   })
   const [showCompare, setShowCompare] = useState(false)
+  const [showParametric, setShowParametric] = useState(() => new URLSearchParams(window.location.search).get('view') === 'parametric')
+  const [showSuppliers, setShowSuppliers] = useState(false)
   const [rhinoLayers, setRhinoLayers] = useState<RhinoLayer[]>([])
   const [showGenerated, setShowGenerated] = useState(true)
   const [models, setModels] = useState<{ name: string; url: string; bytes: number }[]>([])
@@ -56,6 +61,17 @@ export default function App() {
   const [methods, setMethods] = useState<Methods | null>(null)
   const [kpiResult, setKpiResult] = useState<KpiResult | null>(null)
   const [explain, setExplain] = useState<string | null>(null)   // Methods panel open (KPI id to show, or '')
+  const [rhinoName, setRhinoName] = useState<string | null>(null)
+  // the saved scenario on screen: its name and its settings when saved or loaded (cleared once anything changes)
+  const [shownScenario, setShownScenario] = useState<{ name: string; settings: string } | null>(null)
+  const [panels, setPanels] = useState<{ left: boolean; right: boolean }>(() => {
+    try { return { left: true, right: true, ...JSON.parse(localStorage.getItem('mvx-panels') ?? '{}') } } catch { return { left: true, right: true } }
+  })
+  const togglePanel = (side: 'left' | 'right') => setPanels((p) => {
+    const next = { ...p, [side]: !p[side] }
+    try { localStorage.setItem('mvx-panels', JSON.stringify(next)) } catch { /* private window */ }
+    return next
+  })
 
   const buildingId = level.kind === 'site' ? null : level.building
   const settingsOf = useCallback((id: string) => scen[id] ?? site?.defaults, [scen, site])
@@ -334,10 +350,23 @@ export default function App() {
     }
   }, [bdata])
 
+  const allSettings = useCallback(() => {
+    const all: Record<string, Settings> = {}
+    if (site) for (const b of site.buildings) all[b.id] = { ...site.defaults, ...(scen[b.id] ?? {}) }
+    return all
+  }, [site, scen])
+  const scenarioStatus = useMemo(() => {
+    const all = allSettings()
+    const today = JSON.stringify(site?.defaults ?? {})
+    const changed = Object.keys(all).filter((id) => JSON.stringify(all[id]) !== today)
+    const name = shownScenario && shownScenario.settings === JSON.stringify(all) ? shownScenario.name : null
+    return { changed, name, savedCount: saved.length }
+  }, [allSettings, site, shownScenario, saved.length])
+
   const saveScenario = (name: string) => {
     if (!site) return
-    const all: Record<string, Settings> = {}
-    for (const b of site.buildings) all[b.id] = { ...site.defaults, ...(scen[b.id] ?? {}) }
+    const all = allSettings()
+    setShownScenario({ name, settings: JSON.stringify(all) })
     const s: SavedScenario = {
       id: Math.random().toString(36).slice(2, 9), name, created: new Date().toISOString(), scenarios: all,
       kpi: { gfa_m2: totals.gfa_m2, units: totals.units, capex_sek: totals.capex_sek, upfront_kgco2e: totals.upfront_kgco2e, added_gfa_m2: totals.added_gfa_m2 },
@@ -357,6 +386,7 @@ export default function App() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(next)) } catch { /* ignore */ }
   }
   const restoreSaved = (s: SavedScenario) => {
+    setShownScenario({ name: s.name, settings: JSON.stringify(s.scenarios) })
     for (const [id, st] of Object.entries(s.scenarios)) {
       const cur = { ...site?.defaults, ...(scen[id] ?? {}) }
       if (JSON.stringify(cur) !== JSON.stringify(st)) updateScenario(id, st)
@@ -378,6 +408,7 @@ export default function App() {
     try {
       const layers = await viewer.current!.loadRhino(src)
       setRhinoLayers(layers)
+      setRhinoName(label)
       setError(null)
     } catch (e) { setError(`Rhino: ${(e as Error).message}`) } finally { setBusy(null) }
   }
@@ -403,115 +434,179 @@ export default function App() {
     return bb ? `${bb.id} ${bb.name} · floor ${hover.p.floor}${f ? ` · ${f.use_label}${f.added ? ' (added)' : ''}` : ''}` : hover.p.building
   })()
 
+  const project = PROJECTS[choice.project]
+  const working = busy ?? (Object.values(loading).some(Boolean) ? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…` : null)
+  const sc = scenarioStatus
+  const scenarioLabel = sc.name ? sc.name : sc.changed.length ? `${sc.changed.length} building${sc.changed.length > 1 ? 's' : ''} changed · not saved` : 'Today’s site'
+  const panelTop = 'top-[5.5rem]'
+  // hover label: above and right of the pointer, flipped to the left near the right edge so it never runs off screen
+  const hoverLeft = hover ? (hover.x > window.innerWidth - 360 ? hover.x - 16 : hover.x + 16) : 0
+  const hoverFlip = hover ? hover.x > window.innerWidth - 360 : false
+
   return (
     <div className="relative h-full w-full">
       <div ref={host} className="absolute inset-0" />
 
-      {/* top: title + breadcrumb */}
+      {/* top bar: project and scenario first; everything else grouped on the right */}
       <header className="pointer-events-none absolute left-3 right-3 top-3 z-10 flex items-start justify-between gap-3">
-        <div className="pointer-events-auto flex items-center gap-2 rounded-md border border-line bg-raised/95 px-3 py-1.5 shadow-sm">
-          <a href="/" className="text-[12px] text-muted hover:text-ink" title="Back to the Digital Lab home page">←</a>
-          <span className="text-[13px] font-semibold tracking-tight">Marievik+ Explorer</span>
-          <span className="text-line-strong">|</span>
-          <nav className="flex items-center gap-1 text-[12.5px]" aria-label="Level">
+        <div className="pointer-events-auto rounded-lg border border-line bg-raised/95 px-3.5 py-2 shadow-sm">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <a href="/" className="text-[12.5px] text-ink-2 hover:text-ink" title="Back to the Digital Lab home page">← Home</a>
+            <span className="h-4 w-px bg-line" aria-hidden />
+            <span className="flex items-baseline gap-1.5" title={project.placeholder ? 'Placeholder project: shows the Marievik model until its own is added' : undefined}>
+              <span className="text-[16px] font-semibold tracking-tight">{project.name}</span>
+              <span className="text-[13px] text-ink-2">{project.city}</span>
+              {project.placeholder && <span className="rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
+            </span>
+            <span className="h-4 w-px bg-line" aria-hidden />
+            <button onClick={() => setShowCompare(true)} title="Open scenarios"
+              className="flex items-baseline gap-1.5 rounded px-1 text-[13px] hover:bg-sunken">
+              <span className="text-ink-2">Scenario:</span>
+              <span className={`font-medium ${sc.changed.length && !sc.name ? 'text-warn' : 'text-ink'}`}>{scenarioLabel}</span>
+            </button>
+          </div>
+          <nav className="mt-1 flex flex-wrap items-center gap-1 text-[12.5px]" aria-label="Level">
             {crumbs.map((c, i) => (
               <span key={i} className="flex items-center gap-1">
                 {i > 0 && <span className="text-muted">›</span>}
-                <button className={`rounded px-1 ${i === crumbs.length - 1 ? 'font-medium text-ink' : 'text-accent hover:underline'}`}
+                <button className={`rounded px-1 ${i === crumbs.length - 1 ? 'font-medium text-ink' : 'text-ink-2 underline-offset-2 hover:text-ink hover:underline'}`}
                   onClick={() => go(c.to)}>{c.label}</button>
               </span>
             ))}
+            {level.kind !== 'site' && (
+              <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11.5px] text-ink-2 hover:text-ink" title="Up one level (Esc)">↑ up</button>
+            )}
           </nav>
-          {level.kind !== 'site' && (
-            <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11px] text-muted hover:text-ink" title="Up one level (Esc)">↑ up</button>
-          )}
         </div>
+
         <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-1.5">
-          <span className="flex items-center gap-1.5 rounded-md border border-line bg-raised/95 px-2.5 py-1 text-[12px] shadow-sm"
-            title={PROJECTS[choice.project].placeholder ? 'Placeholder project: shows the Marievik model until its own is added' : undefined}>
-            <span className="h-2 w-2 rounded-full bg-c2" aria-hidden />
-            {PROJECTS[choice.project].name}, {PROJECTS[choice.project].city}
-            {PROJECTS[choice.project].placeholder && <span className="rounded bg-warn-bg px-1 font-mono text-[9.5px] text-warn">placeholder</span>}
-          </span>
-          <select value={choice.profile ?? ''} onChange={(e) => setChoice((c) => ({ ...c, profile: e.target.value || null }))}
-            aria-label="Profile"
-            className="rounded-md border border-line bg-raised/95 px-2 py-1 text-[12px] shadow-sm outline-none focus:border-accent">
-            <option value="">No profile</option>
-            {Object.entries(PROFILE_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-          </select>
-          <button onClick={() => setExplain('')}
-            className="rounded-md border border-accent bg-accent px-2.5 py-1 text-[12px] font-medium text-white shadow-sm hover:brightness-110">
-            Methods & data
-          </button>
-          {(busy || Object.values(loading).some(Boolean)) && (
-            <span className="rounded-md border border-line bg-raised/95 px-2.5 py-1 font-mono text-[11px] text-ink-2 shadow-sm">
-              {busy ?? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…`}
-            </span>
+          {working && (
+            <span className="rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-sm">{working}</span>
           )}
+          <label className="flex items-center gap-1.5 rounded-lg border border-line bg-raised/95 py-1 pl-2.5 pr-1 text-[12.5px] text-ink-2 shadow-sm">
+            View as
+            <select value={choice.profile ?? ''} onChange={(e) => setChoice((c) => ({ ...c, profile: e.target.value || null }))}
+              className="rounded bg-transparent px-1 py-0.5 text-[12.5px] font-medium text-ink outline-none">
+              <option value="">No profile</option>
+              {Object.entries(PROFILE_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
+            </select>
+          </label>
           <button onClick={() => setShowCompare((s) => !s)}
-            className="rounded-md border border-line bg-raised/95 px-2.5 py-1 text-[12px] shadow-sm hover:border-line-strong">
-            Scenarios ({saved.length})
+            className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
+            {saved.length ? `Scenarios (${saved.length})` : 'Scenarios · none saved'}
+          </button>
+          <button onClick={() => setShowParametric(true)} title="Plans, bill of quantities and every use × wall system for one building"
+            className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
+            Parametric model
+          </button>
+          {site && site.suppliers.length > 0 && (
+            <button onClick={() => setShowSuppliers(true)} title="Supplier products and how they do in the open building"
+              className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
+              Suppliers ({site.suppliers.length})
+            </button>
+          )}
+          <button onClick={() => setExplain('')}
+            className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
+            Methods & data
           </button>
         </div>
       </header>
 
       {error && (
-        <div className="absolute left-1/2 top-14 z-20 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12px] text-critical shadow">
+        <div className="absolute left-1/2 top-24 z-20 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
           <button className="float-right ml-3 font-mono" onClick={() => setError(null)} aria-label="Dismiss">×</button>
           {error}
         </div>
       )}
 
-      {/* left: scenario controls + Rhino */}
-      <aside className="panel-scroll absolute left-3 top-14 z-10 w-[19rem]">
-        {site && (
-          <ScenarioPanel
-            site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
-            loading={buildingId ? !!loading[buildingId] : false}
-            onChange={(patch) => buildingId && updateScenario(buildingId, patch)}
-            onGo={go} view={view} setView={setView}
-            onSave={saveScenario}
-            onResetBuilding={() => buildingId && updateScenario(buildingId, { ...site.defaults })}
-            onResetSite={resetSite}
-          />
-        )}
-        <RhinoPanel models={models} layers={rhinoLayers}
-          onLoad={loadRhino}
-          onLayers={(vis) => {
-            setRhinoLayers((ls) => ls.map((l) => ({ ...l, visible: vis.has(l.name) })))
-            viewer.current?.applyRhinoLayers(vis)
-          }}
-          showGenerated={showGenerated}
-          setShowGenerated={(v) => { setShowGenerated(v); viewer.current?.setBuildingsVisible(v) }} />
-      </aside>
+      {/* left: scenario controls + Rhino import (collapsible) */}
+      {panels.left ? (
+        <aside className={`panel-scroll absolute left-3 ${panelTop} z-10 w-[20rem]`}>
+          <button onClick={() => togglePanel('left')} className="mb-1.5 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
+            ◂ Hide panel
+          </button>
+          {site && (
+            <ScenarioPanel
+              site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
+              loading={buildingId ? !!loading[buildingId] : false} status={sc}
+              onChange={(patch) => buildingId && updateScenario(buildingId, patch)}
+              onGo={go} view={view} setView={setView}
+              onSave={saveScenario} onCompare={() => setShowCompare(true)} onSuppliers={() => setShowSuppliers(true)}
+              onResetBuilding={() => buildingId && updateScenario(buildingId, { ...site.defaults })}
+              onResetSite={resetSite}
+            />
+          )}
+          <RhinoPanel models={models} layers={rhinoLayers} loaded={rhinoName}
+            onLoad={loadRhino}
+            onLayers={(vis) => {
+              setRhinoLayers((ls) => ls.map((l) => ({ ...l, visible: vis.has(l.name) })))
+              viewer.current?.applyRhinoLayers(vis)
+            }}
+            showGenerated={showGenerated}
+            setShowGenerated={(v) => { setShowGenerated(v); viewer.current?.setBuildingsVisible(v) }} />
+        </aside>
+      ) : (
+        <button onClick={() => togglePanel('left')}
+          className={`absolute left-3 ${panelTop} z-10 rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] font-medium shadow-sm hover:border-line-strong`}>
+          Scenario ▸
+        </button>
+      )}
 
-      {/* right: KPIs and analysis for the current level */}
-      <aside className="panel-scroll absolute right-3 top-14 z-10 w-[22rem]">
-        {site && choice.profile && (
-          <ProfileKpis profile={choice.profile} methods={methods} result={kpiResult} building={buildingId}
-            onExplain={(k) => setExplain(k)} />
-        )}
-        {site && (
-          <InfoPanel
-            site={site} level={level} bdata={bdata} totals={totals} floor={floorData}
-            dl={dl} cf={cf} unitComfort={unitComfort} overlay={overlay} setOverlay={setOverlay}
-            method={method} setMethod={setMethod} caps={caps} busy={!!busy}
-            onQuick={runQuick} onFull={runFull} onGo={go}
-          />
-        )}
-      </aside>
+      {/* right: KPIs and analysis for the current level (collapsible) */}
+      {panels.right ? (
+        <aside className={`panel-scroll absolute right-3 ${panelTop} z-10 w-[23rem]`}>
+          <div className="flex justify-end">
+            <button onClick={() => togglePanel('right')} className="mb-1.5 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
+              Hide panel ▸
+            </button>
+          </div>
+          {site && (
+            <InfoPanel
+              site={site} level={level} bdata={bdata} totals={totals} floor={floorData}
+              dl={dl} cf={cf} unitComfort={unitComfort} overlay={overlay} setOverlay={setOverlay}
+              method={method} setMethod={setMethod} caps={caps} busy={!!busy}
+              onQuick={runQuick} onFull={runFull} onGo={go}
+            />
+          )}
+          {site && choice.profile && (
+            <ProfileKpis profile={choice.profile} methods={methods} result={kpiResult} building={buildingId}
+              onExplain={(k) => setExplain(k)} />
+          )}
+        </aside>
+      ) : (
+        <button onClick={() => togglePanel('right')}
+          className={`absolute right-3 ${panelTop} z-10 rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] font-medium shadow-sm hover:border-line-strong`}>
+          ◂ Figures & KPIs
+        </button>
+      )}
 
-      {/* legends */}
+      {/* analysis legends */}
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
       </div>
 
-      <SunBar sun={sun} setSun={setSun} view={view} setView={setView} level={level} />
+      {/* bottom: map legend + sun/view controls, both foldable */}
+      <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-end gap-2">
+        {site && <div className="pointer-events-auto min-w-0 max-w-[58rem]"><MapLegend site={site} level={level} floor={floorData} /></div>}
+        <div className="pointer-events-auto"><SunBar sun={sun} setSun={setSun} view={view} setView={setView} level={level} /></div>
+      </div>
 
       {showCompare && (
         <CompareDrawer saved={saved} current={totals} onClose={() => setShowCompare(false)}
           onRemove={removeSaved} onRestore={restoreSaved} onSave={saveScenario} />
+      )}
+
+      {showParametric && site && (
+        <ParametricDrawer site={site} start={buildingId} settingsOf={settingsOf}
+          onApply={(id, patch) => { updateScenario(id, patch); if (buildingId !== id) go({ kind: 'building', building: id }) }}
+          onClose={() => setShowParametric(false)} />
+      )}
+
+      {showSuppliers && site && (
+        <SupplierDrawer suppliers={site.suppliers} building={b} settings={buildingId ? settingsOf(buildingId) ?? null : null}
+          onApply={(system) => buildingId && updateScenario(buildingId, { partition_system: system })}
+          onClose={() => setShowSuppliers(false)} />
       )}
 
       {explain !== null && methods && (
@@ -520,8 +615,8 @@ export default function App() {
       )}
 
       {hover && hoverText && (
-        <div className="pointer-events-none fixed z-30 rounded border border-line bg-raised px-2 py-1 text-[11.5px] shadow"
-          style={{ left: hover.x + 14, top: hover.y + 12 }}>
+        <div className="pointer-events-none fixed z-30 max-w-[340px] rounded-md bg-ink px-2.5 py-1.5 text-[12.5px] leading-snug text-bg shadow-lg"
+          style={{ left: hoverLeft, top: hover.y - 44, transform: hoverFlip ? 'translateX(-100%)' : undefined }}>
           {hoverText}
         </div>
       )}

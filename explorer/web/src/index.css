@@ -37,8 +37,10 @@
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
 }
 
+/* Dark mode overrides the variables at runtime. (An @theme block inside @media is hoisted by
+   Tailwind v4 and would apply the dark values everywhere, so plain :root is used here.) */
 @media (prefers-color-scheme: dark) {
-  @theme {
+  :root {
     --color-bg: #0f1c1c;
     --color-surface: #152525;
     --color-raised: #1c2e2e;
@@ -92,7 +94,7 @@ body {
   white-space: nowrap;
   transform: translateY(-50%);
 }
-.panel-scroll { max-height: calc(100vh - 7.5rem); overflow-y: auto; }
+.panel-scroll { max-height: calc(100vh - 10rem); overflow-y: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

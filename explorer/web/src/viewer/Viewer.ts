@@ -30,6 +30,8 @@ type Focus =
   | { kind: 'floor'; building: string; floor: number }
   | { kind: 'unit'; building: string; floor: number; unit: string }
 
+export const SELECTION_COLOR = '#1e3434'   // deep pine: the accent, reserved for selection and primary actions
+
 const WALL_COLORS: Record<string, string> = {
   E: '#d9d4ca', C: '#efece6', S: '#cfe0ea', K: '#b9b5ad', P: '#f4f2ee', I: '#f4f2ee', A: '#e8c27a',
 }
@@ -391,6 +393,7 @@ export class Viewer {
         m.castShadow = !ghost
         if (!m.userData.shell) m.visible = !ghost
       })
+      this.outline(bv, active && f.kind === 'building')
       const explode = active && f.kind === 'building' ? this.options.explode : 0
       bv.floors.forEach((fg, i) => {
         fg.position.z = explode * i
@@ -403,6 +406,28 @@ export class Viewer {
     if (f.kind === 'unit') this.highlightUnit(f.unit)
     else this.highlightUnit(null)
     if (animate) this.frame()
+  }
+
+  /** The selected building's edges in the selection colour (see the map legend). */
+  private outline(bv: BuildingView, on: boolean) {
+    const old: THREE.LineSegments[] = []
+    bv.group.traverse((c) => { if (c.userData.outline) old.push(c as THREE.LineSegments) })
+    if (on && old.length) return
+    for (const l of old) {
+      l.parent?.remove(l)
+      l.geometry.dispose()
+      ;(l.material as THREE.Material).dispose()
+    }
+    if (!on) return
+    bv.group.traverse((c) => {
+      const m = c as THREE.Mesh
+      if (!m.isMesh || m.userData.pick !== 'building') return
+      const lines = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry, 30),
+        new THREE.LineBasicMaterial({ color: SELECTION_COLOR }))
+      lines.userData = { outline: true }
+      lines.raycast = () => {}                       // never picked
+      m.add(lines)
+    })
   }
 
   private frame() {

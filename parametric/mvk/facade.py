@@ -19,7 +19,7 @@ import math
 
 from shapely.geometry import Polygon, box as sbox
 from shapely import affinity
-from shapely.ops import polylabel
+from shapely.ops import polylabel, unary_union
 
 try:
     from . import layout as L
@@ -74,6 +74,15 @@ def _rings(g):
     return [[tuple(p) for p in r] for r in L._rings(g)]
 
 
+# No two roof parts may share a face or a volume: coincident faces flicker in the viewer (z-fighting).
+# The parapet starts at the top of the facade's floor band (BAND above the slab top), the membrane sits
+# inside the parapet, features stand on the membrane, and each feature avoids what earlier ones took.
+BAND = 0.02          # the viewer's floor-edge band rises this far above the slab top
+MEMBRANE = 0.06
+PARAPET_T = 0.3
+CLEAR = 0.5          # gap kept between roof features
+
+
 def roof_parts(fp, top, facade):
     """Parapet, membrane and roof features on a footprint whose roof slab top is at z = top."""
     out = []
@@ -81,50 +90,64 @@ def roof_parts(fp, top, facade):
         return out
     roof = facade.get("roof", {})
     memb = "membrane_" + roof.get("membrane", "light")
-    out.append(("prism", _rings(fp), top, top + 0.06, memb))
+    inside = L._mbuf(fp, -PARAPET_T)
+    for p in L._polys(inside, 0.1):
+        out.append(("prism", _rings(p), top, top + MEMBRANE, memb))
     par = roof.get("parapet", 0.8)
-    ring = fp.difference(L._mbuf(fp, -0.3))
-    for p in L._polys(ring, 0.1):
-        out.append(("prism", _rings(p), top, top + par, facade.get("material", "render_light")))
+    for p in L._polys(fp.difference(inside), 0.1):
+        out.append(("prism", _rings(p), top + BAND, top + par, facade.get("material", "render_light")))
+    base = top + MEMBRANE
     c, u, v, Lu, Lv = _frame(fp)
     inner = L._mbuf(fp, -2.0)
+    taken = []
+
+    def free(g):
+        """g minus everything already on the roof (with a gap); records what it keeps."""
+        if taken:
+            g = g.difference(unary_union(taken).buffer(CLEAR, join_style=2))
+        if not g.is_empty:
+            taken.append(g)
+        return g
+
     for f in roof.get("features", []):
         k = f["kind"]
         if k == "barrel_vault":
             length, width = f.get("along", 0.5) * Lu, f.get("across", 0.3) * Lv
             o = (c[0] - u[0] * length / 2, c[1] - u[1] * length / 2)
-            out.append(("vault", o, u, length, width, top, f.get("rise", 2.5), f.get("material", "metal_light")))
+            out.append(("vault", o, u, length, width, base, f.get("rise", 2.5), f.get("material", "metal_light")))
+            taken.append(_rect(c, u, length, width))
         elif k == "plant":
-            r = _rect(c, u, f.get("along", 0.25) * Lu, f.get("across", 0.2) * Lv, f.get("offset", 0.0) * Lu).intersection(inner)
+            r = free(_rect(c, u, f.get("along", 0.25) * Lu, f.get("across", 0.2) * Lv, f.get("offset", 0.0) * Lu).intersection(inner))
             for p in L._polys(r, 1.0):
-                out.append(("prism", _rings(p), top, top + f.get("h", 2.5), "metal_light"))
+                out.append(("prism", _rings(p), base, base + f.get("h", 2.5), "metal_light"))
         elif k == "plant_u":
             outer = _rect(c, u, f.get("along", 0.6) * Lu, f.get("across", 0.5) * Lv)
             hole = _rect(c, u, f.get("along", 0.6) * Lu - 2 * f.get("width", 4.0), f.get("across", 0.5) * Lv - 2 * f.get("width", 4.0),
                          f.get("width", 4.0))
-            for p in L._polys(outer.difference(hole).intersection(inner), 1.0):
-                out.append(("prism", _rings(p), top, top + f.get("h", 2.8), "metal_light"))
+            for p in L._polys(free(outer.difference(hole).intersection(inner)), 1.0):
+                out.append(("prism", _rings(p), base, base + f.get("h", 2.8), "metal_light"))
         elif k == "skylight":
-            r = _rect(c, u, f.get("along", 0.3) * Lu, f.get("across", 0.3) * Lv).intersection(inner)
+            r = free(_rect(c, u, f.get("along", 0.3) * Lu, f.get("across", 0.3) * Lv, f.get("offset", 0.0) * Lu).intersection(inner))
             for p in L._polys(r, 1.0):
-                out.append(("prism", _rings(p), top, top + f.get("h", 1.0), "glass"))
+                out.append(("prism", _rings(p), base, base + f.get("h", 1.0), "glass"))
         elif k == "roof_garden":
-            r = _rect(c, u, f.get("along", 0.2) * Lu, f.get("across", 0.2) * Lv).intersection(inner)
+            r = free(_rect(c, u, f.get("along", 0.2) * Lu, f.get("across", 0.2) * Lv, f.get("offset", 0.0) * Lu).intersection(inner))
             for p in L._polys(r, 1.0):
-                out.append(("prism", _rings(p), top, top + 0.35, "green"))
+                out.append(("prism", _rings(p), base, base + 0.35, "green"))
         elif k == "pv":
-            out += _pv(fp, inner, c, u, v, Lu, Lv, top, f.get("share", 0.3))
+            zone = inner.difference(unary_union(taken).buffer(CLEAR, join_style=2)) if taken else inner
+            out += _pv(fp, zone, c, u, v, Lu, Lv, top, f.get("share", 0.3))
         elif k == "glass_roof":
             d = WATER_DIR
             proj = [p[0] * d[0] + p[1] * d[1] for p in fp.exterior.coords]
             cut = max(proj) - f.get("depth", 0.35) * (max(proj) - min(proj))
-            nrm = (-d[1], d[0])
             half = sbox(-1000, 0, 1000, 1000)
             ang = math.degrees(math.atan2(d[1], d[0])) - 90
             half = affinity.rotate(half, ang, origin=(0, 0))
             half = affinity.translate(half, d[0] * cut, d[1] * cut)
-            for p in L._polys(fp.intersection(half), 5.0):
-                out.append(("prism", _rings(p), top - 3.0, top + f.get("rise", 5.0), "glass"))
+            # glazed roof inside the parapet, standing on the membrane (not sunk into the top floor)
+            for p in L._polys(free(inside.intersection(half)), 5.0):
+                out.append(("prism", _rings(p), base, base + f.get("rise", 5.0), "glass"))
     return out
 
 
@@ -134,10 +157,13 @@ def terrace_parts(fp, top_fp, z, facade):
     if not facade or top_fp is None or top_fp.equals(fp):
         return out
     roof = facade.get("roof", {})
-    for p in L._polys(fp.difference(top_fp), 1.0):
-        out.append(("prism", _rings(p), z, z + 0.06, "membrane_" + roof.get("membrane", "light")))
-    for p in L._polys(fp.difference(L._mbuf(fp, -0.3)), 0.1):
-        out.append(("prism", _rings(p), z, z + 1.1, "glass"))       # glazed railing along the terrace edge
+    inside = L._mbuf(fp, -PARAPET_T)
+    # membrane between the railing and the recessed top floor, touching neither
+    deck = inside.difference(top_fp.buffer(0.02, join_style=2))
+    for p in L._polys(deck, 1.0):
+        out.append(("prism", _rings(p), z, z + MEMBRANE, "membrane_" + roof.get("membrane", "light")))
+    for p in L._polys(fp.difference(inside), 0.1):
+        out.append(("prism", _rings(p), z + BAND, z + 1.1, "glass"))       # glazed railing along the terrace edge
     return out
 
 

@@ -182,7 +182,8 @@ KPIS: dict[str, dict] = {
     "data_quality": dict(
         name="Decision-critical data quality", group="Data", scale="All",
         meaning="Share of the cost and carbon figures that rest on verified data, with a CAVF A–D grade.",
-        explorer="Computed: share of priced rows whose catalogue entry is not PLACEHOLDER. Grade A ≥ 90 %, B ≥ 70 %, "
+        explorer="Computed: share of priced rows whose catalogue entry is not PLACEHOLDER (or our own ESTIMATE). "
+                 "Grade A ≥ 90 %, B ≥ 70 %, "
                  "C ≥ 40 %, else D (provisional thresholds)."),
 }
 for _k, _d in KPIS.items():
@@ -260,12 +261,16 @@ def _load(p: Path) -> dict:
 def methods_payload() -> dict:
     """Everything the Methods & data panel shows: KPI definitions, profiles, scenarios, databases, constants."""
     cat = _load(CATALOGUE)
+    suppliers = sorted((CATALOGUE.parent / "suppliers").glob("*.json"))   # local, gitignored
+    components = cat["components"] + [c for p in suppliers for c in _load(p)["components"]]
     op = _load(OPERATIONAL)
     return {
         "kpis": KPIS, "profiles": PROFILES, "scenarios": SCENARIOS,
         "data": {
             "catalogue": {"meta": {k: cat["_meta"].get(k) for k in ("version", "updated", "currency", "carbon_unit")},
-                          "file": "data/components/catalogue.json", "components": cat["components"]},
+                          "file": "data/components/catalogue.json" + "".join(
+                              " + suppliers/" + p.name for p in suppliers),
+                          "components": components},
             "study_period": dict(op["study_period"], file="data/factors/operational.json"),
             "placeholders": dict(_load(PLACEHOLDERS), file="data/kpi/placeholders.json"),
         },
@@ -309,7 +314,7 @@ def building_kpis(site, bid: str, raw: dict | None) -> dict:
     verified = 1 - k["placeholder_share"]
     grade = "A" if verified >= .9 else "B" if verified >= .7 else "C" if verified >= .4 else "D"
     put("data_quality", verified, f"Grade {grade} · {verified * 100:.0f} % verified", "computed",
-        f"{k['placeholder_share'] * 100:.0f} % of priced items rest on PLACEHOLDER catalogue data")
+        f"{k['placeholder_share'] * 100:.0f} % of priced items rest on PLACEHOLDER or estimated catalogue data")
     try:   # same building and uses, demountable vs conventional partitions
         base = dict(raw or {})
         dem = site.scenario(bid, dict(base, partition_system="demountable"))["kpi"]["upfront_kgco2e"]

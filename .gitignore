@@ -50,3 +50,8 @@ parametric/outputs/
 
 # KPI cheat sheet - kept local; its content is built into the explorer's Methods panel
 CAVF_KPI_Equations_and_Definitions_Updated.docx
+
+# Supplier data received under confidentiality: the originals and their structured extract.
+# Loaders merge data/components/suppliers/*.json into the catalogue when present; see the README there.
+Smartax/
+data/components/suppliers/*.json

@@ -3,6 +3,7 @@
     python -m engine.cli doctor     data health and what is still unknown
     python -m engine.cli fit        which uses the shell can host
     python -m engine.cli compare    cost and carbon across use timelines
+    python -m engine.cli supplier   a supplier's product in a use timeline (e.g. Smartax walls)
     python -m engine.cli all        everything, written to runs/
 """
 
@@ -279,6 +280,98 @@ def cmd_compare(args) -> int:
 
 
 # ---------------------------------------------------------------------------
+# supplier
+# ---------------------------------------------------------------------------
+
+GENERIC_SUPPLIERS = {"GENERIC", "PLACEHOLDER_SUPPLIER"}
+
+
+def _like_for_like(components: dict, replaces: str) -> str | None:
+    """A named supplier's partition with the same fire class and at least the same sound insulation."""
+    ref = components[replaces].get("performance", {})
+    fire = ref.get("fire_class")
+    candidates = [
+        (c["performance"].get("Rw_dB", 0), cid)
+        for cid, c in components.items()
+        if c["supplier"] not in GENERIC_SUPPLIERS and c["layer"] == components[replaces]["layer"]
+        and cid.startswith("part.") and c.get("performance", {}).get("fire_class") == fire
+        and c["performance"].get("Rw_dB", 0) >= ref.get("Rw_dB", 0)
+    ]
+    return min(candidates)[1] if candidates else None
+
+
+def cmd_supplier(args) -> int:
+    components = loader.catalogue()
+    replaces = args.replaces
+    target = args.component or _like_for_like(components, replaces)
+    if target not in components:
+        named = sorted(cid for cid, c in components.items() if c["supplier"] not in GENERIC_SUPPLIERS)
+        print(f"\n  No supplier component to test{f' ({target})' if target else ''}. Named supplier components:")
+        for cid in named:
+            print(f"    {cid}")
+        if not named:
+            print("    none: add a file to data/components/suppliers/ (see the README there)")
+        return 1
+
+    new, old = components[target], components[replaces]
+    print(RULE)
+    print(f"SUPPLIER — {new['supplier']}: {new['name']}")
+    print(RULE)
+    print(f"\n  Replaces {old['name']}\n  in every fit-out of the timeline '{args.timeline}'.\n")
+    rows = [
+        ("Sound / fire", lambda c: f"{c.get('performance', {}).get('Rw_dB', '?')} dB {c.get('performance', {}).get('fire_class', '?')}"),
+        ("Fixing", lambda c: c["fixing"]),
+        ("Reversibility / recovery", lambda c: f"{c['reversibility']:.2f} / {c['recovery_rate']:.2f}"),
+        ("Capex SEK/m²", lambda c: f"{c['cost_sek']['material'] + c['cost_sek']['labour_install']:,.0f}"),
+        ("Upfront kgCO2e/m²", lambda c: f"{c['carbon_kgco2e']['A1A3'] + c['carbon_kgco2e']['A4'] + c['carbon_kgco2e']['A5']:.1f}"),
+        ("C1-C4 kgCO2e/m²", lambda c: f"{c['carbon_kgco2e']['C1C4']:.2f}"),
+        ("Data", lambda c: "verified" if not loader.is_placeholder(c["carbon_kgco2e"]["provenance"]) else "placeholder / estimate"),
+    ]
+    print(f"  {'':<26}{replaces[:24]:>25}{target[:24]:>25}")
+    for label, get in rows:
+        print(f"  {label:<26}{get(old):>25}{get(new):>25}")
+    ref, perf = old.get("performance", {}), new.get("performance", {})
+    if perf.get("Rw_dB", 0) < ref.get("Rw_dB", 0) or perf.get("fire_class") != ref.get("fire_class"):
+        print("\n  NOTE: not like for like on sound or fire, so the comparison flatters the weaker wall.")
+
+    base = scenarios.run_timeline(args.timeline)
+    swapped = scenarios.run_timeline(args.timeline, swap={replaces: target})
+    adaptable_id = args.timeline.replace("conventional", "adaptable")
+    results = [("as in fitouts.json", base), (f"with {new['supplier'].split()[0]} wall", swapped)]
+    if adaptable_id != args.timeline and adaptable_id in scenarios._fitouts()["timelines"]:
+        results.append(("adaptable variant", scenarios.run_timeline(adaptable_id)))
+
+    print(f"\n{THIN}\n  {'PER m² OF FLOOR':<24}{'UPFRONT':>12}{'CHANGES':>12}{'TOTAL':>12}{'COST':>12}{'REUSE':>8}")
+    print(f"  {'':<24}{'kgCO2e':>12}{'kgCO2e':>12}{'kgCO2e':>12}{'SEK':>12}")
+    print("  " + "-" * 78)
+    for label, r in results:
+        changes = sum(t.transformation_carbon for t in r.transformations)
+        print(f"  {label[:23]:<24}{r.initial.carbon.upfront / r.area_m2:>12,.1f}{changes / r.area_m2:>12,.1f}"
+              f"{r.carbon_per_m2:>12,.0f}{r.cost_per_m2:>12,.0f}{r.mean_circularity:>8.0%}")
+
+    be = scenarios.break_even(base, swapped)
+    print(f"""
+  {target} INSTEAD OF {replaces}
+    upfront carbon .......... {_co2(be.upfront_carbon_premium):>18}
+    upfront cost ............ {_sek(be.upfront_cost_premium):>18}
+    carbon per change ....... {_co2(-be.carbon_saved_per_change):>18}
+    cost per change ......... {_sek(-be.cost_saved_per_change):>18}""")
+    if len(results) == 3:
+        be2 = scenarios.break_even(swapped, results[2][1])
+        print(f"""
+  ADAPTABLE (demountable) AGAINST THE {new['supplier'].upper()} VERSION
+    upfront premium ......... {_co2(be2.upfront_carbon_premium):>18}   {_sek(be2.upfront_cost_premium):>16}
+    break-even, carbon ...... {be2.verdict('carbon')}
+    break-even, cost ........ {be2.verdict('cost')}""")
+    print(f"""
+  {loader.provenance_report().caveat()}
+  The supplier's reversibility ({new['reversibility']:.2f}) and recovery ({new['recovery_rate']:.2f}) decide every
+  change after the first. They are the numbers to confirm with the supplier.
+""")
+    return 0
+
+
+# ---------------------------------------------------------------------------
 # experience
 # ---------------------------------------------------------------------------
 
@@ -382,11 +475,16 @@ def cmd_layout(args) -> int:
   Partition density ...... {partition_area / floor_area:.2f} m² wall per m² floor
   Layout penalty score ... {result.score:,.0f}  (lower is better)""")
 
-        # Price the same layout two ways: irreversible vs demountable.
-        for component_id, name in (
+        # Price the same layout two ways: irreversible vs demountable, plus any named
+        # supplier's like-for-like wall (data/components/suppliers/).
+        options = [
             ("part.stud.gypsum.95", "stud + gypsum (irreversible)"),
             ("part.demount.solid.100", "demountable  (reversible)"),
-        ):
+        ]
+        supplier_wall = _like_for_like(loader.catalogue(), "part.stud.gypsum.95")
+        if supplier_wall:
+            options.append((supplier_wall, f"{loader.catalogue()[supplier_wall]['supplier'].split()[0]} (supplier)"))
+        for component_id, name in options:
             bill = layout.bill_from_layout(result, component_id)
             assessment = evaluate.evaluate_bill(
                 bill, area_m2=floor_area, years=50, include_replacements=False
@@ -547,6 +645,12 @@ def main(argv: list[str] | None = None) -> int:
 
     compare = sub.add_parser("compare", help="compare use timelines on cost and carbon")
     compare.set_defaults(func=cmd_compare)
+
+    supplier = sub.add_parser("supplier", help="test a supplier's product in a use timeline")
+    supplier.add_argument("component", nargs="?", help="catalogue id; default: like for like with --replaces")
+    supplier.add_argument("--replaces", default="part.stud.gypsum.95", help="component it replaces")
+    supplier.add_argument("--timeline", default="conventional_change_of_use", help="timeline id in fitouts.json")
+    supplier.set_defaults(func=cmd_supplier)
 
     cad = sub.add_parser("cad", help="import geometry from / export layouts to CAD")
     cad.add_argument("-p", "--program", help="single programme id to export")

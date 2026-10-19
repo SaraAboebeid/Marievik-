@@ -157,9 +157,9 @@ def evaluate_bill(
         cost = component["cost_sek"]
 
         total_count += 2
-        if str(carbon.get("provenance", "")).upper() == "PLACEHOLDER":
+        if loader.is_placeholder(carbon.get("provenance", "")):
             placeholder_count += 1
-        if str(cost.get("provenance", "")).upper() == "PLACEHOLDER":
+        if loader.is_placeholder(cost.get("provenance", "")):
             placeholder_count += 1
 
         result.carbon.a1a3 += carbon["A1A3"] * quantity

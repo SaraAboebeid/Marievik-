@@ -270,15 +270,35 @@ def _fitouts() -> dict:
     return loader.load_json("scenarios/fitouts.json")
 
 
-def run_timeline(timeline_id: str, area_m2: float | None = None) -> TimelineResult:
-    """Evaluate a full sequence of uses over the study period."""
+def swap_bill(bill: dict[str, float], swap: dict[str, str]) -> dict[str, float]:
+    """The same bill with components substituted, e.g. a supplier's wall for the generic one."""
+    out: dict[str, float] = {}
+    for component_id, quantity in bill.items():
+        target = swap.get(component_id, component_id)
+        out[target] = out.get(target, 0.0) + quantity
+    return out
+
+
+def run_timeline(
+    timeline_id: str, area_m2: float | None = None, swap: dict[str, str] | None = None
+) -> TimelineResult:
+    """Evaluate a full sequence of uses over the study period.
+
+    swap substitutes components in every bill of the timeline ({from_id: to_id}), so one
+    supplier product can be tested against the same sequence of uses without editing
+    data/scenarios/fitouts.json.
+    """
     data = _fitouts()
     timelines = data["timelines"]
     if timeline_id not in timelines:
         raise KeyError(f"Unknown timeline: {timeline_id}")
 
-    timeline = timelines[timeline_id]
+    timeline = dict(timelines[timeline_id])
     fitouts = data["fitouts"]
+    if swap:
+        fitouts = {k: dict(f, bill=swap_bill(f["bill"], swap)) if isinstance(f, dict) and "bill" in f else f
+                   for k, f in fitouts.items()}
+        timeline["label"] = timeline["label"] + " — with " + ", ".join(swap.values())
     area = area_m2 or data["_meta"]["reference_floor_area_m2"]
 
     period = loader.operational_factors()["study_period"]

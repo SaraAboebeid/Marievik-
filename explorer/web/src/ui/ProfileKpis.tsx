@@ -1,5 +1,5 @@
 import type { KpiResult, KpiStatus, Methods } from '../types'
-import { Badge, Card } from './kit'
+import { Badge, Section } from './kit'
 
 export const STATUS_TAG: Record<KpiStatus, { tone: 'good' | 'warn' | 'muted'; label: string; title: string }> = {
   computed: { tone: 'good', label: 'computed', title: 'Computed from this scenario by the engine' },
@@ -22,15 +22,15 @@ export function ProfileKpis({ profile, methods, result, building, onExplain }: P
   const counts = { computed: 0, partial: 0, placeholder: 0 }
   if (result) p.kpis.forEach((k) => { const v = result.kpis[k]; if (v) counts[v.status]++ })
   return (
-    <Card title={`${p.name} · KPIs`} right={<button onClick={() => onExplain('')} className="text-[11px] text-accent hover:underline">equations</button>}>
-      {p.provisional && <p className="mb-1.5 text-[10.5px] leading-snug text-muted">Provisional KPI set for this profile, until it is defined.</p>}
+    <Section id="profile-kpis" title={`${p.name} · KPIs`} right={<button onClick={() => onExplain('')} className="text-[12px] text-ink-2 underline-offset-2 hover:text-ink hover:underline">equations</button>}>
+      {p.provisional && <p className="mb-1.5 text-[12.5px] leading-snug text-ink-2">Provisional KPI set for this profile, until it is defined.</p>}
       {!building ? (
         <>
-          <p className="mb-1.5 text-[11.5px] leading-snug text-ink-2">Open a building to see these KPIs for its current scenario.</p>
+          <p className="mb-1.5 text-[12.5px] leading-snug text-ink-2">Open a building to see these KPIs for its current scenario.</p>
           <ul className="flex flex-wrap gap-1">
             {p.kpis.map((k) => (
               <li key={k}>
-                <button onClick={() => onExplain(k)} className="rounded border border-line bg-surface px-1.5 py-[1px] text-[11px] text-ink-2 hover:border-line-strong">
+                <button onClick={() => onExplain(k)} className="rounded border border-line bg-surface px-1.5 py-[1px] text-[12px] text-ink-2 hover:border-line-strong">
                   {methods.kpis[k]?.name ?? k}
                 </button>
               </li>
@@ -38,7 +38,7 @@ export function ProfileKpis({ profile, methods, result, building, onExplain }: P
           </ul>
         </>
       ) : !result || result.building !== building ? (
-        <p className="text-[12px] text-muted">Calculating…</p>
+        <p className="text-[12.5px] text-ink-2">Calculating…</p>
       ) : (
         <>
           <ul>
@@ -48,27 +48,27 @@ export function ProfileKpis({ profile, methods, result, building, onExplain }: P
               if (!v || !d) return null
               const tag = STATUS_TAG[v.status]
               return (
-                <li key={k} className="border-t border-line py-1 first:border-t-0">
-                  <div className="flex items-baseline justify-between gap-2.5 text-[12.5px]">
-                    <button onClick={() => onExplain(k)} className="min-w-0 truncate text-left hover:text-accent hover:underline" title="Show the equation">
+                <li key={k} className="border-t border-line py-1.5 first:border-t-0">
+                  <div className="flex items-baseline justify-between gap-2.5 text-[13px]">
+                    <button onClick={() => onExplain(k)} className="min-w-0 truncate text-left hover:text-ink underline-offset-2 hover:underline" title="Show the equation">
                       {d.name}
                     </button>
                     <span className="whitespace-nowrap font-mono tabular-nums">{v.display}</span>
                   </div>
                   <div className="mt-0.5 flex items-center justify-between gap-2">
-                    <span className="min-w-0 truncate text-[10.5px] text-muted" title={v.note}>{v.note}</span>
+                    <span className="min-w-0 truncate text-[11.5px] text-ink-2" title={v.note}>{v.note}</span>
                     <span title={tag.title}><Badge tone={tag.tone}>{tag.label}</Badge></span>
                   </div>
                 </li>
               )
             })}
           </ul>
-          <p className="mt-1.5 border-t border-line pt-1.5 text-[10.5px] leading-snug text-muted">
+          <p className="mt-1.5 border-t border-line pt-1.5 text-[12.5px] leading-snug text-ink-2">
             {counts.computed} computed · {counts.partial} partial · {counts.placeholder} placeholder values. Click a KPI for its
             equation and data.
           </p>
         </>
       )}
-    </Card>
+    </Section>
   )
 }

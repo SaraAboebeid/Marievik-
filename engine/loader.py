@@ -18,7 +18,14 @@ from typing import Any
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 
-PLACEHOLDER_MARKERS = {"PLACEHOLDER", "UNKNOWN", "GENERIC"}
+PLACEHOLDER_MARKERS = {"PLACEHOLDER", "UNKNOWN", "GENERIC", "ESTIMATE"}
+SUPPLIERS = DATA / "components" / "suppliers"
+
+
+def is_placeholder(provenance: Any) -> bool:
+    """PLACEHOLDER, UNKNOWN, GENERIC, or a stated derivation such as 'ESTIMATE: ...'."""
+    head = str(provenance).split(":", 1)[0].strip().upper()
+    return head in PLACEHOLDER_MARKERS
 
 
 def load_json(relative_path: str) -> dict[str, Any]:
@@ -44,10 +51,22 @@ def use_programs() -> dict[str, dict]:
     return {program["id"]: program for program in raw["use_programs"]}
 
 
+def supplier_files() -> list[Path]:
+    """Local supplier catalogues (gitignored), merged into the catalogue when present."""
+    return sorted(SUPPLIERS.glob("*.json")) if SUPPLIERS.is_dir() else []
+
+
 @lru_cache(maxsize=None)
 def catalogue() -> dict[str, dict]:
     raw = load_json("components/catalogue.json")
-    return {component["id"]: component for component in raw["components"]}
+    components = {component["id"]: component for component in raw["components"]}
+    for path in supplier_files():
+        with path.open(encoding="utf-8") as handle:
+            for component in json.load(handle)["components"]:
+                if component["id"] in components:
+                    raise ValueError(f"{path.name}: {component['id']} is already in the catalogue")
+                components[component["id"]] = component
+    return components
 
 
 @lru_cache(maxsize=None)
@@ -109,7 +128,7 @@ def _walk_provenance(node: Any, path: str, report: ProvenanceReport) -> None:
         ]
         if provenance is not None and numeric_siblings:
             report.total_values += len(numeric_siblings)
-            if str(provenance).upper() in PLACEHOLDER_MARKERS:
+            if is_placeholder(provenance):
                 report.placeholder_values += len(numeric_siblings)
                 report.unverified_records.append(path)
 
@@ -138,6 +157,9 @@ def provenance_report() -> ProvenanceReport:
         ("shell", load_json("building/marievik_shell.json")),
     ):
         _walk_provenance(payload, name, report)
+    for path in supplier_files():
+        with path.open(encoding="utf-8") as handle:
+            _walk_provenance(json.load(handle), f"suppliers/{path.stem}", report)
     return report
 
 

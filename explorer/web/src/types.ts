@@ -48,7 +48,49 @@ export interface SitePayload {
   defaults: Settings
   buildings: SiteBuilding[]
   provenance: string
+  suppliers: Supplier[]
 }
+
+// ---------------------------------------------------------------- supplier product cards (data/components/suppliers)
+export interface SupplierProduct {
+  id: string; name: string; Rw_dB: number; fire_class: string; thickness_mm: number; max_height_m?: number
+  capex_sek_m2: number; labour_demount_sek_m2: number; upfront_kgco2e_m2: number; c1c4_kgco2e_m2: number; d_kgco2e_m2: number
+  reversibility: number; recovery_rate: number; fixing: string; service_life_years: number
+  estimate: boolean; cost_provenance: string; carbon_provenance: string; notes: string
+}
+export interface Supplier {
+  id: string; supplier: string; title: string; system: string; received: string; product: string
+  strengths: string[]; open_questions: string[]; sources: Record<string, string>; confidential: boolean
+  products: SupplierProduct[]
+}
+export interface SupplierSystemResult {
+  system: string; wall_area_m2: number; walls_capex_sek: number; walls_upfront_kgco2e: number
+  capex_sek: number; upfront_kgco2e: number; sound_below_m2: number; fire_below_m2: number
+  too_tall: WallCheck['too_tall']; builds: { type: string; name: string; area_m2: number }[]
+  strip_cost_sek: number; strip_kgco2e: number; recovered_m2: number; strip_unknown_m2: number; placeholder_share: number
+}
+export interface SupplierCompare { supplier: string; building: string; settings: Settings; systems: SupplierSystemResult[] }
+
+// ---------------------------------------------------------------- parametric view (the dashboard's Grasshopper view, live)
+export interface PlanGeometry {
+  index: number; use: string; wall_h: number
+  walls: { id: string; cat: string; type: string; a: XY; b: XY; t: number }[]
+  openings: { wall: string; kind: 'door' | 'window'; s0: number; s1: number; new: boolean }[]
+  rooms: { id: string; name: string; area: number; poly: XY[]; label: XY }[]
+  footprint: XY[]; voids: XY[][]
+}
+export interface BillLine {
+  id: string; name: string; supplier: string; layer: string; unit: string; qty: number
+  capex_sek: number; upfront_kgco2e: number; verified: boolean
+}
+export interface ParametricPayload {
+  building: string; key: string; settings: Settings; floor: number
+  floors: { index: number; use: string; use_label: string; added: boolean }[]
+  plan: PlanGeometry
+  kpi: BuildingKpi & { nfa_m2: number; unit_name: string; partition_run_m: number; partition_density: number; doors: number }
+  bill: BillLine[]; unpriced: Record<string, number>; mock_priced_rows: number
+}
+export interface ParametricCell { upfront_kgco2e_per_m2: number; capex_sek_per_m2: number; walls_ok: boolean }
 
 export interface Blocker { kind: string; text: string; severity: string }
 
@@ -107,7 +149,18 @@ export interface BuildingKpi {
   partition_area_m2: number
   placeholder_share: number
   mock_priced_rows: number
+  walls: WallCheck
   blockers: Blocker[]
+}
+
+/** New walls against the use profiles' indicative sound and fire requirements (mvk.layout.check_requirements). */
+export interface WallCheck {
+  checked_m2: number
+  unknown_m2: number
+  sound_below_m2: number
+  fire_below_m2: number
+  shortfalls: { use: string; category: string; type: string; area_m2: number; required: string; has: string; sound_ok: boolean; fire_ok: boolean }[]
+  too_tall: { type: string; max_height_m: number; wall_h: number; floors: number[] }[]
 }
 
 export type Detail =

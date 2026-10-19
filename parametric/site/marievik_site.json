@@ -843,7 +843,8 @@
       {
        "kind": "roof_garden",
        "along": 0.2,
-       "across": 0.2
+       "across": 0.2,
+       "offset": -0.4
       }
      ]
     },

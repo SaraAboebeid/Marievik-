@@ -44,7 +44,7 @@ import mvk.facade as FA                                          # noqa: E402
 from mvk import export as MX                                     # noqa: E402
 
 USES = ["site", "office_cellular", "office_open", "residential", "hotel", "school", "retail"]
-SYSTEMS = ["as_profile", "conventional", "demountable", "glass"]
+SYSTEMS = ["as_profile", "conventional", "demountable", "glass", "smartax"]   # smartax: only with its supplier file
 WINDOWS = {"existing": None, "triple_timber": "W_TRIPLE_TIMBER", "triple_alu_wood": "W_TRIPLE_ALU_WOOD"}
 ADDED_TYPES = {"wall_exterior": "EW_TIMBER_CLT_380", "wall_core": "IW_CLT_100", "slab": "SL_CLT_240",
                "window": "W_TRIPLE_TIMBER"}
@@ -92,6 +92,8 @@ class Site:
         self.profiles = L.load_profiles()
         self.db = L.load_db()
         self.catalogue = PR.load_catalogue(str(ROOT))
+        self.systems = [s for s in SYSTEMS if s == "as_profile" or L.system_available(s, self.db, self.catalogue)]
+        self.suppliers = load_suppliers(self.catalogue, self.systems)
         self.materials = dict(self.site.get("materials", {}))
         self.materials.setdefault("timber", [176, 136, 96])
         self._cache: dict[str, dict] = {}
@@ -107,7 +109,10 @@ class Site:
             "materials": self.materials,
             "roads": self.site.get("roads", []),
             "uses": {k: self.profiles[k]["label"] for k in self.profiles if not k.startswith("_")},
-            "systems": SYSTEMS, "windows": list(WINDOWS), "max_added": MAX_ADDED, "defaults": DEFAULTS,
+            # generic systems in the dropdown; a supplier's system is presented on its product card
+            "systems": [s for s in self.systems if s not in {x["system"] for x in self.suppliers.values()}],
+            "suppliers": list(self.suppliers.values()),
+            "windows": list(WINDOWS), "max_added": MAX_ADDED, "defaults": DEFAULTS,
             "buildings": [{"id": b["id"], "name": b["name"], "levels": b["levels"], "current_use": b["current_use"],
                            "ground_use": b.get("ground_use"), "role": b.get("role"),
                            "footprint": b["footprint"], "holes": b.get("holes") or [],
@@ -119,6 +124,8 @@ class Site:
 
     def scenario(self, bid: str, raw: dict | None = None) -> dict:
         s = clean_settings(raw)
+        if s["partition_system"] not in self.systems:      # e.g. smartax without its supplier file
+            s["partition_system"] = "as_profile"
         key = settings_key(bid, s)
         with self._lock:
             hit = self._cache.get(key)
@@ -190,7 +197,11 @@ class Site:
             "capex_sek_per_m2": round(res["summary"]["total"]["cost_sek"] / gfa) if gfa else 0,
             "window_floor_ratio": _wfr(res),
         })
-        k["blockers"] = blockers(b, s, len(floors), levels)
+        rq = res["requirements"]
+        k["walls"] = {"checked_m2": rq["checked_m2"], "unknown_m2": rq["unknown_m2"],
+                      "sound_below_m2": rq["sound_below_m2"], "fire_below_m2": rq["fire_below_m2"],
+                      "shortfalls": rq["shortfalls"][:6], "too_tall": rq["too_tall"]}
+        k["blockers"] = blockers(b, s, len(floors), levels) + wall_blockers(rq, s, self.db)
         return k
 
     # ------------------------------------------------------------------ JSON for the viewer
@@ -263,6 +274,80 @@ class Site:
                            "label": [_r(r["label_pt"][0]), _r(r["label_pt"][1])]} for r in F.rooms],
                 "units": sc["units"][index],
                 "kpi": floor_kpi(F, rows, sc["units"][index])}
+
+    # ------------------------------------------------------------------ supplier product card
+    def supplier_compare(self, sid: str, bid: str, raw: dict | None = None) -> dict:
+        """The supplier's system against conventional and demountable walls in one building, same uses:
+        what the new walls cost and emit now, whether they meet their use, and what stripping them out
+        costs at the next change of use (demount labour, recovered area, C1-C4 of the rest)."""
+        sup = self.suppliers[sid]
+        out = []
+        for system in ("conventional", "demountable", sup["system"]):
+            sc = self.scenario(bid, dict(raw or {}, partition_system=system))
+            k, rows = sc["kpi"], sc["res"]["rows"]
+            walls = [r for r in rows if r["state"] == "new" and r["category"].startswith("wall_")
+                     and r["category"] not in ("wall_exterior", "wall_core")]
+            builds: dict[str, dict] = {}
+            strip_cost = strip_co2 = recovered = unknown = 0.0
+            for r in walls:
+                d = builds.setdefault(r["type"], {"type": r["type"], "name": (self.db.get(r["type"]) or {}).get("name", r["type"]),
+                                                  "area_m2": 0.0})
+                d["area_m2"] += r["qty"]
+                c = self.catalogue.get(r["component"]) if r.get("component") else None
+                if not c:
+                    unknown += r["qty"]
+                    continue
+                rec = r["qty"] * c["recovery_rate"]
+                recovered += rec
+                strip_cost += r["qty"] * c["cost_sek"]["labour_demount"]
+                strip_co2 += (r["qty"] - rec) * c["carbon_kgco2e"]["C1C4"]
+            area = sum(r["qty"] for r in walls)
+            out.append({
+                "system": system, "wall_area_m2": round(area),
+                "walls_capex_sek": round(sum(r["capex_sek"] for r in walls)),
+                "walls_upfront_kgco2e": round(sum(r["upfront_kgco2e"] for r in walls)),
+                "capex_sek": k["capex_sek"], "upfront_kgco2e": k["upfront_kgco2e"],
+                "sound_below_m2": k["walls"]["sound_below_m2"], "fire_below_m2": k["walls"]["fire_below_m2"],
+                "too_tall": k["walls"]["too_tall"],
+                "builds": sorted(({**b, "area_m2": round(b["area_m2"])} for b in builds.values()), key=lambda b: -b["area_m2"]),
+                "strip_cost_sek": round(strip_cost), "strip_kgco2e": round(strip_co2),
+                "recovered_m2": round(recovered), "strip_unknown_m2": round(unknown),
+                "placeholder_share": k["placeholder_share"]})
+        return {"supplier": sid, "building": bid, "settings": clean_settings(raw), "systems": out}
+
+    # ------------------------------------------------------------------ parametric view
+    def parametric_payload(self, bid: str, raw: dict | None, floor: int) -> dict:
+        """One floor as a 2D plan (rotated so the long axis is horizontal), the building's KPIs and its
+        bill of quantities priced from the catalogue: the dashboard's Grasshopper view, on live layouts."""
+        sc = self.scenario(bid, raw)
+        res, k = sc["res"], sc["kpi"]
+        floor = max(0, min(floor, len(res["floors"]) - 1))
+        F = res["floors"][floor]
+        bill = []
+        for cid, q in res["summary"]["bill"].items():
+            c = self.catalogue.get(cid)
+            if not c:
+                continue
+            cb, cc = c["cost_sek"], c["carbon_kgco2e"]
+            bill.append({"id": cid, "name": c["name"], "supplier": c["supplier"], "layer": c["layer"], "unit": c["unit"],
+                         "qty": q, "capex_sek": round(q * (cb["material"] + cb["labour_install"])),
+                         "upfront_kgco2e": round(q * (cc["A1A3"] + cc.get("A4", 0) + cc.get("A5", 0))),
+                         "verified": not (PR._is_placeholder(cb) or PR._is_placeholder(cc))})
+        bill.sort(key=lambda r: -r["upfront_kgco2e"])
+        geo = MX.floor_geometry(F, MX._xf(res["footprint"]))
+        geo["wall_h"] = round(F.wall_h, 2)
+        return {"building": bid, "key": sc["key"], "settings": sc["settings"], "floor": floor,
+                "floors": [{"index": f.index, "use": f.use, "use_label": self.profiles[f.use]["label"],
+                            "added": f.index >= sc["levels"]} for f in res["floors"]],
+                "plan": geo, "kpi": k, "bill": bill,
+                "unpriced": {c: round(v, 1) for c, v in res["summary"]["unpriced"].items()},
+                "mock_priced_rows": res["summary"]["total"]["mock_priced_rows"]}
+
+    def parametric_cell(self, bid: str, raw: dict | None) -> dict:
+        """One bar of the use x system chart."""
+        k = self.scenario(bid, raw)["kpi"]
+        return {"upfront_kgco2e_per_m2": k["upfront_kgco2e_per_m2"], "capex_sek_per_m2": k["capex_sek_per_m2"],
+                "walls_ok": k["walls"]["sound_below_m2"] == 0 and k["walls"]["fire_below_m2"] == 0}
 
     def context_prisms(self, raw_by_building: dict | None = None) -> list[dict]:
         """Every building as (rings, top height) for daylight obstruction, with its current scenario height."""
@@ -359,6 +444,66 @@ def blockers(b, s, n_floors, levels) -> list[dict]:
     if s["use"] in ("residential", "hotel") and b["current_use"] == "office":
         out.append({"kind": "technical", "text": "Office to housing: plan depth limits daylight in the inner "
                     "part of the plan; check units without windows.", "severity": "medium"})
+    return out
+
+
+def load_suppliers(catalogue: dict, systems: list[str]) -> dict[str, dict]:
+    """Supplier product cards from data/components/suppliers/*.json (local, gitignored): the _meta text and
+    each product's figures, for suppliers whose requirement-based system the layout engine can use."""
+    out = {}
+    for p in sorted((ROOT / "data" / "components" / "suppliers").glob("*.json")):
+        raw = json.loads(p.read_text(encoding="utf-8"))
+        meta = raw.get("_meta", {})
+        if meta.get("system") not in systems:
+            continue
+        products = []
+        for c in raw["components"]:
+            c = catalogue.get(c["id"], c)
+            cb, cc, perf = c["cost_sek"], c["carbon_kgco2e"], c.get("performance", {})
+            products.append({
+                "id": c["id"], "name": c["name"], "Rw_dB": perf.get("Rw_dB"), "fire_class": perf.get("fire_class"),
+                "thickness_mm": perf.get("thickness_mm"), "max_height_m": perf.get("max_height_m"),
+                "capex_sek_m2": cb["material"] + cb["labour_install"], "labour_demount_sek_m2": cb["labour_demount"],
+                "upfront_kgco2e_m2": round(cc["A1A3"] + cc.get("A4", 0) + cc.get("A5", 0), 1),
+                "c1c4_kgco2e_m2": cc["C1C4"], "d_kgco2e_m2": cc.get("D", 0.0),
+                "reversibility": c["reversibility"], "recovery_rate": c["recovery_rate"], "fixing": c["fixing"],
+                "service_life_years": c["service_life_years"],
+                "estimate": PR._is_placeholder(cb) or PR._is_placeholder(cc),
+                "cost_provenance": cb["provenance"], "carbon_provenance": cc["provenance"], "notes": c.get("notes", "")})
+        out[p.stem] = {"id": p.stem, "supplier": meta.get("supplier", p.stem), "title": meta.get("title", p.stem),
+                       "system": meta["system"], "received": meta.get("received"), "product": meta.get("product", ""),
+                       "strengths": meta.get("strengths", []), "open_questions": meta.get("open_questions", []),
+                       "sources": meta.get("sources", {}), "confidential": bool(meta.get("confidential")),
+                       "products": products}
+    return out
+
+
+def wall_blockers(rq, s, db) -> list[dict]:
+    """New walls that miss the (indicative) sound or fire requirement, walls taller than a system allows,
+    and the caveats that come with supplier data."""
+    out = []
+    fire = next((x for x in rq["shortfalls"] if not x["fire_ok"]), None)
+    sound = next((x for x in rq["shortfalls"] if not x["sound_ok"]), None)
+    if fire:
+        out.append({"kind": "regulatory", "text": "%.0f m² of new walls below the fire class their use needs "
+                    "(indicative, Br1). Largest: %s walls in %s, %s, need %s." % (
+                        rq["fire_below_m2"], fire["category"], fire["use"], fire["has"], fire["required"]),
+                    "severity": "high"})
+    if sound:
+        out.append({"kind": "regulatory", "text": "%.0f m² of new walls below the sound insulation their use needs "
+                    "(indicative R'w, ljudklass C). Largest: %s walls in %s, %s, need %s." % (
+                        rq["sound_below_m2"], sound["category"], sound["use"], sound["has"], sound["required"]),
+                    "severity": "medium"})
+    for t in rq["too_tall"]:
+        out.append({"kind": "technical", "text": "%s: studs are at most %.1f m, but walls on floor%s %s are %.1f m "
+                    "high. Needs jointed studs or another system there." % (
+                        (db.get(t["type"]) or {}).get("name", t["type"]), t["max_height_m"],
+                        "s" if len(t["floors"]) > 1 else "", ", ".join("F%02d" % f for f in t["floors"]),
+                        t["wall_h"]), "severity": "medium"})
+    if s["partition_system"] == "smartax":
+        out.append({"kind": "process", "text": "Smartax: prices are a confidential supplier quote for a 2.5 m wall; "
+                    "the 45-57 dB builds are our estimates. Boards are glued and nailed, so the walls are modelled "
+                    "as non-reusable until Smartax documents a demount method.", "severity": "low"})
     return out
 
 

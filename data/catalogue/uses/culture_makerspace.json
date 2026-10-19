@@ -1,0 +1,181 @@
+{
+  "id": "culture_makerspace",
+  "label_en": "Culture house / makerspace / studios / gallery / rehearsal rooms",
+  "label_sv": "Kulturhus / makerspace / ateljéer / galleri / replokaler",
+  "family": "community",
+  "summary": "A cluster of cultural production and display spaces: artists' studios (ateljéer), shared workshops and makerspace (wood, metal, textile, digital fabrication), a gallery or exhibition room, and music rehearsal rooms (replokaler). No Swedish law is specific to these uses and no national space norm was found. Requirements come from generic rules: fire class depending on whether users know the premises (members: Vk 1; public gallery or open house: Vk 2A/2B); sound insulation (BFS 2024:10, functional for lokaler; 56 dB minimum to dwellings), which is decisive for rehearsal rooms; workplace and machine safety for staffed workshops (AFS); ventilation and fire safety for fumes, dust and flammable goods (LBE 2010:1011). These uses are among the most tolerant of office-building constraints (moderate loads, small rooms, deep plans acceptable for studios without permanent occupancy), except for loud music, heavy machines and kilns.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "Mixed. Studios and workshops used by members with good knowledge of the premises can be argued as Vk 1 (BFS 2024:7 2 kap. 10 §, like offices; assessment, not sourced). A gallery, open workshop or public events is Vk 2A (max 150) or 2B (more than 150) (2 kap. 11–12 §§). Rehearsal rooms are Vk 1 for regular members, or Vk 2A if used for audiences. See cross_cutting.json fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "BFS 2024:10 skydd mot buller: 2 kap. 2 § tabell 2:1, 5 § tabell 2:4, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" },
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 3–4, 10–12 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö: 3 kap. 4 § (removal of pollutants from the intended use), 4 kap. 3 § (daylight in lokaler)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser (staffed workshops; 3 kap. 7 § separate rooms for particular risks)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "Lag (2010:1011) om brandfarliga och explosiva varor (LBE): gases for welding and brazing, solvents (thresholds in MSB regulations, not verified here)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-20101011-om-brandfarliga-och-explosiva_sfs-2010-1011/" },
+      { "ref": "Folkhälsomyndighetens allmänna råd om höga ljudnivåer (FoHMFS 2014:15)", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a) where the new use is 'väsentligen annat'. Studios used as offices for creative work may not need it (assessment by the byggnadsnämnd).",
+      "Permit for flammable gases or liquids above MSB thresholds (LBE permit regime; paragraph numbers and threshold values not verified here).",
+      "Detaljplan: workshops with noise or dust may conflict with housing or office plans; check permitted use (e.g. C, K, J småindustri). Not verified."
+    ],
+    "operator_oversight": "Kommunens byggnadsnämnd; räddningstjänsten (LBE permits, LSO); miljö- och hälsoskyddsnämnd (noise, emissions); Arbetsmiljöverket (staffed workshops)"
+  },
+  "occupancy": {
+    "unit": "user",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish law, guidance or public programme found that gives m2 per artist, member or rehearsal band.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Often volunteer- or member-run." },
+    "egress_design_density": {
+      "persons_per_m2": 0.25,
+      "strength": "practice",
+      "source": "Repealed BBR general advice, practice: BBR tabell 5:333 'Museum, konsthall' 0.25 persons/m2 (gallery). Studios and workshops: furnished maximum (BFS 2024:7 2 kap. 4 §). Vernissage or events use the samlingslokal default 2.5 p/m2.",
+      "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0.02, 0.01, 0, 0, 0, 0, 0, 0.02, 0.1, 0.25, 0.35, 0.35, 0.3, 0.35, 0.4, 0.4, 0.45, 0.6, 0.75, 0.8, 0.7, 0.5, 0.2, 0.05],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Studios used by day by professional artists; makerspace and rehearsal rooms peak in the evening and at weekends. Rehearsal rooms are often booked until 22–23."
+  },
+  "spaces": [
+    {
+      "id": "culture_studios",
+      "label_en": "Artists' studios (individual or shared)",
+      "label_sv": "Ateljéer",
+      "required": { "strength": "practice", "basis": "Defining space; not regulated. If used as a permanent workplace by employees, AFS 2023:12 applies; for self-employed artists, BFS 2024:8 4 kap. 3 § applies (rooms in lokaler where people stay more than temporarily need sufficient daylight and view unless unreasonable).", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "per artist or collective", "strength": "none", "source": "No Swedish public source found.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["coworking", "office"],
+      "shareable_note": "Studio clusters often sit beside coworking. Clean studios (illustration, design) are close to office use.",
+      "binding_constraint": "daylight_and_view",
+      "layer": "space_plan",
+      "notes": "Office floors suit studios well: facade-adjacent cellular offices become studios with little intervention (high reversibility). Painting with solvents needs extract ventilation (BFS 2024:8 3 kap. 4 §)."
+    },
+    {
+      "id": "culture_workshop",
+      "label_en": "Shared workshop / makerspace (wood, metal, textile, digital fabrication)",
+      "label_sv": "Verkstad / makerspace",
+      "required": { "strength": "practice", "basis": "Not required. Where staffed, AFS 2023:12 3 kap. 7 § (processes with particular risks normally in separate rooms) and machine rules apply. Process ventilation and dust extraction follow from BFS 2024:8 3 kap. 4 § and AFS 2023:12 5 kap.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish public source found.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["culture_storage"],
+      "shareable_with": ["school_compulsory", "community_hybrid"],
+      "shareable_note": "Schools (slöjd) and study associations can book workshop time; evening members.",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Heavy machines and material stacks: storage loads E1 5.0 kN/m2 (BFS 2024:6 tabell 4:1) vs office 2.5; machine bases may need local strengthening. Wood dust (explosion and fire risk) and welding fumes need local extraction; welding gases fall under LBE. Machine noise and vibration to neighbours (BFS 2024:10). Goods access (lift or ground floor, wide doors) is often decisive. Ceiling height of 2,700 mm is guidance only (AFS 2023:12 3 kap. 5 § allmänna råd)."
+    },
+    {
+      "id": "culture_kiln_hot_work",
+      "label_en": "Kiln, hot-work and spray room",
+      "label_sv": "Brännugn / heta arbeten / sprutbox",
+      "required": { "strength": "practice", "basis": "Optional. If present, fire separation and ventilation follow from BFS 2024:7 (fire cells) and BFS 2024:8 3 kap. 4 §; flammable products under LBE.", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Ceramic kilns need high power supply and exhaust; spray painting needs a separate fire cell and exhaust. Facade or roof access for exhaust is the typical binding constraint in office conversions (indicative)."
+    },
+    {
+      "id": "culture_rehearsal",
+      "label_en": "Music rehearsal rooms",
+      "label_sv": "Replokaler / musikrum",
+      "required": { "strength": "law", "basis": "Required only if the programme includes music, but then sound insulation is law: BFS 2024:10 2 kap. 9 § (lokaler: dampen noise to the extent the intended use requires) and, where dwellings adjoin, tabell 2:1 (DnT,w,50 at least 56 dB from lokaler) and tabell 2:4 (L'nT,w,50 at most 52 dB). Miljöbalken 9 kap. nuisance rules apply in operation.", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "per band or ensemble", "strength": "none", "source": "No Swedish public source found for rehearsal-room size.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["community_hybrid", "school_compulsory"],
+      "shareable_note": "Kulturskola by day, bands in the evening. Only if box-in-box construction is in place.",
+      "binding_constraint": "noise_to_neighbours",
+      "layer": "skin",
+      "notes": "Amplified band rehearsal far exceeds what the 56 dB building minimum is designed for. Box-in-box rooms (floating floor, independent walls and ceiling) are standard practice (engineering judgement, indicative), costing floor area and height and loading the slab. Best placed in basements or on slab-on-grade, away from dwellings and sleeping rooms. Musicians' exposure: FoHMFS 2014:15 (audiences) and AFS rules on noise at work (not opened). Windowless rooms are acceptable when the use is temporary per room (no daylight needed under BFS 2024:8 4 kap. 3 § where unreasonable for the intended use)."
+    },
+    {
+      "id": "culture_gallery",
+      "label_en": "Gallery / exhibition room",
+      "label_sv": "Galleri / utställningsrum",
+      "required": { "strength": "practice", "basis": "Optional. If open to the public it is a publik lokal: accessible (BFS 2024:12 2 kap.) and Vk 2A/2B.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": true },
+      "depends_on": ["culture_storage"],
+      "shareable_with": ["shared_amenities", "library", "assembly_event", "community_hybrid"],
+      "shareable_note": "A shared lobby or library foyer can host exhibitions.",
+      "binding_constraint": "accessibility",
+      "layer": "space_plan",
+      "notes": "Load C3 'without obstacles for moving persons' 3.0 kN/m2 (BFS 2024:6 tabell 4:1), slightly above office B 2.5; heavy sculptures need local checks. Egress density 0.25 p/m2 (repealed BBR advice, practice), or 2.5 p/m2 at vernissage. Street-level facade is valuable for visibility. 2,700 mm is guidance (repealed BBR 3:3112 for publika lokaler; AFS allmänna råd)."
+    },
+    {
+      "id": "culture_storage",
+      "label_en": "Material and artwork storage, goods access",
+      "label_sv": "Materialförråd / konstförråd / godsmottagning",
+      "required": { "strength": "practice", "basis": "Not regulated.", "url": "" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "Goods lift and loading bay shared with other tenants.",
+      "binding_constraint": "floor_load",
+      "layer": "stuff",
+      "notes": "E1 storage 5.0 kN/m2 (BFS 2024:6 tabell 4:1)."
+    },
+    {
+      "id": "culture_wc_staff",
+      "label_en": "WCs, wash-up sink and staff/member facilities",
+      "label_sv": "Toaletter, utslagsvask, personalutrymmen",
+      "required": { "strength": "law", "basis": "FMH 35 § (sufficient toilets); BFS 2024:12 2 kap. 7 § (accessible public WC if public WCs exist); AFS 2023:12 for staff. See cross_cutting.json sanitary and staff_facilities.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "See cross_cutting.json.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Clay and plaster traps on sinks in ceramic and sculpture workshops (practice)."
+    }
+  ],
+  "variants": [
+    { "id": "culture_studio_cluster", "label": "Studio cluster (ateljéhus)", "changes": "Mostly individual studios along the facade, shared wash-up and storage. Closest to office use; minimal fire or acoustic change." },
+    { "id": "culture_makerspace_open", "label": "Open makerspace / fablab", "changes": "Public or member workshop with machines, laser cutters and 3D printers. Ventilation and extraction, goods access and machine safety bind. Vk 2A if open to the public." },
+    { "id": "culture_rehearsal_house", "label": "Rehearsal house (replokaler)", "changes": "Box-in-box rooms, basement or ground floor preferred. Noise to dwellings is the hard constraint." },
+    { "id": "culture_house", "label": "Culture house (kulturhus) with gallery and event room", "changes": "Adds a gallery (publik lokal) and an event room (see assembly_event), often combined with library and community_hybrid." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Music: BFS 2024:10 minima to dwellings (56 dB DnT,w,50; 52 dB L'nT,w,50) do not cover amplified music. Box-in-box rooms are needed, costing height and load.",
+      "Workshops: dust and fume extraction, hot work and flammable goods (LBE), and machine noise and vibration in a building designed for quiet office work.",
+      "Goods handling (sheet materials, artworks) on upper floors without a goods lift.",
+      "Storage and machine loads (E1 5.0 kN/m2) vs office 2.5 kN/m2."
+    ],
+    "typical_enablers": [
+      "Cellular office rooms convert directly to studios (high reversibility, low cost).",
+      "Deep interior zones suit storage, darkrooms and rehearsal rooms that need no daylight.",
+      "Basement or ground floor and former garages suit workshops and rehearsal.",
+      "Moderate public density (gallery 0.25 p/m2, repealed advice) rarely binds egress."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:10 buller: 2 kap. 2, 5, 9 §§ (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7: 2 kap. 4, 10–12 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8: 3 kap. 4 §, 4 kap. 3 §", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12: 3 kap. 5, 7 §§; 5 kap.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Repealed BBR tabell 5:333 (consolidated BBR p. 52)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "FoHMFS 2014:15", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No Swedish public programme for ateljéhus, makerspace or replokaler was found (municipal kulturförvaltning or KRO/Konstnärernas Riksorganisation could have studio guidance; Studiefrämjandet/Sensus for rehearsal rooms). Not searched in depth.",
+    "LBE permit thresholds for welding gases and solvents (MSB föreskrifter) were not verified.",
+    "Vk 1 vs Vk 2A for member-only studios and workshops is an assessment; confirm with Boverket guidance.",
+    "Folkhälsomyndigheten FoHMFS 2014:13 (buller inomhus) values for dwellings next to music rooms were not verified; add them if the fit test needs operational limits.",
+    "AFS rules on noise exposure for staff and musicians (and their current AFS number after the 2025 restructuring) were not opened."
+  ]
+}

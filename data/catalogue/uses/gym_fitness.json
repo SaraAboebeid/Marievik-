@@ -1,0 +1,180 @@
+{
+  "id": "gym_fitness",
+  "label_en": "Gym / fitness centre",
+  "label_sv": "Gym / träningsanläggning",
+  "family": "commercial",
+  "summary": "Commercial or association fitness centre: weights and cardio floor, group-exercise studios, changing rooms with showers, reception. No Swedish law is specific to gyms: they are not on the FMH 38 § notification list (pool bathing is). The binding requirements are generic but hard to meet in an office building: the floor category for physical activity (C4, 4.0 kN/m2 and dynamic effects, BFS 2024:6) against office slabs designed for 2.5; sound insulation from lokaler to dwellings (BFS 2024:10: DnT,w,50 at least 56 dB, L'nT,w,50 at most 52 dB), with dropped weights and music usually needing more than the minimum; and high outdoor-air demand at elevated activity (AFS 2023:12 5 kap. 4 § allmänna råd). No public source gives m2 per member or per piece of equipment.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (max 150 persons) / 2B (more than 150). BFS 2024:7 2 kap. 11–12 §§ list 'sporthallar och andra utrymmen där personer har liknande förutsättningar att utrymma'; a gym open to the public falls here (classification by analogy, assessment). See cross_cutting.json fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1 (C4 4.0 kN/m2), 13 § (dynamic forces)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/" },
+      { "ref": "BFS 2024:10 skydd mot buller: 2 kap. 2 § tabell 2:1, 5 § tabell 2:4, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" },
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 4, 11–12 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser: 5 kap. 4 § (outdoor air) for staff and instructors", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "FMH (1998:899) 38 § (notification only for e.g. bassängbad and hygienic treatments; gyms not listed)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a). Detaljplan: commercial or centrum use; a gym is usually accepted under C (not verified against Boverket's planbestämmelser guide).",
+      "No gym-specific operating permit. Notification under FMH 38 § is needed only if a pool (bassängbad) or professional hygienic treatments (e.g. tattooing) are added.",
+      "Music played in group classes: FoHMFS 2014:15 recommended sound levels apply, supervised by the municipal miljöförvaltning."
+    ],
+    "operator_oversight": "Kommunens miljö- och hälsoskyddsnämnd (noise, hygiene nuisance under Miljöbalken 9 kap.); byggnadsnämnd; räddningstjänst"
+  },
+  "occupancy": {
+    "unit": "visitor",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish law, guidance or public programme found that gives m2 per member, per simultaneous visitor or per piece of equipment. Operator benchmarks are not public.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "No source; many gyms run staff-less hours with access control." },
+    "egress_design_density": {
+      "persons_per_m2": null,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 §: design number = maximum expected. No gym default; the samlingslokal default (2.5 p/m2) is a conservative fallback for group-exercise studios if the operator cannot commit to a maximum. The repealed BBR tabell 5:333 had no gym row (danslokal 2.5 was the nearest).",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0.02, 0.01, 0.01, 0.01, 0.02, 0.1, 0.4, 0.45, 0.3, 0.25, 0.25, 0.35, 0.45, 0.3, 0.25, 0.3, 0.6, 0.9, 1.0, 0.8, 0.5, 0.25, 0.1, 0.05],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Three peaks: early morning, lunch and 17–20. 24/7 access is common in staff-less gyms, so the profile is non-zero at night. None of the README hour profiles fits exactly; 'evening_weekend' is the closest label."
+  },
+  "spaces": [
+    {
+      "id": "gym_training_floor",
+      "label_en": "Training floor (free weights, machines, cardio)",
+      "label_sv": "Träningshall (fria vikter, maskiner, kondition)",
+      "required": { "strength": "practice", "basis": "Defining space of the use; not regulated as such.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "operator-specific", "strength": "none", "source": "No public source for m2 per station or per member.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["gym_changing", "gym_ventilation"],
+      "shareable_with": [],
+      "shareable_note": "Weights floor is rarely time-shared; equipment is fixed.",
+      "binding_constraint": "floor_load",
+      "layer": "structure",
+      "notes": "Load: C4 'samlingslokaler där fysiska aktiviteter kan förekomma' 4.0 kN/m2 and 4.0 kN point load, vs office B 2.5 kN/m2 (BFS 2024:6 4 kap. 10 § tabell 4:1). 4 kap. 13 §: members shall be designed for dynamic forces from persons and objects in rapid, forceful movement (jumping crowds given as an example). Heavy racks and dropped weights add local impact loads and vibration. Sound: from lokaler to dwellings, DnT,w,50 at least 56 dB (tabell 2:1) and L'nT,w,50 at most 52 dB (tabell 2:4). The tapping-machine metric does not represent dropped weights, so isolated floating floors are standard practice (engineering judgement, indicative). The repealed BBR 7:21 allmänt råd named 'träningslokal' as noisy activity needing special insulation measures and advised LpAeq,nT 25 dB in dwellings from impulse or low-frequency noise from adjacent gyms (consolidated BBR p. 117–118). Ceiling height: 2,700 mm is guidance only (AFS 2023:12 3 kap. 5 § allmänna råd); overhead lifts and racks need more locally."
+    },
+    {
+      "id": "gym_group_studio",
+      "label_en": "Group-exercise studio (aerobics, spinning, yoga)",
+      "label_sv": "Gruppträningssal",
+      "required": { "strength": "practice", "basis": "Typical; not regulated.", "url": "" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "class size", "strength": "none", "source": "No public source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["gym_ventilation"],
+      "shareable_with": ["community_hybrid", "culture_makerspace", "assembly_event"],
+      "shareable_note": "Dance, yoga, rehearsal and community classes can time-share an open studio with a sprung floor. Needs the C4 floor and the noise separation anyway.",
+      "binding_constraint": "noise_to_neighbours",
+      "layer": "space_plan",
+      "notes": "Rhythmic jumping (aerobics, spinning) is the critical dynamic load case (BFS 2024:6 4 kap. 13 §). Amplified music: FoHMFS 2014:15 recommends at most LAeq 100 dB / LAFmax 115 dB, and 97/110 dB if children are admitted (sourced from municipal summaries)."
+    },
+    {
+      "id": "gym_changing",
+      "label_en": "Changing rooms with showers and WCs (visitors)",
+      "label_sv": "Omklädningsrum med duschar och toaletter",
+      "required": { "strength": "practice", "basis": "For visitors there is no legal requirement (AFS 2023:12 3 kap. 46–54 §§ apply to employees). FMH 35 § requires sufficient toilets. Showers and changing are a market necessity.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "per peak simultaneous visitors; no source", "strength": "none", "source": "No public gym programme found. For comparison, the Uppsala sports hall programme (2023) uses 20 persons per changing room with at least 4 showers (see sports_hall).", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["sports_hall", "shared_amenities", "office"],
+      "shareable_note": "Could double as end-of-trip facilities (showers, lockers) for cycling office workers in the building.",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Wet rooms need waterproofing (BFS 2024:8 7 kap. 7–8, 11 §§) and floor drains with falls, which are hard on office slabs without raised floors. Legionella-safe hot water applies to shower installations (BFS 2024:8 8 kap. 6 §; AFS 2023:12 also has rules for showers and aerosol-producing installations). Accessible changing and shower: repealed guidance and the Uppsala practice put an accessible WC with shower in changing areas (indicative)."
+    },
+    {
+      "id": "gym_ventilation",
+      "label_en": "Ventilation capacity for high activity",
+      "label_sv": "Ventilation för hög aktivitetsnivå",
+      "required": { "strength": "law", "basis": "BFS 2024:8 3 kap. 4 § (functional: continuous air change, removal of pollutants from the intended use). AFS 2023:12 5 kap. 4 §: at least 7 l/s per person plus 0.35 l/s per m2 for workplaces; allmänna råd: 7 l/s is for sedentary work and higher activity may need more.", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "airflow > 7 l/s per person + 0.35 l/s per m2; multiplier for exercise not sourced", "strength": "law", "source": "AFS 2023:12 5 kap. 4 § (verified, p. 39). No Swedish source gives an exercise multiplier.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Cooling load from people and cardio equipment is high; office AHUs sized for about 0.1 persons/m2 typically fail."
+    },
+    {
+      "id": "gym_reception",
+      "label_en": "Reception / access control",
+      "label_sv": "Reception / entré med passersystem",
+      "required": { "strength": "law", "basis": "If staffed, a reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §). Accessible main entrance (2 kap. 1 §).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "Staff-less gyms can use the shared lobby with gate access.",
+      "binding_constraint": "accessibility",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "gym_storage_cleaning",
+      "label_en": "Equipment store and cleaning room",
+      "label_sv": "Förråd och städ",
+      "required": { "strength": "practice", "basis": "Not regulated; cleaning room needs per BFS 2024:8 hygiene in general terms.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": ""
+    },
+    {
+      "id": "gym_staff",
+      "label_en": "Staff facilities",
+      "label_sv": "Personalutrymmen",
+      "required": { "strength": "law", "basis": "AFS 2023:12. Instructors do sweaty work, so changing rooms and showers apply (3 kap. 46, 52 §§). See cross_cutting.json staff_changing_showers_storage.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "See cross_cutting.json.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "gym_full_service", "label": "Full-service gym with group studios and sauna", "changes": "Adds sauna and spa wet areas (more drainage, moisture and vapour control). A pool would trigger FMH 38 § notification (bassängbad)." },
+    { "id": "gym_24_7_compact", "label": "Compact 24/7 staff-less gym", "changes": "Mainly machines and cardio, few or no group studios, small changing rooms. Access control replaces the reception. Night use raises noise concerns next to dwellings." },
+    { "id": "gym_boutique_studio", "label": "Boutique studio (yoga, pilates, cycling)", "changes": "One or two studios only; can fit 200–400 m2 office units (indicative). Yoga and pilates are low-impact, while cycling and HIIT carry dynamic loads and music noise." },
+    { "id": "gym_crossfit_lifting", "label": "Strength / CrossFit box", "changes": "Dropped weights; essentially a ground-floor or slab-on-grade use. Upper office floors are unsuitable without heavy isolation." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Floor load and dynamics: C4 4.0 kN/m2 plus dynamic effects (BFS 2024:6 4 kap. 10, 13 §§) vs office B 2.5 kN/m2.",
+      "Impact noise and vibration to other tenants, especially dwellings: BFS 2024:10 tabell 2:1 / 2:4 minima, plus dropped weights and music bass.",
+      "Wet rooms (showers) on office slabs: floor drains, falls, waterproofing and drainage stack capacity.",
+      "Ventilation and cooling capacity for exercising occupants.",
+      "Fire class change Vk 1 to 2A/2B (30 m travel)."
+    ],
+    "typical_enablers": [
+      "Ground floor or basement on slab-on-grade (no impact path to neighbours below; loads go to ground).",
+      "Large open floor plates and existing showers or bike rooms.",
+      "Time profile complementary to offices (morning and evening peaks), so shared showers and lockers can serve both."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1, 13 § (via Boverket 'Nyttiga laster')", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:10 buller: 2 kap. 2, 5, 9 §§ (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7: 2 kap. 4, 11–12 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8: 3 kap. 4 §, 7 kap., 8 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12: 3 kap. 5, 46–54 §§; 5 kap. 4 §", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "FMH (1998:899) 35, 38 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/", "accessed": "2026-10-19" },
+    { "ref": "Repealed BBR 7:21 allmänt råd (consolidated BBR pp. 117–118)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "FoHMFS 2014:15 Höga ljudnivåer", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No public Swedish source for gym sizing (m2 per member or simultaneous user, changing-room capacity). Consider operator interviews or an industry body (e.g. Friskvårdsföretagen); not searched in depth.",
+    "Is a gym formally a 'sporthall or similar' (Vk 2) or could a members-only gym be argued as Vk 1? Classification here is an analogy; confirm with Boverket guidance or a fire consultant.",
+    "Folkhälsomyndigheten's allmänna råd om buller inomhus (FoHMFS 2014:13) values for dwellings next to gyms were not verified; add them if the fit test needs neighbour-noise limits.",
+    "Exercise-specific ventilation rates (l/s per exercising person) have no Swedish source found."
+  ]
+}

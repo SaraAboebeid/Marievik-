@@ -1,0 +1,244 @@
+{
+  "id": "library",
+  "label_en": "Public library",
+  "label_sv": "Folkbibliotek",
+  "family": "community",
+  "summary": "Municipal public library. Bibliotekslagen (2013:801) requires every municipality to have folkbibliotek. They must be open to all, lend literature free of charge, and give special attention to children and young people, persons with disabilities, national minorities and people whose first language is not Swedish. They must also promote reading and knowledge of IT. The law sets services, not space: no Swedish law or national guidance gives a library size. The only quantitative space standards found are foreign examples published in the IFLA Public Library Service Guidelines (Ontario 1997: 56 m2 per 1,000 inhabitants for communities under 100,000). Size is therefore indicative and set in the municipal biblioteksplan (Bibliotekslagen 17 §).",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (max 150 persons) or 2B (more than 150): a library is a public premises with awake visitors unfamiliar with the building (BFS 2024:7 2 kap. 11–12 §§). See cross_cutting.json fire_vk_2abc. Libraries are also named in BFS 2024:7 2 kap. 3 § on variable fire load (bibliotek), so check fire load density in cross_cutting fire_load_density.",
+    "key_laws": [
+      { "ref": "Bibliotekslag (2013:801), t.o.m. SFS 2024:1073: 2, 4–9, 17 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/" },
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 3–4, 11–12 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet: 2 kap. 7 §, 3 kap. 6–7 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1 (C1, C3, E1)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a). The detaljplan must allow the use (often C centrum or S skola/samhällsservice; not verified against Boverket's planbestämmelser guide).",
+      "Municipal biblioteksplan (Bibliotekslagen 17 §) sets the service level; the municipality is usually both operator and client."
+    ],
+    "operator_oversight": "Municipality (kultur- och fritidsnämnd); Kungliga biblioteket (national follow-up and statistics); regional library activity (Bibliotekslagen 11 §)"
+  },
+  "occupancy": {
+    "unit": "inhabitant_served",
+    "gross_m2_per_unit": {
+      "value": 0.056,
+      "range": null,
+      "strength": "practice",
+      "source": "IFLA Public Library Service Guidelines, 2nd ed. (2010), Appendix 4, p. 131: Ontario Public Library Guidelines 1997: 'For a community under 100 000 population the appropriate standard is 56 sq. m. (600 sq. ft.) per 1000 capita'. IFLA 3.10.2 (p. 59) states that a universal space standard cannot be proposed. This is a foreign example, not Swedish practice.",
+      "confidence": "sourced",
+      "note": "Minimum sizes in the same appendix: independent library at least 370 m2; branch at least 230 m2 plus 14 m2 per additional 1,000 volumes over 3,000. No Swedish equivalent was found."
+    },
+    "staff_per_unit": { "value": 0.0005, "strength": "practice", "source": "IFLA 2010 Appendix 4 (Ontario 1997): 1 staff member per 2,000 population, at 16.3 m2 total space per staff member including desks, circulation, lounge and lockers. Foreign example; confidence sourced." },
+    "egress_design_density": {
+      "persons_per_m2": 0.1,
+      "strength": "practice",
+      "source": "Repealed BBR general advice, practice: BBR tabell 5:333 (consolidated BBR p. 52) gave Bibliotek 0.1 persons/m2 net area, with deduction of loose furniture allowed. BFS 2024:7 2 kap. 4 § now requires the expected maximum and gives no library default. Event rooms inside the library use the samlingslokal default of 2.5 p/m2.",
+      "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "retail_hours",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.05, 0.2, 0.35, 0.4, 0.45, 0.45, 0.45, 0.55, 0.6, 0.55, 0.45, 0.3, 0.1, 0, 0, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Typical branch opening about 10–19 on weekdays with an after-school peak, and shorter Saturday hours. 'Meröppet' (self-service opening without staff) can extend hours to 7–22 at low occupancy."
+  },
+  "spaces": [
+    {
+      "id": "library_collection",
+      "label_en": "Open collection (shelving) and browsing",
+      "label_sv": "Medieytor / öppen hylla",
+      "required": { "strength": "law", "basis": "Bibliotekslagen 6 § (folkbibliotek open to all, with varied media of high quality) and 9 § (free lending of literature regardless of format). A service requirement. No space size is set.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/" },
+      "size": {
+        "rule": "derived",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "volumes / 110 per m2 (practice, foreign)",
+        "strength": "practice",
+        "source": "IFLA 2010 Appendix 4, p. 131 (Ontario 1997): '1 sq. m. for every 110 volumes', allowing low shelving and wider aisles in children's and reference areas. Foreign example.",
+        "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "floor_load",
+      "layer": "structure",
+      "notes": "Loads: reading and browsing areas are C1/C3 (2.5–3.0 kN/m2), and book storage is E1 (5.0 kN/m2, BFS 2024:6 tabell 4:1). Assigning library stacks to E1 follows EN 1991-1-1 practice (not verified here). Compact or rolling shelving can exceed 5.0. Office slabs (B, 2.5) suit low open shelving but not stacks or compact archives without strengthening. IFLA 3.10.5 recommends adjustable shelving on lockable wheels for flexibility, and IFLA 3.10.3 gives circulation of 15–20 % in public areas."
+    },
+    {
+      "id": "library_children",
+      "label_en": "Children's and youth area",
+      "label_sv": "Barn- och ungdomsavdelning",
+      "required": { "strength": "law", "basis": "Bibliotekslagen 8 §: folkbibliotek shall give special attention to children and young people to promote language development and reading, including by offering suitable literature. A service requirement; a dedicated area is how it is normally met. IFLA 3.10.3 (p. 59): space for children including babies and toddlers, young adults and family use.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish or IFLA size given.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": false },
+      "depends_on": ["library_wc"],
+      "shareable_with": ["preschool", "school_compulsory"],
+      "shareable_note": "Story-time and class visits from nearby preschools and schools. The school library itself is regulated separately (Skollagen 2 kap. 24 a–d §§, referenced in Bibliotekslagen 10 §).",
+      "binding_constraint": "acoustics",
+      "layer": "space_plan",
+      "notes": "Pram parking near the entrance and a baby-changing facility are practice. Acoustic separation from quiet study areas matters."
+    },
+    {
+      "id": "library_reading_study",
+      "label_en": "Reading, study and group-work places incl. quiet room",
+      "label_sv": "Läs- och studieplatser, grupprum, tyst rum",
+      "required": { "strength": "practice", "basis": "Not named in Bibliotekslagen. IFLA 3.10.3 (p. 59): reader seating for leisure reading, study, group work and tutoring; 'quiet rooms should be provided'. Supports Bibliotekslagen 2 § (education and further learning).", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full" },
+      "size": {
+        "rule": "per_seat",
+        "value_m2": 2.8,
+        "range_m2": null,
+        "count": "5 user places per 1,000 inhabitants (practice, foreign)",
+        "strength": "practice",
+        "source": "IFLA 2010 Appendix 4, p. 132 (Ontario 1997): 5 user spaces per 1,000 capita; 2.8 m2 (30 sq ft) per reader station. Foreign example.",
+        "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["coworking", "community_hybrid", "school_compulsory"],
+      "shareable_note": "Study places overlap with coworking 'drop-in' demand. A library cannot charge for access to its core service (Bibliotekslagen 9 § covers lending; fees for space use are a policy question).",
+      "binding_constraint": "daylight_and_view",
+      "layer": "space_plan",
+      "notes": "Rooms where people stay more than temporarily need sufficient daylight and view (BFS 2024:8 4 kap. 3 §, functional). Deep office plans suit stacks in the core and reading at the facade."
+    },
+    {
+      "id": "library_it",
+      "label_en": "Public computers, printing and digital help",
+      "label_sv": "Publika datorer, utskrift, digital vägledning",
+      "required": { "strength": "law", "basis": "Bibliotekslagen 7 §: folkbibliotek shall work to increase knowledge of how information technology can be used for learning and participation in cultural life. A service requirement; no space defined.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No size source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["coworking", "community_hybrid"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": ""
+    },
+    {
+      "id": "library_accessible_media",
+      "label_en": "Accessible media and assistive technology; minority-language collections",
+      "label_sv": "Tillgängliga medier (talböcker m.m.), minoritetsspråk, lättläst",
+      "required": { "strength": "law", "basis": "Bibliotekslagen 4 § (persons with disabilities: e.g. literature and technical aids adapted to their needs) and 5 § (national minorities and people whose first language is not Swedish: literature in minority languages, other languages and easy-to-read Swedish). Service requirements.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No size source; part of the collection area.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["library_collection"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": ""
+    },
+    {
+      "id": "library_meeting_room",
+      "label_en": "Meeting / event room for community groups",
+      "label_sv": "Mötesrum / programrum",
+      "required": { "strength": "practice", "basis": "IFLA 3.10.3 (p. 59): meeting room space for large and small community groups, which should have separate access to washrooms and to the exterior so meetings can be held while the library is closed. Not required by Swedish law.", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "IFLA Appendix 4: 'based on community service and programme objectives' (no figure).", "url": "", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["library_wc"],
+      "shareable_with": ["community_hybrid", "assembly_event", "shared_amenities", "coworking"],
+      "shareable_note": "The textbook shared space: IFLA itself asks for after-hours access independent of the library. See shared_amenities.shared_meeting_rooms.",
+      "binding_constraint": "egress_capacity",
+      "layer": "space_plan",
+      "notes": "A samlingssal needs a hearing-aid system (BFS 2024:12 3 kap. 6 §). 2,700 mm is guidance (AFS 2023:12 3 kap. 5 § allmänna råd; repealed BBR 3:3112). Event density uses the samlingslokal default (2.5 p/m2)."
+    },
+    {
+      "id": "library_desk_entrance",
+      "label_en": "Entrance, service desk, self-service and returns",
+      "label_sv": "Entré, informationsdisk, självbetjäning, återlämning",
+      "required": { "strength": "law", "basis": "A reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §), and the main entrance must be accessible (2 kap. 1 §). IFLA 3.10.4 (p. 60): after-hours return facility, theft- and waterproof.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "community_hybrid"],
+      "shareable_note": "A shared building lobby can host returns and the 'meröppet' entry control.",
+      "binding_constraint": "accessibility",
+      "layer": "space_plan",
+      "notes": "IFLA 3.10.4: a library on two or more floors should have lifts close to the entrance that take wheelchairs and prams."
+    },
+    {
+      "id": "library_wc",
+      "label_en": "Public WCs incl. accessible WC and baby changing",
+      "label_sv": "Publika toaletter, RWC, skötrum",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 7 §: if public toilets exist, at least one accessible. Public WCs are not strictly required by Bibliotekslagen, but FMH 35 § requires sufficient toilets where people stay for longer periods. See cross_cutting.json san_public and access_public_premises_wc.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "no Swedish ratio found", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "community_hybrid", "assembly_event"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "library_back_office",
+      "label_en": "Staff work room, media handling, staff facilities",
+      "label_sv": "Personalutrymmen, mediehantering, arbetsrum",
+      "required": { "strength": "law", "basis": "AFS 2023:12 staff facilities; see cross_cutting.json staff_facilities. IFLA 3.10.3: staff work space, break and meeting rooms, outreach and preparation areas.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 16.3,
+        "range_m2": null,
+        "count": "per staff member (practice, foreign)",
+        "strength": "practice",
+        "source": "IFLA 2010 Appendix 4, p. 132 (Ontario 1997): 16.3 m2 (175 sq ft) per staff member, including workstations, service desks, circulation, lounge and lockers.",
+        "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office", "shared_amenities"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Goods access for media deliveries and mobile library (bokbuss) where relevant."
+    },
+    {
+      "id": "library_support_nonassignable",
+      "label_en": "Non-assignable space (WC, cleaning, plant, lifts, stairs)",
+      "label_sv": "Övriga ytor (installationer, städ, kommunikation)",
+      "required": { "strength": "practice", "basis": "IFLA Appendix 4 component (5).", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "20 % of net space (items 1–4) per Ontario 1997; reduced where WCs and plant are shared with other tenants", "strength": "practice", "source": "IFLA 2010 Appendix 4, p. 132.", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "IFLA explicitly notes the reduction when washrooms and mechanical areas are shared with another tenant.",
+      "binding_constraint": "none",
+      "layer": "services",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "library_branch", "label": "Branch library (filialbibliotek)", "changes": "Ontario example minimum 230 m2 plus 14 m2 per 1,000 volumes over 3,000 (IFLA App. 4, practice). Often combined with a medborgarkontor or träffpunkt (community_hybrid)." },
+    { "id": "library_main", "label": "Main / central library (huvudbibliotek)", "changes": "Ontario example minimum 370 m2 for an independent library; in practice much larger, with event hall, makerspace and café. Stack areas need E1 loads." },
+    { "id": "library_meroppet", "label": "Staff-less extended opening (meröppet)", "changes": "Access control at the entrance, CCTV, self-service. Extends hours with low occupancy. Fire safety and the occupant sign must work without staff (organisational fire safety under LSO; assessment, not sourced)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Floor load for stacks (E1, 5.0 kN/m2) and compact shelving vs office B (2.5 kN/m2), per BFS 2024:6 tabell 4:1.",
+      "Vk 1 to Vk 2A/2B change: 30 m travel distance and, above 150 persons, fire alarm, evacuation alarm and emergency lighting (cross_cutting fire_vk_2abc).",
+      "Upper-floor location weakens street presence; IFLA 3.10.4 asks for a visible entrance on the side most users approach."
+    ],
+    "typical_enablers": [
+      "Low design density (repealed advice 0.1 p/m2) means egress rarely binds outside event rooms.",
+      "Deep office plans suit stacks in the interior and reading places along the facade.",
+      "Office ceiling heights (about 2.6–2.7 m) are generally acceptable; there is no library-specific height rule.",
+      "Ground-floor library plus shared meeting rooms is a classic mixed-use anchor."
+    ]
+  },
+  "sources": [
+    { "ref": "Bibliotekslag (2013:801) t.o.m. SFS 2024:1073, 2, 4–11, 17 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/bibliotekslag-2013801_sfs-2013-801/", "accessed": "2026-10-19" },
+    { "ref": "IFLA Public Library Service Guidelines, 2nd ed. (Koontz & Gubbin eds., 2010, IFLA Publications 147, CC BY 3.0): 3.10.2–3.10.5 (pp. 59–61); Appendix 4 'Library Building Standards – Ontario, Canada and Barcelona, Spain' (pp. 131–132)", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 brandskydd: 2 kap. 3–4, 11–12 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet: 2 kap. 1, 7 §§; 3 kap. 6–7 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1 (via Boverket 'Nyttiga laster')", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/", "accessed": "2026-10-19" },
+    { "ref": "Repealed BBR tabell 5:333 (consolidated BBR p. 52)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No Swedish space norm for folkbibliotek was found (KB, Svensk biblioteksförening and Kulturrådet searched; none surfaced). Check whether KB's folkbibliotek statistics include floor area per municipality, which would allow a Swedish empirical m2 per inhabitant.",
+    "IFLA's Barcelona and Queensland standards are referenced in IFLA 3.10.2 but were not readable in the extracted text. Only the Ontario 1997 figures are recorded.",
+    "Confirm the E1 classification for library stacks under BFS 2024:6 (Boverket guidance) and loads for compact shelving.",
+    "Opening hours / hourly profile is a modelling assumption; KB statistics could give open hours per week."
+  ]
+}

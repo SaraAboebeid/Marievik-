@@ -1,0 +1,242 @@
+{
+  "id": "primary_care_clinic",
+  "label_en": "Primary care clinic (health centre)",
+  "label_sv": "Vårdcentral / hälsocentral",
+  "family": "health",
+  "summary": "Outpatient primary care under the Health and Medical Services Act (HSL). The law requires only that the premises and equipment needed for good, hygienic care exist (HSL 5 kap. 1-2 §§). Room lists and sizes come from the national PTS concept programme for primary care (2022) and regional standard rooms (typrum): general consulting rooms 12-16 m², specialised ones 16-20 m². Hygiene layout follows the professional guideline BOV (Svensk Förening för Vårdhygien). Fire class is 2A (or 2B above 150 persons) for the reception areas. Office buildings convert well, apart from separate infection entrances, ventilation and wet installations in every consulting room.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (2B if more than 150 persons); staff-only areas 1; 5C only if care is given to people who cannot self-evacuate",
+    "bbr_verksamhetsklass_source": "BFS 2024:7 2 kap. 11 § (2A, at most 150 persons) and 12 § (2B, more than 150 persons) both list 'mottagning på vårdcentraler'. 2 kap. 10 § (1, offices). 2 kap. 20 § (5C). Boverket PBL kunskapsbanken: a health centre where care under 5C is given is classed 5C for that part. https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+    "key_laws": [
+      { "ref": "Hälso- och sjukvårdslag (2017:30) 5 kap. 1 § (good care, good hygienic standard, easily accessible) and 5 kap. 2 § (the staff, premises, medical devices and equipment needed for good care)", "url": "https://lagen.nu/2017:30" },
+      { "ref": "HSL 2 kap. 6 § (definition of primary care) and 13 a kap. 1 § (primary care basic mission)", "url": "https://lagen.nu/2017:30" },
+      { "ref": "SOSFS 2015:10 basal hygien i vård och omsorg (staff hygiene, so hand-wash basins and disinfection points are needed)", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf" },
+      { "ref": "HSLF-FS 2017:37 läkemedelshantering (locked storage). Paragraph numbers not checked.", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf" },
+      { "ref": "BFS 2024:12 2 kap. 7 § and 3 kap. 7 § (public premises: if public toilets exist, at least one accessible with wheelchair turning and side transfer on both sides); 3 kap. 6 § (hearing loop in receptions)", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser (staff facilities; see cross_cutting.json staff_*)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use (PBL 9 kap. 15 § 1, from 2025-12-01) if office use changes to health care. See cross_cutting.json cou_bygglov_trigger. Whether office to clinic counts as a change of use under the plan is case-specific.",
+      "Care-provider registration with IVO (vårdgivarregistret). The legal reference was not checked in this research.",
+      "Contract with the region under vårdval (LOV) for private providers"
+    ],
+    "operator_oversight": "IVO; the region (vårdval contract)"
+  },
+  "occupancy": {
+    "unit": "listed_patient",
+    "gross_m2_per_unit": {
+      "value": 0.13,
+      "range": [0.07, 0.2],
+      "strength": "practice",
+      "source": "PTS/CVA Konceptprogram lokaler för primärvård 2022, bilaga 2 case examples (m² BRA per listed patient): Lindesberg about 2670 m² / 13 000 listed (0.2); Linköping example about 1640 m² / about 21 000 (0.07); Råslätt about 1750 m² / 10 700 (0.16); Capio Landskrona about 1000 m² / 11 200 (0.09); further examples 0.2 and 0.09. The value 0.13 is the approximate median of these examples (derived).",
+      "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf",
+      "confidence": "verified",
+      "notes": "PTS itself warns that listed patients are an uncertain basis for sizing. It recommends calculating from visits per consulting room (bilaga 1). Typical clinics hold about 10 000-20 000 listed patients in about 1000-2700 m² BRA."
+    },
+    "staff_per_unit": {
+      "value": 0.00067,
+      "strength": "practice",
+      "source": "PTS förstudie primärvård 2022 (search snippet): Region Kalmar län plans for 1500 listed persons per doctor (about 0.00067 doctors per listed patient). Total staff not given.",
+      "url": "https://www.ptsforum.se/media/3523/foerstudie-primaervaard-220520.pdf",
+      "confidence": "sourced"
+    },
+    "hours_profile": "office_hours",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0.3, 0.8, 1, 1, 1, 0.7, 1, 1, 1, 0.6, 0.2, 0, 0, 0, 0, 0, 0],
+    "hourly_presence_note": "Patients and staff relative to capacity on a weekday, indicative and not sourced. Råslätt (PTS): about 100-150 visits per day for 10 700 listed patients. Some clinics have evening or weekend drop-in hours."
+  },
+  "spaces": [
+    {
+      "id": "pc_entrances",
+      "label_en": "Entrances: main, infection (separate flow), ambulance, staff/goods",
+      "label_sv": "Entréer: huvudentré, infektionsentré, ambulansentré, personal-/godsentré",
+      "required": { "strength": "programme", "basis": "PTS konceptprogram 2022 p. 16: infection entrance with a flow separate from the rest, ambulance entrance next to the acute room. BOV 2025 p. 128: consider a separate entrance from outside to examination rooms. BFS 2024:12 2 kap. 1 § (law): accessible main entrance.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "constraints": { "facade_required": true, "ground_level_access": true },
+      "binding_constraint": "ground_floor_frontage",
+      "layer": "site"
+    },
+    {
+      "id": "pc_reception_backoffice",
+      "label_en": "Reception with back office",
+      "label_sv": "Reception med backoffice",
+      "required": { "strength": "programme", "basis": "PTS p. 16 and 19: overview of entrance and waiting room, back office directly behind for retreat, acoustic privacy. BFS 2024:12 3 kap. 6 § (law): hearing loop in receptions.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_waiting",
+      "label_en": "Waiting room(s), incl. children's, lab and rehab waiting",
+      "label_sv": "Väntrum (allmänt, barn, lab, BVC/BMM, rehab)",
+      "required": { "strength": "practice", "basis": "BOV 2025 p. 128: waiting rooms sized to the activity and planned to minimise infection spread; more than one waiting room helps separate patient groups. PTS p. 16: distance between patients per infection-control advice, drop-in separated, separate waiting for BVC, BMM and rehab.", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No m² or seats-per-visit figure found. Höllviken filial (PTS bilaga 2): 8 seats plus 4 in the corridor for 1600 listed patients.", "confidence": "verified" },
+      "constraints": { "daylight_required": true },
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_consulting_room_general",
+      "label_en": "Consulting / examination room, general",
+      "label_sv": "Mottagningsrum allmän (undersökning, behandling, samtal)",
+      "required": { "strength": "law", "basis": "HSL 5 kap. 2 § (premises needed for good care). Function and size per PTS.", "url": "https://lagen.nu/2017:30" },
+      "size": {
+        "rule": "derived", "value_m2": 14, "range_m2": [12, 16],
+        "count": "visits per day / (target visits per room per day); see PTS bilaga 1",
+        "strength": "programme",
+        "source": "PTS/CVA Konceptprogram lokaler för primärvård 2022 p. 15 and 17: 'Mottagningsrum allmän (12-16 m2)' from PTS typrum. The most common consulting-room areas in regional typrum are 12-16 m², with recommendations up to 20 and 24 m². Contents: wash basin, couch, visitor chair, small documentation place.",
+        "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "daylight_required": true, "facade_required": false, "hand_wash_basin": true },
+      "binding_constraint": "water_and_drainage_to_every_room",
+      "layer": "space_plan",
+      "notes": "PTS recommends generic, interchangeable rooms (multirum) usable as consulting, conversation or admin rooms. Whether daylight is legally required in consulting rooms is in cross_cutting.json daylight_premises."
+    },
+    {
+      "id": "pc_consulting_room_special",
+      "label_en": "Consulting rooms, specialised (acute, minor surgery, gyn, ear/eye, triage, BVC, DSK)",
+      "label_sv": "Mottagningsrum akut, enklare operationer, gyn/rektoskopi, ögon/öron, triage, BVC, DSK",
+      "required": { "strength": "programme", "basis": "PTS p. 17. Which rooms are needed depends on the clinic's mission. Gyn needs an adjoining RWC. Minor-surgery rooms follow BOV p. 128 (hygiene class 3 standard for minimal invasive surgery).", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 18, "range_m2": [12, 20], "count": "by mission", "strength": "programme", "source": "PTS 2022 p. 17: acute, minor operations, gyn, BVC, DSK 16-20 m²; ear/eye and triage 12-20 m².", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_infection_room",
+      "label_en": "Infection consulting room with anteroom, own entrance and RWC",
+      "label_sv": "Mottagningsrum infektion med förrum och RWC",
+      "required": { "strength": "programme", "basis": "PTS p. 17-18: direct entrance from outside or from the infection entrance; staff enter via an anteroom; toilet directly adjoining. BOV p. 128: for high-risk airborne infection (only for children's and infection clinics), isolation room with airlock and separate outdoor entrance.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "constraints": { "facade_required": true, "ground_level_access": true },
+      "binding_constraint": "ventilation_pressure_and_outdoor_entrance",
+      "layer": "services"
+    },
+    {
+      "id": "pc_conversation_room",
+      "label_en": "Conversation room",
+      "label_sv": "Samtalsrum",
+      "required": { "strength": "programme", "basis": "PTS p. 17: calm location; may share the general consulting room's base layout for flexibility.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 14, "range_m2": [12, 16], "strength": "programme", "source": "PTS p. 17: same base design as the general consulting room (12-16 m²).", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_lab_sampling",
+      "label_en": "Laboratory (analysis room), sampling room(s), ECG room",
+      "label_sv": "Lab (analysrum), provtagningsrum, provtagningsrum EKG",
+      "required": { "strength": "programme", "basis": "PTS p. 17: lab near waiting room with a hand-over point for sample transport; sampling room adjoining the lab, with direct patient entrance from waiting and staff entrance from the lab side; ECG room with couch; avoid south-facing for stable temperature. BOV: patient-near analysis rooms.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² in PTS concept programme", "confidence": "verified" },
+      "depends_on": ["pc_rwc_sample_hatch"],
+      "layer": "services"
+    },
+    {
+      "id": "pc_medication_store",
+      "label_en": "Medication store",
+      "label_sv": "Läkemedelsförråd",
+      "required": { "strength": "law", "basis": "HSL 5 kap. 2 §; medicines must be stored inaccessible to unauthorised people with lockable door and windows (BOV 2025 p. 77, citing Socialstyrelsen rules). PTS p. 18: preferably without window.", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "binding_constraint": "cooling",
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_disinfection_room",
+      "label_en": "Disinfection room (dirty and clean side; sluice function)",
+      "label_sv": "Desinfektionsrum",
+      "required": { "strength": "practice", "basis": "PTS p. 18: one dirty and one clean side, or two rooms with pass-through washer-disinfectors; preferably no window. BOV 2025 lists disinfection rooms among outpatient room functions (p. 127).", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "constraints": { "floor_drain_required": true },
+      "binding_constraint": "drainage",
+      "layer": "services"
+    },
+    {
+      "id": "pc_sterile_clean_storage",
+      "label_en": "Sterile and high-clean goods storage; consumables store",
+      "label_sv": "Förvaring av sterilt och höggradigt rent gods; förråd",
+      "required": { "strength": "practice", "basis": "PTS p. 18: closed storage in cupboards or closed trolleys; sterile and high-clean goods may be stored together but separated. BOV 2025: sterile material kept apart from other cleanliness grades.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "layer": "space_plan",
+      "notes": "Sterilisation on site (BOV 'Rum för steriliseringsverksamhet på mottagning') is only needed if reusable instruments are reprocessed locally."
+    },
+    {
+      "id": "pc_patient_wc",
+      "label_en": "Patient WCs incl. accessible WC by waiting room",
+      "label_sv": "WC / RWC patient vid väntrum",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 7 § and 3 kap. 7 §: in a public premises with toilets for the public, at least one must be accessible (turning, side transfer on both sides). Number and size are in cross_cutting.json access_public_premises_wc. PTS p. 18: RWC door facing a neutral space.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "strength": "none", "source": "BFS 2024:12 gives no size; see cross_cutting.json for the 2.2 x 2.2 m planning value (AFS 2023:12 allmänt råd; repealed BBR 3:1453 advice, pre-2025)", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "pc_rwc_sample_hatch",
+      "label_en": "RWC with sample pass-through hatch to lab",
+      "label_sv": "RWC med genomräckningslucka",
+      "required": { "strength": "programme", "basis": "PTS p. 18: sample hatch directly to the lab or the disinfection room.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "depends_on": ["pc_lab_sampling"],
+      "layer": "services"
+    },
+    {
+      "id": "pc_rehab_gym",
+      "label_en": "Rehab gym and rehab consulting rooms; aids store clean/returned",
+      "label_sv": "Rehabgym, mottagningsrum fysioterapi/arbetsterapi, hjälpmedelsförråd",
+      "required": { "strength": "programme", "basis": "PTS p. 17-18 (where rehab is part of the mission).", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "shareable_with": ["gym", "community_hall"],
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_admin_rooms",
+      "label_en": "Administrative rooms, meeting / group rooms, conference",
+      "label_sv": "Administrativa rum, grupprum, konferensrum",
+      "required": { "strength": "programme", "basis": "PTS p. 19: individual quiet rooms for dictation and phone or video consultations, shared offices for about 4, group rooms for 2-10, conference room near the entrance.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_staff", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "shareable_with": ["office", "coworking"],
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_staff_facilities",
+      "label_en": "Staff room with pentry, changing rooms, staff WC/shower, workwear store",
+      "label_sv": "Personalrum med pentry, omklädning, personal-WC/dusch, förråd personalkläder",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 40-63 §§ (see cross_cutting.json staff_* and san_workplace). PTS p. 18-19: workwear store next to changing rooms, RWC/shower reachable neutrally.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_staff", "value_m2": null, "strength": "none", "source": "no m² in AFS", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "pc_logistics_waste",
+      "label_en": "Unpacking room, waste room, cleaning room / central",
+      "label_sv": "Avemballering, miljörum, städutrymme/städcentral",
+      "required": { "strength": "practice", "basis": "PTS p. 18: unpacking separate from care, next to the staff and goods entrance; waste room reachable from inside and outside. BOV 2025 p. 99: an unpacking room at a vårdcentral can sit next to the goods entrance.", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
+      "layer": "services"
+    }
+  ],
+  "variants": [
+    { "id": "small_digital_filial", "label": "Small 'digi-physical' branch", "changes": "PTS bilaga 2, Höllviken: about 120 m² BRA for 1600 listed patients (about 0.08 m²/listed when the main clinic carries the rest), with consulting rooms of 11-17 m², lab, reception, 8+4 waiting seats." },
+    { "id": "co_located_health_hub", "label": "Health hub with BVC/BMM, rehab, specialist rooms", "changes": "Separate waiting rooms for BVC, BMM and rehab. Room-hotel for visiting specialists. Larger acute room near ambulance access if far from a hospital (PTS p. 20)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "A wash basin in every consulting room and drainage for disinfection room, lab and sluice: many new drainage points in an office slab.",
+      "Infection entrance and infection room need a ground-floor facade with direct outdoor access and pressure-controlled ventilation.",
+      "Consulting-room ventilation recommendations in BOV table 2 (not read in detail) may exceed what office systems deliver.",
+      "More than 150 persons at the same time moves the class to 2B, with alarm and egress consequences."
+    ],
+    "typical_enablers": [
+      "Office floor plates and cellular-office grids map directly onto 12-16 m² consulting rooms and admin rooms.",
+      "Ground floor with a street entrance plus an upper floor for admin. Lifts exist.",
+      "Fire class 2A/1 is close to office class 1, with no sprinkler requirement unlike 5B/5C."
+    ]
+  },
+  "sources": [
+    { "ref": "PTS forum / Chalmers CVA, Konceptprogram – Lokaler för primärvård med fokus på vård- och hälsocentraler (2022-05-20)", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf", "accessed": "2026-10-19" },
+    { "ref": "PTS forum, Förstudie till konceptprogram lokaler för primärvård (2022-05-20) (search snippet only)", "url": "https://www.ptsforum.se/media/3523/foerstudie-primaervaard-220520.pdf", "accessed": "2026-10-19" },
+    { "ref": "Svensk Förening för Vårdhygien, Byggnation och vårdhygien (BOV) 2025-06-24, s. 77, 127-129", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf", "accessed": "2026-10-19" },
+    { "ref": "Hälso- och sjukvårdslag (2017:30)", "url": "https://lagen.nu/2017:30", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 brandskydd, 2 kap. 10-12, 20 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Verksamhetsklasser", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/brandskydd/dimensionerande-forutsattningar/verksamhetsklasser/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet och användbarhet, 2 kap. 7 §, 3 kap. 6-7 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "The PTS typrum sheets with exact m² per room type (lab, sampling, medication store, disinfection, waiting seats per visit) were not obtained.",
+    "The legal basis and paragraph for IVO care-provider registration were not checked.",
+    "The visits-per-room-per-day target used for dimensioning (PTS bilaga 1) was not extracted.",
+    "Whether conversion of an office to a vårdcentral needs bygglov under PBL 9 kap. 15 § 1 depends on the detaljplan (e.g. K vs D purpose).",
+    "Exact BOV ventilation rates for outpatient consulting rooms (table 2) should be read before relying on the air-change figure."
+  ]
+}

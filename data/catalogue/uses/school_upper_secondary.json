@@ -1,0 +1,299 @@
+{
+  "id": "school_upper_secondary",
+  "label_en": "Upper secondary school (gymnasieskola), higher-education-preparatory programmes as baseline",
+  "label_sv": "Gymnasieskola (högskoleförberedande program som bas)",
+  "family": "education",
+  "summary": "Students aged about 16-19. The law requires the premises and equipment the education needs (Skollagen 2 kap. 35 §), a staffed school library on the school's own unit (2 kap. 24 a §, from 2025-07-01) and elevhälsa (2 kap. 25 §). Unlike grundskola, Skollagen has no school-meal requirement for gymnasieskolan, so dining is practice, not law. Outdoor friyta is required only 'i skälig utsträckning' (BFS 2015:1), and older students are expected to use parks and squares. That makes gymnasieskola the school type that best fits a dense office building. Area benchmarks are thin. Hässleholm's riktvärden are 12 m²/student for theoretical programmes, 15 for combined and 18 for practical (vocational). Stockholm schools are reported at about 11-14 m² BRA per student. Vocational programmes (variant) add workshops with heavy services, vehicle access and floor-load needs.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (≤150 persons) / 2B (>150 persons)",
+    "bbr_verksamhetsklass_source": "BFS 2024:7 2 kap. 11-12 §§ (spaces for pupils in schools; split at 150 persons). Workshops in vocational programmes may contain spaces closer to Vk1 (industrial) and spaces with high fire risk. General fire rules and travel distances are in cross_cutting.json.",
+    "bbr_verksamhetsklass_url": "https://lagen.nu/bfs/2024:7",
+    "key_laws": [
+      { "ref": "Skollagen (2010:800) 2 kap. 35 § (premises and equipment needed)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      { "ref": "Skollagen 2 kap. 24 a-24 d §§ (skolbibliotek on own skolenhet, staffed; gymnasieskolan explicitly included), SFS 2024:1072, in force 2025-07-01", "url": "https://www.svenskforfattningssamling.se/sites/default/files/sfs/2024-11/SFS2024-1072.pdf" },
+      { "ref": "Skollagen 2 kap. 25 § (elevhälsa)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      { "ref": "Skollagen 15 kap. 17 § (gymnasieskolan is free of charge; no meal requirement, unlike 10 kap. 10 § for grundskola)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      { "ref": "PBL 8 kap. 9-11 §§ and BFS 2015:1 FRI (friyta for gymnasieskolor 'placeras och ordnas på det sätt som är skäligt')", "url": "https://www.boverket.se/globalassets/publikationer/dokument/2015/gor-plats-for-barn-och-unga.pdf" },
+      { "ref": "BFS 2024:7 fire safety, Vk2A/2B", "url": "https://lagen.nu/bfs/2024:7" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser, kap. 3 (personalutrymmen); details in cross_cutting.json", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "Förordning (1998:899) 38 § (anmälan before starting a gymnasieskola)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" },
+      { "ref": "Förordning (EG) nr 852/2004 (if a school kitchen or café is run)", "url": "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32004R0852" }
+    ],
+    "permits": [
+      "Bygglov for change of use (PBL 9 kap. 15 § 1, from 2025-12-01; see cross_cutting.json), tested against the detaljplan (S) and PBL 8 kap. 9 § friyta 'skäligt'",
+      "Anmälan för hälsoskydd to the municipal environment committee before start (FMH 38 §)",
+      "Food establishment registration if a kitchen or café is run (EU 852/2004 art. 6)",
+      "For an independent school: Skolinspektionen approval of the huvudman",
+      "Vocational variant: possible environmental permits or notifications for workshops (e.g. vehicle, painting). Not researched here."
+    ],
+    "operator_oversight": "Skolinspektionen; municipal miljönämnd; municipal livsmedelskontroll"
+  },
+  "occupancy": {
+    "unit": "pupil",
+    "gross_m2_per_unit": {
+      "value": 12,
+      "range": [11, 18],
+      "measure": "not stated by Hässleholm; Stockholm figures are BRA",
+      "strength": "programme",
+      "source": "Hässleholms kommun, Lokalförsörjningsplan 2022-2026, p. 27: riktvärden 12 m²/elev for teoretiska program, 15 m²/elev for kombinerade program and 18 m²/elev for praktiska program (actual stock 27.8 m²/elev). Stockholm stad 'Skola för skola' table reports about 11.3 (Kungsholmens gymnasium), 13.3 (Hässelby) and 14.0 (Thorildsplan) kvm BRA per student. The Stockholm figures come from a search summary of an undated bilaga and were not re-checked.",
+      "url": "https://www.hassleholm.se/download/18.28c96a201840e272ce56dbd/1667233206811/Lokalf%C3%B6rs%C3%B6rjningsplan%20H%C3%A4ssleholms%20kommun%202022-2026.pdf",
+      "confidence": "sourced"
+    },
+    "group_size": {
+      "value": 32,
+      "range": [30, 35],
+      "strength": "practice",
+      "source": "No legal class size. Classroom dimensioning for 30-35 students is common practice; not found in a reviewed source.",
+      "confidence": "indicative"
+    },
+    "staff_per_unit": {
+      "value": 0.08,
+      "strength": "practice",
+      "source": "About 12.5 students per full-time teacher in gymnasieskola, 2024/25 (Skolverket, 'Pedagogisk personal i skola och vuxenutbildning läsåret 2024/25'). Skolverket no longer publishes the ratio as an official series. Figure from a search summary, not re-checked.",
+      "url": "https://www.skolverket.se/download/18.54896228195f379209c12e6/1743597844852/",
+      "confidence": "sourced"
+    },
+    "hours_profile": "weekday_daytime",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0.1, 0.7, 0.9, 0.9, 0.85, 0.8, 0.85, 0.75, 0.5, 0.25, 0.08, 0.03, 0, 0, 0, 0, 0],
+    "hourly_presence_confidence": "indicative",
+    "hourly_presence_note": "Lower peak than grundskola because of free periods, elective courses and APL (workplace-based learning) days in vocational programmes. Adult education (komvux) often shares buildings in the evening."
+  },
+  "spaces": [
+    {
+      "id": "gy_classroom",
+      "label_en": "Classrooms and group rooms",
+      "label_sv": "Lärosalar och grupprum",
+      "required": { "strength": "law", "basis": "Skollagen 2 kap. 35 § (premises needed). The law gives no size.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No gymnasium-specific classroom norm found. By analogy, Uppsala's grundskola programme requires lärosalar of at least 60 m² (2015 p. 11). Malmö miljöförvaltningen recommends at least 65 m² per 30 pupils (Malmö friyta guideline p. 13). Uppsala 2019 states that only the kitchen, restaurant, idrott and elevhälsa parts of its grundskola programme apply to gymnasieskolor (p. 4).", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "sourced" },
+      "constraints": { "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["adult_education", "office", "conference"],
+      "shareable_note": "Evening komvux, folkbildning and conference use.",
+      "binding_constraint": "daylight_and_facade",
+      "layer": "space_plan",
+      "notes": "The closest school type to office floor plates. Lecture-hall-type rooms for 60-120 students are common in larger schools (practice, unsourced)."
+    },
+    {
+      "id": "gy_science_labs",
+      "label_en": "Science labs (natural science and technology programmes)",
+      "label_sv": "Laborationssalar (NA/TE)",
+      "required": { "strength": "law", "basis": "Laboratory work is part of the course syllabi in biology, chemistry and physics. Skollagen 2 kap. 35 § requires the needed premises and equipment. Needed only where those programmes are offered.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium lab norm found. Uppsala's grundskola NO lab is 105-170 m² per school (2019 p. 27), shown only for reference.", "confidence": "sourced" },
+      "constraints": { "fume_cupboard_required": true, "chemical_storage_ventilated": true, "drainage_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "binding_constraint": "services_extraction",
+      "layer": "services",
+      "notes": "Fume cupboards need their own exhaust risers, and ventilated chemical storage is needed. These are the services hot-spot of a theoretical-programme school."
+    },
+    {
+      "id": "gy_library",
+      "label_en": "School library",
+      "label_sv": "Skolbibliotek",
+      "required": { "strength": "law", "basis": "Skollagen 2 kap. 24 a § (from 2025-07-01): gymnasieskolan pupils shall have access to a school library on their own skolenhet. Exceptions only for särskilda skäl stated in the biblioteksplan (24 c §). 24 d §: staffed.", "url": "https://www.svenskforfattningssamling.se/sites/default/files/sfs/2024-11/SFS2024-1072.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium library size found. Uppsala grundskola: 80-120 m² (2019 p. 27), for reference only.", "confidence": "sourced" },
+      "constraints": { "central_location": true },
+      "depends_on": [],
+      "shareable_with": ["public_library"],
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Many gymnasieskolor in rented city premises previously relied on the public library. From 2025-07-01 that needs särskilda skäl, so an on-site library becomes a real space requirement in conversions."
+    },
+    {
+      "id": "gy_pupil_health",
+      "label_en": "Pupil health rooms",
+      "label_sv": "Elevhälsa",
+      "required": { "strength": "law", "basis": "Skollagen 2 kap. 25 § (elevhälsa, including access to skolläkare, skolsköterska, psykolog, kurator, specialpedagog/speciallärare)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_building", "value_m2": 75, "range_m2": [60, 75], "count": "per school; by analogy with Uppsala grundskola (60-75 m² incl. rest room and RWC)", "strength": "programme", "source": "Uppsala 2019 funktionsprogram p. 4: the elevhälsa requirements AR: T.6-T.10 also apply to gymnasieskolor. The area (lokalprogram p. 27) is set for grundskola, so its use here is by analogy.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
+      "constraints": { "acoustic_privacy_required": true, "wash_basin_required": true },
+      "depends_on": [],
+      "shareable_with": ["health_clinic"],
+      "binding_constraint": "acoustics",
+      "layer": "space_plan"
+    },
+    {
+      "id": "gy_dining",
+      "label_en": "Dining hall / student restaurant",
+      "label_sv": "Skolrestaurang / matsal",
+      "required": { "strength": "practice", "basis": "Skollagen has no meal requirement for gymnasieskolan (15 kap. 17 § covers fees only; chapter 15 never mentions måltider). Most municipalities offer free lunch as a local decision. Uppsala 2019 p. 4 applies its restaurant requirements to gymnasieskolor.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_unit", "value_m2": 0.5, "count": "enrolled students (BRA), by analogy with Uppsala grundskola", "strength": "programme", "source": "Uppsala 2019 lokalprogram översikt p. 27 (grundskola matsal 0.5 m² BRA per pupil). Restaurant functional requirements RE: T-O (p. 24) apply to gymnasium.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
+      "constraints": { "daylight_required": true },
+      "depends_on": ["gy_kitchen"],
+      "shareable_with": ["restaurant", "assembly_hall"],
+      "shareable_note": "Could be an existing nearby restaurant under contract. Uppsala RE: F.1 wants it usable for other activities.",
+      "binding_constraint": "ventilation_and_egress",
+      "layer": "space_plan",
+      "notes": "Because meals are not legally required, a conversion can rely on an external restaurant or a receiving kitchen. This is a major freedom compared with grundskola."
+    },
+    {
+      "id": "gy_kitchen",
+      "label_en": "Kitchen (cooking or receiving) — if meals are served",
+      "label_sv": "Kök (tillagnings- eller mottagningskök)",
+      "required": { "strength": "practice", "basis": "Only if meals are served on site. Then EU 852/2004 and registration apply (law).", "url": "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32004R0852" },
+      "size": { "rule": "per_unit", "value_m2": 0.3, "range_m2": [0.2, 0.3], "count": "students (BRA), by analogy with Uppsala grundskola 'Måltidsverksamhet'", "strength": "programme", "source": "Uppsala 2019 lokalprogram översikt p. 27; kitchen functional requirements KÖ (pp. 22-23) apply to gymnasium per p. 4", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
+      "constraints": { "goods_delivery_access_required": true, "exhaust_ventilation_required": true, "grease_separator_required": "cooking kitchen: normally yes (ABVA; SS-EN 1825); receiving: municipality-dependent" },
+      "depends_on": [],
+      "shareable_with": ["restaurant"],
+      "binding_constraint": "ventilation_and_grease_drainage",
+      "layer": "services",
+      "notes": "Registration at least two weeks before start (Livsmedelsverket). See variants in school_compulsory for cooking vs receiving kitchens."
+    },
+    {
+      "id": "gy_sports",
+      "label_en": "Sports hall access with changing rooms",
+      "label_sv": "Idrottshall (tillgång) med omklädning",
+      "required": { "strength": "law", "basis": "Idrott och hälsa is a course common to all national programmes (gymnasiegemensamt ämne; the exact provision in Gymnasieförordningen (2010:2039) or its annex was not verified). Skollagen 2 kap. 35 § requires access to needed premises. Ownership is not required, and halls are commonly hired.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium norm found. Uppsala 2019 p. 4 applies its idrott functional requirements (ID, pp. 25-26) to gymnasium but gives area only for grundskola (1.0 m² BRA per pupil). Malmö hall sizes 18 × 26 m (gymnastikhall) / 20 × 40 m (sporthall), p. 13.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "sourced" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": ["sports_hall", "gym"],
+      "binding_constraint": "structure_span_and_height",
+      "layer": "structure",
+      "notes": "Normally off-site in converted buildings. An on-site fitness or movement room (smaller span) is a common compromise, but that is practice and unsourced."
+    },
+    {
+      "id": "gy_staff_workroom",
+      "label_en": "Teacher workrooms",
+      "label_sv": "Arbetsrum för lärare",
+      "required": { "strength": "law", "basis": "AFS 2023:12 (workplace design)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No gymnasium norm found. Uppsala grundskola uses 0.4 m² BRA per pupil (2019 p. 27); applying it here would be an untested analogy.", "confidence": "sourced" },
+      "constraints": { "daylight_required": true },
+      "depends_on": [],
+      "shareable_with": ["office"],
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Fits existing office space directly."
+    },
+    {
+      "id": "gy_staff_room",
+      "label_en": "Staff room, staff WC and changing",
+      "label_sv": "Personalrum, personal-WC, omklädning",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 38-63 §§ (rules in cross_cutting.json)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "strength": "none", "source": "AFS sets functions and counts, not m²", "confidence": "verified" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": [],
+      "binding_constraint": "drainage_capacity",
+      "layer": "services"
+    },
+    {
+      "id": "gy_admin",
+      "label_en": "Administration, principal, study and career guidance",
+      "label_sv": "Expedition, rektor, studie- och yrkesvägledning",
+      "required": { "strength": "practice", "basis": "Operational need; study and career guidance is a statutory function (Skollagen 2 kap., paragraph not verified here) but needs no specific room by law", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium norm found", "confidence": "sourced" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": ["office"],
+      "binding_constraint": "none",
+      "layer": "space_plan"
+    },
+    {
+      "id": "gy_study_lounge",
+      "label_en": "Study areas and student lounges",
+      "label_sv": "Studieplatser och elevuppehåll",
+      "required": { "strength": "practice", "basis": "Students with free periods need somewhere to be, since the friyta can be off-site", "url": null },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No source found", "confidence": "indicative" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": ["cafe", "library"],
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Often provided as widened circulation, a library or café zone."
+    },
+    {
+      "id": "gy_wc",
+      "label_en": "Student WCs",
+      "label_sv": "Elev-WC",
+      "required": { "strength": "law", "basis": "Follows from Skollagen 2 kap. 35 § and accessibility rules (cross_cutting.json)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No gymnasium norm found. Uppsala grundskola uses 0.3-0.4 m² BRA per pupil, for reference.", "confidence": "sourced" },
+      "constraints": { "drainage_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "binding_constraint": "drainage_capacity",
+      "layer": "services"
+    },
+    {
+      "id": "gy_storage_cleaning_technical",
+      "label_en": "Storage, cleaning, plant rooms, waste and goods reception",
+      "label_sv": "Förråd, städ, teknikutrymmen, avfall, varumottagning",
+      "required": { "strength": "practice", "basis": "Operational need; waste and loading space follows from PBL 8 kap. 9 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium norm found. Uppsala grundskola: varumottagning/källsortering/avfall 70 m² fixed; plant 0.7 m² BRA per pupil (2019 p. 27), for reference.", "confidence": "sourced" },
+      "constraints": { "vehicle_access_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "binding_constraint": "ventilation",
+      "layer": "services"
+    },
+    {
+      "id": "gy_bike_parking",
+      "label_en": "Bicycle and accessible car parking",
+      "label_sv": "Cykelparkering och parkering för rörelsehindrade (HKP)",
+      "required": { "strength": "programme", "basis": "Malmö friyta guideline p. 12: there must always be space for bicycle parking and HKP parking next to a gymnasieskola", "url": "https://malmo2.miljobarometern.se/content/docs/Friytor%20vid%20f%C3%B6rskolor%20och%20skolor%20rev%2020211216.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No m² found; cycle parking norms are municipal", "confidence": "sourced" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": ["office"],
+      "binding_constraint": "site_area",
+      "layer": "site"
+    },
+    {
+      "id": "gy_outdoor_friyta",
+      "label_en": "Outdoor space (friyta), as is reasonable",
+      "label_sv": "Friyta (i skälig utsträckning)",
+      "required": { "strength": "law", "basis": "PBL 8 kap. 9 § andra stycket applies to school tomter. BFS 2015:1 (as quoted in Boverket rapport 2015:8 p. 44 and Malmö p. 12): 'För gymnasieskolor bör friytan placeras och ordnas på det sätt som är skäligt med hänsyn till elevernas och verksamhetens behov.'", "url": "https://www.boverket.se/globalassets/publikationer/dokument/2015/gor-plats-for-barn-och-unga.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No number in Boverket guidance for gymnasieskolor. Malmö (p. 12) tests need case by case: older students can use parks, squares etc.", "url": "https://malmo2.miljobarometern.se/content/docs/Friytor%20vid%20f%C3%B6rskolor%20och%20skolor%20rev%2020211216.pdf", "confidence": "verified" },
+      "constraints": {},
+      "depends_on": [],
+      "shareable_with": ["park", "public_square"],
+      "binding_constraint": "none",
+      "layer": "site",
+      "notes": "The main reason gymnasieskola is the most office-compatible school type."
+    }
+  ],
+  "variants": [
+    {
+      "id": "vocational",
+      "label": "Vocational programmes (yrkesprogram)",
+      "changes": "Adds programme-specific workshops, e.g. vehicle hall (Fordon och transport), construction hall (Bygg och anläggning), electrical, industrial, restaurant kitchen and dining for Restaurang- och livsmedelsprogrammet, salon rooms (Hantverk), care practice rooms (Vård och omsorg). These need large spans, high floor loads (imposed loads per BFS 2024:6, see cross_cutting.json), extraction, three-phase power, vehicle doors and goods access. Area benchmark: Hässleholm riktvärde 18 m²/student for practical and 15 for combined programmes (Lokalförsörjningsplan 2022-2026 p. 27). Teaching restaurant kitchens are food establishments under EU 852/2004. No space norms for individual programmes were found; see open_questions."
+    },
+    { "id": "no_meals_on_site", "label": "No kitchen on site", "changes": "Allowed in law. Students eat at a contracted restaurant or the school issues meal cards. Removes kitchen and most dining area, but most municipal huvudmän offer lunch as policy." },
+    { "id": "kitchen_receiving", "label": "Mottagningskök", "changes": "As for school_compulsory: reduced exhaust, grease separator depends on the municipality, still registered." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Library must be on site from 2025-07-01 (2 kap. 24 a §) unless särskilda skäl apply.",
+      "Science labs need fume-cupboard exhaust risers.",
+      "Egress capacity for hundreds of students moving between lessons; Vk2B over 150 persons.",
+      "Vocational workshops: floor load, spans, vehicle access and extraction rarely fit an office frame.",
+      "Detaljplan change from office use to S (skola)."
+    ],
+    "typical_enablers": [
+      "Friyta only 'skäligt'. City-centre parks and squares are accepted in practice (Malmö p. 12).",
+      "No legal meal requirement, so external dining is possible.",
+      "Sports hall usually hired off-site.",
+      "Classroom and workroom sizes are close to office cellular and open-plan modules."
+    ]
+  },
+  "sources": [
+    { "ref": "Skollagen (2010:800) 2 kap. 25 §, 35 §; 15 kap. 17 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/skollag-2010800_sfs-2010-800/", "accessed": "2026-10-19" },
+    { "ref": "SFS 2024:1072 (2 kap. 24 a-24 d §§ skolbibliotek, in force 2025-07-01)", "url": "https://www.svenskforfattningssamling.se/sites/default/files/sfs/2024-11/SFS2024-1072.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7, 2 kap. 11-12 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket rapport 2015:8 'Gör plats för barn och unga!', p. 44 (BFS 2015:1 on gymnasieskolor)", "url": "https://www.boverket.se/globalassets/publikationer/dokument/2015/gor-plats-for-barn-och-unga.pdf", "accessed": "2026-10-19" },
+    { "ref": "Hässleholms kommun, Lokalförsörjningsplan 2022-2026, p. 27 (gymnasium riktvärden 12/15/18 m²/elev)", "url": "https://www.hassleholm.se/download/18.28c96a201840e272ce56dbd/1667233206811/Lokalf%C3%B6rs%C3%B6rjningsplan%20H%C3%A4ssleholms%20kommun%202022-2026.pdf", "accessed": "2026-10-19" },
+    { "ref": "Uppsala kommun, 'Funktionsprogram för grundskolans lokaler', nämndversion 2019-03-01, p. 4 (which parts apply to gymnasieskolor) and lokalprogram p. 27", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "accessed": "2026-10-19" },
+    { "ref": "Malmö stad, 'Friytor vid förskolor och skolor' (rev. 2021-12-16), p. 12 (gymnasieskolor)", "url": "https://malmo2.miljobarometern.se/content/docs/Friytor%20vid%20f%C3%B6rskolor%20och%20skolor%20rev%2020211216.pdf", "accessed": "2026-10-19" },
+    { "ref": "Stockholms stad, 'Bilaga till lokalförsörjningsplan: Skola för skola' (kvm BRA per student per gymnasium; via search summary, not re-checked)", "url": "https://insynsverige.se/documentHandler.ashx?did=121129", "accessed": "2026-10-19" },
+    { "ref": "Skolverket, 'Pedagogisk personal i skola och vuxenutbildning läsåret 2024/25'", "url": "https://www.skolverket.se/download/18.54896228195f379209c12e6/1743597844852/", "accessed": "2026-10-19" },
+    { "ref": "Förordning (EG) nr 852/2004; Livsmedelsverket Kontrollwiki 'Registrering och godkännande'", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/106/registrering-och-godkannande", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No public gymnasium lokalprogram with room-by-room m² was found (searched Göteborg, Stockholm and Uppsala). Hässleholm's riktvärden are the only per-student norm; the area measure (BRA/LOA/BTA) is not stated in the passage. Ask Stockholm (SISAB) or Göteborg (Lokalförvaltningen) for their gymnasium programmes.",
+    "Verify the Stockholm 'Skola för skola' kvm/elev figures (11.3-14.0 BRA) directly in the source; they came from a search summary.",
+    "Find the exact provision making Idrott och hälsa a gymnasiegemensamt ämne (Gymnasieförordningen 2010:2039 or annex; check after the 2025 gymnasium reform toward ämnesbetyg).",
+    "Vocational programmes: no Skolverket space norms were found. Check whether Skolverket or the national programme councils (nationella programråd) publish equipment and premises guidance per programme.",
+    "Confirm the Skollagen paragraph for studie- och yrkesvägledning (cited without paragraph here).",
+    "Check whether municipalities count free gymnasium lunch as a binding local decision for a given pilot city, since it decides whether a kitchen is required in practice."
+  ]
+}

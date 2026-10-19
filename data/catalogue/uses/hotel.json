@@ -1,0 +1,323 @@
+{
+  "id": "hotel",
+  "label_en": "Hotel / short-stay accommodation (incl. aparthotel)",
+  "label_sv": "Hotell / tillfälligt boende (inkl. apartmenthotell)",
+  "family": "hospitality",
+  "summary": "Temporary accommodation is not a 'bostad'. The dwelling-design rules (BFS 2024:11) and the dwelling-specific accessibility, daylight and sound rules therefore do not apply; Boverket states this explicitly for hotels and temporary accommodation, even when rooms have full home facilities. A hotel is a 'lokal' (and, where the public enters, a 'publik lokal'). It gets functional requirements: daylight and outlook in rooms used more than temporarily 'unless unreasonable' (BFS 2024:8 4 kap. 3 §), noise control as the use requires (BFS 2024:10 2 kap. 9 §), and general accessibility (PBL 8 kap. 1 § 3; BFS 2024:12), with a hearing loop in receptions. Guest rooms are fire class Vk 4 and each is its own fire compartment (BFS 2024:7). No law sets room size or the number of accessible rooms; practice cited in a 2023 municipal permit file is at least 1 accessible room per 10. The police permit for hotel and boarding-house businesses (Lag 1966:742, >= 9 guests or >= 5 rooms) was repealed on 1 January 2025. Staff areas follow AFS 2023:12. Planning use is 'Tillfällig vistelse', not 'Bostäder'.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "4 — guest rooms, dormitories and similar in hotels, hostels, B&B and other temporary accommodation (BFS 2024:7 2 kap. 17 §); each guest room / dormitory its own fire compartment (5 kap. 25 § p. 7). Restaurant/breakfast room: Vk 2A (<= 150 persons) or 2B (> 150) (2 kap. 11-12 §§); 2C if > 150 persons and alcohol served more than to a limited extent (2 kap. 13 §). Back-of-house offices: Vk 1. A commercial kitchen with special fire risk must be its own compartment (5 kap. 26 §).",
+    "key_laws": [
+      { "ref": "Plan- och bygglag (2010:900) 8 kap. 1 § p. 3, 9 §; 9 kap. 15 § p. 1", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      { "ref": "BFS 2024:7 brand, 2 kap. 11-13 §§, 17 §; 5 kap. 25-26 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      { "ref": "BFS 2024:12 tillgänglighet, 2 kap. 1-2, 5, 7 §§; 3 kap. 6-7 §§ (publik lokal, hearing loop in receptions)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      { "ref": "BFS 2024:8 4 kap. 3 § (daylight/outlook in lokaler), 11 kap. (waste)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      { "ref": "BFS 2024:10 2 kap. 9 § (lokaler: functional noise requirement)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-10" },
+      { "ref": "BFS 2026:4 hållbar mobilitet, 2 kap. 3-4 §§ (lokalbyggnad)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2026-4" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser, 3 kap. 37-65 §§ personalutrymmen (in force 1 Jan 2025)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "Lag (1966:742) om hotell- och pensionatrörelse — REPEALED 1 Jan 2025 by SFS 2024:1082", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-1966742-om-hotell-och-pensionatrorelse_sfs-1966-742/" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office: PBL 9 kap. 15 § p. 1.",
+      "Detaljplan must allow 'Tillfällig vistelse' (Boverket planbestämmelse; includes staff areas and complementary restaurant, conference, spa, gym).",
+      "Food: a food business must be registered with the municipal food control authority before start (EU Regulation 852/2004 art. 6; Livsmedelsverket guidance). Not verified in this pass.",
+      "Alcohol serving licence (serveringstillstånd, alkohollagen 2010:1622) from the municipality, if alcohol is served. Not verified in this pass.",
+      "No police permit since 1 Jan 2025 (Lag 1966:742 repealed)."
+    ],
+    "operator_oversight": "Municipality (byggnadsnämnd; miljö-/livsmedelskontroll for food; räddningstjänst for fire safety under LSO). Arbetsmiljöverket for staff areas."
+  },
+  "occupancy": {
+    "unit": "guest_room",
+    "gross_m2_per_unit": {
+      "value": 38,
+      "range": [28, 55],
+      "strength": "practice",
+      "source": "Working value: gross floor area per key incl. lobby, breakfast and back-of-house. Lower end for economy/limited service, upper for full service. No Swedish source found; MUST be verified against operator briefs.",
+      "url": "",
+      "confidence": "indicative"
+    },
+    "staff_per_unit": { "value": 0.15, "strength": "practice", "source": "Working value for limited-service hotels (staff present per room at peak); full service much higher. Unsourced." },
+    "hours_profile": "24_7",
+    "hourly_presence": [0.65, 0.65, 0.65, 0.65, 0.65, 0.62, 0.55, 0.45, 0.3, 0.2, 0.15, 0.12, 0.12, 0.12, 0.15, 0.2, 0.3, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.65],
+    "hourly_presence_note": "Share of room capacity with guests present, assuming about 65-70 % average room occupancy and an average 1.3-1.5 guests per occupied room. Indicative, unsourced. Breakfast peak 06:30-09:30, check-in peak 15:00-19:00.",
+    "persons_per_dwelling_note": "Beds per room: standard double 2, single 1; family rooms 3-4. Design guests per room about 1.5 (indicative)."
+  },
+  "spaces": [
+    {
+      "id": "hotel_guest_room",
+      "label_en": "Guest room",
+      "label_sv": "Hotellrum / gästrum",
+      "required": { "strength": "law", "basis": "Core function. Fire: Vk 4, own fire compartment (BFS 2024:7 2 kap. 17 §, 5 kap. 25 § p. 7). Daylight and outlook: BFS 2024:8 4 kap. 3 § (rooms in lokaler where people stay more than temporarily must have enough daylight and outlook, unless unreasonable). Noise: BFS 2024:10 2 kap. 9 § (sound insulation, impact sound, installation and traffic noise, reverberation as the use requires).", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 20,
+        "range_m2": [14, 30],
+        "count": "one per key",
+        "strength": "practice",
+        "source": "No law sets room size. Working value (net incl. bathroom); budget/micro hotels go below 14 m². Unsourced.",
+        "url": "",
+        "confidence": "indicative"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": ["hotel_guest_bathroom"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "facade_length_and_room_width",
+      "layer": "space_plan",
+      "notes": "No numeric DF for lokaler (the 1.0 % rule is dwelling-only), which gives hotels more freedom than housing in deep office plans. Whether a hotel guest room counts as 'vistas mer än tillfälligt' was not tested. Acoustic design is typically done to SS 25268 (sound classes for lokaler); edition not checked."
+    },
+    {
+      "id": "hotel_guest_bathroom",
+      "label_en": "En-suite bathroom",
+      "label_sv": "Badrum till hotellrum",
+      "required": { "strength": "practice", "basis": "Not required by building law for temporary accommodation (BFS 2024:11 does not apply); market standard for hotels. Hostels may use shared bathrooms.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/" },
+      "size": { "rule": "per_unit", "value_m2": 4, "range_m2": [3, 6], "count": "one per room", "strength": "practice", "source": "Working value; unsourced.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "wet_room_drainage",
+      "layer": "services",
+      "notes": "In office conversions, a wet room per key is the main services cost, as for studios."
+    },
+    {
+      "id": "hotel_accessible_room",
+      "label_en": "Accessible guest room",
+      "label_sv": "Tillgängligt hotellrum",
+      "required": { "strength": "law", "basis": "PBL 8 kap. 1 § p. 3 and BFS 2024:12 (buildings must be accessible and usable; publik lokal dimensions: wheelchair 0.70 x 1.30 m, turning circle 1.50 m, door >= 0.80 m, 1 kap. 6 §). The law sets no share of accessible rooms.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": ">= 1 per 10 guest rooms (practice)",
+        "strength": "practice",
+        "source": "Accessibility statement in Nacka bygglov file (hotel Rösunda 27:2, 2023): 'Tidigare byggregler rekommenderade minst ett tillgängligt rum per 10 gästrum'. The original rule it refers to was not identified.",
+        "url": "https://handlingar.nacka.se/Handlingar/Miljo_och_stadsbyggnadsnamnden/2023/20230621/24_bygglov_R%C3%B6sunda_27_2_Hotellv%C3%A4gen_2_tillbyggnad/24_h_bygglov_R%C3%B6sunda_27_2_Hotellv%C3%A4gen_2_tillg%C3%A4nglighetsutl%C3%A5tande.pdf",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": ["entrance_lift_lobby"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "bathroom_turning_circle_1500",
+      "layer": "space_plan",
+      "notes": "Use the publik lokal turning circle of 1.50 m (not the 1.30 m dwelling value), since the hotel is not a dwelling."
+    },
+    {
+      "id": "hotel_reception_lobby",
+      "label_en": "Reception and lobby",
+      "label_sv": "Reception och lobby",
+      "required": { "strength": "practice", "basis": "Operational need (self-check-in concepts can minimise it). If a reception exists, a hearing loop is law: BFS 2024:12 3 kap. 6 § ('I samlingssalar och receptioner ska system för ljudöverföring till hörhjälpmedel finnas').", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "one", "strength": "none", "source": "No source sets size.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["co_living"],
+      "shareable_note": "Lobby/lounge can double as café or co-working.",
+      "binding_constraint": "ground_floor_frontage",
+      "layer": "space_plan",
+      "notes": "Office ground-floor lobbies convert easily."
+    },
+    {
+      "id": "hotel_public_wc",
+      "label_en": "Public toilets (incl. at least one accessible)",
+      "label_sv": "Publika toaletter",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 7 § and 3 kap. 7 §: if there are toilets for the public in a publik lokal, at least one must be accessible, with turning space and side transfer on both sides", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": { "rule": "per_building", "value_m2": null, "count": ">= 1 accessible if public WCs exist", "strength": "none", "source": "No m² in BFS 2024:12 (turning circle 1.50 m governs).", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["hotel_reception_lobby"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "hotel_breakfast_dining",
+      "label_en": "Breakfast room / restaurant",
+      "label_sv": "Frukostmatsal / restaurang",
+      "required": { "strength": "practice", "basis": "Not required by law; standard service. Fire class 2A/2B/2C by size and alcohol (BFS 2024:7 2 kap. 11-13 §§).", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      "size": { "rule": "per_seat", "value_m2": null, "count": "seats about 40-60 % of beds (working value, unsourced)", "strength": "none", "source": "No source found for m² per seat; do not copy Neufert tables.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": ["hotel_kitchen"],
+      "shareable_with": ["co_living"],
+      "shareable_note": "Breakfast mornings only; can run as a public restaurant or café the rest of the day.",
+      "binding_constraint": "egress_capacity",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "hotel_kitchen",
+      "label_en": "Kitchen (breakfast / restaurant)",
+      "label_sv": "Kök",
+      "required": { "strength": "law", "basis": "Required only if food is prepared on site; food business registration (EU 852/2004; municipal food control). Commercial kitchen with special fire risk = own fire compartment (BFS 2024:7 5 kap. 26 §); grease ducts with secured fire resistance (4 kap. 24 §).", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "one (cooking or receiving kitchen)", "strength": "none", "source": "No source sets size.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "kitchen_exhaust_to_roof",
+      "layer": "services",
+      "notes": "Grease exhaust routing to roof is the usual blocker in an existing building."
+    },
+    {
+      "id": "hotel_staff_facilities",
+      "label_en": "Staff facilities (changing rooms, toilets, eating, break and rest)",
+      "label_sv": "Personalutrymmen",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 37-65 §§: changing room where work is soiling or work clothes are used (46-49 §§), enough toilets and washbasins (56 §), eating space with tables and chairs, fridge, means to heat food and wash up (60-61 §§), break space (62 §), rest space for lying down (63 §)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "count": "toilets: generally one per started group of 15 employees (AFS 2023:12 general advice to 3 kap. 56 §); separate rest room typically when > 50 persons are employed at the same time (advice to 63 §)",
+        "strength": "guidance",
+        "source": "AFS 2023:12 allmänna råd. An accessible toilet should be at least 2.2 x 2.2 m (advice to 58 §). No m² for changing or eating rooms.",
+        "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Detailed general workplace rules are in data/catalogue/cross_cutting.json; only hotel-specific counts are noted here. Housekeeping staff do soiling work, so changing rooms with showers are effectively needed."
+    },
+    {
+      "id": "hotel_housekeeping_linen",
+      "label_en": "Housekeeping stores, linen room, laundry (or outsourced linen)",
+      "label_sv": "Städcentral, linneförråd, tvätt",
+      "required": { "strength": "practice", "basis": "Operational; floor pantries on each floor are usual. Not law.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "one floor pantry per guest floor plus central store", "strength": "none", "source": "No source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["service_lift"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Fits deep-plan core zones."
+    },
+    {
+      "id": "service_lift",
+      "label_en": "Service / goods lift",
+      "label_sv": "Servicehiss",
+      "required": { "strength": "practice", "basis": "Operational for housekeeping and luggage; not law. Accessible lift requirements (BFS 2024:12 2 kap. 5 §) apply to the guest lift.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "one in larger hotels", "strength": "none", "source": "No source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "core_capacity",
+      "layer": "structure",
+      "notes": ""
+    },
+    {
+      "id": "entrance_lift_lobby",
+      "label_en": "Accessible entrance, corridors and guest lift",
+      "label_sv": "Entré, korridorer och hiss",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 1-2 §§, 5 § (accessible main entrance and circulation; lift short side >= 1100 mm; level difference > 1 m needs a lift)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": { "rule": "derived", "value_m2": null, "count": "per core", "strength": "law", "source": "Lift dimension is law; corridor width is functional.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living"],
+      "shareable_note": "",
+      "binding_constraint": "fire_egress",
+      "layer": "structure",
+      "notes": "Guests are sleeping and unfamiliar with the building (Vk 4), so egress and alarm design is stricter than for Vk 1 offices."
+    },
+    {
+      "id": "luggage_room",
+      "label_en": "Luggage store",
+      "label_sv": "Bagagerum",
+      "required": { "strength": "practice", "basis": "Operational.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "one", "strength": "none", "source": "No source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["hotel_reception_lobby"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "hotel_conference",
+      "label_en": "Meeting / conference rooms (optional)",
+      "label_sv": "Konferenslokaler",
+      "required": { "strength": "practice", "basis": "Optional; if used as samlingslokal, BFS 2024:12 3 kap. 6 § (hearing loop in samlingssalar) and Vk 2A/2B apply.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": { "rule": "per_seat", "value_m2": null, "count": "operator choice", "strength": "none", "source": "No source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["co_living"],
+      "shareable_note": "Existing office meeting rooms can be kept.",
+      "binding_constraint": "ventilation_per_person",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "waste_room",
+      "label_en": "Waste room",
+      "label_sv": "Avfallsutrymme",
+      "required": { "strength": "law", "basis": "BFS 2024:8 11 kap. 1-3 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "per municipal waste rules; food waste from kitchen may need a cooled room", "strength": "programme", "source": "Municipal renhållningsföreskrifter.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living"],
+      "shareable_note": "",
+      "binding_constraint": "collection_vehicle_access",
+      "layer": "site",
+      "notes": ""
+    },
+    {
+      "id": "bicycle_parking",
+      "label_en": "Bicycle parking",
+      "label_sv": "Cykelparkering",
+      "required": { "strength": "law", "basis": "BFS 2026:4 2 kap. 4 §: a new lokalbyggnad must have bicycle parking for at least 15 % of average or 10 % of total user capacity; may be adapted where people normally do not arrive by bike. On alteration only for ombyggnad involving car parking (1 kap. 4 §).", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/" },
+      "size": { "rule": "per_building", "value_m2": null, "count": ">= 15 % of average or 10 % of total user capacity (guests + staff)", "strength": "law", "source": "Count only.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment"],
+      "shareable_note": "",
+      "binding_constraint": "ground_floor_area",
+      "layer": "site",
+      "notes": "Also EV charging if more than 5 car spaces (BFS 2026:4 2 kap. 3 §)."
+    }
+  ],
+  "variants": [
+    { "id": "hotel_limited_service", "label": "Limited-service / budget hotel", "changes": "Small rooms (about 14-18 m²), breakfast only, minimal reception or self-check-in, no conference. Lower gross m² per key (indicative)." },
+    { "id": "hotel_full_service", "label": "Full-service hotel", "changes": "Restaurant and bar (Vk 2B/2C when > 150 persons), conference, spa/gym; larger back-of-house; higher staff ratio." },
+    { "id": "aparthotel", "label": "Aparthotel / extended-stay", "changes": "Rooms of about 25-40 m² (indicative) with kitchenette, no or small restaurant, guest laundry. Still temporary accommodation: Vk 4, BFS 2024:11 does not apply (Boverket: a hotel is not a dwelling even with full home facilities). If units are let on tenancy contracts as permanent homes, the use becomes 'Bostäder' and all dwelling rules apply (daylight 1.0 %, sound tables, dwelling accessibility)." },
+    { "id": "hostel", "label": "Hostel (vandrarhem)", "changes": "Dormitories and shared bathrooms; each dormitory its own fire compartment (Vk 4); communal guest kitchen." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Fire: Vk 1 to Vk 4 (sleeping, unfamiliar occupants), with each room its own compartment, alarm and egress upgrades.",
+      "Wet room per key: drainage through slabs.",
+      "Kitchen grease exhaust to roof.",
+      "Detaljplan may not allow 'Tillfällig vistelse'."
+    ],
+    "typical_enablers": [
+      "No dwelling DF 1.0 % rule and no dwelling sound tables, so deeper rooms are possible than for housing (functional requirements still apply).",
+      "No friyta requirement (PBL 8 kap. 9 § second paragraph covers dwellings and schools, not hotels).",
+      "Office lobbies, lifts, meeting rooms and parking map well to hotel needs.",
+      "Fast route: no police permit since 2025."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:7 brand (full text), 2 kap. 9-20 §§ verksamhetsklasser; 4 kap. 24 §; 5 kap. 25-26 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet (full text)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 4 kap. 3 §, 11 kap.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:10 2 kap. 9 §", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-10", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Bostäders utformning (hotels and temporary accommodation not covered)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Tillfällig vistelse (planbestämmelse)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/planbestammelser/anvandning-av-kvartersmark/tillf-vistelse/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Hållbar mobilitet (BFS 2026:4)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser, 3 kap. 37-65 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Lag (1966:742) om hotell- och pensionatrörelse, riksdagen.se (status: repealed 2025-01-01 by SFS 2024:1082)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-1966742-om-hotell-och-pensionatrorelse_sfs-1966-742/", "accessed": "2026-10-19" },
+    { "ref": "Nacka kommun, bygglov Rösunda 27:2 Hotellvägen 2, tillgänglighetsutlåtande (2023), section 7.2", "url": "https://handlingar.nacka.se/Handlingar/Miljo_och_stadsbyggnadsnamnden/2023/20230621/24_bygglov_R%C3%B6sunda_27_2_Hotellv%C3%A4gen_2_tillbyggnad/24_h_bygglov_R%C3%B6sunda_27_2_Hotellv%C3%A4gen_2_tillg%C3%A4nglighetsutl%C3%A5tande.pdf", "accessed": "2026-10-19" },
+    { "ref": "Plan- och bygglag (2010:900) 8 kap. 9 §; 9 kap. 15 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "Accessible room share: the '1 per 10 rooms' figure comes from a consultant statement citing 'earlier building rules'. Identify the original (likely pre-2008 BBR or ALM general advice) or a current operator/industry standard (e.g. Visita).",
+    "Does BFS 2024:8 4 kap. 3 § (daylight/outlook in lokaler where people stay more than temporarily) cover hotel guest rooms? Boverket guidance on this paragraph was not read.",
+    "Room size, gross m² per key, breakfast seats per bed and staff ratios are unsourced working values. Need operator briefs (e.g. Scandic, Nordic Choice brand standards) or Visita data.",
+    "Food registration and serveringstillstånd were stated from general knowledge, not fetched. Verify with Livsmedelsverket and the alkohollag before relying on them.",
+    "LSO: does a hotel need a written fire-safety statement (skriftlig redogörelse) under MSB rules? Not checked.",
+    "Is guest registration still required after Lag 1966:742 was repealed? Not checked.",
+    "Aparthotel to housing boundary: no case law or Boverket guidance checked beyond the 'Tillfällig vistelse' page."
+  ]
+}

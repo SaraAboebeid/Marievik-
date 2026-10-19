@@ -1,0 +1,227 @@
+{
+  "id": "lss_group_home",
+  "label_en": "LSS group home / service housing for adults with disabilities",
+  "label_sv": "Bostad med särskild service för vuxna enligt LSS (gruppbostad / servicebostad)",
+  "family": "care",
+  "summary": "Housing under LSS 9 § 9 for adults with extensive disabilities. In a group home (gruppbostad) a few full apartments are grouped around a shared kitchen, dining and living room, with staff present around the clock. Two rules differ from SÄBO. First, each LSS apartment must be a FULL dwelling: BFS 2024:11 2 kap. 11 § forbids the shared-function rules (7-10 §§) for special housing for people with disabilities, so each apartment needs its own kitchen. Second, Socialstyrelsen advises 3-5 residents per group home, while municipal practice is 6. Fire class is normally 5B.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "5B (gruppbostad); servicebostad case by case (3A/3B/3C/5B)",
+    "bbr_verksamhetsklass_source": "BFS 2024:7 2 kap. 19 § (5B: dwellings and common spaces in needs-assessed special housing for people with limited or no ability to self-evacuate). Boverket PBL kunskapsbanken names SoL and LSS as the needs-assessment laws behind 5B. Stockholm stad checklista 2015 p. 9 (under the old BBR 5:215) says 5B applies to group homes with sprinkler. Class choice depends on residents' ability to evacuate, so servicebostäder for people who can self-evacuate may fall in 3A/3B/3C. Fire-engineering judgement is needed. Class details are in cross_cutting.json fire_vk_3abc / fire_vk_5abc.",
+    "key_laws": [
+      { "ref": "LSS (1993:387) 9 § p. 9: bostad med särskild service för vuxna eller annan särskilt anpassad bostad för vuxna. 7 §: goda levnadsvillkor. 9 e §: care (omvårdnad) included.", "url": "https://lagen.nu/1993:387" },
+      { "ref": "LSS 23 §: private for-profit providers need an IVO permit for insatser under 9 § p. 2-10", "url": "https://lagen.nu/1993:387" },
+      { "ref": "SOSFS 2002:9 (amended by HSLF-FS 2016:87), Socialstyrelsens föreskrifter och allmänna råd om bostad med särskild service för vuxna enligt LSS: 4-5 §§ (a named manager, with education requirements for group homes). Allmänna råd: 3-5 residents per group home, common rooms next to the apartments, no institutional character, not next to other such housing or SÄBO, not co-located with daily-activity premises.", "url": "https://www.socialstyrelsen.se/kunskapsstod-och-regler/regler-och-riktlinjer/foreskrifter-och-allmanna-rad/konsoliderade-foreskrifter/20029-om-bostad-med-sarskild-service-for-vuxna-enligt-9--9-lagen-1993387-om-stod-och-service-till-vissa-funktionshindrade-lss/" },
+      { "ref": "SoL (2025:400) 8 kap. 11 §: municipalities shall set up housing with special support (bostäder med särskilt stöd). This is the SoL route for similar housing, e.g. psychiatric disability.", "url": "https://lagen.nu/2025:400" },
+      { "ref": "BFS 2024:11 2 kap. 11 §: for special housing for people with reduced functional ability, 7-10 §§ (shared cooking, socialising, meals and hygiene) may NOT be applied, so every apartment is a full dwelling", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 2 kap. 9-10 §§, 3 kap. 2 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:7 (5B: sprinkler 7 kap. 48 §, own fire cell per dwelling 5 kap. 25 §, two escape doors 7 kap. 9 §)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "AFS 2023:12 3 kap. 64-65 §§: an on-call room (jourrum) where on-call duty in the sense of the Working Hours Act occurs. Common in group homes with sleeping night staff.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use (PBL 9 kap. 15 § 1, from 2025-12-01). See cross_cutting.json cou_bygglov_trigger.",
+      "IVO permit for private providers (LSS 23 §). For SoL housing with special support: IVO permit or notification (SoL 2025:400 26 kap. 1-2 §§)."
+    ],
+    "operator_oversight": "IVO"
+  },
+  "occupancy": {
+    "unit": "resident",
+    "group_size": {
+      "value": 6,
+      "range": [3, 6],
+      "strength": "guidance",
+      "source": "SOSFS 2002:9 allmänna råd: 'I en gruppbostad bör i regel endast tre till fem personer bo' (one more may be accepted if living conditions stay good, per Kunskapsguiden). Municipal practice is 6: Knivsta lokalfunktionsprogram 2024 p. 5 'Praxis för gruppbostad är sex (6) lägenheter'; Botkyrka 2017 p. 8, groups of 6; Stockholm checklista 2015 p. 3, six apartments.",
+      "confidence": "verified"
+    },
+    "gross_m2_per_unit": {
+      "value": 92,
+      "range": [67, 100],
+      "strength": "programme",
+      "source": "Stockholm stad Checklista gruppbostad LSS 2015 p. 3: usually about 400 m² for six apartments (about 67 m²/resident). Botkyrka 2017 p. 9: usually about 550 m² (about 92 m²/resident at 6). Knivsta SN-2024/143 p. 5: usually 550-600 m² (about 92-100 m²/resident).",
+      "confidence": "verified",
+      "notes": "The area standard (BTA/LOA) is not stated in the sources."
+    },
+    "staff_per_unit": {
+      "value": null,
+      "strength": "programme",
+      "source": "Stockholm checklista 2015 p. 2: staff provide support and service around the clock. Botkyrka p. 8: group home for people needing more or less continuous staff presence. No ratio found. It varies strongly with the residents' needs.",
+      "confidence": "verified"
+    },
+    "hours_profile": "24_7",
+    "hourly_presence": [1, 1, 1, 1, 1, 1, 1, 0.9, 0.5, 0.3, 0.3, 0.3, 0.3, 0.3, 0.4, 0.6, 0.9, 1, 1, 1, 1, 1, 1, 1],
+    "hourly_presence_note": "Residents, weekday, indicative. Knivsta p. 5: most residents attend daily activity (daglig verksamhet) on weekday daytime and come home in the afternoon. Weekends are close to 1.0. Staff are present 24/7."
+  },
+  "spaces": [
+    {
+      "id": "lss_apartment",
+      "label_en": "Resident apartment (full dwelling)",
+      "label_sv": "Lägenhet (fullvärdig bostad)",
+      "required": { "strength": "law", "basis": "LSS 9 § 9. BFS 2024:11 2 kap. 1 § and 2 kap. 11 § (no sharing of functions, so own kitchen, hygiene room and living space). BFS 2024:12 2 kap. 10 § (free space along both long sides and the foot of the bed).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit", "value_m2": 40, "range_m2": [35, 45],
+        "count": "1 per resident",
+        "strength": "programme",
+        "source": "Stockholm checklista 2015 p. 3: 35-45 m². Botkyrka 2017 p. 22: 37-45 m², lowest functional level 37 m², with separable sleeping area, full kitchen and own patio or balcony. Knivsta 2024 p. 22: about 40 m².",
+        "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "daylight_required": true, "facade_required": true, "bed_clearance_both_sides_mm": 900, "hall_turning_diameter_mm": 1500, "ceiling_hoist": "prepared", "stove_guard": true },
+      "constraints_sources": "Botkyrka p. 22: 900 mm free on both sides of the bed in care position; hall turning 1300 mm minimum, preferably 1500 mm; all apartments prepared for ceiling hoist; stove guard and timer outlets. Stockholm checklista p. 5: bed angled from the wall with 900 mm passage at the foot. Stockholm p. 3 also notes the old BBR 3:223 rule (dwellings of at most 55 m² must have a separable sleeping or cooking area), which is repealed BBR, pre-2025.",
+      "depends_on": ["lss_bathroom"],
+      "binding_constraint": "facade_length_and_drainage",
+      "layer": "space_plan",
+      "notes": "Residents' medicines are kept in a locked cabinet in each apartment, not in a central medication room (Stockholm checklista p. 9; Botkyrka p. 22)."
+    },
+    {
+      "id": "lss_bathroom",
+      "label_en": "Apartment bathroom (accessible, assisted)",
+      "label_sv": "Hygienrum i lägenhet",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 3 § and 11 § (no shared hygiene rooms). BFS 2024:12 2 kap. 9 § (accessible hygiene room).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 6.5, "count": "1 per apartment (included in apartment area)", "strength": "programme", "source": "Botkyrka 2017 p. 23: bathrooms 2.4 x 2.7 m with room to assist on both sides of WC and shower (for both SÄBO and LSS apartments). Stockholm checklista p. 6: room for an assisting person on both sides of the WC, 1500 mm turning diameter, space for washer/dryer.", "confidence": "verified" },
+      "constraints": { "floor_drain_required": true, "ceiling_hoist": "prepared" },
+      "binding_constraint": "drainage_and_shafts",
+      "layer": "services"
+    },
+    {
+      "id": "lss_apartment_balcony",
+      "label_en": "Private balcony / patio",
+      "label_sv": "Egen balkong / uteplats",
+      "required": { "strength": "programme", "basis": "Botkyrka 2017 p. 8 and 22: own patio or balcony shall exist. Stockholm checklista p. 6: max 2.5 cm level difference.", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "constraints": { "facade_required": true },
+      "binding_constraint": "structure_new_balcony",
+      "layer": "skin"
+    },
+    {
+      "id": "lss_apartment_storage",
+      "label_en": "Resident storage",
+      "label_sv": "Lägenhetsförråd",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 5 § (storage function; may be outside the dwelling). Stockholm checklista p. 7: every apartment shall have a storage space.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 2, "count": "1 per apartment plus 1 for the group home", "strength": "programme", "source": "Botkyrka 2017 p. 25: at least 2 m² for group homes. Knivsta 2024: at least 2 m².", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_common_kitchen_living",
+      "label_en": "Common kitchen, dining and living room",
+      "label_sv": "Gemensamt kök, matplats och vardagsrum",
+      "required": { "strength": "guidance", "basis": "SOSFS 2002:9 allmänna råd (Gemensamhetslokaler i gruppbostaden): common rooms in close or direct connection to the apartments, easy to reach, used only by residents and staff. Programme: Stockholm p. 7 and Botkyrka p. 9.", "url": "https://www.socialstyrelsen.se/kunskapsstod-och-regler/regler-och-riktlinjer/foreskrifter-och-allmanna-rad/konsoliderade-foreskrifter/20029-om-bostad-med-sarskild-service-for-vuxna-enligt-9--9-lagen-1993387-om-stod-och-service-till-vissa-funktionshindrade-lss/" },
+      "size": {
+        "rule": "per_group", "value_m2": null, "count": "1 per group home; seats 8-10 persons",
+        "strength": "programme",
+        "source": "Stockholm checklista 2015 p. 3 and 7: kitchen, meals and socialising for 8-10 persons, separate staff hand-wash basin. All common housing functions (common room with kitchen, laundry, apartment and wheelchair stores) together about 100 m². No separate m² for the kitchen-living room alone.",
+        "confidence": "verified"
+      },
+      "constraints": { "daylight_required": true, "facade_required": true },
+      "depends_on": ["lss_common_terrace"],
+      "binding_constraint": "acoustics_and_daylight",
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_common_terrace",
+      "label_en": "Common balcony / patio and garden",
+      "label_sv": "Gemensam balkong/uteplats, utemiljö",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 8: directly next to the common room. Knivsta 2024: outdoor environment adapted to residents.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "site"
+    },
+    {
+      "id": "lss_laundry",
+      "label_en": "Laundry room within group home",
+      "label_sv": "Tvättutrymme",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 7: one washer and one dryer on plinths, folding bench, reached from the group home corridor. Apartments also prepared for their own machines. BFS 2024:11 2 kap. 4 § allows shared laundry.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "included in the about 100 m² of common functions (Stockholm)", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "lss_wheelchair_store",
+      "label_en": "Wheelchair / aids store with charging and rinse",
+      "label_sv": "Rullstolsförråd",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 5: room for 4 wheelchairs, charging at 800 mm, hot and cold water for rinsing, floor drain with grit trap.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "per_group", "value_m2": null, "count": "dimensioned for 4 chairs", "strength": "none", "source": "capacity given, not m²", "confidence": "verified" },
+      "constraints": { "floor_drain_required": true },
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_cleaning_store",
+      "label_en": "Cleaning store / near store",
+      "label_sv": "Städförråd och närförråd",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 7-8: slop sink, shelving. May be combined with the laundry.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "lss_staff_office",
+      "label_en": "Staff office (expedition)",
+      "label_sv": "Expedition / kontor",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 8; Botkyrka p. 9. Fire alarm panel placed here (Stockholm p. 9).", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "Part of about 40 m² for all staff spaces (Stockholm p. 3).", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_staff_oncall_room",
+      "label_en": "On-call / rest room for staff",
+      "label_sv": "Jourrum / vilrum",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 63 § (rest space), 64 § (on-call room as single room near the main workplace where on-call duty occurs), 65 § (food heating, WC and shower nearby).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "No m². Stockholm p. 8: bed, bedside table, wardrobes, near the WC.", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_staff_changing_wc_shower",
+      "label_en": "Staff changing, WC with shower",
+      "label_sv": "Omklädning, personaltoalett med dusch",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 40-58 §§ (general staff-facility rules in cross_cutting.json staff_*). Stockholm p. 8: staff WC with shower near the on-call room.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": {
+        "rule": "per_group", "value_m2": 40, "count": "all staff spaces together (office, on-call/rest, changing, WC/shower)",
+        "strength": "programme",
+        "source": "Stockholm stad checklista gruppbostad LSS 2015 p. 3: staff work room, rest/on-call room, changing and hygiene, 'Sammanlagt cirka 40 kvm'.",
+        "confidence": "verified"
+      },
+      "layer": "space_plan"
+    },
+    {
+      "id": "lss_visitor_wc",
+      "label_en": "Visitors' accessible WC (servicebostad common room)",
+      "label_sv": "RWC för besökare",
+      "required": { "strength": "programme", "basis": "Stockholm checklista p. 10: RWC for visitors in the common premises for service apartments.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755" },
+      "size": { "rule": "fixed", "value_m2": null, "strength": "none", "source": "no m²; see cross_cutting.json san_public for the 2.2 x 2.2 m planning value", "confidence": "verified" },
+      "layer": "services"
+    }
+  ],
+  "variants": [
+    { "id": "servicebostad", "label": "Service housing (servicebostad)", "changes": "Ordinary-standard apartments spread among other apartments, plus a common room for socialising and meetings with staff for a group of up to about 15 residents, and a visitors' RWC (Stockholm checklista 2015 p. 10). SOSFS 2002:9: number of residents limited so the housing blends into the neighbourhood. Fire class may be lower than 5B depending on residents." },
+    { "id": "sol_bostad_sarskilt_stod", "label": "SoL housing with special support (SoL 2025:400 8 kap. 11 §)", "changes": "Similar physical brief, e.g. for psychiatric disability. LSS-specific Socialstyrelsen advice (SOSFS 2002:9) does not apply. Whether BFS 2024:11 2 kap. 11 § ('särskilda bostäder för personer med nedsatt funktionsförmåga') covers it should be checked." },
+    { "id": "group_home_in_villa", "label": "Detached-house group home", "changes": "Same brief on one storey (Knivsta norm). Own entrance." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Full kitchen and bathroom in every apartment (BFS 2024:11 2 kap. 11 §): drainage, ventilation and shafts at every unit.",
+      "5B: sprinkler, own fire cell per apartment, two escape routes; cannot be waived on change of use (see cross_cutting.json).",
+      "SOSFS 2002:9 advises against institutional settings and against co-location with other special housing or daily-activity premises. A large office building converted into several group homes conflicts with this.",
+      "Programmes want the whole group home on one floor (Knivsta) or at most two apartments on an adjacent floor (Stockholm p. 3), which needs about 400-600 m² on one floor."
+    ],
+    "typical_enablers": [
+      "A floor plate of 400-600 m² fits one group home. Office floors of that size are common.",
+      "An office building in a mixed housing area meets the 'integrated in ordinary housing' advice.",
+      "Ground floor with direct garden access (Stockholm p. 3: raised ground floor has advantages for noise and evacuation)."
+    ]
+  },
+  "sources": [
+    { "ref": "LSS (1993:387) 7, 9, 9 e, 23 §§ (lagen.nu)", "url": "https://lagen.nu/1993:387", "accessed": "2026-10-19" },
+    { "ref": "SOSFS 2002:9 consolidated (Socialstyrelsen)", "url": "https://www.socialstyrelsen.se/kunskapsstod-och-regler/regler-och-riktlinjer/foreskrifter-och-allmanna-rad/konsoliderade-foreskrifter/20029-om-bostad-med-sarskild-service-for-vuxna-enligt-9--9-lagen-1993387-om-stod-och-service-till-vissa-funktionshindrade-lss/", "accessed": "2026-10-19" },
+    { "ref": "Kunskapsguiden: Boendealternativ för vuxna enligt LSS", "url": "https://kunskapsguiden.se/omraden-och-teman/funktionshinder/boende-for-personer-med-funktionsnedsattning/bostad-med-sarskild-service-for-vuxna-eller-annan-sarskilt-anpassad-bostad-for-vuxna/", "accessed": "2026-10-19" },
+    { "ref": "Socialtjänstlag (2025:400) 8 kap. 11 §, 26 kap.", "url": "https://lagen.nu/2025:400", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:11 bostäders lämplighet (2 kap. 11 §)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet och användbarhet", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 brandskydd", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser, 3 kap. 63-65 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Stockholms stad, Lokalplanerarna: Checklista vid planering av gruppbostad för boende enligt LSS (2015). Cites the old BBR, pre-2025.", "url": "https://insynsverige.se/documentHandler.ashx?did=1821755", "accessed": "2026-10-19" },
+    { "ref": "Knivsta kommun, Lokalfunktionsprogram gruppbostad LSS, SN-2024/143 (2024-05-24)", "url": "https://knivstakommun.ondemand.formpipe.com/welcome-sv/namnder-styrelser/kommunstyrelsen/kommunstyrelsen-2025-03-31/agenda/sn-2024143-lokalfunktionsprogram-gruppbostad-lsspdf?downloadMode=open", "accessed": "2026-10-19" },
+    { "ref": "Botkyrka kommun, Lokalfunktionsprogram för särskilda boenden (SoL och LSS), von/2017:158 (valid to 2021)", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "Socialstyrelsen advises 3-5 residents (SOSFS 2002:9), but every checked municipal programme uses 6. The fit test should flag 6 as 'deviation from guidance, accepted practice'.",
+    "Fire class for servicebostad and for group homes whose residents can self-evacuate (3B/3C vs 5B). Needs case-by-case fire-engineering judgement.",
+    "Whether BFS 2024:11 2 kap. 11 § ('särskilda bostäder för personer med nedsatt funktionsförmåga') also covers SoL 8 kap. 11 § housing.",
+    "No source gives a staff ratio or m² for the common kitchen and living room alone. Stockholm gives only about 100 m² total for common functions.",
+    "SOSFS 2002:9 dates from 2002 (amended 2016). Check whether Socialstyrelsen plans an HSLF-FS replacement."
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "id": "elderly_care_home",
+  "label_en": "Residential care home for older people (SÄBO), incl. dementia unit",
+  "label_sv": "Särskilt boende för äldre (SÄBO) / vård- och omsorgsboende",
+  "family": "care",
+  "summary": "Needs-assessed special housing for older people with extensive care needs. Legally it is the residents' home (own apartment with own tenancy) and at the same time a 24/7 workplace and a place where municipal health care is given. The law requires the housing form, round-the-clock staff access, couples' right to live together, fire class 5B with sprinkler, and dwelling functions in each apartment; it sets almost no areas. Areas come from municipal programmes: apartments of about 30-35 m², grouped in units of roughly 8-16 apartments around a shared kitchen/dining/living room, with staff, medication and utility rooms per unit or floor.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "5B",
+    "bbr_verksamhetsklass_source": "BBR (BFS 2011:6) was replaced on 1 July 2025 by Boverket's new building regulations. The transition period ended 1 July 2026. Class 5B is now defined in BFS 2024:7 2 kap. 19 §: 'bostäder och gemensamhetsutrymmen i behovsprövade särskilda boenden för personer som kan förväntas ha begränsade, eller inga, förutsättningar att själva sätta sig i säkerhet'. That § is amended by BFS 2025:10, whose text was not checked. https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+    "fire_consequences_of_5B": [
+      "Automatic sprinkler for personal protection or a residential sprinkler system in every 5B fire cell (BFS 2024:7 7 kap. 48 §). No deviation is allowed on change of use (10 kap. 7 §).",
+      "Each apartment (bostad/boendeenhet) in 5B is its own fire cell (BFS 2024:7 5 kap. 25 § p. 9).",
+      "Two independent escape doors for a group of 5B units (7 kap. 9 § p. 5). Max. 45 m to an escape door (7 kap. 19 §) and 30 m in a shared escape route (7 kap. 20 §).",
+      "Fire alarm (7 kap. 46 §) and evacuation alarm (7 kap. 43 §) are required. The evacuation alarm may be adapted to staff intervention and to residents' ability to perceive signals.",
+      "Load-bearing main structure must be at least R 30 (3 kap. 15 §).",
+      "Apartment doors need no door closer if at most eight units open onto the same common space (5 kap. 43 § p. 4). This rule supports groups of 8.",
+      "Stairs in escape routes serving 5B must have constant tread depth (7 kap. 26 §).",
+      "Scale limit: an activity with more than 150 people who cannot be expected to evacuate themselves becomes Vk 0 (BFS 2024:7 2 kap. 9 § p. 4). It then needs analytical fire design. Check this for homes of 80-100+ residents counted together with staff and visitors. How a home is split into separate activities is a fire-engineering question.",
+      "General fire class and change-of-use rules are in data/catalogue/cross_cutting.json (fire_vk_5abc, fire_change_of_use_floor) and are not repeated here."
+    ],
+    "key_laws": [
+      { "ref": "Socialtjänstlag (2025:400) 8 kap. 4 § första stycket: the municipality shall set up special housing for older people who need care and special support", "url": "https://lagen.nu/2025:400", "note": "In force 1 July 2025. It replaced SoL (2001:453), whose former 5 kap. 5 § is cited in older municipal programmes." },
+      { "ref": "SoL (2025:400) 11 kap. 3 §: right to live together with a spouse or cohabitant (parboende)", "url": "https://lagen.nu/2025:400" },
+      { "ref": "SoL (2025:400) 10 kap. 7 §: fixed care contact (fast omsorgskontakt)", "url": "https://lagen.nu/2025:400" },
+      { "ref": "Socialtjänstförordning (2025:468) 2 kap. 2 §: access to staff around the clock in housing under SoL 8 kap. 4 § första stycket. Staff must be able to notice at once when help is needed. 2 kap. 1 §: couples who are both granted a place may live in the same housing.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/socialtjanstforordning-2025468_sfs-2025-468/" },
+      { "ref": "Hälso- och sjukvårdslag (2017:30) 5 kap. 1-2 §§: good hygienic standard; the premises and equipment needed for good care", "url": "https://lagen.nu/2017:30" },
+      { "ref": "BFS 2024:11 (bostäders lämplighet) 2 kap. 1, 3, 10 §§ and 3 kap. 3 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 (tillgänglighet och användbarhet) 2 kap. 2-5, 9-10 §§ and 3 kap. 2, 5 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:7 (brandskydd)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser, 3 kap. (replaced AFS 2020:1 from 1 January 2025)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "SOSFS 2015:10 basal hygien i vård och omsorg (cited in the Uppsala programme)", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use under PBL 9 kap. 15 § 1, in force from 2025-12-01 (Lag 2025:974). Formerly 9 kap. 2 § 3 a/b. See cross_cutting.json cou_bygglov_trigger.",
+      "Private operators need a permit from IVO (SoL 2025:400 26 kap. 1 § första stycket 2). A municipality running the service itself must notify IVO before starting (26 kap. 2 §). Source: lagen.nu summary, paragraph text not re-read.",
+      "Registration of the food establishment (unit kitchens, production kitchen) with the municipal food control authority under (EG) 852/2004, cited in the Uppsala programme"
+    ],
+    "operator_oversight": "IVO (Inspektionen för vård och omsorg); municipal MAS (medically responsible nurse) for the health care part"
+  },
+  "occupancy": {
+    "unit": "resident",
+    "gross_m2_per_unit": {
+      "value": 65,
+      "range": [55, 120],
+      "strength": "programme",
+      "source": "Uppsala kommun funktionsprogram 2021 p. 10: 'Den totala ytan bör vara max 65 kvm per boende'. Göteborgs Stad, förstudie Önneredsvägen p. 3-4: 100-120 m² LOA per resident at early stage, including a production kitchen, restaurant and assembly hall; rentable housing area incl. common spaces and storage about 55 m² LOA per resident. Lidköping riktlinje lokalförsörjning bilaga 1: max 75 m² per resident in total.",
+      "confidence": "verified",
+      "notes": "The measures are not the same. Uppsala gives total area as a ceiling, Göteborg gives LOA (excluding technical rooms), and 55 m² covers housing plus common space only. Convert to BTA before use. Lidköping was not re-checked."
+    },
+    "group_size": {
+      "value": 10,
+      "range": [8, 16],
+      "strength": "programme",
+      "source": "Botkyrka lokalfunktionsprogram 2017 p. 7: groups of at most 10 apartments, about 60 apartments per home. Göteborg förstudie Önneredsvägen p. 3: units of 10-16, 80-100 apartments per home. Lidköping: 9-12 per unit, 60-100 per home (not re-checked). BFS 2024:7 5 kap. 43 § makes groups of at most 8 easier for door closers.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": {
+      "value": null,
+      "strength": "law",
+      "source": "SoF (2025:468) 2 kap. 2 § requires access to staff around the clock based on residents' current needs. No national staff ratio exists, and no source was found for typical day and night ratios.",
+      "confidence": "sourced"
+    },
+    "hours_profile": "24_7",
+    "hourly_presence": [1, 1, 1, 1, 1, 1, 1, 1, 1, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 1, 1, 1, 1, 1, 1, 1],
+    "hourly_presence_note": "Residents' presence, indicative. Staff presence follows day, evening and night shifts with clearly fewer staff at night. No sourced shift ratios."
+  },
+  "spaces": [
+    {
+      "id": "sabo_apartment",
+      "label_en": "Resident apartment (one person)",
+      "label_sv": "Lägenhet (enpersons)",
+      "required": { "strength": "law", "basis": "SoL 8 kap. 4 § creates the housing form. BFS 2024:11 2 kap. 1 §: a dwelling must be designed for the dwelling functions (sleep/rest, socialising, cooking, meals, hygiene, storage). 2 kap. 10 §: in SÄBO with boendeenheter, socialising, cooking and meals may be shared only partly, as a complement to the functions in each unit. BFS 2024:12 2 kap. 10 §: free space for assistance along both long sides and the foot of at least one bed, in each boendeenhet. BFS 2024:12 3 kap. 2 §: stretcher transport must be possible from each boendeenhet.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 32, "range_m2": [30, 40],
+        "count": "1 per resident (minus couple apartments)",
+        "strength": "programme",
+        "source": "Uppsala funktionsprogram 2021 p. 16: 'Lägenheten bör vara 30-35 kvm' (hall, sleeping/living room with pentry, bathroom). Göteborg förstudie Önneredsvägen p. 4: 32-35 m² LOA. Botkyrka 2017 p. 7 and p. 20: minimum 31 m², about 31-40 m².",
+        "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 2600, "daylight_required": true, "facade_required": true, "bed_clearance_both_sides_mm": 900, "hall_turning_diameter_mm": 1500, "door_clear_width_mm": 1000, "ceiling_hoist": "required_or_prepared" },
+      "constraints_sources": "Ceiling height 2600 mm, 'motivated by ceiling-track hoist': Botkyrka 2017 p. 52. Bed 900 mm free on both sides in care position: Botkyrka p. 20. Hall turning 1300 mm minimum, preferably 1500 mm: Botkyrka p. 20. Doors used by residents 1100 mm frame and 1000 mm clear at 90°: Botkyrka p. 45. Ceiling hoist: Uppsala p. 17, 'Rummet ska vara utrustat med travers'; Botkyrka p. 53, ceiling structure prepared for hoists in apartment and bathroom; Göteborg Morans 2022, primary and secondary hoist beams in each apartment. Daylight and facade: dwelling requirement (Uppsala p. 16, view out from bed and wheelchair). AFS 2023:12 3 kap. 6 §: normally at least 0.8 m free working space where care work involves force or bending.",
+      "depends_on": ["sabo_bathroom", "sabo_kitchenette"],
+      "shareable_with": [],
+      "binding_constraint": "facade_length_and_floor_depth",
+      "layer": "space_plan",
+      "notes": "Programmes differ on whether the residents' common area is in the rent. Ground-floor apartments should have their own door outside (Uppsala p. 16). Medicines are kept in a locked cabinet in the apartment, linked to the access-control system (Uppsala p. 16; Göteborg Morans)."
+    },
+    {
+      "id": "sabo_bathroom",
+      "label_en": "Apartment bathroom (WC/shower)",
+      "label_sv": "Hygienrum / badrum i lägenheten",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 3 § and 3 kap. 1 §: the dwelling must have a room for personal hygiene with fixed fittings. Shared hygiene rooms (2 kap. 8 §) may NOT be used in SÄBO (2 kap. 10 § andra stycket). BFS 2024:12 2 kap. 9 §: at least one hygiene room accessible to a person with reduced mobility.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 6.5, "range_m2": [6.5, 6.5],
+        "count": "1 per apartment (included in apartment area)",
+        "strength": "programme",
+        "source": "Botkyrka 2017 p. 23: 'måtten skall vara 2,4 x 2,7 meter' with space to assist on both sides of WC and shower. Uppsala p. 17: room for two staff assisting, plus washing machine and tumble dryer. BOV 2025 (SFVH) p. 134: every SÄBO apartment needs its own hygiene room with room for washer and dryer.",
+        "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "daylight_required": false, "facade_required": false, "ceiling_hoist": "prepared", "floor_drain_required": true },
+      "depends_on": ["sabo_apartment"],
+      "binding_constraint": "drainage_and_shafts",
+      "layer": "services",
+      "notes": "Office floors usually lack drainage stacks at each apartment position. This is often the costliest conversion item."
+    },
+    {
+      "id": "sabo_kitchenette",
+      "label_en": "Kitchenette in apartment",
+      "label_sv": "Pentry",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 10 §: cooking may be shared only partly, as a complement to the function in the unit. 3 kap. 3 §: a cooking space must have fixed fittings, BUT boendeenheter for people with dementia in SÄBO are exempt, provided the installations are prepared.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No area given. Contents per Uppsala p. 17: sink, fridge with freezer compartment, space for coffee maker or hotplate. Stove guard, timer outlets and a separately fused fridge per Botkyrka p. 21.", "confidence": "verified" },
+      "depends_on": ["sabo_apartment"],
+      "binding_constraint": "none",
+      "layer": "services"
+    },
+    {
+      "id": "sabo_couple_apartment",
+      "label_en": "Couple apartment / connectable apartments",
+      "label_sv": "Parboende / dubblettlägenhet",
+      "required": { "strength": "law", "basis": "SoL (2025:400) 11 kap. 3 § and SoF (2025:468) 2 kap. 1 §: right to live together. No source sets a number of couple apartments.", "url": "https://lagen.nu/2025:400" },
+      "size": { "rule": "per_unit", "value_m2": 52, "range_m2": [50, 55], "count": "a few per home, by project", "strength": "programme", "source": "Botkyrka 2017 p. 21: dubblettlägenhet about 50-55 m² with separate bedroom. Uppsala p. 16 uses instead a door between two adjacent apartments.", "confidence": "verified" },
+      "binding_constraint": "none",
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_apartment_storage",
+      "label_en": "Resident storage outside apartment",
+      "label_sv": "Lägenhetsförråd",
+      "required": { "strength": "law", "basis": "Storage is a dwelling function (BFS 2024:11 1 kap. 5 §). Storage not for daily use may be outside the dwelling, nearby and separated off (2 kap. 5 §).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 1, "count": "1 per apartment", "strength": "programme", "source": "Botkyrka 2017 p. 25: about 1 m² per resident for older people. Uppsala p. 24 sizes it to the minimum requirement and requires access with a rollator or wheelchair.", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_group_common_living_dining",
+      "label_en": "Shared kitchen-dining-living room per group",
+      "label_sv": "Gemensam matsal och vardagsrum per boendegrupp",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 10 §: when socialising, cooking and meals are partly shared, the shared functions must be next to the units. In practice this is required because apartments of 30-35 m² do not hold full living and dining. Uppsala p. 17-18 and Botkyrka p. 25 require a dining room and living room per group.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "count": "1 per boendegrupp (about 8-16 apartments)", "strength": "none", "source": "No law or checked programme gives m². Botkyrka p. 25: dining room sized for all residents plus a couple of staff. Uppsala p. 18: two groups should be able to sit together, and daylight from two directions. The 4 m²/resident in data/standards/space_requirements.json is unverified.", "confidence": "indicative" },
+      "constraints": { "daylight_required": true, "facade_required": true, "daylight_two_directions": "programme (Uppsala p. 18)" },
+      "depends_on": ["sabo_group_kitchen", "sabo_group_balcony"],
+      "binding_constraint": "acoustics_and_daylight",
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_group_kitchen",
+      "label_en": "Unit kitchen (warming / partial cooking)",
+      "label_sv": "Avdelningskök / boendegruppens kök",
+      "required": { "strength": "programme", "basis": "Uppsala p. 18: each group kitchen for some meal preparation and receiving ready-cooked food, accessible so residents can take part. Botkyrka p. 27: separate clean and dirty zones, two sinks, hand-wash basin at the door. Food hygiene law (EG 852/2004) applies to professional food handling.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "Size depends on the meal concept chosen per project (Uppsala p. 18).", "confidence": "verified" },
+      "binding_constraint": "ventilation_and_drainage",
+      "layer": "services"
+    },
+    {
+      "id": "sabo_group_balcony",
+      "label_en": "Shared balcony / terrace per group",
+      "label_sv": "Gemensam balkong / uteplats",
+      "required": { "strength": "programme", "basis": "Uppsala p. 18-19: every group has a balcony or terrace next to the common rooms, may be shared between groups, preferably glazed.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "Must fit residents and staff at the same time (Uppsala). No m² given.", "confidence": "verified" },
+      "constraints": { "facade_required": true, "level_threshold_free": true },
+      "binding_constraint": "structure_new_balcony",
+      "layer": "skin"
+    },
+    {
+      "id": "sabo_staff_base",
+      "label_en": "Staff documentation room / unit office",
+      "label_sv": "Dokumentationsrum / expedition",
+      "required": { "strength": "programme", "basis": "Uppsala p. 19: shared documentation room between groups for each boendeenhet (floor). Botkyrka p. 29: one office per unit or department, staff WC nearby, at least one per floor.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "No m² in the checked programmes. The 12 m² in space_requirements.json is unverified.", "confidence": "indicative" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_medication_room",
+      "label_en": "Medication room",
+      "label_sv": "Läkemedelsrum / läkemedelsförråd",
+      "required": { "strength": "law", "basis": "HSL 5 kap. 2 §: premises needed for good care. Socialstyrelsen's medicines-handling rules (HSLF-FS 2017:37, cited by BOV) require locked storage inaccessible to unauthorised people; the paragraph was not checked. The room form is programme: Uppsala p. 21, separate room, no window, max 25 °C, access control for nurses only.", "url": "https://lagen.nu/2017:30" },
+      "size": { "rule": "per_building", "value_m2": 7, "count": "1 per home, or per floor in large homes", "strength": "programme", "source": "Botkyrka 2017 p. 36: 'Ytbehov ca 7 kvm', door only to the nurses' office, no windows.", "confidence": "verified" },
+      "constraints": { "daylight_required": false, "facade_required": false, "max_room_temp_c": 25 },
+      "binding_constraint": "cooling",
+      "layer": "space_plan",
+      "notes": "BOV 2025 p. 77: preparation bench, medicine fridge with temperature monitoring, space for trolley, administrative place, delivery area inside the door, no wash basin next to the bench."
+    },
+    {
+      "id": "sabo_sluice_room",
+      "label_en": "Sluice / dirty utility with bedpan washer",
+      "label_sv": "Sköljrum med spoldesinfektor (städ/avfall)",
+      "required": { "strength": "programme", "basis": "Uppsala p. 19: at least one sluice room with bedpan washer per floor, clean and dirty sides. Botkyrka p. 29: washer-disinfector on every floor. AFS 2023:12 3 kap. 2 § allmänt råd names 'sköljrum inom vården' as an example of a needed space (guidance).", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_floor", "value_m2": null, "strength": "none", "source": "No m² given. Must hold waste interim storage and a cleaning trolley (Uppsala).", "confidence": "verified" },
+      "constraints": { "floor_drain_required": true, "daylight_required": false },
+      "binding_constraint": "drainage_and_odour_extract",
+      "layer": "services"
+    },
+    {
+      "id": "sabo_disinfection_room",
+      "label_en": "Disinfection room (washer-disinfector for reusable items)",
+      "label_sv": "Desinfektionsrum",
+      "required": { "strength": "programme", "basis": "Uppsala p. 21: next to the medication room and health staff office, with washer-disinfector and stainless bench. Göteborg Morans 2022: washer-disinfector near nurse spaces.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "sabo_clean_store",
+      "label_en": "Clean supplies / sterile store",
+      "label_sv": "Materialförråd / sterilförråd / närförråd",
+      "required": { "strength": "programme", "basis": "Uppsala p. 18, 19 and 21: närförråd per group, materialförråd per floor, small sterile store by the health staff office. BOV 2025: sterile goods kept apart from other cleanliness grades.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_aid_storage",
+      "label_en": "Assistive-device store (clean / returned), with charging",
+      "label_sv": "Hjälpmedelsförråd",
+      "required": { "strength": "programme", "basis": "Uppsala p. 24: storage, adjustment and cleaning of aids near goods reception. Botkyrka p. 32: space for hoist, shower trolley and transport chair, at least two 16 A outlets. Göteborg Morans 2022: clean and dirty aids must not be mixed, separate rooms for returned and clean. BOV p. 133: secure space for bulky aids.", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "strength": "none", "source": "No m² in checked programmes. The 1.2 m²/resident in space_requirements.json is unverified.", "confidence": "indicative" },
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "If this room is missing, corridors fill with equipment and escape width is lost."
+    },
+    {
+      "id": "sabo_laundry",
+      "label_en": "Laundry for house textiles; separate staff workwear laundry",
+      "label_sv": "Tvättstuga (verksamhet) och tvätt för arbetskläder",
+      "required": { "strength": "programme", "basis": "Uppsala p. 21-22: at least one laundry for the whole house with separate clean and dirty zones, a second one for workwear by the changing rooms, plus machines in every apartment bathroom. BOV p. 133: workwear preferably laundered by an external laundry, separate laundry room on site preferred.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "constraints": { "floor_drain_required": true },
+      "layer": "services"
+    },
+    {
+      "id": "sabo_cleaning_central",
+      "label_en": "Central cleaning store",
+      "label_sv": "Centralt städförråd",
+      "required": { "strength": "programme", "basis": "Uppsala p. 24: room for washing machine, trolley, scrubber and slop sink.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "sabo_goods_reception_food_store",
+      "label_en": "Delivery entrance, goods reception, food store",
+      "label_sv": "Leveransentré, varumottagning, livsmedelsförråd",
+      "required": { "strength": "programme", "basis": "Uppsala p. 23: deliveries not through the main entrance; reception room for unpacking and heating food trolleys; food store with fridges and freezers. AFS 2023:12 3 kap. 32 §: a goods reception where needed (law).", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "Sized after the kitchen and meal concept is chosen (Uppsala).", "confidence": "verified" },
+      "depends_on": ["sabo_waste_room"],
+      "layer": "site"
+    },
+    {
+      "id": "sabo_waste_room",
+      "label_en": "Waste / recycling room",
+      "label_sv": "Miljörum / soprum",
+      "required": { "strength": "programme", "basis": "Uppsala p. 23: must not be reached past the main entrance, next to goods handling. Interim stations per floor if far away.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "site"
+    },
+    {
+      "id": "sabo_activity_room",
+      "label_en": "Activity / assembly room",
+      "label_sv": "Aktivitetsrum / samlingssal",
+      "required": { "strength": "programme", "basis": "Uppsala p. 21: at least one larger adaptable activity room with an accessible WC next to it. Botkyrka p. 43: assembly hall for 50-60 seated people.", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "1 per home; capacity 50-60 seated (Botkyrka)", "strength": "none", "source": "Capacity is given, area is not.", "confidence": "verified" },
+      "shareable_with": ["community_hall", "day_centre_elderly"],
+      "shareable_note": "Uppsala and Botkyrka both see co-location with day activities as positive.",
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_therapy_room",
+      "label_en": "Training / assessment room (physio, OT)",
+      "label_sv": "Rum för träning",
+      "required": { "strength": "programme", "basis": "Uppsala p. 21: smaller room for function assessment and individual or small-group training.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_wellbeing_room",
+      "label_en": "Wellbeing / relaxation room",
+      "label_sv": "Rum för välbefinnande",
+      "required": { "strength": "programme", "basis": "Uppsala p. 21.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_shared_shower_room",
+      "label_en": "Shared shower room for bedridden residents",
+      "label_sv": "Gemensamt duschrum (duschbrits)",
+      "required": { "strength": "practice", "basis": "BOV 2025 p. 134: needed if there is no room for a shower trolley in the apartment bathroom.", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "sabo_offices",
+      "label_en": "Offices: manager, coordinator, nurses/OT/physio; conversation room",
+      "label_sv": "Kontor chef/samordnare, kontor HSL-personal, samtalsrum",
+      "required": { "strength": "programme", "basis": "Uppsala p. 22-23: health staff office close to the medication, disinfection and sterile rooms. Conversation room for confidential care planning. Botkyrka p. 35-37.", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "shareable_with": ["office"],
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_staff_changing",
+      "label_en": "Staff changing rooms with shower and WC",
+      "label_sv": "Omklädningsrum personal med dusch",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 46 § (changing room where special workwear is worn), 47 § (enough space and seats), 48 § (normally separate for men and women), 49 § (separate rooms for private clothes and workwear if needed, e.g. infection risk), 52 § (shower always when work carries infection risk), 40-41 §§ (lockable storage).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_staff", "value_m2": null, "count": "lockers for all staff; sized to the largest shift overlap", "strength": "none", "source": "AFS gives no m². Uppsala p. 22 sizes to staff numbers per project.", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_staff_wc",
+      "label_en": "Staff WCs",
+      "label_sv": "Personaltoaletter",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 56-58 §§. Allmänt råd to 56 §: generally one toilet per started group of about 15 workers. 3 kap. 4 § p. 6: in new or rebuilt workplaces, at least one accessible toilet per floor.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "fixed", "value_m2": 4.84, "count": "1 per ~15 staff (guidance); at least one accessible per floor", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänt råd: an accessible toilet should be at least 2.2 x 2.2 m.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "sabo_staff_room",
+      "label_en": "Staff dining / break room",
+      "label_sv": "Personalmatsal / pausutrymme",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 60 § (eat at table with chairs with backrest), 61 § (fridge, heating, washing up), 62 § (break space).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_staff", "value_m2": null, "strength": "none", "source": "No m² in AFS or the programmes. Göteborg Morans 2022: about 80-90 staff in total in one home.", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_staff_rest_room",
+      "label_en": "Staff rest room",
+      "label_sv": "Vilrum",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 63 §: a suitable space for temporary, undisturbed lying rest. Allmänt råd: a separate rest room may be needed when more than 50 people work in the same area. Uppsala p. 23: rest room with bed, bedside table and chair.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_main_entrance",
+      "label_en": "Main entrance with seating, transport-wheelchair store and visitors' WC",
+      "label_sv": "Huvudentré med RWC och förråd för transportrullstolar",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 1 § and 3 kap. 1 §: main entrances must be accessible and easy to perceive. Uppsala p. 20 (programme): seating inside, accessible WC at the main entrance, store for transport wheelchairs with charging, entrance kept separate from goods handling.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_corridors",
+      "label_en": "Corridors (bed-transport capable, rest seating)",
+      "label_sv": "Korridorer",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 2 §: width set by use, layout and length. 3 kap. 2 §: stretcher transport possible from each boendeenhet. BFS 2024:7: escape route rules for 5B.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "strength": "none", "source": "No width is set in the new regulations, which are functional and have no allmänna råd for widths. The 1800 mm in space_requirements.json is unverified. Uppsala p. 20 asks for walking routes with rest places and loops back to the start.", "confidence": "indicative" },
+      "binding_constraint": "corridor_width",
+      "layer": "space_plan"
+    },
+    {
+      "id": "sabo_lift",
+      "label_en": "Lift (stretcher / bed)",
+      "label_sv": "Hiss",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 2 § (lift where level difference over 1 m), 2 kap. 5 § (wheelchair user plus helper, free space short side at least 1100 mm), 3 kap. 5 § (stretcher transport by lift in a residential building with more than four storeys). Bed-sized lift is programme practice.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "dimension rule only (1100 mm short side)", "confidence": "verified" },
+      "binding_constraint": "lift_car_size",
+      "layer": "structure"
+    },
+    {
+      "id": "sabo_garden",
+      "label_en": "Enclosed garden / outdoor space",
+      "label_sv": "Trädgård / friyta",
+      "required": { "strength": "programme", "basis": "Uppsala p. 24-25: garden reachable easily, one central larger seating area and several smaller ones, loop paths. Göteborg förstudie p. 4: open space dedicated to residents next to the building.", "url": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/BA5E0FA0592B43F9C125897900478B70/$File/21. TU Forstudie gallande nybyggnation av vard och omsorgsboende vid Onneredsvagen.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 15, "range_m2": [15, 20], "count": "per resident", "strength": "programme", "source": "Göteborgs Stad förstudie Önneredsvägen p. 4: open-space key figure 15-20 m² per resident or apartment. Partly compensated by large glazed balconies if the site is tight.", "confidence": "verified" },
+      "constraints": { "ground_level_access": true },
+      "binding_constraint": "site_open_space",
+      "layer": "site"
+    },
+    {
+      "id": "sabo_guest_room",
+      "label_en": "Guest room for relatives",
+      "label_sv": "Gästrum",
+      "required": { "strength": "programme", "basis": "Botkyrka 2017 p. 32 (for relatives keeping vigil, long-distance visitors).", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² found", "confidence": "verified" },
+      "layer": "space_plan"
+    }
+  ],
+  "variants": [
+    { "id": "dementia_unit", "label": "Dementia unit (demensboende)", "changes": "Apartments may omit fixed cooking fittings, but installations must be prepared (BFS 2024:11 3 kap. 3 § tredje stycket). Simple, overviewable plan without long corridors. Walking loops inside and in the garden (Uppsala p. 11, 24-25). The garden boundary is enclosed without feeling locked in. Calm acoustics and colour/contrast for orientation. Nyköping and Uppsala plan all apartments to be dementia-capable. The legal basis for locking unit doors is unresolved, see open_questions." },
+    { "id": "production_kitchen", "label": "Cooking (production) kitchen vs receiving kitchen", "changes": "Uppsala leaves the choice to each project. A production kitchen needs goods delivery, a reception room, food stores and extra staff facilities next to it (Uppsala p. 22). Göteborg's 100-120 m² LOA per resident includes a production kitchen, restaurant and café." },
+    { "id": "short_term_stay", "label": "Short-term stay (korttidsboende)", "changes": "Same hygiene principles as health care. Single rooms each with their own hygiene room (BOV 2025 p. 133-134). Botkyrka uses the 31-40 m² apartment type." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Sprinkler is mandatory in 5B and cannot be waived on change of use (BFS 2024:7 7 kap. 48 §, 10 kap. 7 §). Each apartment is its own fire cell. Fire alarm, evacuation alarm and two escape routes are required. Avsteg on fire cells, number of escape doors and alarms is not allowed on change of use (10 kap. 2-5 §§).",
+      "Deep office floor plates: 30-35 m² apartments need facade length (about 3.6-4 m width each). The core zone then becomes too large unless filled with group common rooms, utilities and staff rooms.",
+      "A wet room in every apartment means drainage, floor drains and shafts at each apartment position.",
+      "Ceiling height: Botkyrka asks for 2600 mm clear, for the hoist track above sprinkler and ducts. Office floor-to-floor heights with raised floors and suspended ceilings may not fit.",
+      "Stretcher transport from every unit, and a stretcher lift above 4 storeys (BFS 2024:12 3 kap. 2 § and 5 §).",
+      "Dwelling acoustics between apartments, and residential daylight and outlook. A bedridden resident must be able to see out (Uppsala), so office sill heights may need lowering.",
+      "Outdoor space of 15-20 m² per resident at ground level (Göteborg) is rare on office sites."
+    ],
+    "typical_enablers": [
+      "Generous structural grid and load capacity for ceiling hoists and balconies.",
+      "Existing large lifts and central cores; goods entrance and loading bay from office logistics.",
+      "Ground floor suits entrance, activity room, kitchen, goods reception and staff areas, which are not dwellings and not facade-critical.",
+      "Office ventilation capacity can usually meet the BOV targets of at least 2 air changes per hour in apartments and at least 3 in common rooms (BOV 2025)."
+    ]
+  },
+  "sources": [
+    { "ref": "Socialtjänstlag (2025:400), lagen.nu (8 kap. 4 §, 10 kap. 7 §, 11 kap. 3 §, 26 kap. 1-2 §§)", "url": "https://lagen.nu/2025:400", "accessed": "2026-10-19" },
+    { "ref": "Socialtjänstförordning (2025:468) 2 kap. 1-2 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/socialtjanstforordning-2025468_sfs-2025-468/", "accessed": "2026-10-19" },
+    { "ref": "Hälso- och sjukvårdslag (2017:30) 5 kap. 1-2 §§", "url": "https://lagen.nu/2017:30", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 Boverkets föreskrifter om brandskydd (original text, as issued)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:11 Boverkets föreskrifter om bostäders lämplighet för sitt ändamål", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 Boverkets föreskrifter om byggnaders tillgänglighet och användbarhet", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Verksamhetsklasser", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/brandskydd/dimensionerande-forutsattningar/verksamhetsklasser/", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Uppsala kommun, Funktionsprogram för nytt vård- och omsorgsboende för äldre, ALN-2021-00041, 2021-09-24", "url": "https://www.uppsala.se/contentassets/7608aa284a64481bb52150f3fa6ee3a7/funktionsprogram-for-nytt-vard--och-omsorgsboende-for-aldre_slutversion_210924.pdf", "accessed": "2026-10-19" },
+    { "ref": "Göteborgs Stad, Äldre samt vård- och omsorgsnämnden, Förstudie nybyggnation vård- och omsorgsboende vid Önneredsvägen (tjänsteutlåtande, about 2023)", "url": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/BA5E0FA0592B43F9C125897900478B70/$File/21. TU Forstudie gallande nybyggnation av vard och omsorgsboende vid Onneredsvagen.pdf", "accessed": "2026-10-19" },
+    { "ref": "Göteborgs Stad, Uppdaterad behovsbeskrivning Moräns vård- och omsorgsboende, 2022-05-04", "url": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/50165A85ED47BCEFC12589790047ACDF/$File/23.5 Bilaga 5 Uppdaterad behovsbeskrivning Morans VOB 2022 05 04.pdf", "accessed": "2026-10-19" },
+    { "ref": "Göteborgs Stad, tjänsteutlåtande N160-2039/24 on lokalfunktionsprogram för vård- och omsorgsboende (2024-11-15). The programme itself (bilaga 1) was not obtained.", "url": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/CD0E8E1DA221033FC1258BE8005047B6/$File/11. Aldre samt vard och omsorgsnamndens lokalfunktionsprogram for vard och omsorgsboende.pdf", "accessed": "2026-10-19" },
+    { "ref": "Botkyrka kommun, Lokalfunktionsprogram för särskilda boenden (SoL och LSS), von/2017:158 (valid to 2021-11-13)", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf", "accessed": "2026-10-19" },
+    { "ref": "Lidköping, Riktlinje lokalförsörjning bilaga 1 (via search snippet, not re-checked)", "url": "https://intranat.lidkoping.se/download/18.3e34645417f706ca9551206/1647011307923/Riktlinje%20lokalf%C3%B6rs%C3%B6rjning%20bilaga%201.docx", "accessed": "2026-10-19" },
+    { "ref": "Nyköpings kommun, Funktionsprogram vård- och omsorgsboende (via search snippet: 5B and dementia planning)", "url": "https://www.nykoping.se/globalassets/nykoping.se/dokument/styrande-dokument/normerande/funktionsprogram-vard--och-omsorgsboende.pdf", "accessed": "2026-10-19" },
+    { "ref": "Svensk Förening för Vårdhygien, Byggnation och vårdhygien (BOV), 2025-06-24, utgåva 0.1, s. 77, 133-135", "url": "https://www.regiondalarna.se/contentassets/0094a97d15394247bf70887bbce88169/byggnation-och-vardhygien-bov-2025-06-24.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "BFS 2024:7 2 kap. 19 § (definition of 5B) was amended by BFS 2025:10. The amended wording has not been read.",
+    "No national or programme source was found for staff ratios by day, evening and night (e.g. Kolada). staff_per_unit is left null.",
+    "Status of Socialstyrelsen's former dementia and staffing regulation SOSFS 2012:12 (amended by SOSFS 2015:1) has not been confirmed. Also unconfirmed: whether any current rule or law permits locked unit doors in dementia units.",
+    "The Göteborg lokalfunktionsprogram 2024 (bilaga 1 to N160-2039/24) was not found. It may contain m² for group common rooms and staff rooms.",
+    "No checked source gives m² for the group common kitchen, dining and living room, the staff base, the aid storage or the sluice room. All are null.",
+    "Whether a SÄBO counts as a 'publik lokal' under BFS 2024:12 2 kap. 7 §, which would make an accessible public toilet a legal requirement rather than programme.",
+    "Paragraph numbers in HSLF-FS 2017:37 for medicine storage have not been checked.",
+    "Areas in the programmes are given as BOA, LOA or 'total' without a stated standard. A conversion to BTA (SS 21054) is needed for the fit test."
+  ]
+}

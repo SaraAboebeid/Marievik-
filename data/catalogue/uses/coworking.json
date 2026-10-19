@@ -1,0 +1,232 @@
+{
+  "id": "coworking",
+  "label_en": "Coworking / flexible workspace",
+  "label_sv": "Coworking / flexibel kontorsarbetsplats",
+  "family": "work",
+  "summary": "Operator-run shared office with hot desks, fixed desks, small private offices, meeting rooms and often a café/event area open to members and guests. Spatially it is an office: AFS 2023:12 staff-facility, ventilation and daylight rules apply to the operator's staff and, in practice, to the workplaces offered to members. The distinguishing features are higher density, many small enclosed rooms (phone booths, focus rooms) and an event space that can tip parts of the premises into verksamhetsklass 2A/2B.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "1 for member work areas (BFS 2024:7 2 kap. 10 §, 'kontor'); event/café areas open to the public are 2A (≤150 persons) or 2B (>150 persons) per BFS 2024:7 2 kap. 11–12 §§ (samlingslokaler); 2C if alcohol served in more than limited extent and >150 persons (13 §).",
+    "key_laws": [
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "BFS 2024:7 brandskydd", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" }
+    ],
+    "permits": [
+      "In an existing office: normally no change of use. An event space for >150 persons changes fire class; whether that is 'väsentligen annat ändamål' (bygglov, PBL 9 kap. 15 § 1 since 2025-12-01) is a municipal judgment — anmälan is needed in any case for fire-safety changes (PBF 6 kap. 1 §).",
+      "Anmälan (PBF 6 kap. 1 §) for ventilation changes when subdividing into many small rooms.",
+      "Livsmedelsregistrering (LIVSFS 2022:8 2 §) if the café sells/handles food beyond a member pantry."
+    ],
+    "operator_oversight": "Arbetsmiljöverket; kommunens byggnadsnämnd; kommunal livsmedelskontroll if a café is run",
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "fire_vk_1", "fire_vk_2abc", "occ_density_law_2024", "staff_personalutrymmen_general", "staff_eating_rest", "staff_room_height_daylight", "san_workplace", "vent_workplace"]
+  },
+  "occupancy": {
+    "unit": "workplace",
+    "gross_m2_per_unit": {
+      "value": 15,
+      "range": [12, 22],
+      "strength": "practice",
+      "source": "Borrowed from the office benchmark (Riksrevisionen RiR 2025:17 sect. 4.1; Skr. 2025/26:65 sect. 3.1: 15 m2 per employee). No Swedish coworking-specific public source found.",
+      "confidence": "indicative",
+      "note": "Coworking is usually denser per desk than agency offices; treat as an upper working value."
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Operator staffing (hosts/reception) not regulated or published." },
+    "egress_design_density": {
+      "persons_per_m2": 2.5,
+      "applies_to": "event / assembly area only",
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 § p. 3: samlingslokal 2.5 persons/m2 when the maximum number is not known. Work areas: use furnished workplaces.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "office_hours",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0.02, 0.1, 0.35, 0.6, 0.7, 0.65, 0.55, 0.65, 0.7, 0.6, 0.45, 0.3, 0.2, 0.15, 0.1, 0.05, 0, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced): office-like daytime peak with a longer evening tail from events and member access."
+  },
+  "spaces": [
+    {
+      "id": "cowork_desks",
+      "label_en": "Hot desks and fixed desks",
+      "label_sv": "Flex- och fasta arbetsplatser",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 5–6 §§ sufficient area, free height and movement; 5 kap. 25 § daylight and view.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "desks sold", "strength": "none", "source": "No m2 per desk in AFS 2023:12.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": ["cowork_ventilation"],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "daylight_and_view",
+      "layer": "space_plan",
+      "notes": "Ceiling height per AFS 2023:12 3 kap. 5 § allmänna råd (2.40 m)."
+    },
+    {
+      "id": "cowork_private_offices",
+      "label_en": "Small private offices (team rooms)",
+      "label_sv": "Små kontorsrum för team",
+      "required": { "strength": "practice", "basis": "Product offering of most operators; not required by law.", "url": "" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": ["cowork_ventilation"],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "space_plan",
+      "notes": "Each room is a permanent workplace: daylight/view (AFS 2023:12 5 kap. 25 §) and 7 l/s/person + 0.35 l/s/m2 (5 kap. 4 §)."
+    },
+    {
+      "id": "cowork_phone_booths",
+      "label_en": "Phone booths / focus rooms",
+      "label_sv": "Telefonbås / tysta rum",
+      "required": { "strength": "guidance", "basis": "AFS 2023:12 3 kap. 2 § allmänna råd: 'tysta rum' as example of rooms that may be needed.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["cowork_ventilation"],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "stuff",
+      "notes": "Free-standing booths are furniture ('stuff') but need their own airflow; fire-safety of booth materials should be checked with the fire consultant."
+    },
+    {
+      "id": "cowork_meeting",
+      "label_en": "Bookable meeting rooms",
+      "label_sv": "Bokningsbara mötesrum",
+      "required": { "strength": "practice", "basis": "Core product of coworking operators; not a legal requirement.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": false, "facade_required": false },
+      "depends_on": ["cowork_ventilation"],
+      "shareable_with": ["office"],
+      "shareable_note": "Can be sold to building tenants.",
+      "binding_constraint": "ventilation",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "cowork_event_lounge",
+      "label_en": "Lounge / café / event space",
+      "label_sv": "Lounge / kafé / eventyta",
+      "required": { "strength": "practice", "basis": "Typical feature, not required. If open to the public it is a publik lokal and a samlingslokal (BFS 2024:7 2 kap. 11–12 §§).", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["cowork_ventilation", "cowork_wc"],
+      "shareable_with": ["restaurant_cafe", "food_hall", "office"],
+      "shareable_note": "Evening events; daytime café can also serve as members' eating room.",
+      "binding_constraint": "egress",
+      "layer": "space_plan",
+      "notes": "Above 150 persons: verksamhetsklass 2B — two independent exits (BFS 2024:7 7 kap. 9 §), alternative exit leading to main entrance or equivalent (7 kap. 17 §), max 30 m to exit (7 kap. 19 §), door width 1.00 m per 150 persons (7 kap. 29 §), fire alarm (7 kap. 46 §), evacuation alarm (7 kap. 43 §), emergency lighting (7 kap. 40 §). At change of use the number of exits may not be relaxed for 2B (10 kap. 4 §). Ceiling 2.70 m: AFS 2023:12 3 kap. 5 § allmänna råd for rooms for many persons."
+    },
+    {
+      "id": "cowork_ventilation",
+      "label_en": "Ventilation capacity",
+      "label_sv": "Ventilation",
+      "required": { "strength": "law", "basis": "AFS 2023:12 5 kap. 4 §: at least 7 l/s per person + 0.35 l/s per m2.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "7 x persons + 0.35 x m2 (l/s)", "strength": "law", "source": "AFS 2023:12 5 kap. 4 §", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Density and many small rooms make this the most likely failure point in an existing office."
+    },
+    {
+      "id": "cowork_pantry",
+      "label_en": "Member kitchen / eating area",
+      "label_sv": "Pentry / matutrymme",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 60–61 §§ (tables and chairs with backrests; fridge, heating, dishwashing) for employees; 36 § drinking water.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "seats for simultaneous users", "strength": "none", "source": "No m2 in AFS 2023:12.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office", "restaurant_cafe"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Whether the requirement formally applies towards members depends on who is employer and who 'råder över' the workplace (see open_questions); operators provide it in practice."
+    },
+    {
+      "id": "cowork_pause_rest",
+      "label_en": "Pause and rest space",
+      "label_sv": "Paus- och vilutrymme",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 62 § (pause), 63 § (rest space for lying rest; separate vilrum may be needed when >50 persons simultaneously employed — allmänna råd).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["cowork_wc"],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "cowork_wc",
+      "label_en": "WCs incl. accessible WC",
+      "label_sv": "Toaletter inkl. tillgänglig toalett",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 56–58 §§, 3 kap. 4 § p. 6 (accessible WC per storey at new build/ombyggnad). If WCs are provided for the public in a publik lokal, at least one accessible (BFS 2024:12 2 kap. 7 §).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 4.84, "range_m2": null, "count": "1 WC per started 15 persons (AFS allmänna råd to 3 kap. 56 §)", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänna råd: accessible WC at least 2.2 x 2.2 m.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "value_m2 = accessible WC."
+    },
+    {
+      "id": "cowork_lockers",
+      "label_en": "Lockers / storage",
+      "label_sv": "Skåp / förvaring",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 40–41 §§ (clothes storage; lockable valuables).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": ""
+    },
+    {
+      "id": "cowork_reception",
+      "label_en": "Reception / host desk",
+      "label_sv": "Reception",
+      "required": { "strength": "practice", "basis": "Operator practice. Receptions in publika lokaler need sound transfer to hearing aids (BFS 2024:12 3 kap. 6 §, new build).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office"],
+      "shareable_note": "",
+      "binding_constraint": "accessibility",
+      "layer": "space_plan",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "cowork_desk_led", "label": "Desk-led (hot desks dominate)", "changes": "Highest density; ventilation and WC count drive the fit." },
+    { "id": "cowork_office_suites", "label": "Serviced office suites", "changes": "Mostly small enclosed offices; each needs facade, daylight and per-room ventilation — behaves like cellular office." },
+    { "id": "cowork_community_event", "label": "Community / event-led", "changes": "Large event space; may become samlingslokal 2B (>150 persons) with fire alarm, evacuation alarm and two exits; possible food registration for café." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Ventilation capacity for higher density and many small rooms (AFS 2023:12 5 kap. 4 §).",
+      "Event space >150 persons: 2B requirements (BFS 2024:7 7 kap. 9, 17, 29, 43, 46 §§; no relaxation of exit numbers at change of use, 10 kap. 4 §).",
+      "WC count at high density (1 per started 15 — AFS allmänna råd)."
+    ],
+    "typical_enablers": [
+      "Same verksamhetsklass 1 for work areas; usually no change-of-use permit.",
+      "Existing office cores, WCs and pantries can be reused directly."
+    ]
+  },
+  "sources": [
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser — 2 kap. 7 §, 3 kap. 2–6, 36–63 §§, 5 kap. 4, 25 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 — 2 kap. 4, 10–13 §§; 7 kap. 9, 17, 19, 29, 40, 43, 46 §§; 10 kap. 4 §", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 — 2 kap. 7 §, 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "LIVSFS 2022:8 registrering och godkännande — 2 §, 9 §", "url": "https://www.livsmedelsverket.se/globalassets/om-oss/lagstiftning/offentlig-kontroll/livsfs-2022-8_web_t.pdf", "accessed": "2026-10-19" },
+    { "ref": "Riksrevisionen RiR 2025:17 / Skr. 2025/26:65", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/regeringens-skrivelse/riksrevisionens-rapport-om-statens-anvandning-och_hd0365/html/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "Who carries AFS 2023:12 duties towards members? AFS 2023:12 2 kap. 7 §: an employer who does not 'råda över' the workplace need only follow a few provisions; allmänna råd says an employer does not råda if it neither owns nor has a lease for the workplace. Whether a coworking membership counts as a lease is not settled in the text — ask Arbetsmiljöverket or check case practice.",
+    "Self-employed members without employees are covered as both employer and employee (2 kap. 7 § fourth paragraph) with listed exceptions — implications for operator obligations unclear.",
+    "BFS 2025:10 amended BFS 2024:7 from 2025-12-01 (per cross_cutting.json); 7 kap./10 kap. paragraph numbers here are from the original text — re-check.",
+    "No Swedish public source for m2 per coworking desk or desk-to-member ratio; value is borrowed from office benchmark.",
+    "Does a members-only event space count as samlingslokal 2A/2B, or vk1 because members know the premises? BFS 2024:7 2 kap. 10–12 §§ turn on 'god lokalkännedom' — needs fire consultant judgment."
+  ]
+}

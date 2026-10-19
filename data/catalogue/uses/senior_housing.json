@@ -1,0 +1,188 @@
+{
+  "id": "senior_housing",
+  "label_en": "Senior housing / safety housing (seniorboende, trygghetsboende)",
+  "label_sv": "Trygghetsboende / seniorboende (hyresbostäder för äldre)",
+  "family": "housing",
+  "summary": "Ordinary dwellings, usually rental, aimed at older people (often 55+ or 65+). Each apartment is a full dwelling under the housing rules. A trygghetsboende adds a shared common room and usually a host or staff on site at set times. Law sets the dwelling requirements and nothing about common spaces, unless (a) the owner seeks state support under SFS 2016:848, whose definition requires common spaces and daily staff or other shared services, or (b) the municipality runs it as a needs-assessed special housing form under SoL 8 kap. 4 § andra stycket. Case (b) moves it to fire class 3C with sprinkler and stove guards. No minimum apartment size exists. SFS 2016:848 caps the area eligible for funding at 35 m² per apartment and 15 m² common space per apartment.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "3A (ordinary senior / 55+ housing); 3C (behovsprövat trygghetsboende)",
+    "bbr_verksamhetsklass_source": "BFS 2024:7 2 kap. 14 § (3A: dwellings in multi-family buildings) and 2 kap. 16 § (3C: 'bostäder i behovsprövade trygghetsboenden och andra boenden avsedda för personer som kan förväntas behöva stöd eller vård delar av dygnet'). Boverket PBL kunskapsbanken: 55+ housing not specifically intended for people with special needs may be designed in 3A. https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+    "fire_consequences_of_3C": [
+      "Sprinkler for personal protection or a residential sprinkler system for the whole building (BFS 2024:7 7 kap. 48 §). No deviation is allowed on change of use (10 kap. 7 §).",
+      "Stove guard with overheating protection on cooking appliances used by residents (4 kap. 25 §).",
+      "Smoke detectors (7 kap. 47 §); each dwelling is its own fire cell (5 kap. 25 § p. 5); two escape doors per dwelling (7 kap. 9 § p. 3)."
+    ],
+    "key_laws": [
+      { "ref": "SoL (2025:400) 8 kap. 4 § andra stycket: the municipality MAY set up special housing for older people who mainly need services in the home and other easily accessible services, and need to break unwanted isolation. This is the needs-assessed (biståndsbedömt) trygghetsboende.", "url": "https://lagen.nu/2025:400" },
+      { "ref": "Förordning (2016:848) om statligt stöd för att anordna och tillhandahålla bostäder för äldre personer, 2 § p. 4 (definition) and 11 § (area caps). Latest amendment SFS 2025:497.", "url": "https://lagen.nu/2016:848" },
+      { "ref": "BFS 2024:11 bostäders lämplighet (full dwelling functions)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet och användbarhet", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:7 brandskydd", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use (PBL 9 kap. 15 § 1, from 2025-12-01; formerly 9 kap. 2 § 3 a/b) from office to dwellings. See cross_cutting.json cou_bygglov_trigger.",
+      "If run as a needs-assessed special housing form (SoL 8 kap. 4 § andra stycket), IVO permit for private operators or notification for municipal ones (SoL 26 kap. 1-2 §§, lagen.nu summary)",
+      "Optional: application to Boverket or the county board for state support under SFS 2016:848"
+    ],
+    "operator_oversight": "None for ordinary senior rental housing (landlord under the Jordabalken rent rules). IVO if run as needs-assessed special housing."
+  },
+  "occupancy": {
+    "unit": "apartment",
+    "gross_m2_per_unit": {
+      "value": null,
+      "strength": "none",
+      "source": "No programme source checked. For reference, SFS 2016:848 11 § caps the area eligible for funding at 35 m² boarea plus 15 m² common activity space per apartment (50 + 20 m² for two-person apartments). These are funding caps, not design values.",
+      "confidence": "sourced"
+    },
+    "staff_per_unit": {
+      "value": null,
+      "strength": "law",
+      "source": "SFS 2016:848 2 § p. 4: staff present daily who can support residents at set times, OR access to other shared services. This applies only to the definition used for state support. No ratio exists. Linköping pays a host/staff resource in steps by apartment count (≤30, 31-59, ≥60 apartments), per Linköping rutin värdvärdinna (not re-checked).",
+      "confidence": "sourced"
+    },
+    "hours_profile": "24_7",
+    "hourly_presence": [0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.9, 0.8, 0.7, 0.7, 0.7, 0.75, 0.75, 0.7, 0.7, 0.75, 0.85, 0.9, 0.95, 0.95, 0.95, 0.95, 0.95],
+    "hourly_presence_note": "Residents at home, indicative and not sourced. Common room and host presence typically at set daytime hours."
+  },
+  "spaces": [
+    {
+      "id": "senior_apartment",
+      "label_en": "Apartment (full dwelling)",
+      "label_sv": "Lägenhet (fullvärdig bostad)",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 1 § (all dwelling functions), 2 kap. 3 § (own hygiene room), 3 kap. 3 § (cooking fittings). BFS 2024:12 2 kap. 9 § (accessible hygiene room), 2 kap. 10 § (free space for help along both long sides and the foot of a bed), 3 kap. 2 § (stretcher transport from each dwelling). Stove guard in 3C (BFS 2024:7 4 kap. 25 §).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "1 per household",
+        "strength": "none",
+        "source": "No minimum area in law. SFS 2016:848 11 §: state support is calculated on at most 35 m² boarea per apartment (50 m² for a two-person apartment). This is a funding cap, not a design value.",
+        "url": "https://lagen.nu/2016:848",
+        "confidence": "sourced"
+      },
+      "constraints": { "daylight_required": true, "facade_required": true },
+      "binding_constraint": "facade_length_and_drainage",
+      "layer": "space_plan",
+      "notes": "Tenure must be rental or cooperative rental to qualify for SFS 2016:848 support. Age: at least one occupant 65+."
+    },
+    {
+      "id": "senior_common_room",
+      "label_en": "Common room for meals, socialising, hobbies",
+      "label_sv": "Gemensamhetslokal",
+      "required": { "strength": "law", "basis": "Definitional only. SFS 2016:848 2 § p. 4 requires 'utrymmen för de boendes måltider, samvaro, hobby och rekreation som främjar gemenskap och trygghet' for housing to count as hyresbostäder för äldre and receive support. A plain 55+ seniorboende has no such legal requirement; there it is practice.", "url": "https://lagen.nu/2016:848" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "1 per building or block",
+        "strength": "none",
+        "source": "No minimum. SFS 2016:848 11 § caps fundable common activity space at 15 m² per apartment (20 m² per two-person apartment). Region Gotland's local rule funds common rooms up to 2 m² per apartment (search snippet, not re-checked).",
+        "url": "https://lagen.nu/2016:848",
+        "confidence": "sourced"
+      },
+      "constraints": { "daylight_required": true, "facade_required": true },
+      "depends_on": ["senior_common_kitchenette", "senior_common_wc"],
+      "shareable_with": ["community_hall", "day_centre_elderly"],
+      "shareable_note": "Often co-used with neighbourhood activities or a municipal meeting place (träffpunkt).",
+      "binding_constraint": "ground_floor_location",
+      "layer": "space_plan"
+    },
+    {
+      "id": "senior_common_kitchenette",
+      "label_en": "Kitchen in common room",
+      "label_sv": "Kök i gemensamhetslokal",
+      "required": { "strength": "practice", "basis": "Follows from 'måltider' in the SFS 2016:848 definition. No room is specified.", "url": "https://lagen.nu/2016:848" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no source", "confidence": "indicative" },
+      "layer": "services"
+    },
+    {
+      "id": "senior_common_wc",
+      "label_en": "Accessible WC by common room",
+      "label_sv": "RWC vid gemensamhetslokal",
+      "required": { "strength": "practice", "basis": "No legal requirement found for residential common rooms. BFS 2024:12 2 kap. 7 § applies only to 'publika lokaler'.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "strength": "none", "source": "no source", "confidence": "indicative" },
+      "layer": "services"
+    },
+    {
+      "id": "senior_host_office",
+      "label_en": "Host / staff office",
+      "label_sv": "Värdens/värdinnans kontor (personalutrymme)",
+      "required": { "strength": "law", "basis": "Conditional. SFS 2016:848 2 § p. 4: daily staff OR access to other shared services. If staff are employed, AFS 2023:12 3 kap. applies to their workplace (WC, break and eating facilities).", "url": "https://lagen.nu/2016:848" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no source", "confidence": "indicative" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "senior_storage",
+      "label_en": "Resident storage (apartment store, bulky items)",
+      "label_sv": "Lägenhetsförråd / förråd för skrymmande föremål",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 5 § (storage not for daily use may be outside the dwelling, nearby and separated off) and 2 kap. 6 § (shared room for bulky items for daily use, sized for the dwellings sharing it).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "no m² in BFS 2024:11", "confidence": "verified" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "senior_mobility_store",
+      "label_en": "Rollator / mobility-scooter store with charging",
+      "label_sv": "Förråd för rullatorer, permobiler med laddning",
+      "required": { "strength": "law", "basis": "Falls under BFS 2024:11 2 kap. 6 § (bulky items for daily use). The charging provision is practice. Fire risk from battery charging should be checked against BFS 2024:7.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no source", "confidence": "indicative" },
+      "layer": "space_plan"
+    },
+    {
+      "id": "senior_laundry",
+      "label_en": "Shared laundry (if not in apartments)",
+      "label_sv": "Gemensam tvättstuga",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 4 § and 3 kap. 2 §: washing and drying may be outside the dwelling, shared, nearby, with machines sized for the dwellings sharing it.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² in BFS 2024:11", "confidence": "verified" },
+      "layer": "services"
+    },
+    {
+      "id": "senior_lift_and_entrance",
+      "label_en": "Accessible entrance and lift",
+      "label_sv": "Tillgänglig entré och hiss",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 1 § (accessible main entrance), 2 kap. 2 § (lift where level difference over 1 m), 2 kap. 5 § (car short side at least 1100 mm), 3 kap. 5 § (stretcher in lift above four storeys), 4 kap. 5 § (when altering multi-family buildings over two storeys, install a lift if missing, with some exceptions).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "dimension rule only", "confidence": "verified" },
+      "binding_constraint": "lift_car_size",
+      "layer": "structure"
+    },
+    {
+      "id": "senior_outdoor",
+      "label_en": "Outdoor seating / balcony",
+      "label_sv": "Uteplats / balkong",
+      "required": { "strength": "practice", "basis": "No checked source sets this for senior housing. Lot requirements under BFS 2024:13 (tomter) were not checked.", "url": null },
+      "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no source", "confidence": "indicative" },
+      "layer": "site"
+    }
+  ],
+  "variants": [
+    { "id": "seniorboende_55plus", "label": "Seniorboende 55+ (no needs assessment)", "changes": "Ordinary housing in class 3A. Common room optional. No staff. Age criterion set by the landlord." },
+    { "id": "trygghetsboende_supported", "label": "Trygghetsboende with state support (SFS 2016:848)", "changes": "Tenants 65+ (or couple/siblings with one 65+). Common spaces for meals, socialising, hobby and recreation. Daily staff or shared services; a 10 % support supplement where staff are present (11 § femte stycket). Still class 3A unless needs-assessed." },
+    { "id": "trygghetsboende_needs_assessed", "label": "Needs-assessed trygghetsboende (SoL 8 kap. 4 § andra stycket)", "changes": "A special housing form under SoL, class 3C: whole-building sprinkler, stove guards, smoke detectors. IVO permit or notification. Allocation by needs assessment." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Every apartment needs a kitchen and a wet room, so drainage and shafts are needed in a regular pattern.",
+      "Deep floor plates give dark single-aspect apartments. Dwelling daylight and acoustics are stricter than for offices.",
+      "If needs-assessed (3C), whole-building sprinkler cannot be waived on change of use (BFS 2024:7 10 kap. 7 §)."
+    ],
+    "typical_enablers": [
+      "An existing lift and accessible entrance meet BFS 2024:12 easily.",
+      "The office ground floor can hold the common room, host office and mobility store.",
+      "Small apartments of about 35 m² fit a narrower facade module than SÄBO groups with their common rooms."
+    ]
+  },
+  "sources": [
+    { "ref": "Förordning (2016:848) om statligt stöd för att anordna och tillhandahålla bostäder för äldre personer (lagen.nu, consolidated to SFS 2025:497)", "url": "https://lagen.nu/2016:848", "accessed": "2026-10-19" },
+    { "ref": "Riksdagen, SFS 2016:848", "url": "https://www.riksdagen.se/sv/dokument-lagar/dokument/svensk-forfattningssamling/forordning-2016848-om-statligt-stod-for-att_sfs-2016-848", "accessed": "2026-10-19" },
+    { "ref": "Socialtjänstlag (2025:400) 8 kap. 4 §", "url": "https://lagen.nu/2025:400", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 brandskydd (2 kap. 14, 16 §§; 4 kap. 25 §; 7 kap. 48 §; 10 kap. 7 §)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:11 bostäders lämplighet", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet och användbarhet", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Verksamhetsklasser (3A for 55+ housing; 3C for needs-assessed trygghetsboende)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/brandskydd/dimensionerande-forutsattningar/verksamhetsklasser/", "accessed": "2026-10-19" },
+    { "ref": "Linköpings kommun, Rutin värd/värdinna på trygghetsboende (not re-checked)", "url": "https://linkoping.se/contentassets/lank-rutin-ansokan-om-ersattning-for-personalresurs-for-vardvardinna-pa-trygghetsboende/rutin-vard-vardinna-pa-trygghetsboende-tillganglig.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No municipal or operator space programme for trygghetsboende with m² was found. A programme from Stockholm (Micasa), Göteborg (Framtiden/Bostads AB Poseidon trygghetsboende) or Malmö (MKB) should be sought.",
+    "Boverket's BFS 2016:9 rules supplementing SFS 2016:848 were not read. They may set more conditions on common spaces and staff hours.",
+    "Whether SFS 2016:848 support is currently funded (support is given 'i mån av tillgång på medel').",
+    "Outdoor and lot requirements for housing under BFS 2024:13 were not checked.",
+    "Whether a residential common room in 3A housing counts as a 'publik lokal' needing an accessible public toilet (BFS 2024:12 2 kap. 7 §)."
+  ]
+}

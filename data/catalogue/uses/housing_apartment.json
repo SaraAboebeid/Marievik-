@@ -1,0 +1,424 @@
+{
+  "id": "housing_apartment",
+  "label_en": "Ordinary dwelling in a multi-dwelling building (flerbostadshus)",
+  "label_sv": "Bostadslägenhet i flerbostadshus",
+  "family": "housing",
+  "summary": "Permanent, self-contained dwellings (1 rok to 4 rok). Since 1 July 2025 the dwelling-design rules are in BFS 2024:11 (bostäders lämplighet för sitt ändamål), which replaced BBR section 3:2; the BBR transition period ended 30 June 2026. The new rules are purely functional: every dwelling must provide, in reasonable measure, separable spaces for the six 'bostadsfunktioner' (sleep/rest, socialising, cooking, meals, hygiene, storage), and personal hygiene must be a room of its own. The old BBR size bands (>55 m², 35-55 m², <=35 m²) and the general-advice references to SS 91 42 21 no longer exist in the regulation; sizing is a judgement on four factors (dwelling size, number of residents, need for separable parts of rooms, fittings and equipment) supported by 'relevant and established standards'. Hard numeric law values that do exist: daylight factor >= 1.0 % over half the floor area of habitable rooms (0.8 % may be accepted on conversion from non-residential premises), outdoor-air flow 0.35 l/s per m² and 4 l/s per person, sound insulation tables in BFS 2024:10, wheelchair design dimensions 0.70 x 1.20 m / turning circle 1.30 m / door 0.76 m inside dwellings (BFS 2024:12), and >= 2 bicycle parking spaces per apartment for new multi-dwelling buildings (BFS 2026:4).",
+  "regulatory": {
+    "bbr_verksamhetsklass": "3A — 'bostäder i flerbostadshus' (BFS 2024:7, 2 kap. 14 §). Each dwelling is its own fire compartment (BFS 2024:7, 5 kap. 25 § p. 3). Lägenhetsförråd are Vk 1 (BFS 2024:7, 2 kap. 10 §). Note: BBR 5:2 (repealed BBR, pre-2025) numbering is superseded; the class names are unchanged.",
+    "key_laws": [
+      { "ref": "Plan- och bygglag (2010:900) 8 kap. 1 §, 4 §, 9-10 §§; 9 kap. 15 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      { "ref": "Plan- och byggförordning (2011:338) 3 kap. 1 §, 4 §, 17 §, 18 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-byggforordning-2011338_sfs-2011-338/" },
+      { "ref": "BFS 2024:11 Boverkets föreskrifter om bostäders lämplighet för sitt ändamål", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 Boverkets föreskrifter om byggnaders tillgänglighet och användbarhet", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      { "ref": "BFS 2024:8 Boverkets föreskrifter om skydd med hänsyn till hygien, hälsa och miljö samt hushållning med vatten och avfall", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      { "ref": "BFS 2024:10 Boverkets föreskrifter om skydd mot buller i byggnader", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-10" },
+      { "ref": "BFS 2024:7 Boverkets föreskrifter och allmänna råd om säkerhet i händelse av brand i byggnader", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      { "ref": "BFS 2026:4 Boverkets föreskrifter och allmänna råd om hållbar mobilitet (in force 1 July 2026)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2026-4" }
+    ],
+    "permits": [
+      "Bygglov for change of use: PBL 9 kap. 15 § p. 1 (building taken into use for a substantially different purpose) and p. 2 (an additional dwelling is created). Numbering as amended by Lag (2025:974); before 1 Dec 2025 this was 9 kap. 2 § p. 3 a-b.",
+      "Detaljplan must permit 'Bostäder' (B); otherwise planändring or an avvikelse is needed.",
+      "Tekniskt samråd and startbesked (technical requirements of BFS 2024:7-2024:12 are handled here, design requirements at bygglov).",
+      "On alteration, the altered part must meet the new-build requirements, which may be adapted on the grounds listed in BFS 2024:11 4 kap. 1 § (varsamhet, förvanskning, scope, negligible benefit, unreasonable cost, technical reasons, other requirements)."
+    ],
+    "operator_oversight": "Byggnadsnämnden (municipality) under PBL; no sector-specific operator authority."
+  },
+  "occupancy": {
+    "unit": "resident",
+    "gross_m2_per_unit": {
+      "value": 45,
+      "range": [40, 50],
+      "strength": "practice",
+      "source": "Derived: SCB 'Hushållens boende 2025' gives 35 m² bostadsarea per person for rented flats in flerbostadshus (40 m² for bostadsrätt, 42 m² national average). Converted to gross with an assumed BOA/BTA ratio of about 0.75-0.85; that ratio is an assumption, not sourced.",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/boende-bebyggelse-och-mark/bostader-och-boende/hushallens-boende/pong/statistiknyhet/hushallens-boende-2025/",
+      "confidence": "indicative"
+    },
+    "staff_per_unit": { "value": 0, "strength": "practice", "source": "No on-site staff in ordinary rental housing; property management is off-site or shared." },
+    "hours_profile": "24_7",
+    "hourly_presence": [0.95, 0.95, 0.95, 0.95, 0.95, 0.95, 0.9, 0.75, 0.5, 0.4, 0.35, 0.35, 0.35, 0.35, 0.35, 0.4, 0.5, 0.65, 0.75, 0.8, 0.85, 0.9, 0.95, 0.95],
+    "hourly_presence_note": "Indicative weekday profile (share of residents at home): high at night, low during working hours, peak in the evening. Not taken from a source; replace with SCB tidsanvändningsundersökning data if needed. Weekends sit roughly between 0.6 and 0.95 all day.",
+    "persons_per_dwelling_note": "BFS 2024:11 2 kap. 1 § requires sizing for 'det antal boende som den är avsedd för'; Boverket's guidance says a dwelling is intended for as many persons as it has sleeping places. Design persons per variant are listed under variants and are indicative."
+  },
+  "spaces": [
+    {
+      "id": "dwelling_sleep",
+      "label_en": "Space for sleep and rest (bedroom or separable part of a room)",
+      "label_sv": "Utrymme för sömn och vila",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § and 17 § (separable spaces for sömn och vila, in reasonable measure); BFS 2024:11 2 kap. 1 § (design and size for the bostadsfunktioner)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "one sleeping place per intended resident; number of separable sleeping spaces depends on household size",
+        "strength": "none",
+        "source": "BFS 2024:11 sets no m². Boverket points to 'relevanta och vedertagna standarder' (SS 91 42 21:2006 is the established Swedish standard but is paid and no longer referenced by the regulation).",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Private function; not shareable in an ordinary dwelling.",
+      "binding_constraint": "daylight_and_plan_depth",
+      "layer": "space_plan",
+      "notes": "Accessibility: in at least one sleeping space it must be possible to arrange free space for help along both long sides and the foot of at least one bed (BFS 2024:12 2 kap. 10 §). In a multi-storey dwelling only the entrance level needs to be accessible, but it must give access to all functions (BFS 2024:12 2 kap. 12 §). Daylight: DF >= 1.0 % over at least half the summed floor area of rooms used more than temporarily (BFS 2024:8 4 kap. 1 §). Ceiling height: BFS 2024:8 5 kap. 1 § is only functional ('tillräcklig ... anpassad till rummets avsedda användning'); the old BBR 2.40 m value is no longer in the regulation, so null is recorded."
+    },
+    {
+      "id": "dwelling_living",
+      "label_en": "Space for socialising / living room",
+      "label_sv": "Utrymme för samvaro (vardagsrum)",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § and 17 §; BFS 2024:11 2 kap. 1 §; outlook required: BFS 2024:8 4 kap. 2 § ('utrymme för bostadsfunktionerna samvaro och måltider ha utblick')", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "one per dwelling",
+        "strength": "none",
+        "source": "No m² in BFS 2024:11 or its guidance.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "In small dwellings for few persons, sleep/rest and socialising may overlap (Boverket guidance on överlappning).",
+      "binding_constraint": "daylight_and_outlook",
+      "layer": "space_plan",
+      "notes": "The outlook requirement (utblick) makes a window toward the outside effectively mandatory for living and dining spaces."
+    },
+    {
+      "id": "dwelling_kitchen",
+      "label_en": "Kitchen / space for cooking",
+      "label_sv": "Utrymme för matlagning (kök)",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § second paragraph (fittings and equipment for cooking); BFS 2024:11 3 kap. 3 § (fixed fittings and equipment sized for the number of persons the dwelling is intended for); BFS 2024:12 2 kap. 8 § and 3 kap. 8 § (kitchen can be made accessible)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "one per dwelling",
+        "strength": "none",
+        "source": "Regulation requires fitting units 'i lämpligt antal och lämpliga storlekar' for the household but gives no length or m². Kitchen fitting lengths in SS 91 42 21:2006 are behind a paywall and are not reproduced here.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["dwelling_dining"],
+      "shareable_with": [],
+      "shareable_note": "Not shareable in an ordinary dwelling (sharing is only allowed in dwellings with boendeenheter; see co_living).",
+      "binding_constraint": "drainage_and_kitchen_exhaust",
+      "layer": "services",
+      "notes": "Cooking fumes must be removed at the source (BFS 2024:8 3 kap. 6 §). Kitchen exhaust ducts serving dwellings have fire rules in BFS 2024:7 4 kap. 22 §. Room for temporary storage of household waste must exist in the apartment (BFS 2024:8 11 kap. 3 §)."
+    },
+    {
+      "id": "dwelling_dining",
+      "label_en": "Space for meals",
+      "label_sv": "Utrymme för måltider",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § and 17 §; BFS 2024:11 2 kap. 1 §; outlook required by BFS 2024:8 4 kap. 2 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_seat",
+        "value_m2": null,
+        "count": "a dining place for the intended number of residents",
+        "strength": "none",
+        "source": "No m² in the regulation.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": ["dwelling_kitchen"],
+      "shareable_with": [],
+      "shareable_note": "Usually combined with kitchen or living room.",
+      "binding_constraint": "outlook",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "dwelling_hygiene",
+      "label_en": "Bathroom (room for personal hygiene)",
+      "label_sv": "Rum för personhygien (badrum/hygienrum)",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 3 § ('I bostaden ska finnas rum för personhygien') and 3 kap. 1 § (fixed fittings); BFS 2024:12 2 kap. 9 § and 3 kap. 9 § (at least one hygiene room accessible for a person with reduced mobility)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "at least one per dwelling, at least one of them accessible",
+        "strength": "none",
+        "source": "No m² in regulation. The binding geometry is the wheelchair design dimensions for inside dwellings in BFS 2024:12 1 kap. 6 §: wheelchair 0.70 x 1.20 m, turning circle 1.30 m diameter, door clear passage >= 0.76 m.",
+        "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Must be a separate room inside the dwelling ('Funktionen personhygien måste dock alltid vara i ett separat rum').",
+      "binding_constraint": "wet_room_drainage",
+      "layer": "services",
+      "notes": "Office conversions: new wet rooms need falls to drains and stack routing through existing slabs, often the costliest single item."
+    },
+    {
+      "id": "dwelling_storage_daily",
+      "label_en": "Storage for daily use (wardrobes, cleaning cupboard, outdoor clothes)",
+      "label_sv": "Förvaring för dagligt bruk",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § and 17 § (förvaring); BFS 2024:11 2 kap. 1 §. Boverket defines daily-use storage as clothes, home textiles, cleaning equipment, which stays inside the dwelling.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "scaled to number of residents",
+        "strength": "none",
+        "source": "No storage quantity in BFS 2024:11. The old BBR general advice quantities (via SS 91 42 21) are no longer referenced.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": "Interior zone of a deep plan suits this."
+    },
+    {
+      "id": "storage_non_daily",
+      "label_en": "Storage not for daily use (apartment storeroom: seasonal items, suitcases)",
+      "label_sv": "Förvaring som inte är för dagligt bruk (lägenhetsförråd)",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § (förvaring); BFS 2024:11 2 kap. 5 § allows it outside the dwelling but nearby; if outside it must be 'avskilt' (separate/lockable per dwelling)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "one per dwelling",
+        "strength": "none",
+        "source": "No m² in BFS 2024:11.",
+        "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Each dwelling's share must be separated; the room can be common.",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Basements and dark deep-plan zones of offices are good for this. Fire: lägenhetsförråd = Vk 1 (BFS 2024:7 2 kap. 10 §)."
+    },
+    {
+      "id": "storage_bulky_shared",
+      "label_en": "Room for bulky items in daily use (prams, bicycles, wheelchairs, walkers)",
+      "label_sv": "Rum för skrymmande föremål för dagligt bruk (barnvagns-/rullstolsförråd)",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 6 § (may be outside the dwelling and shared; must be sized for the dwellings that share it). Boverket guidance lists cyklar, rullstolar, rollatorer, barnvagnar.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "count": "sized for the dwellings sharing it",
+        "strength": "none",
+        "source": "No m² in regulation.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["co_living", "student_housing"],
+      "shareable_note": "Can be combined with the bicycle room.",
+      "binding_constraint": "step_free_access_from_entrance",
+      "layer": "space_plan",
+      "notes": "Must be reachable step-free near the entrance to be usable for prams and wheelchairs."
+    },
+    {
+      "id": "laundry_room",
+      "label_en": "Shared laundry room",
+      "label_sv": "Tvättstuga",
+      "required": { "strength": "law", "basis": "PBF 3 kap. 1 § (hygien includes hantering av tvätt per Boverket). BFS 2024:11 2 kap. 4 § allows the function outside the dwelling, shared, near the dwellings and sized for them; 3 kap. 2 § requires fixed equipment for machine washing and drying when shared. If not shared, space for it must be inside each dwelling.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "count": "number and type of machines sized for the number, size and type of dwellings sharing it",
+        "strength": "none",
+        "source": "No m² or machine ratio in the regulation.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "co_living"],
+      "shareable_note": "One laundry can serve several residential uses in the same building.",
+      "binding_constraint": "drainage_and_exhaust",
+      "layer": "services",
+      "notes": "Alternative: washer/dryer space in each bathroom (then the shared room is not needed)."
+    },
+    {
+      "id": "waste_room",
+      "label_en": "Waste room / waste collection point",
+      "label_sv": "Avfallsutrymme / avfallsanordning",
+      "required": { "strength": "law", "basis": "BFS 2024:8 11 kap. 1-3 §§ (waste must be handled in or next to the building; avfallsanordningar or avfallsutrymmen required; placed, designed and sized for hygiene and for removal 'på det sätt som krävs')", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "count": "depends on fractions and collection frequency in the municipal waste rules",
+        "strength": "programme",
+        "source": "Size comes from the municipality's renhållningsföreskrifter / avfallshandbok (varies by municipality); not set nationally.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hygien-halsa-och-miljo/avfallsutrymmen/",
+        "confidence": "indicative"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "co_living", "hotel"],
+      "shareable_note": "Can be shared across uses in a mixed building if fractions and access suit both.",
+      "binding_constraint": "collection_vehicle_access",
+      "layer": "site",
+      "notes": "Distance and route for the collection vehicle is usually what fails in an existing building."
+    },
+    {
+      "id": "bicycle_parking",
+      "label_en": "Bicycle parking",
+      "label_sv": "Cykelparkering",
+      "required": { "strength": "law", "basis": "BFS 2026:4 2 kap. 2 §: a new flerbostadshus must have at least two bicycle parking spaces per bostadslägenhet, plus a reasonable number for larger cycles. On alteration the rules only apply to an ombyggnad that involves car parking (1 kap. 4 §), and the number may be adapted if two per apartment is not possible (3 kap. 1 §).", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": ">= 2 spaces per apartment (new build)",
+        "strength": "law",
+        "source": "The law sets the count, not the m². Space dimensions: see Boverket's page on designing bicycle parking spaces (not extracted here).",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/utformning-av-cykelparkeringsplatser/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "co_living"],
+      "shareable_note": "",
+      "binding_constraint": "ground_floor_area",
+      "layer": "site",
+      "notes": "Municipal parking norms (parkeringsnorm/mobilitetsnorm) may ask for more; they are programme-level and vary by city. Applies to applications made on or after 1 July 2026."
+    },
+    {
+      "id": "outdoor_play_space",
+      "label_en": "Outdoor space for play and outdoor stay (friyta)",
+      "label_sv": "Friyta för lek och utevistelse",
+      "required": { "strength": "law", "basis": "PBL 8 kap. 9 § second paragraph (a plot built with dwellings shall have sufficiently large friyta on or near the plot, prioritised over parking) and 8 kap. 10 § (applies 'i skälig utsträckning' when the plot is already built, i.e. conversions)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "count": "sufficiently large for the residents; may be 'i närheten' (nearby park)",
+        "strength": "none",
+        "source": "PBL sets no m². Some municipalities set friyta targets in their own programmes (not checked here).",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "co_living"],
+      "shareable_note": "Roof terraces or courtyards shared with other residential uses.",
+      "binding_constraint": "plot_area",
+      "layer": "site",
+      "notes": "Office plots in business parks often have parking but no friyta; a nearby park may satisfy 'i närheten'."
+    },
+    {
+      "id": "entrance_stair_lift",
+      "label_en": "Entrance, stairwell and lift",
+      "label_sv": "Entré, trapphus och hiss",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 1-2 §§, 5 § (accessible entrance and circulation; lift for wheelchair user plus helper, clear short side >= 1100 mm; more than one passenger lift above ten storeys); 3 kap. 2 § and 5 § (stretcher transport from every dwelling; stretcher in lift in residential buildings of more than four storeys); PBF 3 kap. 4 § (lift not needed for dwellings in buildings with fewer than three storeys, but must be possible to add)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": {
+        "rule": "derived",
+        "value_m2": null,
+        "count": "per stair core",
+        "strength": "law",
+        "source": "Lift dimension (short side >= 1100 mm) is law; corridor widths are functional only ('utifrån utformningen och längden av utrymmet'). Public-area wheelchair dimensions: 0.70 x 1.30 m, turning circle 1.50 m, door >= 0.80 m (BFS 2024:12 1 kap. 6 §).",
+        "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "co_living", "hotel"],
+      "shareable_note": "",
+      "binding_constraint": "fire_egress_and_stair_count",
+      "layer": "structure",
+      "notes": "Office cores usually have lifts, but stair numbers and their relation to new fire compartments decide egress. On alteration of a multi-dwelling building above two storeys with major intervention in stairwell, plan or structure, an accessible lift must be installed if missing (BFS 2024:12 4 kap. 5 §). From 1 Jan 2027, PBF 3 kap. 4 b § / 18 b § (SFS 2026:1265) say a lift need not be installed on alteration if the building has fewer than four storeys afterwards."
+    },
+    {
+      "id": "balcony_or_patio",
+      "label_en": "Balcony or private patio",
+      "label_sv": "Balkong / uteplats",
+      "required": { "strength": "practice", "basis": "Not required by BFS 2024:11; market practice in new production. Where present, BFS 2024:12 2 kap. 11 § sets accessibility rules for roof terraces that complement a balcony.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "optional",
+        "strength": "none",
+        "source": "No source sets size.",
+        "url": "",
+        "confidence": "indicative"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "facade_and_structure",
+      "layer": "skin",
+      "notes": "Adding balconies to an office facade is a structural and facade intervention."
+    },
+    {
+      "id": "car_parking",
+      "label_en": "Car parking, loading and unloading",
+      "label_sv": "Bilparkering, lastning och lossning",
+      "required": { "strength": "law", "basis": "PBL 8 kap. 9 § first paragraph p. 4 ('i skälig utsträckning' on or near the plot); friyta takes priority if space is short", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "per municipal parkeringsnorm",
+        "strength": "programme",
+        "source": "Municipal parking/mobility norms (vary by city and zone).",
+        "url": "",
+        "confidence": "indicative"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["hotel"],
+      "shareable_note": "Office parking is often surplus after conversion; daytime/evening sharing with other uses is possible.",
+      "binding_constraint": "none",
+      "layer": "site",
+      "notes": "If there are more than three car spaces, EV-charging pre-installation applies to new buildings (BFS 2026:4 2 kap. 1 §)."
+    }
+  ],
+  "variants": [
+    { "id": "apt_1rok", "label": "1 rok (one room + kitchenette/kitchen)", "changes": "Design persons 1 (indicative). Typical BOA about 25-40 m² (indicative, not sourced). Sleep, socialising and meals may overlap in one room; only the bathroom must be a separate room. Under the old BBR this was the <=35 m² band (BBR 3:224 (repealed BBR, pre-2025)), which no longer exists." },
+    { "id": "apt_2rok", "label": "2 rok", "changes": "Design persons 1-2 (indicative). Typical BOA about 45-60 m² (indicative). One separable bedroom. Old BBR band 35-55 m² (BBR 3:223 (repealed BBR, pre-2025)) required either the bedroom or the kitchen to be separable; that rule is gone and replaced by the four-factor judgement." },
+    { "id": "apt_3rok", "label": "3 rok", "changes": "Design persons 2-4 (indicative). Typical BOA about 65-80 m² (indicative). Two bedrooms, one with room for a double bed (old BBR 3:222 (repealed BBR, pre-2025) general advice; not in the new rules)." },
+    { "id": "apt_4rok", "label": "4 rok", "changes": "Design persons 3-5 (indicative). Typical BOA about 85-100 m² (indicative). Bigger kitchen fittings and storage scaled to household size (BFS 2024:11 3 kap. 3 §); a second WC is common practice but not required." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Daylight: DF >= 1.0 % over half the habitable floor area (BFS 2024:8 4 kap. 1 §), relaxable to 0.8 % on conversion of non-residential premises only on the grounds in 12 kap. 1 § (BFS 2024:8 13 kap. 5 §). Office plans deeper than about 12-14 m usually fail without an atrium or light well (depth figure indicative).",
+      "Wet rooms in every dwelling: drainage falls and new stacks through existing slabs.",
+      "Sound insulation between dwellings to the BFS 2024:10 2 kap. tables (e.g. 52 dB DnT,w,50 from other spaces outside the dwelling; 56 dB from commercial premises) where offices had lightweight partitions and continuous raised floors or suspended ceilings.",
+      "Fire: change from Vk 1 to Vk 3A; each dwelling becomes its own fire compartment (BFS 2024:7 5 kap. 25 §), with new compartment walls, doors and egress.",
+      "Outdoor friyta (PBL 8 kap. 9-10 §§) on plots designed for parking.",
+      "Detaljplan may only allow offices ('K')."
+    ],
+    "typical_enablers": [
+      "Existing lifts and accessible entrances usually meet BFS 2024:12.",
+      "Ventilation capacity (0.35 l/s per m², BFS 2024:8 3 kap. 5 §) is often already met by office systems, though the distribution needs rebuilding.",
+      "Generous floor-to-floor heights allow drainage in raised floors.",
+      "BFS 2024:11 4 kap. 1 § lets requirements be adapted on alteration (technical reasons, unreasonable cost, varsamhet).",
+      "The functional (non-m²) dwelling rules give freedom to fit unusual plans."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:11 Boverkets föreskrifter om bostäders lämplighet för sitt ändamål (full text, 7 pages)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Bostäders utformning och dimensionering", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Bostäders inredning och utrustning", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Anpassning av krav på bostäders lämplighet vid ändring", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/andring/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet och användbarhet, 1 kap. 6 §, 2 kap. 1-12 §§, 3 kap., 4 kap. 5 §", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Tillgängliga bostäder (quotes PBF 3 kap. 4 §, 18 § incl. 2027 versions)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/tillganglighet-och-anvandbarhet/tillgangliga-bostader/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 hygien, hälsa och miljö: 3 kap. 5-6 §§ ventilation, 4 kap. 1-2 §§ dagsljus/utblick, 5 kap. 1 § rumshöjd, 11 kap. avfall, 13 kap. 5 § dagsljus vid ändring", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:10 skydd mot buller, 2 kap. 2-8 §§, 3 kap.", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-10", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 brand, 2 kap. 10 §, 14 §; 5 kap. 24-25 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Hållbar mobilitet (quotes BFS 2026:4 1 kap. 4 §, 2 kap. 1-4 §§, 3 kap. 1 §)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/", "accessed": "2026-10-19" },
+    { "ref": "Plan- och bygglag (2010:900), riksdagen.se (8 kap. 9-10 §§; 9 kap. 15 §)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/", "accessed": "2026-10-19" },
+    { "ref": "Boverket (2026) Boverkets byggregler Bostadsutformning – Vägledning från PBL kunskapsbanken (före 1 juli 2026), archived guidance on old BBR 3:22x (repealed BBR, pre-2025), pp. 3, 8-9", "url": "https://www.boverket.se/globalassets/publikationer/dokument/2026/boverkets-byggregler-bbr---bostadsutformning-efter-1-december-2025.pdf", "accessed": "2026-10-19" },
+    { "ref": "SCB, Hushållens boende 2025 (m² per person by tenure)", "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/boende-bebyggelse-och-mark/bostader-och-boende/hushallens-boende/pong/statistiknyhet/hushallens-boende-2025/", "accessed": "2026-10-19" },
+    { "ref": "SIS, SS 25267:2024 Byggakustik – Ljudklassning av utrymmen i byggnader – Bostäder (product page; replaces SS 25267:2015)", "url": "https://www.sis.se/en/produkter/building-design-stage/building-design/ss-252672024/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "BFS 2024:7, 2024:8 and 2024:10 were read in their original 2024 text; later amending BFS (2025-2026) were not checked. BFS 2024:11 and 2024:12 wording matches the October 2026 Boverket guidance pages.",
+    "SS 91 42 21:2006 (dimensions, kitchen and storage lengths) is no longer cited by the regulation. Does any municipality still require it? Is a revision under way at SIS? Its values are paid and were not used.",
+    "Sound class: SS 25267:2024 classes A-D were mapped to the old BBR 7 (class C = BBR level). How they map to the new BFS 2024:10 tables was not checked.",
+    "Accessibility levels 'B/C' asked for in the brief: we found no public source tying SS 91 42 21 to such levels. What is public is the wheelchair dimensions in BFS 2024:12 1 kap. 6 §. The level terminology needs checking against the paid standard.",
+    "Ceiling height: no numeric minimum remains (BFS 2024:8 5 kap. 1 § is functional). Is 2.40 m still applied in practice by building committees?",
+    "PBL changes from 1 Jan 2027 (Lag 2026:746: new 8 kap. 2 a, 5 a-5 b §§ and 'större byggnadsändring') will change how requirements apply on alteration. Re-check when in force.",
+    "Persons per dwelling type and BOA ranges per rok are indicative working values. Replace them with a municipal or allmännyttan programme (e.g. the target pilot city's housing company) if one exists.",
+    "Overcrowding norm (e.g. 'norm 2': at most two persons per bedroom, kitchen and living room excluded) could calibrate persons per rok, but no current source was retrieved."
+  ]
+}

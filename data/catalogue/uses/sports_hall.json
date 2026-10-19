@@ -1,0 +1,188 @@
+{
+  "id": "sports_hall",
+  "label_en": "Sports hall (school idrottssal to full-size idrottshall)",
+  "label_sv": "Idrottshall / idrottssal",
+  "family": "community",
+  "summary": "Indoor hall for school PE (idrott och hälsa) and club sport (handball, floorball, basketball, volleyball, badminton). No law sets hall dimensions: they come from the sports federations' court sizes (collected in SKR's 'Måttboken') and municipal programmes. Uppsala's 2023 standard programme for a full-size hall sets 43 x 23 m clear floor, 40 x 20 m courts, 7 m clear height without installations, 4 changing rooms for 20 persons each, a flexible single changing room, stands for 100 seated and a maximum of 299 persons, with a typical BTA of at least 1,700 m2. A school-PE hall (idrottssal) is 250–350 m2 of floor (Uppsala UBF, 2017). This is usually a POOR FIT in office buildings: the 7 m clear height and roughly 23 m column-free span are incompatible with office storey heights (about 3.3–3.9 m floor to floor) and 6–8 m column grids. A hall can normally only go into an existing building by removing slabs and columns (major structural intervention) or in an attached new-build volume.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (max 150 persons) or 2B (more than 150). BFS 2024:7 2 kap. 11–12 §§ name 'sporthallar' explicitly. Events with spectators beyond 1,200 people go to Vk 0 (2 kap. 9 §). See cross_cutting.json fire_vk_0 and fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 4, 9, 11–12 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1 (C4 4.0 kN/m2, C5 5.0 kN/m2 for stands), 13 § dynamic forces", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/" },
+      { "ref": "BFS 2024:12 tillgänglighet: 2 kap. 6–7 §§, 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:10 buller: 2 kap. 9 § (lokaler, functional; includes reverberation time)", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" },
+      { "ref": "AFS 2023:12 (PE teachers' workplace): 3 kap. 46–54 §§ changing and showers", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use, and in practice for the structural change (removal of slabs) or a new extension (PBL 9 kap. 2 §). Detaljplan must allow sports or school use; a full-size hall is often planned as its own building.",
+      "Matches and events with an audience may need a Police permit for offentlig tillställning (Ordningslagen 1993:1617 2 kap.; not re-checked)."
+    ],
+    "operator_oversight": "Municipality (kultur- och fritidsförvaltning for bookings; utbildningsförvaltning for school PE); Skolinspektionen indirectly (PE teaching); räddningstjänst"
+  },
+  "occupancy": {
+    "unit": "hall",
+    "gross_m2_per_unit": {
+      "value": 1700,
+      "range": null,
+      "strength": "programme",
+      "source": "Uppsala kommun, Funktionsprogram för stor idrottshall, 2023-04-17 (IFN-2022-00104), p. 4: 'Dagens idrottshallar har i regel en BTA om minst 1700 kvm'. Full-size hall with 43 x 23 m clear floor (p. 13).",
+      "confidence": "verified",
+      "note": "School-size hall (idrottssal): 250–350 m2 floor area per Uppsala utbildningsförvaltning, cited in Behovsprogram för idrottslokaler vid Johannesbäckskolan, 2017-10-26, p. 2. Gross area for the school-size variant is not given."
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Teachers per class; hall staff minimal. Uppsala: teacher room for 2–6 teachers (p. 12)." },
+    "egress_design_density": {
+      "persons_per_m2": null,
+      "strength": "programme",
+      "source": "BFS 2024:7 2 kap. 4 §: maximum expected number. The Uppsala programme sets 'Maximal personbelastning 299 personer' for a 43 x 23 m hall (p. 13). For use as a samlingssal, the programme notes that ventilation and fire design must allow it (p. 14). The 2.5 p/m2 samlingslokal default applies if the hall is used for events without a defined maximum.",
+      "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.5, 0.6, 0.6, 0.5, 0.3, 0.6, 0.6, 0.4, 0.5, 0.9, 1.0, 1.0, 0.9, 0.6, 0.2, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). School PE on weekdays 8–15 (a hall is booked by the class, so presence is a class of 25–30), and club sport 17–22 at near-full booking. Weekends have tournaments and matches. Capacity is a booking slot rather than a person count."
+  },
+  "spaces": [
+    {
+      "id": "sports_hall_arena",
+      "label_en": "Hall (playing area incl. run-off), divisible",
+      "label_sv": "Idrottshallsrum (delbart med ridåvägg)",
+      "required": { "strength": "programme", "basis": "Defining space. Dimensions come from sports federations via SKR Måttboken and municipal programmes, not law.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": {
+        "rule": "fixed",
+        "value_m2": 989,
+        "range_m2": [250, 1056],
+        "count": "1 hall. 43 x 23 m clear floor = 989 m2 (full-size); 250–350 m2 for a school idrottssal; Nacka programmes use 43–44 x 23–24 m",
+        "strength": "programme",
+        "source": "Uppsala Funktionsprogram för stor idrottshall 2023, p. 13: 'Storlek 43*23 meter fritt golvmått', 'Fri takhöjd utan installationer 7 meter', 'Fria spelmått 40*20 meter', 'Belysning minst 750 lux enligt måttboken', 'Ridåvägg med gångdörr', 'Maximal personbelastning 299 personer'. School size: Uppsala Johannesbäckskolan behovsprogram 2017, p. 2. The upper range of 1,056 m2 (44 x 24 m) comes from Nacka (search summary, not opened).",
+        "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 7000, "daylight_required": false, "facade_required": false },
+      "depends_on": ["sports_hall_changing", "sports_hall_storage"],
+      "shareable_with": ["assembly_event", "community_hybrid", "school_compulsory"],
+      "shareable_note": "School by day, clubs by evening; also school assemblies and graduations (Uppsala p. 14). Event use must be covered by ventilation and fire design.",
+      "binding_constraint": "clear_height_and_span",
+      "layer": "structure",
+      "notes": "The 7 m clear height is a programme value (Uppsala, Nacka) tied to federation requirements for ball sports. It is not a law; smaller existing halls with 6 m height exist. Column-free span about 23 m. Floor C4 4.0 kN/m2 with dynamic effects (BFS 2024:6). Sprung sports floor. Divider curtain: Uppsala requires a sound reduction of at least 30 dB (p. 15). Wall reflectance under 70 % at window walls and under 60 % elsewhere, with limited daylight to avoid glare (p. 14). Reverberation: BFS 2024:10 2 kap. 9 § functional. Lighting: at least 750 lux per Måttboken (Uppsala p. 13)."
+    },
+    {
+      "id": "sports_hall_changing",
+      "label_en": "Changing rooms with showers (team)",
+      "label_sv": "Omklädningsrum med duschutrymme",
+      "required": { "strength": "programme", "basis": "Uppsala 2023 pp. 10–11: four changing rooms, 20 persons each, with shower rooms of at least 4 showers (1 accessible) designed for privacy. For staff, AFS 2023:12 3 kap. 46–54 §§ (law).", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "4 rooms x 20 persons (Uppsala 2023, full-size hall); Johannesbäck 2017: 4 rooms with 22 seats each and 6 showers per double changing room", "strength": "programme", "source": "Uppsala programmes give counts, not m2.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["gym_fitness", "shared_amenities"],
+      "shareable_note": "Can be shared with a gym or outdoor pitches (Johannesbäck adds changing rooms with an entrance towards the football pitch).",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Uppsala: an accessible WC in every other changing room, equipped for showering (p. 11); Johannesbäck: an accessible WC in every changing room. Threshold-free doors, possibility of forced ventilation, wall-hung benches."
+    },
+    {
+      "id": "sports_hall_flex_changing",
+      "label_en": "Flexible single changing room / referee room",
+      "label_sv": "Flexibelt omklädningsrum / domarrum",
+      "required": { "strength": "programme", "basis": "Uppsala 2023 pp. 12–13: one room for 4 persons with its own entrance, lockable, one shower; for individual changing, referees and as a meeting room.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "1 per hall", "strength": "none", "source": "No m2 in source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["community_hybrid"],
+      "shareable_note": "Doubles as a meeting room (Uppsala).",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "sports_hall_storage",
+      "label_en": "Equipment stores (general, school, club, outdoor)",
+      "label_sv": "Redskapsförråd (allmänt, skola, förening, ute)",
+      "required": { "strength": "programme", "basis": "Uppsala 2023 pp. 11–12: one general store reachable from both half-halls, two school stores (one on each side of the curtain), one outdoor store, one club store; lockable except the general store.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "5 stores (Uppsala)", "strength": "programme", "source": "No m2 in the Uppsala 2023 programme. Johannesbäck 2017 lists 'Förråd 10 kvm' (p. 3). A Nacka document proposes 20 m2 and 4 m height for large equipment (search summary, not opened).", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["sports_hall_arena"],
+      "shareable_with": ["assembly_event", "community_hybrid"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": "Stores must open directly onto the hall floor at the same level, with impact protection (Uppsala p. 11–12)."
+    },
+    {
+      "id": "sports_hall_stands",
+      "label_en": "Spectator stand",
+      "label_sv": "Läktare",
+      "required": { "strength": "programme", "basis": "Uppsala 2023 p. 14: stand for 100 seated, wheelchair places at floor level, free sightlines; also used for assemblies and lessons.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "per_seat", "value_m2": null, "range_m2": null, "count": "100 seats (Uppsala)", "strength": "none", "source": "No m2 per seat in source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["sports_hall_arena"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "egress_capacity",
+      "layer": "structure",
+      "notes": "Stand loads: C5 5.0 kN/m2 (BFS 2024:6 tabell 4:1). BFS 2024:12 2 kap. 6 § allows not all audience places to be accessible."
+    },
+    {
+      "id": "sports_hall_teacher_room",
+      "label_en": "PE teachers' room with changing and shower",
+      "label_sv": "Lärarrum / ledarrum",
+      "required": { "strength": "law", "basis": "Teachers' workplace: AFS 2023:12 (cross_cutting.json staff_facilities). Uppsala 2023 p. 12: workplace for 2–6 teachers, changing and shower, daylight, lockable cupboards so clubs can use the room in the evening.", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "1", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["community_hybrid"],
+      "shareable_note": "Club leaders' room in the evening (Uppsala).",
+      "binding_constraint": "daylight_and_view",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "sports_hall_support",
+      "label_en": "Entrance, public WC/RWC, cleaning rooms, kiosk/pentry, waste room",
+      "label_sv": "Entré, publik WC/RWC, städförråd, pentry/kiosk, avfallsrum",
+      "required": { "strength": "programme", "basis": "Uppsala 2023 pp. 9–13, 18: one public RWC and one WC by the entrance; a large cleaning room plus a separate small one for clubs; a pentry with lockable serving hatch; waste room. Accessible public WC is law if public WCs exist (BFS 2024:12 2 kap. 7 §).", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No m2 in source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "community_hybrid"],
+      "shareable_note": "Johannesbäck 2017: for evening club use there should be no more than one entrance (supervision).",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "sports_hall_school", "label": "School idrottssal (250–350 m2 floor)", "changes": "Programme value of 250–350 m2 (Uppsala UBF 2017); one class at a time, 2 changing rooms. Height requirement for this size was not found in a source (open question). Still needs a column-free span of about 12–18 m (derived from an 18 x 36 m hall divided in two; indicative)." },
+    { "id": "sports_hall_full", "label": "Full-size divisible hall (43 x 23 m, 7 m clear)", "changes": "Uppsala 2023 programme: BTA at least 1,700 m2, 4+1 changing rooms, stand for 100, max 299 persons, divider curtain of at least 30 dB." },
+    { "id": "sports_hall_large", "label": "Large hall / arena with spectators", "changes": "More than 150 persons is Vk 2B; above 1,200 is Vk 0 (fire analysis); stands at C5 5.0 kN/m2. Not a realistic conversion target in office stock." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Clear height: 7 m without installations (Uppsala 2023, Nacka) vs typical office floor-to-floor of about 3.3–3.9 m (indicative). This requires removing one or two slabs, which destroys floor area and needs a new stability system (major structure-layer intervention, poor reversibility).",
+      "Column-free span of about 23 m for a full-size hall (20 m court plus run-off) vs office column grids of about 6–8 m (indicative), requiring transfer structures.",
+      "Floor load C4 4.0 kN/m2 plus dynamic effects (BFS 2024:6) vs office B 2.5 kN/m2; stands C5 5.0.",
+      "Ball impact and impact noise to adjacent uses; reverberation control in a large volume.",
+      "Large footprint (BTA of at least 1,700 m2 for full-size) on one level with stores, changing rooms and an entrance."
+    ],
+    "typical_enablers": [
+      "Office buildings with a large double-height ground-floor hall, atrium, or a low annex (canteen, garage, warehouse) that can be raised to about 7 m.",
+      "Courtyard or adjoining plot for a new-build hall attached to the converted office, which then hosts changing rooms, stores and club rooms (these fit office floors well).",
+      "Smaller activity rooms (dance, gymnastics, martial arts) fit office floors with about 3 m clear height better; see gym_fitness.gym_group_studio and culture_makerspace."
+    ]
+  },
+  "sources": [
+    { "ref": "Uppsala kommun, Funktionsprogram för stor idrottshall, Kommunledningskontoret, 2023-04-17, IFN-2022-00104, pp. 4, 9–15, 18", "url": "https://www.uppsala.se/contentassets/373e49d0398b4f7e928036dd1b086a30/funktionsprogram-fullstor-idrottshall.pdf", "accessed": "2026-10-19" },
+    { "ref": "Uppsala kommun, Behovsprogram för idrottslokaler vid Johannesbäckskolan, 2017-10-26, pp. 2–3", "url": "https://www.uppsala.se/contentassets/628e5697002a491f888a89e76d6e1eb1/11.--behovsprogram-idrottslokaler-vid-johannesbackskolan.pdf", "accessed": "2026-10-19" },
+    { "ref": "SKR Måttboken (court dimensions and lines; referenced by Uppsala p. 14; not opened)", "url": "https://skr.se/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7: 2 kap. 4, 9, 11–12 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1, 13 §", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12: 2 kap. 6–7 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Nacka kommun handlingar on Stavsborgskolan and Ektorps skola halls (search summaries only, not opened)", "url": "https://handlingar.nacka.se/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "Riksidrottsförbundet and SKR Måttboken were not opened. Verify the 7 m height and the 40 x 20 m court against Måttboken and the federation rules (handball, floorball, volleyball).",
+    "Clear height for a school-size idrottssal (250–350 m2) was not found in a source.",
+    "Changing-room m2 per person is not stated in the Uppsala programmes; a municipal room-data sheet (rumsfunktionsprogram) may have it.",
+    "Office floor-to-floor and grid figures are indicative ranges (not sourced) and should be replaced by the pilot building's actual data.",
+    "Why the Uppsala programme sets 299 persons (keeps below a threshold?) is not explained in the text."
+  ]
+}

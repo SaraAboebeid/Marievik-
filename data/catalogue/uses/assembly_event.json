@@ -1,0 +1,233 @@
+{
+  "id": "assembly_event",
+  "label_en": "Assembly / event venue / conference",
+  "label_sv": "Samlingslokal / evenemangslokal / konferenslokal",
+  "family": "community",
+  "summary": "A room or group of rooms for gatherings of people who do not know the building: conference, lectures, theatre-style seating, banquets, standing events. Swedish law classifies it by fire class (BFS 2024:7: Vk 2A up to 150 persons, 2B above 150, 2C above 150 with alcohol served beyond a limited extent, Vk 0 above 1,200, or above 600 with alcohol) and requires a hearing-aid system in samlingssalar (BFS 2024:12 3 kap. 6 §). The occupant number, not the floor area, drives egress widths, WC count, ventilation and alarms. No Swedish law sets m2 per seat. The only legal density is the BFS 2024:7 2 kap. 4 § default of 2.5 persons/m2 for a samlingslokal when the real maximum is unknown.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (max 150 persons), 2B (more than 150), 2C (more than 150 with alcohol served beyond a limited extent); Vk 0 above 1,200 unfamiliar persons or above 600 with alcohol (designed by fire analysis). BFS 2024:7 2 kap. 9, 11–13 §§. See cross_cutting.json fire_vk_0 and fire_vk_2abc. Do not duplicate those rules here.",
+    "key_laws": [
+      { "ref": "BFS 2024:7 Boverkets föreskrifter och allmänna råd om säkerhet i händelse av brand i byggnader: 2 kap. 4 §, 11–13 §§; 7 kap. 9, 19–21, 27–29, 39–46 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:12 Boverkets föreskrifter om byggnaders tillgänglighet och användbarhet: 2 kap. 6–7 §§, 3 kap. 6–7 §§, 4 kap. 1–3 §§", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2024:10 Boverkets föreskrifter om skydd mot buller i byggnader: 2 kap. 2 § tabell 2:1, 5 § tabell 2:4, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" },
+      { "ref": "BFS 2024:6 (loads) 4 kap. 10 § tabell 4:1, categories C1–C5", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/" },
+      { "ref": "Förordning (1998:899) om miljöfarlig verksamhet och hälsoskydd, 35 § (sufficient toilets)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" },
+      { "ref": "Folkhälsomyndighetens allmänna råd om höga ljudnivåer (FoHMFS 2014:15)", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use (PBL 9 kap. 2 § första stycket 3 a) when converting from office. The detaljplan must allow the use. 'Centrum (C)' typically covers samlingslokaler, but check the plan wording (indicative, not verified against Boverket's planbestämmelser guide).",
+      "Public events (offentlig tillställning) may need a Police permit under Ordningslagen (1993:1617) 2 kap. The Police can set a maximum number of persons (sourced from general knowledge, not re-checked).",
+      "Alcohol service needs a serveringstillstånd from the municipality (Alkohollagen 2010:1622, 8 kap.). Alcohol beyond a limited extent with more than 150 persons moves the room to Vk 2C (15 m travel distance).",
+      "Posted sign with the design occupant number is required in 2B/2C (BFS 2024:7 7 kap. 41 §)."
+    ],
+    "operator_oversight": "Kommunens byggnadsnämnd (bygglov, slutbesked); räddningstjänsten (LSO 2003:778 tillsyn); Polisen (offentlig tillställning); kommunens miljö- och hälsoskyddsnämnd (noise, toilets under FMH); kommunens alkoholhandläggare (serveringstillstånd)"
+  },
+  "occupancy": {
+    "unit": "visitor",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish law, guidance or public programme found that gives gross m2 per visitor for a whole venue (hall + foyer + WC + back-of-house). Use the hall density below and derive the support spaces.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Event-specific; no source." },
+    "egress_design_density": {
+      "persons_per_m2": 2.5,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 §: the design number is the maximum number expected; if not known, samlingslokal = 2.5 persons/m2 (affärslokal 0.5, pub/bar 3). Verified against the lagen.nu rendering of BFS 2024:7.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "layout_densities_persons_per_m2_net": {
+      "seated_no_fixed_chairs": 1.7,
+      "seated_and_standing": 2.5,
+      "conference_room": 0.7,
+      "restaurant_banquet": 1.0,
+      "dance": 2.5,
+      "fixed_seating": "number of seats",
+      "strength": "practice",
+      "source": "Repealed BBR general advice (BBR 5:333 tabell 5:333, BFS 2011:26; consolidated BBR p. 52). No longer in force for new applications after 30 Jun 2026; restaurant/conference figures allowed deduction of loose furniture. Labelled 'repealed BBR general advice, practice'.",
+      "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf",
+      "confidence": "verified",
+      "note": "Fire-design maxima, not comfort layouts. Inverted: 0.40 m2/person standing, 0.59 m2/person seated in rows, 1.0 m2/person banquet, 1.43 m2/person conference. The 0.8/0.6/1.6/2.0 m2 figures in data/standards/space_requirements.json (event_venue) are unsourced working values."
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.25, 0.3, 0.3, 0.3, 0.3, 0.3, 0.25, 0.2, 0.3, 0.6, 0.8, 0.8, 0.6, 0.3, 0.1],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Mixed profile: daytime conference use at about 30 % of capacity, evening events peaking at 80 %. Annual utilisation of event halls is typically low and intermittent, and many days have zero use."
+  },
+  "spaces": [
+    {
+      "id": "assembly_hall",
+      "label_en": "Main assembly hall (divisible)",
+      "label_sv": "Samlingssal / evenemangssal",
+      "required": { "strength": "law", "basis": "Defining space of the use. Its occupant number sets the fire class (BFS 2024:7 2 kap. 11–13 §§) and egress (7 kap.). BFS 2024:12 3 kap. 6 §: samlingssalar shall have a system for sound transfer to hearing aids (teleslinga/IR or equivalent), and the sound environment shall give good audibility and speech intelligibility.", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": {
+        "rule": "per_seat",
+        "value_m2": 0.4,
+        "range_m2": [0.4, 1.43],
+        "count": "design occupants. 0.4 m2/person is the legal default density (2.5 p/m2); 0.59 seated rows, 1.0 banquet and 1.43 conference come from the repealed BBR table (practice).",
+        "strength": "law",
+        "source": "BFS 2024:7 2 kap. 4 § (default 2.5 persons/m2 for samlingslokal); repealed BBR tabell 5:333 for layout variants.",
+        "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 2700, "daylight_required": false, "facade_required": false },
+      "depends_on": ["assembly_foyer", "assembly_wc", "assembly_storage", "assembly_technical"],
+      "shareable_with": ["community_hybrid", "culture_makerspace", "coworking", "office", "school_compulsory", "library"],
+      "shareable_note": "Typical time-sharing: office or coworking conference by day, events in the evening, community use at weekends. The fire design must cover the highest-occupancy mode (e.g. standing event), not the daytime mode.",
+      "binding_constraint": "egress_capacity",
+      "layer": "space_plan",
+      "notes": "Ceiling height: BFS 2024:8 5 kap. 1 § is now functional only. 2,700 mm is the AFS 2023:12 3 kap. 5 § allmänna råd for rooms for many persons (workplace guidance) and the repealed BBR 3:3112 value for publika lokaler (p. 26), so it is guidance, not law. Egress (law, BFS 2024:7 7 kap.): two exit doors up to 600 persons, three up to 1,000, four above (9 §); doors at least 0.80 m clear up to 150 persons and 1.15 m above (27 §); passages 0.90/1.20 m (28 §); total door width at least 1.00 m per 150 persons, and 1.00 m per 300 with one door blocked (29 §). In 2B/2C one alternative exit must lead to the main entrance or equivalent (7 kap. 17 §). Reverberation: the repealed BBR 3:1451 allmänt råd gave 0.8 s for samlingssalar, and up to 2.0 s in rooms higher than 3.5 m (indicative now). Accessibility: BFS 2024:12 2 kap. 6 § says not all audience places need to be accessible. The new text does not mention stages. The repealed BBR 3:1452 said podia and stages shall always be accessible, and the general requirement of BFS 2024:12 2 kap. 2 § (accessible communication spaces, lift above 1 m level difference) still applies (see cross_cutting access_public_premises_other). Loads: C1 movable seats 2.5, C2 fixed seats 2.5, C3 3.0, C5 large crowds 5.0 kN/m2 (BFS 2024:6 tabell 4:1). An office slab (B, 2.5) suits seated use only. Standing events and concerts (C5) and dancing (C4, dynamic: 4 kap. 13 §) exceed it."
+    },
+    {
+      "id": "assembly_foyer",
+      "label_en": "Foyer / arrival and queuing",
+      "label_sv": "Foajé / entréhall",
+      "required": { "strength": "law", "basis": "Function follows from egress: in 2B/2C the alternative exit leads to the main entrance or equivalent (BFS 2024:7 7 kap. 17 §), and the main entrance must be accessible (BFS 2024:12 2 kap. 1 §). If the foyer has a reception, it needs a hearing-aid system (BFS 2024:12 3 kap. 6 §). No size requirement.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "derived from hall capacity", "strength": "none", "source": "No Swedish source sets foyer m2 per person. The 0.35 m2/person in space_requirements.json is an unsourced working value.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "library", "community_hybrid", "culture_makerspace"],
+      "shareable_note": "A shared building lobby can serve as the foyer if it carries the egress and the queuing load. See shared_amenities.shared_lobby.",
+      "binding_constraint": "egress_capacity",
+      "layer": "space_plan",
+      "notes": "In conversions the foyer often doubles as an escape route, so furniture, bars and cloakroom queues must not reduce the 1.20 m passage width (BFS 2024:7 7 kap. 28 §)."
+    },
+    {
+      "id": "assembly_cloakroom",
+      "label_en": "Cloakroom",
+      "label_sv": "Garderob / kapprum",
+      "required": { "strength": "practice", "basis": "Not required by law. Typical for events and conferences in the Nordic climate.", "url": "" },
+      "size": { "rule": "per_seat", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish public source found.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["assembly_foyer"],
+      "shareable_with": ["shared_amenities"],
+      "shareable_note": "",
+      "binding_constraint": "egress_capacity",
+      "layer": "stuff",
+      "notes": "Fire load from coats; keep queues out of escape routes."
+    },
+    {
+      "id": "assembly_wc",
+      "label_en": "Visitor WCs incl. accessible WC",
+      "label_sv": "Publika toaletter inkl. tillgänglig toalett",
+      "required": { "strength": "law", "basis": "FMH (1998:899) 35 §: there shall be sufficient toilets in or next to buildings where people stay. BFS 2024:12 2 kap. 7 §: if there are public toilets in a publik lokal, at least one shall be accessible, with room to turn a wheelchair and side transfer on both sides. See cross_cutting.json access_public_premises_wc and san_public.", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "No Swedish ratio of WCs per visitor found. Working value from data/standards/space_requirements.json: 3 WC per 100 persons (unsourced, indicative only).",
+        "strength": "none",
+        "source": "FMH 35 § says only 'tillräckligt'. Lawline and municipal practice point to the municipal miljöförvaltning for event-specific requirements. AFS 2023:12's 1 WC per started 15 employees covers staff only.",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "community_hybrid", "library", "culture_makerspace"],
+      "shareable_note": "Peak demand is at intermissions. Shared WCs must be reachable without passing locked areas when other tenants are closed.",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Peak sanitary load far exceeds office stacks. Office cores usually provide WCs for about 1 per 15 staff, so a 300-person event floor may need several times the core's WC count and new drainage. Accessible WC size: BFS 2024:12 is functional (1.5 m turning circle per 1 kap. 6 §, side transfer on both sides). The 2.2 x 2.2 m figure is AFS 2023:12 allmänna råd and the repealed BBR 3:1453 advice (guidance)."
+    },
+    {
+      "id": "assembly_storage",
+      "label_en": "Chair, table and equipment store",
+      "label_sv": "Möbel- och utrustningsförråd",
+      "required": { "strength": "practice", "basis": "Needed for any reconfigurable hall (theatre, banquet and standing modes). Not regulated.", "url": "" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "derived from stacked furniture volume for the largest layout", "strength": "none", "source": "No Swedish source. The 0.15 x hall factor for back-of-house in space_requirements.json is unsourced.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["assembly_hall"],
+      "shareable_with": ["community_hybrid", "sports_hall"],
+      "shareable_note": "Adjacent at the same level as the hall, with a level route and wide doors.",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": "Storage loads: E1 5.0 kN/m2 (BFS 2024:6 tabell 4:1), double the office value of 2.5. Locate stores on stronger bays or at grade."
+    },
+    {
+      "id": "assembly_catering",
+      "label_en": "Catering / serving kitchen and bar",
+      "label_sv": "Serveringskök / bar",
+      "required": { "strength": "practice", "basis": "Needed for the banquet variant. Food handling requires registration of the food business with the municipality (EU Regulation 852/2004 art. 6 via Swedish livsmedelslagstiftning; indicative, not re-checked). Alcohol requires serveringstillstånd (Alkohollagen 8 kap.) and moves rooms above 150 persons to Vk 2C.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No size source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["assembly_hall"],
+      "shareable_with": ["restaurant_cafe", "community_hybrid", "shared_amenities"],
+      "shareable_note": "Can be the building's café or restaurant kitchen. See shared_amenities.shared_kitchen.",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Kitchen exhaust and grease ducts are hard to route through office floors. Cooled waste for food waste was recommended in the repealed BBR 3:422 allmänt råd."
+    },
+    {
+      "id": "assembly_technical",
+      "label_en": "AV / control room, stage and back-of-house",
+      "label_sv": "Teknikrum / scen / logeutrymme",
+      "required": { "strength": "law", "basis": "The hearing-aid sound transfer system is required in samlingssalar (BFS 2024:12 3 kap. 6 §). Stage accessibility was explicit in the repealed BBR 3:1452 ('podier och scener ska dock alltid vara tillgängliga') but is not named in BFS 2024:12. The general accessibility rules still apply. Control room and dressing rooms are practice.", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No size source.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["assembly_hall"],
+      "shareable_with": ["culture_makerspace", "community_hybrid"],
+      "shareable_note": "",
+      "binding_constraint": "accessibility",
+      "layer": "services",
+      "notes": "Amplified music: FoHMFS 2014:15 allmänna råd recommend at most LAeq 100 dB and LAFmax 115 dB where children under 13 are not admitted, and 97/110 dB where they are (values from secondary sources, confidence sourced). Sound insulation to neighbouring dwellings: BFS 2024:10 tabell 2:1 requires DnT,w,50 at least 56 dB and tabell 2:4 requires L'nT,w,50 at most 52 dB from lokaler to dwellings. These are building minima and are often insufficient for amplified music (engineering judgement, indicative)."
+    },
+    {
+      "id": "assembly_staff",
+      "label_en": "Staff facilities",
+      "label_sv": "Personalutrymmen",
+      "required": { "strength": "law", "basis": "AFS 2023:12 staff facilities apply to employees. See cross_cutting.json staff_facilities (not duplicated here).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "per staff", "strength": "none", "source": "See cross_cutting.json.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["shared_amenities", "office", "coworking"],
+      "shareable_note": "Small venues often share staff rooms with the building operator.",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "assembly_theatre", "label": "Seated theatre / lecture (rows)", "changes": "Densest seated layout: 1.7 p/m2 without fixed chairs (repealed BBR advice, practice), or the seat count with fixed seating. C1/C2 floor load 2.5 kN/m2 matches office slabs. Sightlines and raked floors favour double-height or ground-floor space. Accessible seats should be integrated (repealed BBR 3:1452 allmänt råd)." },
+    { "id": "assembly_banquet", "label": "Banquet / dinner", "changes": "About 1.0 p/m2 (repealed BBR 'restaurang' advice, practice). Needs a serving kitchen and bar. Alcohol beyond a limited extent with more than 150 persons gives Vk 2C (15 m travel distance, spoken evacuation alarm, BFS 2024:7 7 kap. 19, 44 §§)." },
+    { "id": "assembly_standing", "label": "Standing event / concert / reception", "changes": "2.5 p/m2 legal default (BFS 2024:7 2 kap. 4 §). Highest egress, WC and ventilation demand. Floor category C5 (5.0 kN/m2) for crowds, C4 (4.0) for dancing, with dynamic checks (BFS 2024:6 4 kap. 13 §). Usually the binding mode in an office building." },
+    { "id": "assembly_conference", "label": "Conference / seminar rooms", "changes": "0.7 p/m2 (repealed BBR 'konferensrum' advice, practice). Up to 150 persons is Vk 2A. Fits office floors best. Hearing-aid system is required if the room is a samlingssal (the repealed advice gave 'at least 50 persons' as an example)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Egress: office floors are Vk 1 with 45 m travel; an assembly use needs 30 m (2A/2B) or 15 m (2C), plus exit widths of 1.0 m per 150 persons. A standing event of 300 persons needs at least 2 m of total door width and two independent exits at least 5 m apart (BFS 2024:7 7 kap. 9, 19, 29 §§).",
+      "Fire alarm, evacuation alarm, emergency lighting and occupant sign are required in 2B/2C (cross_cutting fire_vk_2abc).",
+      "Floor loads: office slabs are designed for B = 2.5 kN/m2. Standing and crowd use (C5, 5.0) and dancing (C4, 4.0, dynamic) exceed this (BFS 2024:6 tabell 4:1).",
+      "Columns on a 6–8 m office grid obstruct sightlines and divisible-hall layouts.",
+      "Ceiling height: office floors often have 2.6–2.7 m under suspended ceilings. A large hall wants more for volume, acoustics and air distribution (no legal minimum; 2.7 m is guidance).",
+      "Ventilation capacity: assembly density is 10–25 times office density. Office AHUs are sized for about 0.1 persons/m2.",
+      "WC and drainage capacity at intermission peaks.",
+      "Impact and airborne sound to dwellings or offices above (BFS 2024:10 tables 2:1 and 2:4 where dwellings adjoin)."
+    ],
+    "typical_enablers": [
+      "Ground floor with direct exits to open air (no stair dependence) and an existing double-height entrance hall.",
+      "Seated conference variant up to 150 persons (Vk 2A, C1 load 2.5 kN/m2) fits typical office slabs.",
+      "Sprinkler lets travel distances grow by one third (BFS 2024:7 7 kap. 21 §).",
+      "Shared lobby and WC cores with other tenants (time-shared peaks)."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:7 brandskydd: 2 kap. 4, 9, 11–13 §§; 7 kap. 9, 17, 19–21, 27–29, 38–46 §§ (read via lagen.nu rendering)", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 tillgänglighet: 1 kap. 6 §, 2 kap. 1, 6, 7 §§, 3 kap. 6–7 §§, 4 kap. 1–3 §§ (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:10 buller: 2 kap. 2 § tabell 2:1, 5 § tabell 2:4, 9 § (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:6 4 kap. 10 § tabell 4:1 and 13 § (via Boverket PBL kunskapsbanken 'Nyttiga laster')", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/barformaga-stadga-bestandighet/laster/nyttiga-laster/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 hygien, hälsa och miljö: 5 kap. 1 § (rumshöjd, functional)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "Repealed BBR (BFS 2011:6 t.o.m. BFS 2024:5, consolidated): 3:1451–3:1453 (pp. 19–20), 3:3112 (p. 26), 5:333 tabell 5:333 (p. 52), 5:334 (p. 53)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12: 3 kap. 5 § allmänna råd (room height), 56–58 §§ (WC)", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "FMH (1998:899) 35 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/", "accessed": "2026-10-19" },
+    { "ref": "FoHMFS 2014:15 Höga ljudnivåer (values via municipal summaries)", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No Swedish ratio of visitor WCs per person was found (FMH 35 § says only 'sufficient'). Decide whether to adopt a foreign standard as practice (e.g. a Nordic event guideline) or keep the unsourced 3 per 100 working value.",
+    "Ordningslagen and Alkohollagen paragraph numbers for permits were not re-checked against the statute text.",
+    "Confirm whether Boverket's new vägledning to BFS 2024:7 gives any replacement density table for layouts (the old tabell 5:333 is repealed).",
+    "FoHMFS 2014:15 values were taken from municipal summaries; verify against the PDF.",
+    "Detaljplan use category (C vs R vs other) for samlingslokaler was not verified against Boverket's planbestämmelser guidance."
+  ]
+}

@@ -1,0 +1,205 @@
+{
+  "id": "retail_shop",
+  "label_en": "Shop / small retail unit (incl. ground-floor retail)",
+  "label_sv": "Butik / mindre handelslokal (inkl. bottenvåningshandel)",
+  "family": "commercial",
+  "summary": "Non-food retail unit, typically in a ground floor with street frontage. It is a publik lokal (BFS 2024:12) and a butiksutrymme in verksamhetsklass 2A (≤150 persons) or 2B (>150 persons). The default design occupancy for an affärslokal is 0.5 persons/m2 (BFS 2024:7 2 kap. 4 §), which drives exits: a 2A unit may have a single exit only if it serves at most 30 persons — about 60 m2 of shop floor at the default density. Staff facilities follow AFS 2023:12; customer WCs are not required by national law.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A for ≤150 persons, 2B for >150 persons — BFS 2024:7 2 kap. 11–12 §§ name 'butiksutrymmen'. Back-of-house staff/stock rooms can be vk1.",
+    "key_laws": [
+      { "ref": "BFS 2024:7 brandskydd", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet (new build/ändring)", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2011:13 as amended by BFS 2013:9 (HIN) — enkelt avhjälpta hinder in existing publika lokaler", "url": "https://rinfo.boverket.se/BFS2011-13/pdf/BFS2013-9.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö (waste, daylight in lokaler)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 15 § 1 since 2025-12-01, formerly 9 kap. 2 § 3 a — cross_cutting.json cou_bygglov_trigger), and detaljplan must allow Detaljhandel (H) or Centrum (C); Kontor (K) does not normally cover retail — Boverket PBL kunskapsbanken, användning 'Detaljhandel' and 'Centrum'.",
+      "Bygglov for façade changes (shop windows, entrances, signs) per PBL 9 kap. and local rules.",
+      "Anmälan (PBF 6 kap. 1 §) for fire-safety, ventilation and load-bearing changes."
+    ],
+    "operator_oversight": "Kommunens byggnadsnämnd; räddningstjänsten (LSO tillsyn); Arbetsmiljöverket",
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "fire_vk_2abc", "fire_egress_dimensions", "occ_density_law_2024", "access_public_premises_wc", "access_hin", "san_public", "staff_personalutrymmen_general", "loads_imposed_table_4_1"]
+  },
+  "occupancy": {
+    "unit": "visitor",
+    "gross_m2_per_unit": {
+      "value": 2.0,
+      "range": null,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 § p. 1: affärslokal 0.5 persons/m2 when the maximum number of persons is not known (i.e. 2 m2 per person). This is a fire/egress design density for the customer area, not a typical trading density.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "No regulatory or public Swedish source found for staff per m2 in small retail." },
+    "egress_design_density": {
+      "persons_per_m2": 0.5,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 § p. 1 (affärslokal). Consequences: 7 kap. 11 § p. 1 — single exit in 2A only if the exit leads to a safe place and serves ≤30 persons (≈60 m2 at 0.5 p/m2); 7 kap. 9 § p. 6 — otherwise two exits up to 600 persons; 7 kap. 19 § — max 30 m to an exit in 2A/2B; 7 kap. 29 § — door free width ≥1.00 m per 150 persons.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "retail_hours",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.05, 0.1, 0.3, 0.4, 0.55, 0.5, 0.45, 0.5, 0.6, 0.7, 0.55, 0.25, 0.05, 0, 0, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced). Share of egress capacity present on a weekday, opening ~10–19/20; Saturdays typically peak midday. Sweden has no statutory shop hours."
+  },
+  "spaces": [
+    {
+      "id": "retail_sales_floor",
+      "label_en": "Sales floor",
+      "label_sv": "Butiksyta / säljyta",
+      "required": { "strength": "practice", "basis": "Defining space of the use; its size is a business decision. Must meet fire (BFS 2024:7) and accessibility rules.", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No regulated size.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": false, "facade_required": true },
+      "depends_on": ["retail_entrance"],
+      "shareable_with": ["food_hall", "coworking"],
+      "shareable_note": "Pop-up and evening events in the shop space.",
+      "binding_constraint": "egress",
+      "layer": "space_plan",
+      "notes": "Ceiling height: AFS 2023:12 3 kap. 5 § allmänna råd 2.40 m for workplaces. Daylight/view: AFS 2023:12 5 kap. 25 § applies to staff workplaces but allows compensation where the nature of the activity makes daylight impossible; BFS 2024:8 4 kap. 3 § exempts where unreasonable given the room's use. Above ~60 m2 at default density two exits are normally needed (BFS 2024:7 7 kap. 9 §, 11 §); an exit may be in an adjacent business on the same floor (7 kap. 10 §). Fire alarm, evacuation alarm and emergency lighting only for 2B (7 kap. 40, 43, 46 §§); wayfinding markings for 2A and 2B (7 kap. 39 §)."
+    },
+    {
+      "id": "retail_entrance",
+      "label_en": "Accessible street entrance / shop window",
+      "label_sv": "Tillgänglig entré / skyltfönster",
+      "required": { "strength": "law", "basis": "BFS 2024:12 2 kap. 1 § and 3 kap. 1 § — main entrances accessible and usable (new build/ändring); existing publika lokaler: enkelt avhjälpta hinder shall be removed (BFS 2011:13 / BFS 2013:9, HIN).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "1", "strength": "none", "source": "Dimensions (door 0.80 m free passage, 1.50 m turning circle) appear in BFS 2024:7 2 kap. for frångänglighet and AFS 2023:12 3 kap. 4 § allmänna råd; no entrance area.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "level_difference_at_street",
+      "layer": "skin",
+      "notes": "Level differences: BFS 2024:12 2 kap. 2 § — communication spaces with level differences need ramp or lift besides stairs; lift if >1 m; ramps max 1:12 (2 kap. 4 §). Raised office ground floors are a frequent blocker."
+    },
+    {
+      "id": "retail_stock",
+      "label_en": "Stock room",
+      "label_sv": "Lager / förråd",
+      "required": { "strength": "practice", "basis": "Typical; not required by law.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["retail_goods_in"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "floor_load",
+      "layer": "space_plan",
+      "notes": "Storage racks: AFS 2023:12 3 kap. 29–31 §§ (load marking, anchoring)."
+    },
+    {
+      "id": "retail_goods_in",
+      "label_en": "Goods reception",
+      "label_sv": "Varumottag",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 32 § — workplaces shall, when needed, have goods reception designed for the activity; large volumes normally need a loading dock. 3 kap. 11 § — doors in routes must be possible to hold open temporarily for deliveries; 15 § lift if heavy/frequent transports between floors.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "when needed", "strength": "none", "source": "No size in AFS 2023:12; allmänna råd to 33 §: ≥0.7 m free space for pedestrians between vehicles at docking places.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["grocery_store", "restaurant_cafe", "food_hall"],
+      "shareable_note": "Shared building goods entrance.",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": "Small shops are often served through the customer entrance outside opening hours."
+    },
+    {
+      "id": "retail_staff_room",
+      "label_en": "Staff room (eating / pause)",
+      "label_sv": "Personalrum (mat/paus)",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 60–62 §§ — eating with tables and chairs with backrests; fridge, heating, dishwashing; pause space with seats with backrests. 3 kap. 28 § — those who mainly work standing shall be able to sit.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "staff present simultaneously", "strength": "none", "source": "No m2 in AFS 2023:12.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office", "grocery_store"],
+      "shareable_note": "Shared staff facilities in a building or shopping centre.",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Vilutrymme (3 kap. 63 §) must exist or be quickly arrangeable."
+    },
+    {
+      "id": "retail_staff_wc",
+      "label_en": "Staff WC",
+      "label_sv": "Personaltoalett",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 56–58 §§.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": 4.84, "range_m2": null, "count": "1 per started 15 employees (allmänna råd)", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänna råd: accessible WC ≥2.2 x 2.2 m.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["retail_customer_wc"],
+      "shareable_note": "One accessible WC may serve both staff and customers.",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "retail_customer_wc",
+      "label_en": "Customer WC",
+      "label_sv": "Kundtoalett",
+      "required": { "strength": "practice", "basis": "Not required by national law. BFS 2024:12 2 kap. 7 §: if WCs for the public exist in a publik lokal, at least one shall be accessible (wheelchair turning and side transfer on both sides).", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "0 or more", "strength": "none", "source": "BFS 2024:12 gives functional dimensions, no m2.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["retail_staff_wc"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "retail_fitting",
+      "label_en": "Fitting rooms",
+      "label_sv": "Provrum",
+      "required": { "strength": "practice", "basis": "Fashion retail practice only.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": ""
+    },
+    {
+      "id": "retail_waste",
+      "label_en": "Waste and packaging room",
+      "label_sv": "Avfalls- och emballageutrymme",
+      "required": { "strength": "law", "basis": "BFS 2024:8 11 kap. 1–3 §§.", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["retail_goods_in"],
+      "shareable_with": ["office", "grocery_store", "restaurant_cafe"],
+      "shareable_note": "Building-level shared waste room.",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "retail_small_2a", "label": "Small unit ≤150 persons (2A)", "changes": "Single exit allowed if ≤30 persons and exit leads to safe place (BFS 2024:7 7 kap. 11 § p. 1) — roughly ≤60 m2 customer area at 0.5 p/m2; wayfinding markings required." },
+    { "id": "retail_large_2b", "label": "Larger store >150 persons (2B)", "changes": "Fire alarm, evacuation alarm, emergency and general lighting, alternative exit to main entrance or equivalent (BFS 2024:7 7 kap. 17, 38, 40, 43, 46 §§); R 30/R 60 structure depending on floor (3 kap. 16–17 §§); wall/ceiling surface classes (5 kap. 14 §)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Detaljplan: K (kontor) usually does not allow retail; needs H or C or a plan change.",
+      "Change from vk1 to vk2A/2B: exits, travel distance 30 m (vs 45 m in vk1), and at change of use exit numbers may not be relaxed for 2B (BFS 2024:7 10 kap. 4 §); evacuation alarm cannot be relaxed (10 kap. 5 §).",
+      "Raised ground floor / steps at entrance versus accessibility (BFS 2024:12 2 kap. 1–2 §§; HIN for existing).",
+      "Higher imposed floor load: BFS 2024:6 category D1 retail 4.0 kN/m2 (D2 department store 5.0) vs B office 2.5 kN/m2 — see cross_cutting.json loads_imposed_table_4_1.",
+      "Façade without shop windows; bygglov needed for façade change."
+    ],
+    "typical_enablers": [
+      "Office ground floors with street frontage and high floor-to-ceiling.",
+      "Existing WC/pantry can serve staff."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:7 — 2 kap. 4, 11–12 §§; 3 kap. 16–17 §§; 5 kap. 14 §; 7 kap. 9–11, 17, 19, 29, 38–40, 43, 46 §§; 10 kap. 4–5 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 — 2 kap. 1–4, 7 §§; 3 kap. 1 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 — 3 kap. 5, 11, 15, 28–33, 56–63 §§; 5 kap. 25 §", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 — 4 kap. 3 §, 11 kap.", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken — användning Detaljhandel", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/planbestammelser/anvandning-av-kvartersmark/detaljhandel/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken — användning Centrum", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/planbestammelser/anvandning-av-kvartersmark/centrum/", "accessed": "2026-10-19" },
+    { "ref": "Boverket guide till enkelt avhjälpta hinder", "url": "https://www.boverket.se/enklahinder", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "HIN (BFS 2011:13 / 2013:9) status: secondary sources (Stockholms stad teknisk anvisning, Oct 2025) treat it as still in force alongside BFS 2024:12; not confirmed in Boverket's register.",
+    "No public Swedish source for typical trading density (m2 sales area per customer) or staff per m2 — only the egress default 0.5 p/m2.",
+    "BFS 2025:10 amended BFS 2024:7 from 2025-12-01 (per cross_cutting.json, secondary sources); paragraph numbers here are from the original BFS 2024:7 text — re-check 7 kap. and 10 kap. references.",
+    "Hourly presence profile is unsourced."
+  ]
+}

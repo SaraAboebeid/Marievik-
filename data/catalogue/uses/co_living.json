@@ -1,0 +1,253 @@
+{
+  "id": "co_living",
+  "label_en": "Co-living / collective housing",
+  "label_sv": "Co-living / kollektivboende",
+  "family": "housing",
+  "summary": "Permanent housing where residents have a private unit and share some dwelling functions. The building rules call the private unit a 'boendeenhet' (BFS 2024:11 1 kap. 5 §). They distinguish two cases. (1) Units for ONE person (co-living, also student corridors): socialising, cooking and meals may be fully shared, the kitchen by at most 12 persons, and hygiene rooms by at most 3 units on the same floor (2 kap. 7-8 §§). (2) Units for SEVERAL persons (kollektivhus, family co-housing): socialising, cooking and meals may only be PARTLY shared, as a complement to functions inside each unit, and hygiene may not be shared (2 kap. 9 §). The tenancy contract decides the classification: separate contracts per unit means boendeenheter, while one joint contract means the whole is a single large ordinary dwelling (Boverket, based on hyreslagen). Co-living is a 'bostad' (permanent), not a hotel, so all dwelling rules apply. Unlike student housing it gets no accessibility exemption, and the bed help-space requirement applies in every unit. Fire class 3B with mandatory stove guards.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "3B — 'bostäder med boendeenheter' incl. common rooms (BFS 2024:7, 2 kap. 15 §). Stove guard with overheating protection on cookers used by residents (4 kap. 25 §). A group of units for at most 6 persons incl. its common room may form one fire compartment; otherwise each unit is its own compartment unless the group is protected by sprinklers or a residential sprinkler system (5 kap. 25 § p. 4 and 6). Doors to units: see 5 kap. (door list incl. 'Dörr till bostad och boendeenhet i verksamhetsklass 3B'). If it is let on one joint contract (one large dwelling), class 3A applies instead (assumption based on the definitions; verify with the fire consultant).",
+    "key_laws": [
+      { "ref": "Plan- och byggförordning (2011:338) 3 kap. 1 § and 17 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-byggforordning-2011338_sfs-2011-338/" },
+      { "ref": "BFS 2024:11 1 kap. 5 §; 2 kap. 7-9 §§; 3 kap. 4 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 2 kap. 10 § second paragraph; 3 kap. 2 § (stretcher transport from each boendeenhet)", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12" },
+      { "ref": "BFS 2024:8 4 kap. 1-2 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      { "ref": "BFS 2024:7 2 kap. 15 §, 4 kap. 25 §, 5 kap. 25 §", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7" },
+      { "ref": "Jordabalken 12 kap. (hyreslagen): the contract defines the bostadslägenhet", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/boendeenheter/" }
+    ],
+    "permits": [
+      "Bygglov for change of use: PBL 9 kap. 15 § p. 1-2.",
+      "Detaljplan must permit Bostäder. Co-living with short lets and hotel-like services may be judged 'Tillfällig vistelse' instead (Boverket: a hotel is not a dwelling even with full home facilities; the purpose decides).",
+      "State the contract model (individual vs joint) in the bygglov application, since it decides which BFS 2024:11 rules apply."
+    ],
+    "operator_oversight": "Byggnadsnämnden. Rent setting under hyreslagen / bruksvärde applies to each contract; no special licensing."
+  },
+  "occupancy": {
+    "unit": "resident",
+    "gross_m2_per_unit": {
+      "value": 32,
+      "range": [25, 40],
+      "strength": "practice",
+      "source": "Working value; no Swedish source found. Placed between student corridor housing and ordinary rental flats (SCB 2025: 35 m² BOA per person in rented flats).",
+      "url": "https://www.scb.se/hitta-statistik/statistik-efter-amne/boende-bebyggelse-och-mark/bostader-och-boende/hushallens-boende/pong/statistiknyhet/hushallens-boende-2025/",
+      "confidence": "indicative"
+    },
+    "staff_per_unit": { "value": 0.01, "strength": "practice", "source": "Commercial co-living often has a community manager (about 1 per 100 residents); working value, unsourced." },
+    "hours_profile": "24_7",
+    "hourly_presence": [0.92, 0.92, 0.92, 0.92, 0.92, 0.92, 0.88, 0.72, 0.5, 0.4, 0.38, 0.38, 0.4, 0.4, 0.4, 0.42, 0.5, 0.62, 0.72, 0.8, 0.85, 0.88, 0.92, 0.92],
+    "hourly_presence_note": "Indicative weekday profile for working adults, a bit higher daytime presence than ordinary housing because of remote work. Unsourced.",
+    "persons_per_dwelling_note": "One-person units: 1. Multi-person units (kollektivhus): per unit, as for ordinary dwellings."
+  },
+  "spaces": [
+    {
+      "id": "coliving_private_unit",
+      "label_en": "Private unit (boendeenhet) with sleep/rest and daily storage",
+      "label_sv": "Boendeenhet",
+      "required": { "strength": "law", "basis": "BFS 2024:11 1 kap. 5 § (boendeenhet), 2 kap. 1 §; BFS 2024:12 2 kap. 10 § second paragraph (help space along both long sides and the foot of a bed in EACH boendeenhet; no student exemption)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "count": "one per resident (one-person model)",
+        "strength": "none",
+        "source": "No m² in regulation. Note: the bed help-space rule makes co-living units bigger than student corridor rooms for the same function.",
+        "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": ["coliving_shared_kitchen", "coliving_shared_living"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "facade_length_and_bed_clearance",
+      "layer": "space_plan",
+      "notes": "Daylight DF >= 1.0 % in the unit and in shared-function rooms (BFS 2024:8 4 kap. 1 §). Stretcher transport must be possible from every boendeenhet (BFS 2024:12 3 kap. 2 §). A private kitchenette is allowed in addition to the shared kitchen."
+    },
+    {
+      "id": "coliving_private_hygiene",
+      "label_en": "Private bathroom",
+      "label_sv": "Eget hygienrum",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 3 § (room for personal hygiene in the dwelling). Mandatory inside each unit for multi-person units (2 kap. 9 § allows no hygiene sharing). For one-person units it may be replaced by shared rooms (2 kap. 8 §). At least one hygiene room per dwelling must be accessible (BFS 2024:12 2 kap. 9 §).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "count": "one per unit (or shared, see below)", "strength": "none", "source": "No m²; dwelling wheelchair dimensions per BFS 2024:12 1 kap. 6 § (turning circle 1.30 m).", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "wet_room_drainage",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "coliving_shared_hygiene",
+      "label_en": "Shared hygiene room (one-person units only)",
+      "label_sv": "Gemensamt hygienrum",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 8 § (at most three one-person units per hygiene room, adjacent, same floor)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "count": "one per <= 3 units", "strength": "none", "source": "No m² in regulation.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/boendeenheter/", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["coliving_private_unit"],
+      "shareable_with": [],
+      "shareable_note": "Not allowed for multi-person units (kollektivhus).",
+      "binding_constraint": "wet_room_drainage",
+      "layer": "services",
+      "notes": "Optional alternative to coliving_private_hygiene."
+    },
+    {
+      "id": "coliving_shared_kitchen",
+      "label_en": "Shared kitchen",
+      "label_sv": "Gemensamt kök",
+      "required": { "strength": "law", "basis": "One-person units: BFS 2024:11 2 kap. 7 § (fully shareable, <= 12 persons, adjacent, sized for those sharing) and 3 kap. 4 §. Multi-person units: 2 kap. 9 § (only partly shared, as a complement to cooking inside each unit). Stove guards: BFS 2024:7 4 kap. 25 §.", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "count": "one per <= 12 persons (one-person model)", "strength": "none", "source": "No m² in regulation.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/boendeenheter/", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Shared rooms may be on another floor only if reachable by internal communication without passing public stairwells (Boverket).",
+      "binding_constraint": "group_size_12_and_daylight",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "coliving_shared_living",
+      "label_en": "Shared living / dining room",
+      "label_sv": "Gemensamt vardagsrum / matsal",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 7 § (one-person units) or 2 kap. 9 § (multi-person units, partly shared). For multi-person units Boverket says the shared areas must be large enough to complement the smaller private areas (fullgod kompensation in the old BBR 3:226 (repealed BBR, pre-2025)).", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_group", "value_m2": null, "count": "sized for the number sharing", "strength": "none", "source": "Boverket: the rules do not state how large shared areas must be.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/boendeenheter/", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": false },
+      "depends_on": ["coliving_shared_kitchen"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "acoustics",
+      "layer": "space_plan",
+      "notes": "For one-person-unit buildings the outlook requirement does not apply to shared socialising/meal spaces (BFS 2024:8 4 kap. 2 §), but DF >= 1.0 % does. For multi-person units (kollektivhus) outlook also applies to the shared rooms."
+    },
+    {
+      "id": "laundry_room",
+      "label_en": "Shared laundry",
+      "label_sv": "Tvättstuga",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 4 §, 3 kap. 2 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "sized for those sharing", "strength": "none", "source": "No m².", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing"],
+      "shareable_note": "",
+      "binding_constraint": "drainage_and_exhaust",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "storage_non_daily",
+      "label_en": "Storage not for daily use",
+      "label_sv": "Förråd",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 5 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "count": "per dwelling (unit)", "strength": "none", "source": "No m².", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "storage_bulky_shared",
+      "label_en": "Bulky item room (bikes, prams, mobility aids)",
+      "label_sv": "Rum för skrymmande föremål",
+      "required": { "strength": "law", "basis": "BFS 2024:11 2 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "sized for those sharing", "strength": "none", "source": "No m².", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing"],
+      "shareable_note": "",
+      "binding_constraint": "step_free_access_from_entrance",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "bicycle_parking",
+      "label_en": "Bicycle parking",
+      "label_sv": "Cykelparkering",
+      "required": { "strength": "law", "basis": "BFS 2026:4 2 kap. 2 § (>= 2 per bostadslägenhet in a new flerbostadshus; adaptation allowed where the building mainly contains one-person dwellings); on alteration only for ombyggnad involving car parking (1 kap. 4 §)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/" },
+      "size": { "rule": "per_unit", "value_m2": null, "count": "2 per bostadslägenhet (default)", "strength": "law", "source": "Count only. Whether a boendeenhet counts as a 'bostadslägenhet' for this rule was not checked.", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/hallbar-mobilitet/", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing"],
+      "shareable_note": "",
+      "binding_constraint": "ground_floor_area",
+      "layer": "site",
+      "notes": ""
+    },
+    {
+      "id": "waste_room",
+      "label_en": "Waste room",
+      "label_sv": "Avfallsutrymme",
+      "required": { "strength": "law", "basis": "BFS 2024:8 11 kap. 1-3 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "per municipal waste rules", "strength": "programme", "source": "Municipal renhållningsföreskrifter.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "hotel"],
+      "shareable_note": "",
+      "binding_constraint": "collection_vehicle_access",
+      "layer": "site",
+      "notes": ""
+    },
+    {
+      "id": "outdoor_play_space",
+      "label_en": "Outdoor space (friyta)",
+      "label_sv": "Friyta",
+      "required": { "strength": "law", "basis": "PBL 8 kap. 9 § second paragraph, 10 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "sufficient", "strength": "none", "source": "PBL sets no m².", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing"],
+      "shareable_note": "",
+      "binding_constraint": "plot_area",
+      "layer": "site",
+      "notes": ""
+    },
+    {
+      "id": "coliving_cowork_amenity",
+      "label_en": "Amenity rooms (co-working, gym, guest room, event space)",
+      "label_sv": "Gemensamma tillvalsrum (cowork, gym, gästrum)",
+      "required": { "strength": "practice", "basis": "Operator concept; not required by law.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "count": "operator choice", "strength": "none", "source": "No source.", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["student_housing", "hotel"],
+      "shareable_note": "Co-working can be opened to the neighbourhood in the daytime.",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Fits deep, low-daylight office zones. A guest room let to non-residents moves toward Vk 4 (temporary stay); check with the fire consultant."
+    }
+  ],
+  "variants": [
+    { "id": "coliving_single_units", "label": "Co-living, one-person units with individual contracts", "changes": "BFS 2024:11 2 kap. 7-8 §§: full sharing of kitchen (<= 12), living and dining; optional shared hygiene (<= 3 units/room, same floor). Vk 3B." },
+    { "id": "kollektivhus_multi_person_units", "label": "Kollektivhus, multi-person units (families/couples)", "changes": "BFS 2024:11 2 kap. 9 §: each unit keeps its own kitchen, living, dining and bathroom; shared kitchen, dining room and living room only as a complement. Hygiene never shared. Outlook required in shared rooms." },
+    { "id": "shared_flat_joint_contract", "label": "Shared large flat on one joint contract", "changes": "Not boendeenheter: treated as one ordinary dwelling (>55 m² in old BBR 3:222 (repealed BBR, pre-2025) language), so every function must exist inside the one dwelling. Vk 3A (assumed)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Daylight DF >= 1.0 % in each unit and in shared-function rooms.",
+      "Bed help-space requirement in each unit (no student exemption) pushes room width and area up.",
+      "Full accessibility (no 80 % exemption as for students).",
+      "Fire compartments per group of at most 6 persons or sprinklers, plus stove guards (Vk 3B)."
+    ],
+    "typical_enablers": [
+      "Shared kitchen/living for up to 12 persons and shared hygiene for up to 3 units cut wet rooms and kitchens.",
+      "No outlook requirement for shared rooms in one-person co-living, so they can go deeper in the plan.",
+      "Office floors with many WC/shower points near cores suit shared hygiene clusters."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:11 full text", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Bostäder med boendeenheter (co-living explicitly named; contract test)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/boendeenheter/", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Studentbostäder (joint contract means no boendeenheter)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/studentbostader/", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:12 2 kap. 9-10 §§, 3 kap. 2 §", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-12", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 4 kap. 1-2 §§", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-8", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 2 kap. 15 §, 4 kap. 25 §, 5 kap. 25 §", "url": "https://forfattningssamling.boverket.se/detaljer/BFS2024-7", "accessed": "2026-10-19" },
+    { "ref": "Boverket (2026) archived guidance on old BBR 3:226-3:227 (repealed BBR, pre-2025) (kollektivboende, fullgod kompensation, contract test), pp. 16-18", "url": "https://www.boverket.se/globalassets/publikationer/dokument/2026/boverkets-byggregler-bbr---bostadsutformning-efter-1-december-2025.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken: Tillfällig vistelse (hotel vs dwelling boundary)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/planbestammelser/anvandning-av-kvartersmark/tillf-vistelse/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "Sound: BFS 2024:10 has a special table only for STUDENT dwellings with boendeenheter (table 2:3). For non-student co-living it is unclear whether table 2:1 applies between boendeenheter (as separate dwellings) or whether no internal requirement applies (as parts of one dwelling). Boverket guidance says separate contracts make separate dwellings, while BFS defines a boendeenhet as 'del av en bostad'. Ask Boverket or an acoustician.",
+    "Does a boendeenhet count as a 'bostadslägenhet' for BFS 2026:4 bicycle counts (2 per apartment)?",
+    "Boundary with hotel/aparthotel: short-stay co-living with services might be classed as 'Tillfällig vistelse' and Vk 4. Not tested against case law.",
+    "No m² source for co-living units or shared rooms in Sweden. Benchmarks from operators (e.g. existing Swedish co-living projects) needed.",
+    "Fire class for the joint-contract shared flat (assumed 3A) to be confirmed."
+  ]
+}

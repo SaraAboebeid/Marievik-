@@ -1,0 +1,221 @@
+{
+  "id": "grocery_store",
+  "label_en": "Grocery store",
+  "label_sv": "Livsmedelsbutik",
+  "family": "commercial",
+  "summary": "Food retail: sales floor with chilled and frozen display, back-of-house cold rooms, goods reception, waste and returns handling, and optionally manual counters (deli, fish, bake-off) where unpackaged food is handled. It is a butiksutrymme in verksamhetsklass 2A/2B and a livsmedelsanläggning that must be registered with the municipal food control (LIVSFS 2022:8). Hygiene rules (EU 852/2004 Annex II) require hand-wash basins, staff WCs that do not open into food rooms, changing facilities where needed and waste storage, but no sizes. Heavy goods flows make the goods reception (AFS 2023:12 3 kap. 32 §) and floor loads the typical blockers in an office building.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "2A (≤150 persons) or 2B (>150 persons) — BFS 2024:7 2 kap. 11–12 §§ 'butiksutrymmen'. See cross_cutting.json fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "Förordning (EG) nr 852/2004 om livsmedelshygien, bilaga II", "url": "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32004R0852" },
+      { "ref": "LIVSFS 2022:8 Livsmedelsverkets föreskrifter om registrering och godkännande", "url": "https://www.livsmedelsverket.se/globalassets/om-oss/lagstiftning/offentlig-kontroll/livsfs-2022-8_web_t.pdf" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      { "ref": "BFS 2024:7 brandskydd", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö (8 kap. 15 §, 11 kap.)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 15 § 1, see cross_cutting.json cou_bygglov_trigger); detaljplan must allow Detaljhandel (H) or Centrum (C).",
+      "Anmälan (PBF 6 kap. 1 §) for ventilation, VA (incl. any grease separator), refrigeration-related structural or fire changes.",
+      "Registration of the livsmedelsanläggning: written notification to the municipal control authority (LIVSFS 2022:8 2 §, 6 §); activity may start when registered, or two weeks after the notification arrived even if not yet registered (9 §).",
+      "Municipal VA approval/notification of grease separator where required by local ABVA rules."
+    ],
+    "operator_oversight": "Kommunal livsmedelskontroll (miljöförvaltning); byggnadsnämnd; räddningstjänsten; Arbetsmiljöverket",
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "fire_vk_2abc", "fire_egress_dimensions", "occ_density_law_2024", "access_public_premises_wc", "access_hin", "san_public", "staff_personalutrymmen_general", "staff_changing_showers_storage", "staff_eating_rest", "loads_imposed_table_4_1"]
+  },
+  "occupancy": {
+    "unit": "visitor",
+    "gross_m2_per_unit": {
+      "value": 2.0,
+      "range": null,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 § p. 1: affärslokal 0.5 persons/m2 if the maximum is not known (egress design density for the customer area, not a trading density).",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "No public Swedish source found for staff per m2 in grocery retail." },
+    "egress_design_density": {
+      "persons_per_m2": 0.5,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 § p. 1. At this density a sales area above ~300 m2 exceeds 150 persons and becomes vk 2B.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "retail_hours",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0.05, 0.15, 0.2, 0.25, 0.3, 0.4, 0.45, 0.4, 0.35, 0.4, 0.6, 0.8, 0.7, 0.5, 0.35, 0.2, 0.05, 0],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced): long opening hours (~7–22) with after-work peak 16–19; early-morning staff/deliveries."
+  },
+  "spaces": [
+    {
+      "id": "grocery_sales_floor",
+      "label_en": "Sales floor with chilled/frozen display and checkouts",
+      "label_sv": "Butiksyta med kyl/frys och kassor",
+      "required": { "strength": "practice", "basis": "Defining space; size is a business decision.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No regulated size.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": ["grocery_refrigeration_plant", "grocery_goods_in"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "floor_load",
+      "layer": "space_plan",
+      "notes": "Imposed load D1 retail 4.0 kN/m2 vs B office 2.5 kN/m2 (BFS 2024:6, cross_cutting.json loads_imposed_table_4_1). Fire/egress per vk 2A/2B (cross_cutting.json). Checkout staff are permanent workplaces: daylight/view per AFS 2023:12 5 kap. 25 § or compensating measures."
+    },
+    {
+      "id": "grocery_goods_in",
+      "label_en": "Goods reception / loading dock",
+      "label_sv": "Varumottag / lastkaj",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 32 §: goods reception when needed, designed for the activity; a business loading and unloading large amounts of goods shall normally have a goods reception with a loading dock. 34 §: dock needs at least one access from ground, normally a stair. 35 §: outdoor goods reception used more than temporarily normally roofed. 33 § allmänna råd: ≥0.7 m pedestrian clearance between vehicles.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "1", "strength": "none", "source": "No area in AFS 2023:12.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["retail_shop", "restaurant_cafe", "food_hall"],
+      "shareable_note": "Shared building goods yard.",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": "Truck access and turning on the site/street is usually decisive in office districts. If goods move between floors: lift requirement AFS 2023:12 3 kap. 15 §."
+    },
+    {
+      "id": "grocery_cold_rooms",
+      "label_en": "Cold and freezer rooms, dry stock",
+      "label_sv": "Kyl- och frysrum, torrförråd",
+      "required": { "strength": "practice", "basis": "Cold chain is a food-law duty (EU 852/2004 Annex II, believed ch. IX — not verified in this session); dedicated cold/freezer rooms are the practice solution, not a stated room requirement.", "url": "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32004R0852" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["grocery_refrigeration_plant", "grocery_goods_in"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "floor_load",
+      "layer": "space_plan",
+      "notes": "Ch. IX reference was not re-read in this session (confidence of the basis: sourced from general knowledge of 852/2004 — verify). Insulated floors raise floor level; goods storage loads E1 5.0 kN/m2 (cross_cutting.json)."
+    },
+    {
+      "id": "grocery_refrigeration_plant",
+      "label_en": "Refrigeration plant and heat rejection",
+      "label_sv": "Kylmaskinrum / kylaggregat",
+      "required": { "strength": "practice", "basis": "Technical necessity for chilled/frozen display; not a regulated room.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Waste heat can serve other building uses.",
+      "binding_constraint": "roof_or_yard_space_and_noise",
+      "layer": "services",
+      "notes": "Condensers on roof or yard need space and noise control towards neighbours (BFS 2024:10 buller and municipal noise guidance — not checked here)."
+    },
+    {
+      "id": "grocery_manual_counter",
+      "label_en": "Manual service counter / food preparation (deli, fish, bake-off)",
+      "label_sv": "Manuell disk / beredning (chark, fisk, bake-off)",
+      "required": { "strength": "practice", "basis": "Optional; if present, EU 852/2004 Annex II ch. II applies (design permitting good hygiene, cleaning facilities for tools, food-washing facilities where necessary) and ch. I p. 4 hand-wash basins.", "url": "https://www.legislation.gov.uk/eur/2004/852/annex/II" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["grocery_handwash"],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "drainage_and_exhaust",
+      "layer": "services",
+      "notes": "Bake-off ovens and hot food need exhaust; floor drains are not a requirement per Livsmedelsverket kontrollwiki (art. 343) but are suitable where unpackaged sensitive foods are handled."
+    },
+    {
+      "id": "grocery_handwash",
+      "label_en": "Hand-wash basins",
+      "label_sv": "Handtvättställ",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. I p. 4: adequate number of washbasins, suitably located and designated for cleaning hands, with hot and cold running water and hygienic drying. Livsmedelsverket kontrollwiki (art. 1045): where necessary separate from food-rinsing equipment.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "at each area where unpackaged food is handled and at staff WCs", "strength": "none", "source": "No number or size in law or guidance ('tillräckligt antal').", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "grocery_staff_wc_changing",
+      "label_en": "Staff WC and changing",
+      "label_sv": "Personaltoalett och omklädning",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. I p. 3 (adequate flush lavatories, not opening directly into food-handling rooms), p. 9 (adequate changing facilities where necessary); AFS 2023:12 3 kap. 40–58 §§ (see cross_cutting.json staff_* and san_workplace). Kontrollwiki: staff carrying unpackaged food need a suitable place to change; staff route to changing should not pass unpackaged-food areas.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045" },
+      "size": { "rule": "per_unit", "value_m2": 4.84, "range_m2": null, "count": "1 WC per started 15 employees (AFS 2023:12 allmänna råd to 3 kap. 56 §)", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänna råd: accessible WC ≥2.2 x 2.2 m. Changing room size: none.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["retail_shop"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Customer WCs are not required by food law (kontrollwiki art. 1045: up to the operator) nor by Boverket (only accessible if provided)."
+    },
+    {
+      "id": "grocery_staff_room",
+      "label_en": "Staff room (eating, pause, rest)",
+      "label_sv": "Personalrum",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 60–63 §§ — see cross_cutting.json staff_eating_rest.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "staff present simultaneously", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office", "retail_shop"],
+      "shareable_note": "",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "grocery_waste_returns",
+      "label_en": "Waste, food waste, cardboard and bottle-return room",
+      "label_sv": "Avfall, matavfall, kartong och pantretur",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. VI p. 1–4 (food waste removed from food rooms, closable containers, adequate storage and disposal provision, pest-free); BFS 2024:8 11 kap. 1–3 §§ (waste rooms located/dimensioned for hygiene and collection).", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No size; Livsmedelsverket kontrollwiki (art. 343): food law cannot be used to demand a cooled waste room only because of odour.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/343", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["grocery_goods_in"],
+      "shareable_with": ["restaurant_cafe", "food_hall", "retail_shop"],
+      "shareable_note": "Shared waste room at building level.",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": "Bottle/can returns (pant) and cardboard baler are practice; space-demanding."
+    },
+    {
+      "id": "grocery_grease_separator",
+      "label_en": "Grease separator (if fatty wastewater)",
+      "label_sv": "Fettavskiljare",
+      "required": { "strength": "programme", "basis": "Municipal VA rules (ABVA/riktlinjer). Example: MittSverige Vatten & Avfall (Sundsvall) lists grocery stores among businesses required to have a grease separator per SS-EN 1825-1/-2; small or packaged-only businesses can apply for exemption. BFS 2024:8 8 kap. 15 §: WC wastewater may not be connected to grease separators.", "url": "https://msva.se/vatten-och-avlopp/verksamheter/riktlinjer-for-verksamheter/riktlinjer-for-verksamheter-i-sundsvall/restaurang-och-storkok" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "sized per SS-EN 1825-2 from fat-laden flow", "strength": "none", "source": "", "url": "", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["restaurant_cafe", "food_hall"],
+      "shareable_note": "One separator can serve several food tenants if drainage allows.",
+      "binding_constraint": "drainage_and_emptying_access",
+      "layer": "services",
+      "notes": "Relevant mainly with deli/bake-off/fish counters. Municipal guides commonly say it may not be placed in a room where food is handled and needs emptying access for a suction truck."
+    }
+  ],
+  "variants": [
+    { "id": "grocery_convenience", "label": "Convenience store (≤150 persons, 2A)", "changes": "Mostly packaged goods; minimal food handling; possibly exempt from grease separator; goods delivered through front or small rear door." },
+    { "id": "grocery_supermarket", "label": "Supermarket (>150 persons, 2B)", "changes": "Loading dock normally required for large goods volumes (AFS 2023:12 3 kap. 32 §); manual counters; fire alarm and evacuation alarm (2B)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Detaljplan K does not cover retail; needs H or C.",
+      "Goods reception with dock and truck access in an office street.",
+      "Floor load D1 4.0 kN/m2 (+ cold-room and storage loads) vs office B 2.5 kN/m2.",
+      "Change to vk 2A/2B: 30 m travel distance, exits, alarms (cross_cutting.json fire_vk_2abc).",
+      "Space for refrigeration condensers and their noise."
+    ],
+    "typical_enablers": [
+      "Large, column-free ground floors with street frontage.",
+      "Existing goods lift and basement storage."
+    ]
+  },
+  "sources": [
+    { "ref": "EU 852/2004 bilaga II kap. I p. 3, 4, 5, 8, 9; kap. II; kap. VI (text read from legislation.gov.uk copy of the original regulation)", "url": "https://www.legislation.gov.uk/eur/2004/852/annex/II", "accessed": "2026-10-19" },
+    { "ref": "LIVSFS 2022:8 — 2, 6, 9 §§", "url": "https://www.livsmedelsverket.se/globalassets/om-oss/lagstiftning/offentlig-kontroll/livsfs-2022-8_web_t.pdf", "accessed": "2026-10-19" },
+    { "ref": "Livsmedelsverket kontrollwiki — Toaletter och handfat (art. 1045); Lokaler och utrustning (art. 343)", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 — 3 kap. 15, 32–35, 56–63 §§; 5 kap. 25 §", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 — 2 kap. 4, 11–12 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 — 8 kap. 15 §, 11 kap. 1–3 §§", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "MittSverige Vatten & Avfall — Restaurang och storkök (fettavskiljare)", "url": "https://msva.se/vatten-och-avlopp/verksamheter/riktlinjer-for-verksamheter/riktlinjer-for-verksamheter-i-sundsvall/restaurang-och-storkok", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "EU 852/2004 Annex II ch. IX (temperature control) was not re-read in this session — verify wording before citing.",
+    "Grease-separator requirement for grocery stores varies by municipality; MSVA (Sundsvall) is one example. Stockholm Vatten och Avfall's page could not be retrieved.",
+    "Separate collection of food waste/bioavfall from businesses (avfallsförordningen 2020:614) likely drives waste-room size — paragraph not verified here.",
+    "No public Swedish source for back-of-house share or m2 per checkout.",
+    "BFS 2025:10 amendments to BFS 2024:7 not checked."
+  ]
+}

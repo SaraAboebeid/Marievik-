@@ -70,7 +70,10 @@ a{color:inherit; text-decoration:none}
 .card .kpis li::before{display:none}
 .p-finance .kpis li:not(.more){background:color-mix(in srgb, var(--ink-2) 10%, var(--card))}
 .card .kpis li.more{font-family:var(--mono); font-size:10.5px; font-weight:400; color:var(--muted); background:none;
-  box-shadow:inset 0 0 0 1px var(--line); cursor:help}
+  box-shadow:inset 0 0 0 1px var(--line); cursor:pointer}
+.card .kpis li.more:hover, .card .kpis li.more:focus-visible{color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink-2); outline:none}
+.card .kpis li.extra{background:none; box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, var(--line)); font-weight:400}
+.p-finance .kpis li.extra{background:none}
 .kpi-lab{font-family:var(--mono); font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-top:4px}
 .card .q{color:var(--ink-2); line-height:1.5; font-size:14.5px; margin:0 0 16px}
 .card ul{margin:0 0 20px; padding:0; list-style:none; font-size:13px; color:var(--ink-2)}
@@ -271,8 +274,9 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
   select(document.querySelector('.proj[aria-checked="true"]'))
 })()
 
-// Example KPI tags: the four shown are fixed picks; "+N more" and its hover list come from the explorer's
-// profile definitions (explorer/kpis.py), so they stay right when a profile's KPIs change.
+// Example KPI tags: the four shown are fixed picks; "+N more" expands the rest of the profile's KPIs, taken
+// from the explorer's profile definitions (explorer/kpis.py) so they stay right when a profile changes.
+// The card is a link, so the chip stops the click from opening the explorer.
 fetch('/api/methods').then(function (r) { return r.json() }).then(function (m) {
   document.querySelectorAll('.kpis[data-profile]').forEach(function (ul) {
     var prof = m.profiles[ul.dataset.profile]
@@ -282,8 +286,29 @@ fetch('/api/methods').then(function (r) { return r.json() }).then(function (m) {
       .filter(function (n) { return shown.indexOf(n) < 0 })
     var more = ul.querySelector('.more')
     if (!rest.length) { more.remove(); return }
-    more.textContent = '+' + rest.length + ' more'
-    more.title = rest.join(' · ')
+    var label = '+' + rest.length + ' more'
+    more.textContent = label
+    more.setAttribute('role', 'button')
+    more.setAttribute('tabindex', '0')
+    more.setAttribute('aria-expanded', 'false')
+    var extra = rest.map(function (n) {
+      var li = document.createElement('li')
+      li.className = 'extra'
+      li.textContent = n
+      li.hidden = true
+      ul.insertBefore(li, more)
+      return li
+    })
+    function toggle(e) {
+      e.preventDefault()
+      e.stopPropagation()
+      var open = more.getAttribute('aria-expanded') !== 'true'
+      extra.forEach(function (li) { li.hidden = !open })
+      more.setAttribute('aria-expanded', String(open))
+      more.textContent = open ? 'show less' : label
+    }
+    more.addEventListener('click', toggle)
+    more.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') toggle(e) })
   })
 }).catch(function () { /* keep the static tags */ })
 </script>

@@ -1,0 +1,261 @@
+{
+  "id": "restaurant_cafe",
+  "label_en": "Restaurant / café",
+  "label_sv": "Restaurang / kafé",
+  "family": "hospitality",
+  "summary": "Food service with a guest dining area and a kitchen. Variants: full cooking kitchen (storkök) and café with simple preparation. The dining area is a 'serveringsutrymme i restaurang' in verksamhetsklass 2A (≤150 persons) or 2B (>150), or 2C for large pubs/nightclubs serving alcohol beyond a limited extent. A full kitchen triggers the heaviest building demands: grease-laden exhaust duct with fire rating (EI 60/EI 30) taken to an outlet that does not disturb neighbours, possible separate fire cell, grease separator under municipal VA rules, floor drainage, and hygiene layout under EU 852/2004. National law requires no customer WC and, since 1 June 2026, the alcohol licence no longer requires a kitchen or seats.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "Dining area 2A (≤150 persons) / 2B (>150) per BFS 2024:7 2 kap. 11–12 §§ ('serveringsutrymmen i restauranger'); 2C (13 §) for >150 persons where alcohol is served beyond a limited extent (larger pubs, nightclubs). Kitchen and staff areas vk 1. See cross_cutting.json fire_vk_2abc.",
+    "key_laws": [
+      { "ref": "Förordning (EG) nr 852/2004 om livsmedelshygien, bilaga II", "url": "https://eur-lex.europa.eu/legal-content/SV/TXT/?uri=CELEX:32004R0852" },
+      { "ref": "LIVSFS 2022:8 registrering och godkännande", "url": "https://www.livsmedelsverket.se/globalassets/om-oss/lagstiftning/offentlig-kontroll/livsfs-2022-8_web_t.pdf" },
+      { "ref": "BFS 2024:7 brandskydd (4 kap. 22–24 §§ imkanaler; 5 kap. 17, 20, 26, 38 §§ storkök)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö (8 kap. 15 §, 9 kap. 1 §, 11 kap.)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      { "ref": "Alkohollag (2010:1622) 8 kap. 14 §, 16 § (8 kap. 15 § repealed by Lag 2026:511 from 2026-06-01)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/alkohollag-20101622_sfs-2010-1622/" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use from office (PBL 9 kap. 15 § 1, cross_cutting.json cou_bygglov_trigger). Detaljplan: a restaurant as main purpose fits Centrum (C), not Detaljhandel (H) — Boverket kunskapsbanken 'Detaljhandel'; old H/K plans may exclude restaurants.",
+      "Anmälan (PBF 6 kap. 1 §) for ventilation, VA, fire protection and structural openings (exhaust shaft).",
+      "Registration of livsmedelsanläggning (LIVSFS 2022:8 2 §); may start on registration or two weeks after notification (9 §).",
+      "Serveringstillstånd from the municipality if alcohol is served: defined serving area (Alkohollag 8 kap. 14 §), premises suitable from fire-safety viewpoint (8 kap. 16 §). Kitchen, food and seat requirements abolished from 2026-06-01.",
+      "Municipal VA: grease separator installation and notification per local rules.",
+      "Outdoor seating on public land: police permit (ordningslagen) — not verified here."
+    ],
+    "operator_oversight": "Kommunal livsmedelskontroll; kommunal alkoholhandläggning (tillstånd); räddningstjänsten; byggnadsnämnd; VA-huvudman; Arbetsmiljöverket",
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "fire_vk_2abc", "fire_egress_dimensions", "occ_density_law_2024", "occ_density_bbr_table_5333", "access_public_premises_wc", "access_hin", "san_public", "staff_personalutrymmen_general", "staff_changing_showers_storage", "staff_eating_rest", "vent_workplace", "loads_imposed_table_4_1"]
+  },
+  "occupancy": {
+    "unit": "seat",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish public source found for m2 per restaurant seat (dining or gross). Old BBR general advice (table 5:333, repealed) used number of seats or 1.0 person/m2 net for restaurants as egress design load — not a space standard.",
+      "confidence": "verified"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "No public source found." },
+    "egress_design_density": {
+      "persons_per_m2": null,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 §: design number = maximum expected persons (furnished seats + standing + staff). Default densities exist only for affärslokal 0.5, pub/bar 3.0 and samlingslokal 2.5 persons/m2; restaurants are not listed. Old BBR advice: seats or 1.0/m2 (cross_cutting.json occ_density_bbr_table_5333, practice for new applications). A bar-type café would fall under pub/bar 3.0/m2.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "evening_weekend",
+    "hourly_presence": [0, 0, 0, 0, 0, 0, 0, 0, 0.02, 0.05, 0.1, 0.5, 0.9, 0.6, 0.2, 0.1, 0.15, 0.4, 0.8, 0.9, 0.7, 0.4, 0.15, 0.05],
+    "hourly_presence_note": "Modelling assumption (indicative, not sourced): full-service restaurant with lunch peak 12 and dinner peak 18–20; share of seats occupied. Café variant: see variants."
+  },
+  "spaces": [
+    {
+      "id": "rest_dining",
+      "label_en": "Dining room / serving area",
+      "label_sv": "Matsal / serveringsutrymme",
+      "required": { "strength": "practice", "basis": "Defining space. No national seat or size requirement (alcohol-licence seat requirement abolished 2026-06-01). If alcohol is served the licensed area must be defined (Alkohollag 8 kap. 14 §).", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/alkohollag-20101622_sfs-2010-1622/" },
+      "size": { "rule": "per_seat", "value_m2": null, "range_m2": null, "count": "seats", "strength": "none", "source": "No Swedish public source for m2 per seat.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": ["rest_kitchen", "rest_guest_wc"],
+      "shareable_with": ["food_hall", "coworking", "office"],
+      "shareable_note": "Lunch restaurant can double as staff eating place for office tenants (AFS 2023:12 3 kap. 60 § allmänna råd names restaurants as suitable eating places); evening events.",
+      "binding_constraint": "egress",
+      "layer": "space_plan",
+      "notes": ">150 persons → 2B: fire alarm, evacuation alarm, emergency lighting, two exits with the alternative exit leading to the main entrance or equivalent; with alcohol beyond limited extent → 2C with 15 m travel distance (cross_cutting.json fire_vk_2abc). In 2A a single exit is acceptable only for ≤30 persons with a door to safe place (BFS 2024:7 7 kap. 11 §). Facade_required reflects practice (street visibility), not law. Guest ventilation: no national l/s per guest found for restaurants (staff: AFS 2023:12 5 kap. 4 §)."
+    },
+    {
+      "id": "rest_kitchen",
+      "label_en": "Kitchen (storkök or simple preparation)",
+      "label_sv": "Kök (storkök eller enkel beredning)",
+      "required": { "strength": "law", "basis": "Food preparation rooms must meet EU 852/2004 Annex II ch. II (design and layout permitting good hygiene, protection against contamination; facilities for cleaning/disinfecting tools; food-washing facilities where necessary) and ch. I (ventilation, drainage, lighting). Fire: storkök surfaces B-s1,d0 ceiling / C-s2,d0 wall (BFS 2024:7 5 kap. 17 §); storkök with particular fire risk = own fire cell unless an automatic extinguishing system limits the risk (5 kap. 26 §).", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": { "rule": "per_seat", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "No Swedish public source for kitchen m2 per seat; 852/2004 is functional.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["rest_exhaust", "rest_grease_separator", "rest_handwash", "rest_goods_in"],
+      "shareable_with": ["food_hall"],
+      "shareable_note": "Commissary/ghost-kitchen use outside service hours.",
+      "binding_constraint": "exhaust_shaft_and_drainage",
+      "layer": "services",
+      "notes": "Kitchen staff are at permanent workplaces: daylight/view per AFS 2023:12 5 kap. 25 § or compensating measures (cross_cutting.json staff_room_height_daylight). Floor drains not a food-law requirement (kontrollwiki art. 343) but standard in cooking kitchens; BFS 2024:8 7 kap. 7–11 §§ require watertight layers and floor drains where floors are often exposed to water."
+    },
+    {
+      "id": "rest_exhaust",
+      "label_en": "Kitchen exhaust duct (imkanal) and outlet",
+      "label_sv": "Imkanal och avluft",
+      "required": { "strength": "law", "basis": "BFS 2024:7 4 kap. 23 §: imkanaler serving storkök at least EI 60 in byggnadsklass 1, EI 30 in byggnadsklass 2–3 (non-insulated parts allowed inside the served room with 0.10 m clearance, outdoors with 0.5 m); 24 §: storkök ducts with large combustible deposits need assured fire resistance inside the duct unless a deposit-limiting system is fitted; 5 kap. 20 §: imkanaler and hoods in storkök of non-combustible material; 4 kap. 22 §: household-type cooking (café) EI 15 or E 15. BFS 2024:8 9 kap. 1 §: exhaust outlets placed so pollutants/odours are not drawn back and no nuisance arises in the surroundings.", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "vertical shaft through all floors above, plus fan space", "strength": "none", "source": "No size in regulation.", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "vertical_shaft_to_roof",
+      "layer": "services",
+      "notes": "Outlet above roof is the usual way to meet BFS 2024:8 9 kap. 1 § and avoid odour nuisance (miljöbalken tillsyn); Danish municipal rules (e.g. Gentofte, Copenhagen) explicitly require outlet above the ridge — no equivalent Swedish national rule found, so 'via roof' is practice. Typically the single most decisive feature of an office building for a full restaurant."
+    },
+    {
+      "id": "rest_grease_separator",
+      "label_en": "Grease separator",
+      "label_sv": "Fettavskiljare",
+      "required": { "strength": "programme", "basis": "Municipal VA rules. MittSverige Vatten & Avfall (Sundsvall): restaurants, cafés, bakeries, staff canteens etc. must have a grease separator meeting SS-EN 1825-1/-2, reported to the VA utility; exemption possible for small/packaged-only businesses. Kristinehamn similarly lists cafés and restaurants. BFS 2024:8 8 kap. 15 §: WC wastewater may not be connected to grease separators.", "url": "https://msva.se/vatten-och-avlopp/verksamheter/riktlinjer-for-verksamheter/riktlinjer-for-verksamheter-i-sundsvall/restaurang-och-storkok" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "sized per SS-EN 1825-2", "strength": "none", "source": "", "url": "", "confidence": "sourced" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["food_hall", "grocery_store"],
+      "shareable_note": "",
+      "binding_constraint": "drainage_and_emptying_access",
+      "layer": "services",
+      "notes": "Municipal guides commonly require alarm and sampling point, no placement in food rooms, and emptying several times per year by suction truck — so vehicle access within hose reach matters. Kitchen-only drainage must be separated from WC stacks."
+    },
+    {
+      "id": "rest_dishwash",
+      "label_en": "Dishwashing area",
+      "label_sv": "Disk",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. II p. 2: adequate facilities, where necessary, for cleaning, disinfecting and storage of working utensils and equipment, with hot and cold water. AFS 2023:12 3 kap. 7 § allmänna råd names dishwashers as equipment that may need a separate room.", "url": "https://www.legislation.gov.uk/eur/2004/852/annex/II" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["rest_grease_separator"],
+      "shareable_with": ["food_hall"],
+      "shareable_note": "",
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "Kontrollwiki (search excerpt): dirty dishes and outer packaging should not pass through areas where unpackaged food is handled."
+    },
+    {
+      "id": "rest_storage",
+      "label_en": "Cold and dry storage",
+      "label_sv": "Kyl-, frys- och torrförråd",
+      "required": { "strength": "practice", "basis": "Needed to keep the cold chain; no room-level requirement found.", "url": "" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "indicative" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["rest_goods_in"],
+      "shareable_with": ["food_hall"],
+      "shareable_note": "",
+      "binding_constraint": "floor_load",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "rest_handwash",
+      "label_en": "Hand-wash basins",
+      "label_sv": "Handtvättställ",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. I p. 4 (adequate number, suitably located, hot and cold water, hygienic drying); kontrollwiki art. 1045 (separate from food-rinsing where necessary; must not be blocked by food/dishes).", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045" },
+      "size": { "rule": "derived", "value_m2": null, "range_m2": null, "count": "in kitchen near each food-handling station and at staff WCs", "strength": "none", "source": "'Tillräckligt antal' — no number.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": ""
+    },
+    {
+      "id": "rest_staff_wc_changing",
+      "label_en": "Staff WC, changing room and shower",
+      "label_sv": "Personaltoalett, omklädningsrum och dusch",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. I p. 3 (lavatories not opening directly into food-handling rooms) and p. 9 (changing facilities where necessary); AFS 2023:12 3 kap. 46 § changing room when special work clothes are worn, 48 § normally separate for men/women if used simultaneously, 51 § shower normally if work is sweaty or dirty. Kontrollwiki art. 1045: food-law WC requirement concerns staff WCs; an antechamber may be needed if the WC is close to unprotected food.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045" },
+      "size": { "rule": "per_unit", "value_m2": 4.84, "range_m2": null, "count": "1 WC per started 15 employees (AFS allmänna råd to 3 kap. 56 §)", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänna råd: accessible WC ≥2.2 x 2.2 m. Changing room/shower: no size.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Kontrollwiki: a single WC may be shared with customers only if the operator can show routines preventing contamination.",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Staff route to changing should not pass areas with unpackaged food (kontrollwiki excerpt)."
+    },
+    {
+      "id": "rest_guest_wc",
+      "label_en": "Guest WC",
+      "label_sv": "Gästtoalett",
+      "required": { "strength": "practice", "basis": "Not required by national law: Livsmedelsverket kontrollwiki art. 1045 says customer toilets are the operator's decision; Boverket only requires that one is accessible if public WCs exist (BFS 2024:12 2 kap. 7 §; cross_cutting.json san_public, access_public_premises_wc).", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045" },
+      "size": { "rule": "per_seat", "value_m2": null, "range_m2": null, "count": "no national count rule", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["food_hall", "office"],
+      "shareable_note": "",
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "In practice every seated restaurant provides guest WCs, and municipal alcohol or local rules may expect them."
+    },
+    {
+      "id": "rest_staff_room",
+      "label_en": "Staff room (eating / pause / rest)",
+      "label_sv": "Personalrum",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 60–63 §§ (cross_cutting.json staff_eating_rest).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_unit", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": [],
+      "shareable_note": "Staff may eat in the dining room outside service if conditions are satisfactory (60 § allmänna råd).",
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "rest_goods_in",
+      "label_en": "Delivery entrance",
+      "label_sv": "Varuintag",
+      "required": { "strength": "law", "basis": "AFS 2023:12 3 kap. 32 § goods reception when needed; 11 § doors can be held open for deliveries. Hygiene: deliveries/outer packaging should not cross unpackaged-food areas (kontrollwiki).", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "", "url": "", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["retail_shop", "grocery_store", "food_hall"],
+      "shareable_note": "",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": ""
+    },
+    {
+      "id": "rest_waste",
+      "label_en": "Waste room incl. food waste and used cooking oil",
+      "label_sv": "Avfallsrum inkl. matavfall och frityrolja",
+      "required": { "strength": "law", "basis": "EU 852/2004 Annex II ch. VI (removal, closable containers, adequate storage, pest-free); BFS 2024:8 11 kap. 1–3 §§. MSVA: frying oil and large amounts of fat collected separately, not to the grease separator.", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      "size": { "rule": "per_building", "value_m2": null, "range_m2": null, "count": "", "strength": "none", "source": "Kontrollwiki art. 343: food law cannot require a cooled waste room only because of odour.", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/343", "confidence": "verified" },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["food_hall", "grocery_store"],
+      "shareable_note": "",
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": ""
+    }
+  ],
+  "variants": [
+    { "id": "rest_full_kitchen", "label": "Restaurant with full cooking kitchen (storkök)", "changes": "Imkanal EI 60 (Br1) / EI 30 (Br2–3) to outlet, non-combustible hood/duct, deposit control (BFS 2024:7 4 kap. 23–24 §§, 5 kap. 20 §); own fire cell if particular fire risk unless automatic extinguishing (5 kap. 26 §); grease separator; floor drains; changing rooms and showers for kitchen staff." },
+    { "id": "rest_cafe_simple", "label": "Café with simple preparation", "changes": "Household-type cooking only: imkanal EI 15 or E 15 (BFS 2024:7 4 kap. 22 §); no storkök fire cell; grease separator still often required by municipal VA rules (MSVA lists cafés); hours closer to retail (≈7–18, peaks 8, 12, 15); hourly_presence e.g. [0,0,0,0,0,0,0,0.3,0.6,0.4,0.4,0.6,0.9,0.6,0.4,0.6,0.4,0.2,0.05,0,0,0,0,0] (indicative)." },
+    { "id": "rest_bar_2c", "label": "Bar / nightclub >150 persons with alcohol (2C)", "changes": "15 m travel distance, spoken evacuation alarm, pub/bar default 3 persons/m2 (cross_cutting.json); serveringstillstånd; no kitchen needed since 2026-06-01." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "No vertical shaft route for a fire-rated kitchen exhaust to roof through upper floors (often other tenants).",
+      "No kitchen drainage/grease-separator route and floor drains in office slabs; suction-truck access for emptying.",
+      "Detaljplan K or old H may exclude restaurants; needs C or plan change.",
+      "Change from vk 1 to 2A/2B/2C: 30 m (15 m) travel, exit count not relaxable for 2B/2C at change of use (cross_cutting.json fire_change_of_use_floor).",
+      "Odour and noise nuisance to office or residential neighbours (fans, deliveries, late hours)."
+    ],
+    "typical_enablers": [
+      "Ground floor with street frontage and existing shafts.",
+      "Café variant with simple preparation avoids most kitchen exhaust and fire-cell demands.",
+      "Office tenants above provide lunch demand."
+    ]
+  },
+  "sources": [
+    { "ref": "EU 852/2004 bilaga II kap. I p. 3, 4, 5, 8, 9; kap. II p. 1–2; kap. VI p. 1–4 (read via legislation.gov.uk copy of original text)", "url": "https://www.legislation.gov.uk/eur/2004/852/annex/II", "accessed": "2026-10-19" },
+    { "ref": "Livsmedelsverket kontrollwiki — Toaletter och handfat (art. 1045); Lokaler och utrustning (art. 343)", "url": "https://kontrollwiki.livsmedelsverket.se/artikel/1045", "accessed": "2026-10-19" },
+    { "ref": "LIVSFS 2022:8 — 2, 6, 9 §§", "url": "https://www.livsmedelsverket.se/globalassets/om-oss/lagstiftning/offentlig-kontroll/livsfs-2022-8_web_t.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 — 2 kap. 4, 11–13 §§; 4 kap. 22–24 §§; 5 kap. 17, 20, 26, 38 §§; 7 kap. 11 §", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:8 — 7 kap. 7–11 §§, 8 kap. 15 §, 9 kap. 1 §, 11 kap. 1–3 §§", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
+    { "ref": "Alkohollag (2010:1622) as amended to SFS 2026:511 — 8 kap. 14–17 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/alkohollag-20101622_sfs-2010-1622/", "accessed": "2026-10-19" },
+    { "ref": "Köping kommun — Serveringstillstånd (matkravet slopas 2026-06-01)", "url": "https://koping.se/foretagare--naringsliv/upphandling-tillstand-och-tillsyn/tillstand-regler-och-tillsyn/serveringstillstand-och-gardsforsaljning.html", "accessed": "2026-10-19" },
+    { "ref": "MittSverige Vatten & Avfall — Restaurang och storkök (fettavskiljare)", "url": "https://msva.se/vatten-och-avlopp/verksamheter/riktlinjer-for-verksamheter/riktlinjer-for-verksamheter-i-sundsvall/restaurang-och-storkok", "accessed": "2026-10-19" },
+    { "ref": "Kristinehamns kommun — riktlinjer för fettavskiljare", "url": "https://www.kristinehamn.se/contentassets/95c393ff1752470caf755cb71e6508c5/folder-riktlinjer-for-fettavskiljare.pdf", "accessed": "2026-10-19" },
+    { "ref": "AFS 2023:12 — 3 kap. 7, 11, 32, 46–63 §§; 5 kap. 4, 25 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
+    { "ref": "Boverket PBL kunskapsbanken — användning Detaljhandel / Centrum", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/detaljplan/planbestammelser/anvandning-av-kvartersmark/detaljhandel/", "accessed": "2026-10-19" }
+  ],
+  "open_questions": [
+    "No Swedish public source for m2 per seat (dining, kitchen, gross). Need operator data (e.g. Visita) or municipal school/elderly-care kitchen programmes as proxies.",
+    "Restaurant dining is not among the BFS 2024:7 2 kap. 4 § default densities; confirm with a fire consultant whether to use furnished seats, samlingslokal 2.5/m2 or old BBR 1.0/m2.",
+    "Kitchen exhaust 'via roof': no Swedish national rule found; check municipal miljöförvaltning guidance (e.g. Stockholm, Göteborg) and Boverket guidance to BFS 2024:8 9 kap. 1 §.",
+    "Outdoor air for guests in restaurants: FoHMFS 2014:18 (lokaler för allmänna ändamål) not checked for restaurant values.",
+    "Stockholm Vatten och Avfall's grease-separator page could not be retrieved; thresholds (e.g. meals per day) differ by municipality.",
+    "'Storkök med särskild brandrisk' (BFS 2024:7 5 kap. 26 §) — definition and threshold not read; check Boverket guidance.",
+    "BFS 2025:10 amendments to BFS 2024:7 (from 2025-12-01) not checked.",
+    "Alkohollag 8 kap. 15 § repeal read on riksdagen.se and municipal pages (Köping, Malmö); confirm SFS 2026:511 text."
+  ]
+}

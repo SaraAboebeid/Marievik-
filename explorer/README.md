@@ -55,6 +55,11 @@ come from this repository's catalogue.
 Esc goes up one level. The sun bar sets the date and time (Stockholm sun), with sky, shadows and ambient
 occlusion. Add `?lite=1` to the address on a slow GPU.
 
+**Urban context.** Streets, footpaths, the quay boardwalk, Årstaviken, parks and woodland, railway,
+street lamps, about 500 trees and the neighbouring buildings come from `Marievik_parametric/site/marievik_context.json`
+(OpenStreetMap, plus estimated widths and trees). The *Context* toggle hides them. The neighbouring buildings
+also count as obstructions in the daylight analysis.
+
 **Rhino.** The Rhino panel opens any `.3dm` file (drag one in with *Open .3dm…*, or put it in
 `explorer/models`). It shows the file's layers, with their Rhino visibility, in the same coordinates as the
 Grasshopper model.

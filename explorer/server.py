@@ -91,6 +91,11 @@ def api_site():
     return site().site_payload()
 
 
+@app.get("/api/context")
+def api_context():
+    return site().context()
+
+
 @app.post("/api/building/{bid}")
 def api_building(bid: str, body: ScenarioBody):
     _check(bid)

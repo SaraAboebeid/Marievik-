@@ -16,6 +16,8 @@ const title = 'font-mono text-[11px] font-semibold uppercase tracking-[0.1em] te
 interface Props {
   tl: TimelineResponse | null
   profile: ProjectProfile | null
+  /** KPIs picked on the landing page's step 3 (?kpis=a,b,c), overriding the profile's own default set. */
+  kpiOverride: string[] | null
   year: number
   setYear: (y: number) => void
   pathway: string
@@ -24,7 +26,7 @@ interface Props {
 }
 
 /** Ten years of one building as a Gantt chart, played on the 3D model: the chosen pathway against the unchanged building. */
-export function TimelineDrawer({ tl, profile, year, setYear, pathway, setPathway, onClose }: Props) {
+export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathway, setPathway, onClose }: Props) {
   const [playing, setPlaying] = useState(false)
   const [details, setDetails] = useState(false)
   const ready = tl && tl.status === 'ready' ? (tl as Timeline) : null
@@ -71,7 +73,8 @@ export function TimelineDrawer({ tl, profile, year, setYear, pathway, setPathway
   const path = ready.segments.find((s) => s.id === pathway) ?? ready.segments.find((s) => s.segment === 2) ?? base
   const years = ready.years
   const yi = Math.max(0, years.indexOf(year))
-  const kpiIds = (profile?.timeline_kpis ?? ['capex_cum', 'co2_cum', 'people', 'evening_share']).filter((k) => ready.kpis[k])
+  const kpiIds = (kpiOverride?.length ? kpiOverride : profile?.timeline_kpis ?? ['capex_cum', 'co2_cum', 'people', 'evening_share'])
+    .filter((k) => ready.kpis[k])
   const stateNow = ready.states[path.years[yi].state]
   const eventNow = path.events.find((e) => e.year === year)
   const highlights = ready.segments.filter((s) => s.highlight)

@@ -1,6 +1,6 @@
 import type {
   BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
-  ParametricPayload, Project, Settings, SitePayload, SupplierCompare, TimelineResponse,
+  ParametricPayload, Project, Settings, SitePayload, UrbanContext, SupplierCompare, TimelineResponse,
 } from './types'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -19,6 +19,7 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
 
 export const api = {
   site: () => call<SitePayload>('/api/site'),
+  context: () => call<UrbanContext>('/api/context'),
   building: (id: string, settings: Partial<Settings>) => call<BuildingPayload>(`/api/building/${id}`, { settings }),
   floor: (id: string, index: number, settings: Partial<Settings>) =>
     call<FloorPayload>(`/api/floor/${id}/${index}`, { settings }),

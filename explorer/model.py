@@ -99,6 +99,7 @@ class Site:
         self.materials.setdefault("timber", [176, 136, 96])
         self._cache: dict[str, dict] = {}
         self._lock = threading.Lock()
+        self._context: dict | None = None
 
     # ------------------------------------------------------------------ public
     def site_payload(self) -> dict:
@@ -361,6 +362,17 @@ class Site:
         return {"upfront_kgco2e_per_m2": k["upfront_kgco2e_per_m2"], "capex_sek_per_m2": k["capex_sek_per_m2"],
                 "walls_ok": k["walls"]["sound_below_m2"] == 0 and k["walls"]["fire_below_m2"] == 0}
 
+    def context(self) -> dict:
+        """Urban context (streets, paths, quay, water, greens, trees, lamps, neighbouring buildings) from
+        <Marievik_parametric>/site/marievik_context.json, built by site/make_context.py. Empty if missing."""
+        if self._context is None:
+            p = MVK / "site" / "marievik_context.json"
+            try:
+                self._context = json.loads(p.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                self._context = {}
+        return self._context
+
     def context_prisms(self, raw_by_building: dict | None = None) -> list[dict]:
         """Every building as (rings, top height) for daylight obstruction, with its current scenario height."""
         out = []
@@ -375,6 +387,10 @@ class Site:
             if h is None:
                 h = sum(S.floor_heights(b, int(b["levels"])))
             out.append({"id": bid, "rings": [b["footprint"]] + (b.get("holes") or []), "height": h})
+        # neighbouring buildings outside the study set shade too (trees are left out: seasonal, porous)
+        for i, nb in enumerate(self.context().get("buildings", [])):
+            for rings in nb["rings"]:
+                out.append({"id": "ctx%d" % i, "rings": rings, "height": nb["h"]})
         return out
 
 

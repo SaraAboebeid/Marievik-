@@ -59,6 +59,7 @@ export function SunBar({ sun, setSun, view, setView }: Props) {
       <Toggle on={view.shadows} onChange={(v) => setView({ ...view, shadows: v })} label="Shadows" />
       <Toggle on={view.ao} onChange={(v) => setView({ ...view, ao: v })} label="Soft shading" />
       <Toggle on={view.labels} onChange={(v) => setView({ ...view, labels: v })} label="Labels" />
+      <Toggle on={view.context !== false} onChange={(v) => setView({ ...view, context: v })} label="Context" />
       <button type="button" onClick={() => setOpen(false)} className="ml-1 text-[12px] text-ink-2 hover:text-ink" aria-label="Collapse">▾ hide</button>
     </div>
   )

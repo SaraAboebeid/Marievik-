@@ -52,7 +52,7 @@ export default function App() {
   const [sun, setSun] = useState({ month: 6, day: 21, hour: 15 })
   // ?lite=1 starts without shadows and ambient occlusion (slow GPUs, remote desktops)
   const lite = new URLSearchParams(window.location.search).has('lite')
-  const [view, setView] = useState<ViewOptions>({ sky: true, shadows: !lite, ao: !lite, explode: 0, labels: true })
+  const [view, setView] = useState<ViewOptions>({ sky: true, shadows: !lite, ao: !lite, explode: 0, labels: true, context: true })
   const [hover, setHover] = useState<{ p: Pick; x: number; y: number } | null>(null)
   const [saved, setSaved] = useState<SavedScenario[]>(() => {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? '[]') } catch { return [] }
@@ -73,6 +73,12 @@ export default function App() {
     const next = { ...p, [side]: !p[side] }
     try { localStorage.setItem('mvx-panels', JSON.stringify(next)) } catch { /* private window */ }
     return next
+  })
+  // the timeline takes the whole width: the side panels close while it is open and come back as they were
+  const panelsBefore = useRef(panels)
+  const toggleTimeline = () => setShowTimeline((s) => {
+    const open = !s
+    return open ? (panelsBefore.current = panels, setPanels({ left: false, right: false })) : setPanels(panelsBefore.current), open
   })
 
   const [tab, setTab] = useState<Tab>('explore')
@@ -96,7 +102,7 @@ export default function App() {
   // the CAVF KPI set behind the chosen profile: a project profile names the generic profile it reads like
   const cavfProfile = projectProfile?.cavf_profile ?? (choice.profile && PROFILE_LABEL[choice.profile] ? choice.profile : null)
   const profileOptions: [string, string][] = projectData
-    ? projectData.profiles.map((p) => [p.id, p.title])
+    ? projectData.profiles.map((p) => [p.id, p.title_en])
     : Object.entries(PROFILE_LABEL)
 
   // ------------------------------------------------------------ 10-year timeline: computed once per building, polled until ready
@@ -155,6 +161,7 @@ export default function App() {
       if (!alive) return
       setSite(s)
       viewer.current?.setSite(s)
+      api.context().then((c) => { if (alive && c && c.roads) viewer.current?.setContext(c) }).catch(() => {})
       const ids = s.buildings.map((b) => b.id)
       setLoading(Object.fromEntries(ids.map((i) => [i, true])))
       const queue = [...ids]
@@ -515,7 +522,7 @@ export default function App() {
             <span className="rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-sm">{working}</span>
           )}
           {buildingId && (
-            <button onClick={() => setShowTimeline((s) => !s)} aria-pressed={showTimeline}
+            <button onClick={toggleTimeline} aria-pressed={showTimeline}
               title="Ten years: the building unchanged against pathways of change, played on the model"
               className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-medium shadow-sm ${showTimeline ? 'border-accent bg-accent text-white' : 'border-line bg-raised/95 hover:border-line-strong'}`}>
               10-year timeline
@@ -584,7 +591,8 @@ export default function App() {
           )}
           {projectProfile && (
             <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3 text-[12.5px] shadow-sm">
-              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Viewing as {projectProfile.title}</div>
+              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Viewing as {projectProfile.title_en}
+                <span className="ml-1.5 font-sans text-[11px] font-normal normal-case tracking-normal text-ink-2">({projectProfile.title})</span></div>
               <p className="mt-1 leading-snug text-ink-2">{projectProfile.mandate}</p>
               <p className="mt-1 leading-snug text-ink-2"><span className="text-ink">Looks at:</span> {projectProfile.focus}.
                 {' '}<span className="text-ink">Fears:</span> {projectProfile.risk}.</p>
@@ -617,7 +625,8 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-end gap-2">
         {showTimeline && buildingId ? (
           <TimelineDrawer tl={tl && (tl.status !== 'ready' || tl.building === buildingId) ? tl : null} profile={projectProfile}
-            year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={() => setShowTimeline(false)} />
+            kpiOverride={choice.kpis}
+            year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={toggleTimeline} />
         ) : (
           <>
             {site && <div className="pointer-events-auto min-w-0 max-w-[58rem]"><MapLegend site={site} level={level} floor={floorData} /></div>}

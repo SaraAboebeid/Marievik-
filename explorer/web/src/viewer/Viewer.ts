@@ -7,7 +7,8 @@ import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader.js'
-import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit } from '../types'
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
+import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit, UrbanContext } from '../types'
 import { UNIT_BOX, detailGeometry, disposeTree, flat, localBox, prism, segmentBox } from './geometry'
 import { dfColor, unitColor } from './colors'
 
@@ -22,6 +23,7 @@ export interface ViewOptions {
   ao: boolean
   explode: number
   labels: boolean
+  context?: boolean
 }
 
 type Focus =
@@ -238,6 +240,7 @@ export class Viewer {
       if (m) m.needsUpdate = true
     })
     this.labelGroup.visible = this.options.labels
+    this.ctxGroup.visible = this.options.context !== false
     if (prevExplode !== this.options.explode) this.applyFocus(false)
   }
 
@@ -257,6 +260,7 @@ export class Viewer {
       new THREE.MeshStandardMaterial({ color: '#b9bcae', roughness: 1 }))
     ground.position.set(this.center.x, this.center.y, -0.05)
     ground.receiveShadow = true
+    ground.userData.placeholder = true
     this.contextGroup.add(ground)
     // Årstaviken lies south-east of the blocks: a simple water plane to read the site by
     const water = new THREE.Mesh(new THREE.PlaneGeometry(1600, 700),
@@ -264,13 +268,138 @@ export class Viewer {
     water.position.set(this.center.x + 330, this.center.y - 470, -0.02)
     water.rotation.z = Math.atan2(-0.8, 0.6) + Math.PI / 2
     water.receiveShadow = true
+    water.userData.placeholder = true
     this.contextGroup.add(water)
     const road = new THREE.LineBasicMaterial({ color: '#8c8f86' })
     for (const r of site.roads) {
       const g = new THREE.BufferGeometry().setFromPoints(r.pts.map(([x, y]) => new THREE.Vector3(x, y, 0.03)))
-      this.contextGroup.add(new THREE.Line(g, road))
+      const line = new THREE.Line(g, road)
+      line.userData.placeholder = true
+      this.contextGroup.add(line)
     }
     this.frameSite(false)
+  }
+
+  // ------------------------------------------------------------------ urban context (OpenStreetMap)
+  private ctxGroup = new THREE.Group()
+
+  setContext(ctx: UrbanContext) {
+    this.invalidate()
+    disposeTree(this.ctxGroup)
+    this.ctxGroup.clear()
+    if (!this.ctxGroup.parent) this.world.add(this.ctxGroup)
+    // the real shoreline, streets and greens replace the placeholder ground and water
+    for (const c of [...this.contextGroup.children]) if (c.userData.placeholder) this.contextGroup.remove(c)
+    const g = this.ctxGroup
+    const surf = (ringsList: Ring[][], z: number, mat: THREE.Material, thick = 0) => {
+      const geos: THREE.BufferGeometry[] = []
+      for (const rings of ringsList) {
+        const geo = thick ? prism(rings, z, z + thick) : flat(rings, z)
+        if (geo) geos.push(geo.index ? geo.toNonIndexed() : geo)
+      }
+      if (!geos.length) return
+      const merged = mergeGeometries(geos, false)
+      geos.forEach((x) => x.dispose())
+      if (!merged) return
+      merged.computeVertexNormals()
+      const m = new THREE.Mesh(merged, mat)
+      m.receiveShadow = true
+      m.castShadow = thick > 0.5
+      g.add(m)
+    }
+    const M = (color: string, rough = 0.95, extra: THREE.MeshStandardMaterialParameters = {}) =>
+      new THREE.MeshStandardMaterial({ color, roughness: rough, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1, ...extra })
+    const [x0, y0, x1, y1] = ctx.clip ?? [-400, -500, 450, 400]
+    surf([[[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]]], -0.05, new THREE.MeshStandardMaterial({ color: '#cfccc4', roughness: 1 }))
+    const outer = new THREE.Mesh(new THREE.RingGeometry(Math.hypot(x1 - x0, y1 - y0) * 0.55, 2600, 64, 1),
+      new THREE.MeshStandardMaterial({ color: '#b9bcae', roughness: 1 }))
+    outer.position.set((x0 + x1) / 2, (y0 + y1) / 2, -0.08)
+    outer.receiveShadow = true
+    g.add(outer)
+    for (const w of ctx.water ?? []) surf(w.rings, -0.02, new THREE.MeshStandardMaterial({ color: '#3f5f73', roughness: 0.08, metalness: 0.35, envMapIntensity: 1.4 }))
+    const GREEN: Record<string, string> = { grass: '#86a862', park: '#7fa35a', wood: '#5f8648', scrub: '#7b9a5a', playground: '#c8b88e', pitch: '#6f9e58', flowerbed: '#b98a9a', rock: '#a9a59c', sand: '#d9cba3' }
+    const byKind = new Map<string, Ring[][]>()
+    for (const gr of ctx.greens ?? []) byKind.set(gr.kind, [...(byKind.get(gr.kind) ?? []), ...gr.rings])
+    for (const [k, rs] of byKind) surf(rs, 0.02, M(GREEN[k] ?? '#8aa86a'))
+    for (const p of ctx.plazas ?? []) surf(p.rings, 0.03, M('#d6d0c4'))
+    for (const r of ctx.roads ?? []) surf(r.rings, 0.04 + (r.z ?? 0), M(r.z ? '#6c6e72' : '#4e5054', 0.9), r.z ? 0.8 : 0)
+    const PATH: Record<string, string> = { wood: '#9b7651', gravel: '#d6c7a2', paved: '#c9c3b7' }
+    for (const p of ctx.paths ?? []) surf(p.rings, 0.06 + (p.z ?? 0), M(PATH[p.surface] ?? PATH.paved))
+    for (const p of ctx.piers ?? []) surf(p.rings, 0.0, M('#8a6a48', 0.85), 0.4)
+    const nb = new THREE.MeshStandardMaterial({ color: '#e4e1da', roughness: 0.9 })
+    for (const b of ctx.buildings ?? []) surf(b.rings, 0, nb, b.h)
+    // rail: ballast strips
+    for (const r of ctx.rail ?? []) {
+      for (const ln of r.lines) {
+        for (let i = 0; i < ln.length - 1; i++) {
+          const box = new THREE.Mesh(UNIT_BOX, M('#7a6a5c', 1))
+          box.matrixAutoUpdate = false
+          box.matrix.copy(segmentBox(ln[i][0], ln[i][1], ln[i + 1][0], ln[i + 1][1], (r.z ?? 0) + 0.02, (r.z ?? 0) + 0.18, 3.0, new THREE.Matrix4()))
+          box.receiveShadow = true
+          g.add(box)
+        }
+      }
+    }
+    // trees: instanced trunks and crowns, size from the mapped or estimated height
+    const trees = ctx.trees ?? []
+    if (trees.length) {
+      const trunkGeo = new THREE.CylinderGeometry(0.6, 1, 1, 7).rotateX(Math.PI / 2).translate(0, 0, 0.5)
+      const crownGeo = new THREE.IcosahedronGeometry(1, 1)
+      const coneGeo = new THREE.ConeGeometry(1, 1, 8).rotateX(Math.PI / 2).translate(0, 0, 0.5)
+      const trunk = new THREE.InstancedMesh(trunkGeo, new THREE.MeshStandardMaterial({ color: '#5a4636', roughness: 1 }), trees.length)
+      const broad = trees.filter((t) => t.leaf !== 'needleleaved')
+      const needle = trees.filter((t) => t.leaf === 'needleleaved')
+      const crowns = new THREE.InstancedMesh(crownGeo, new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9, flatShading: true }), broad.length)
+      const cones = new THREE.InstancedMesh(coneGeo, new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9, flatShading: true }), Math.max(1, needle.length))
+      const m4 = new THREE.Matrix4()
+      const q = new THREE.Quaternion()
+      const col = new THREE.Color()
+      let rnd = 7
+      const rand = () => { rnd = (rnd * 16807) % 2147483647; return rnd / 2147483647 }
+      trees.forEach((t, i) => {
+        const r = Math.max(0.12, t.h * 0.02)
+        m4.compose(new THREE.Vector3(t.p[0], t.p[1], 0), q, new THREE.Vector3(r, r, t.h * 0.42))
+        trunk.setMatrixAt(i, m4)
+      })
+      broad.forEach((t, i) => {
+        const cr = t.h * (0.27 + rand() * 0.08)
+        q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), rand() * Math.PI)
+        m4.compose(new THREE.Vector3(t.p[0], t.p[1], t.h - cr * 0.95), q, new THREE.Vector3(cr, cr * (0.9 + rand() * 0.2), cr * 0.85))
+        crowns.setMatrixAt(i, m4)
+        crowns.setColorAt(i, col.setHSL(0.24 + rand() * 0.06, 0.34 + rand() * 0.12, 0.27 + rand() * 0.08))
+      })
+      needle.forEach((t, i) => {
+        q.identity()
+        m4.compose(new THREE.Vector3(t.p[0], t.p[1], t.h * 0.3), q, new THREE.Vector3(t.h * 0.2, t.h * 0.2, t.h * 0.72))
+        cones.setMatrixAt(i, m4)
+        cones.setColorAt(i, col.setHSL(0.3 + rand() * 0.04, 0.3, 0.2 + rand() * 0.05))
+      })
+      for (const im of [trunk, crowns, cones]) {
+        im.instanceMatrix.needsUpdate = true
+        if (im.instanceColor) im.instanceColor.needsUpdate = true
+        im.castShadow = true
+        im.receiveShadow = true
+        im.userData.trees = true
+        g.add(im)
+      }
+      if (!needle.length) cones.visible = false
+    }
+    // street lamps
+    const lamps = ctx.lamps ?? []
+    if (lamps.length) {
+      const pole = new THREE.CylinderGeometry(0.07, 0.09, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5)
+      const inst = new THREE.InstancedMesh(pole, new THREE.MeshStandardMaterial({ color: '#3d4044', roughness: 0.6, metalness: 0.4 }), lamps.length)
+      const m4 = new THREE.Matrix4()
+      lamps.forEach(([x, y], i) => inst.setMatrixAt(i, m4.makeScale(1, 1, 5.5).setPosition(x, y, 0)))
+      inst.instanceMatrix.needsUpdate = true
+      inst.castShadow = true
+      g.add(inst)
+    }
+  }
+
+  setContextVisible(v: boolean) {
+    this.ctxGroup.visible = v
+    this.invalidate()
   }
 
   private mat(key: string, site = this.site, opts: THREE.MeshStandardMaterialParameters = {}) {

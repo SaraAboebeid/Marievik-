@@ -24,11 +24,26 @@
   :root{ --bg:#0F1C1C; --card:#152525; --ink:var(--chalk); --ink-2:#C3CDC8; --muted:#869793; --line:#26393A; }
 }
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 html,body{margin:0}
 body{background:var(--bg); color:var(--ink); font-family:var(--sans); -webkit-font-smoothing:antialiased}
 a{color:inherit; text-decoration:none}
 .wrap{max-width:1240px; margin:0 auto; padding-inline:24px}
 .mono{font-family:var(--mono); text-transform:uppercase; letter-spacing:.09em; font-size:11px}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:999px;
+  font-family:var(--sans); font-weight:700; font-size:15px; border:2px solid transparent; cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible{outline:2px solid var(--chalk); outline-offset:3px}
+.btn-primary{background:var(--coral); color:var(--ink)}
+.btn-primary:hover{box-shadow:0 12px 26px rgba(0,0,0,.22)}
+.btn-outline{background:transparent; border-color:rgba(244,242,235,.55); color:var(--chalk)}
+.btn-outline:hover{border-color:var(--chalk); background:rgba(244,242,235,.1)}
+.btn[disabled]{opacity:.45; pointer-events:none}
 
 /* ---------- hero ---------- */
 .hero{background:var(--blue); color:var(--chalk); border-bottom:4px solid var(--coral); position:relative; overflow:hidden}
@@ -51,12 +66,31 @@ a{color:inherit; text-decoration:none}
 .hero h1{font-family:var(--display); font-size:clamp(30px, 4.6vw, 50px); line-height:1.08; letter-spacing:-.01em; font-weight:600; margin:0 0 20px}
 .hero h1 em{font-style:normal; color:var(--coral)}
 .hero p{font-size:18px; line-height:1.55; color:var(--chalk); opacity:.9; margin:0; max-width:620px}
+.hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:30px}
 
-/* ---------- profiles ---------- */
+/* ---------- about ---------- */
+.about{padding:52px 0}
+.about h2{font-family:var(--display); font-size:24px; letter-spacing:-.01em; margin:0 0 14px; font-weight:600}
+.about-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:40px; align-items:start}
+@media (max-width:860px){ .about-grid{grid-template-columns:1fr} }
+.about p{margin:0 0 14px; line-height:1.6; color:var(--ink-2); font-size:15px}
+.loop{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none}
+.loop li{
+  font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+  padding:7px 12px; border-radius:999px; background:var(--card); border:1px solid var(--line); color:var(--ink-2);
+}
+.loop li b{color:var(--ink); font-weight:600}
+
+/* ---------- start flow ---------- */
 .start{padding:56px 0 24px}
+.start[hidden]{display:none}
 .start-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px}
 .start h2{font-family:var(--display); font-size:27px; letter-spacing:-.01em; margin:0; font-weight:600}
 .start-head p{margin:0; color:var(--muted); font-size:14.5px}
+.step-section{margin-bottom:48px}
+.step-section[hidden]{display:none}
+.back-link{display:inline-block; margin-bottom:10px; font-size:13px; color:var(--muted); cursor:pointer; background:none; border:0; padding:0; font-family:inherit}
+.back-link:hover{color:var(--ink)}
 .grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:14px}
 @media (max-width:1180px){ .grid{grid-template-columns:repeat(3, 1fr)} }
 @media (max-width:760px){ .grid{grid-template-columns:repeat(2, 1fr)} }
@@ -64,15 +98,18 @@ a{color:inherit; text-decoration:none}
 
 .card{
   display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:12px;
-  padding:24px 22px 20px; min-height:200px; position:relative; overflow:hidden;
+  padding:24px 22px 20px; min-height:200px; position:relative; overflow:hidden; text-align:left; width:100%;
+  font:inherit; color:inherit; cursor:pointer;
   transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
 }
 .card::before{content:""; position:absolute; left:0; right:0; top:0; height:5px; background:var(--c)}
 .card:hover{transform:translateY(-4px); border-color:var(--c); box-shadow:0 14px 32px rgba(30,52,52,.13)}
 .card:focus-visible{outline:2px solid var(--c); outline-offset:3px}
+.card[aria-pressed="true"]{border-color:var(--c); box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 35%, transparent)}
 .icon{width:48px; height:48px; border-radius:12px; display:grid; place-items:center; background:var(--c); color:var(--on-c); margin-bottom:18px}
 .icon svg{width:24px; height:24px}
-.card h3{font-size:21px; letter-spacing:-.02em; margin:0 0 8px; font-weight:700; line-height:1.2}
+.card h3{font-family:var(--display); font-size:20px; letter-spacing:-.005em; margin:0 0 2px; font-weight:600; line-height:1.2}
+.role-sv{margin:0 0 12px; font-size:12.5px; color:var(--muted); font-style:italic}
 /* example KPI chips: override the card's bullet-list styling (.card li) */
 .card .kpis{display:flex; flex-wrap:wrap; gap:5px; margin:8px 0 22px; padding:0; list-style:none}
 .card .kpis li{padding:3px 8px; border:0; border-radius:6px; font-size:11.5px; line-height:1.35; font-weight:500;
@@ -104,11 +141,10 @@ a{color:inherit; text-decoration:none}
   .p-finance{--c:var(--pink); --on-c:var(--pine)}
 }
 
-/* ---------- projects ---------- */
-.projects{margin-bottom:52px}
-.step{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:var(--pine); color:var(--lime);
+/* ---------- projects (step 1) ---------- */
+.step{display:inline-grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#202020; color:var(--coral);
   font-family:var(--mono); font-size:14px; font-weight:500; margin-right:12px; vertical-align:4px}
-@media (prefers-color-scheme: dark){ .step{background:var(--lime); color:var(--pine)} }
+@media (prefers-color-scheme: dark){ .step{background:var(--blue); color:#fff} }
 .proj-grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:12px}
 @media (max-width:1040px){ .proj-grid{grid-template-columns:repeat(3, 1fr)} }
 @media (max-width:600px){ .proj-grid{grid-template-columns:1fr 1fr} }
@@ -119,23 +155,37 @@ a{color:inherit; text-decoration:none}
   transition:border-color .15s ease, background .15s ease, transform .15s ease;
 }
 .proj:hover{border-color:var(--ink-2); transform:translateY(-2px)}
-.proj:focus-visible{outline:2px solid var(--lime); outline-offset:3px}
+.proj:focus-visible{outline:2px solid var(--blue); outline-offset:3px}
 .proj b{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.005em}
 .proj .city{font-size:13px; color:var(--muted)}
-.proj .pin{width:12px; height:12px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--terra); margin-bottom:8px}
+.proj .pin{width:12px; height:12px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--coral); margin-bottom:8px}
 .proj .tag{position:absolute; top:12px; right:12px; font-family:var(--mono); font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
   color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:2px 7px}
-.proj[aria-checked="true"]{background:var(--pine); border-color:var(--pine); color:var(--chalk)}
+.proj[aria-checked="true"]{background:#202020; border-color:#202020; color:var(--chalk)}
 .proj[aria-checked="true"] .city{color:var(--mist)}
-.proj[aria-checked="true"] .pin{background:var(--lime)}
-.proj[aria-checked="true"] .tag{color:var(--mist); border-color:rgba(215,223,218,.35)}
+.proj[aria-checked="true"] .pin{background:var(--coral)}
+.proj[aria-checked="true"] .tag{color:var(--mist); border-color:rgba(244,242,235,.3)}
 @media (prefers-color-scheme: dark){
-  .proj[aria-checked="true"]{background:var(--lime); border-color:var(--lime); color:var(--pine)}
-  .proj[aria-checked="true"] .city, .proj[aria-checked="true"] .tag{color:var(--pine)}
-  .proj[aria-checked="true"] .pin{background:var(--pine)}
+  .proj[aria-checked="true"]{background:var(--blue); border-color:var(--blue); color:#fff}
+  .proj[aria-checked="true"] .city, .proj[aria-checked="true"] .tag{color:rgba(255,255,255,.78)}
+  .proj[aria-checked="true"] .pin{background:var(--coral)}
 }
 .chosen{color:var(--ink); font-weight:600}
 .grid[hidden]{display:none}
+
+/* ---------- step 3: KPI picker ---------- */
+.kpi-picker{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; list-style:none; margin:0 0 26px; padding:0}
+@media (max-width:900px){ .kpi-picker{grid-template-columns:repeat(2, 1fr)} }
+@media (max-width:560px){ .kpi-picker{grid-template-columns:1fr} }
+.kpi-picker li{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:13px 14px; transition:border-color .15s ease}
+.kpi-picker li:has(input:checked){border-color:var(--blue)}
+.kpi-picker label{display:flex; align-items:flex-start; gap:10px; cursor:pointer; font-weight:600; font-size:14px}
+.kpi-picker input{margin-top:2px; width:16px; height:16px; accent-color:var(--blue); flex:none}
+.kpi-picker .note{display:block; font-weight:400; color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.4}
+.kpi-picker .default-tag{display:inline-block; margin-left:6px; font-family:var(--mono); font-size:9px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--blue); vertical-align:1px}
+.step3-actions{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
+.step3-note{margin:0; font-size:13px; color:var(--muted)}
 
 .skip{margin:26px 0 0; font-size:14px; color:var(--muted)}
 .skip a{color:var(--ink); font-weight:600; border-bottom:1px solid var(--line)}
@@ -158,12 +208,36 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
     <div class="hero-body">
       <h1>What can this building <em>become</em>, and what does becoming it cost?</h1>
       <p>A computational lab for flexibility, circularity and adaptive reuse.</p>
+      <div class="hero-cta">
+        <button type="button" class="btn btn-primary" id="start-exploring">Start exploring <span aria-hidden="true">→</span></button>
+        <a class="btn btn-outline" href="#about">About the lab <span aria-hidden="true">→</span></a>
+      </div>
     </div>
   </div>
 </header>
 
-<main class="wrap start">
-  <section class="projects" aria-labelledby="proj-h">
+<section class="wrap about" id="about">
+  <div class="about-grid">
+    <div>
+      <h2>About the lab</h2>
+      <p>Marievik+ tests how one building shell can serve different uses, different user groups and different
+        time horizons — and what each transformation costs, in SEK and in kg CO₂e. It is a computational
+        platform for adaptive reuse, built with Chalmers Next Labs.</p>
+      <p>Every run follows the same loop, from what already exists to what a change would create:</p>
+    </div>
+    <ul class="loop" aria-label="The lab's method">
+      <li><b>Retain</b> — what exists</li>
+      <li><b>Enable</b> — what room for action</li>
+      <li><b>Adapt</b> — what's needed now</li>
+      <li><b>Implement</b> — what happens trying</li>
+      <li><b>Evaluate</b> — what value, what cost</li>
+    </ul>
+  </div>
+</section>
+
+<main class="wrap start" id="start" hidden>
+
+  <section class="step-section" id="step1-section">
     <div class="start-head">
       <h2 id="proj-h"><span class="step">1</span>Choose a project</h2>
       <p>Placeholder projects open the Marievik model until their own is added.</p>
@@ -187,67 +261,143 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
     </div>
   </section>
 
-  <div class="start-head">
-    <h2><span class="step">2</span>Start as…</h2>
-    <p>Pick the profile closest to your role, for <span class="chosen" id="chosen">Marievik, Stockholm</span>.</p>
-  </div>
+  <section class="step-section" id="step2-section" hidden>
+    <button type="button" class="back-link" data-back="step1-section">‹ Change project</button>
+    <div class="start-head">
+      <h2 id="profile-h"><span class="step">2</span>Choose a profile</h2>
+      <p>Pick the role closest to yours, for <span class="chosen">Marievik, Stockholm</span>.</p>
+    </div>
 
-  <!-- the chosen project's own profiles (data/projects/<id>.json), filled in by the script below -->
-  <div class="grid" id="project-profiles" hidden></div>
+    <!-- Marievik's own profiles, from the AMF workshop interviews (data/projects/marievik.json). Built into
+         the page itself, not fetched, so they are always here — the default project needs no server round
+         trip to show the roles it was actually interviewed for. Shown in English; data-role-sv keeps the
+         Swedish title AMF uses internally, for when the tool gets a language switch. -->
+    <div class="grid" id="project-profiles" data-project="marievik">
 
-  <div class="grid" id="generic-profiles">
+      <button type="button" class="card p-developer" data-profile="projektutvecklare"
+        data-kpis="people,walls_changed_cum,capex_cum,uses_count,issues">
+        <h3>Project developer</h3>
+        <p class="role-sv">Projektutvecklare</p>
+        <p class="q">Attract companies, flexible leases, multi-use premises, reuse that pays</p>
+        <div class="kpi-lab">Over 10 years</div>
+        <ul class="kpis"><li>People at peak</li><li>Walls changed</li><li>Investment over 10 years</li><li>Mix of uses</li><li>Standards issues</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
 
-    <a class="card p-developer" href="/explorer?profile=developer">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V11h5v10"/><path d="M11 21V5h7v16"/><path d="M14 9h1M14 13h1M14 17h1"/><path d="M3 7l4-3 4 3"/></svg>
-      </span>
-      <h3>Project developer</h3>
-      <div class="kpi-lab">Example KPIs</div>
-      <ul class="kpis" data-profile="developer"><li>Transformation cost</li><li>Transformation time</li><li>Upfront GWP</li><li>Feasible alternative uses</li><li class="more">+6 more</li></ul>
-      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
-    </a>
+      <button type="button" class="card p-investor" data-profile="projektledare"
+        data-kpis="capex_cum,disruption_cum,walls_changed_cum,co2_cum,issues">
+        <h3>Project manager</h3>
+        <p class="role-sv">Projektledare</p>
+        <p class="q">Cost and time, build less and right faster, value of reuse in the calculation</p>
+        <div class="kpi-lab">Over 10 years</div>
+        <ul class="kpis"><li>Investment over 10 years</li><li>Months of works</li><li>Walls changed</li><li>Embodied carbon of changes</li><li>Standards issues</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
 
-    <a class="card p-investor" href="/explorer?profile=investor">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>
-      </span>
-      <h3>Real estate investor</h3>
-      <div class="kpi-lab">Example KPIs</div>
-      <ul class="kpis" data-profile="investor"><li>Incremental NPV</li><li>Value retention</li><li>Downside loss</li><li>CRREM misalignment year</li><li class="more">+9 more</li></ul>
-      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
-    </a>
+      <button type="button" class="card p-supplier" data-profile="marknadsomradeschef"
+        data-kpis="people,people_hours,co2_cum,issues">
+        <h3>Market area manager</h3>
+        <p class="role-sv">Marknadsområdeschef</p>
+        <p class="q">Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants</p>
+        <div class="kpi-lab">Over 10 years</div>
+        <ul class="kpis"><li>People at peak</li><li>People-hours per day</li><li>Embodied carbon of changes</li><li>Standards issues</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
 
-    <a class="card p-supplier" href="/explorer?profile=supplier">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
-      </span>
-      <h3>Material supplier</h3>
-      <div class="kpi-lab">Example KPIs</div>
-      <ul class="kpis" data-profile="supplier"><li>Recoverable component mass</li><li>Retained material value</li><li>Carbon premium</li><li>Upfront GWP</li><li class="more">+2 more</li></ul>
-      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
-    </a>
+      <button type="button" class="card p-finance" data-profile="platsutvecklare"
+        data-kpis="people_hours,evening_share,uses_count,people">
+        <h3>Place developer</h3>
+        <p class="role-sv">Platsutvecklare</p>
+        <p class="q">A destination for food, culture and recreation; life on site; connection to the surroundings</p>
+        <div class="kpi-lab">Over 10 years</div>
+        <ul class="kpis"><li>People-hours per day</li><li>Evening share</li><li>Mix of uses</li><li>People at peak</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
 
-    <a class="card p-finance" href="/explorer?profile=finance">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
-      </span>
-      <h3>Financial consultant</h3>
-      <div class="kpi-lab">Example KPIs</div>
-      <ul class="kpis" data-profile="finance"><li>Life cycle cost</li><li>Break-even premium</li><li>Option value</li><li>Incremental NPV</li><li class="more">+9 more</li></ul>
-      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
-    </a>
+      <button type="button" class="card p-environ" data-profile="projektchef"
+        data-kpis="capex_cum,co2_cum,people,issues">
+        <h3>Project director</h3>
+        <p class="role-sv">Projektchef</p>
+        <p class="q">Rent and income, project result, sustainability; long-lived buildings</p>
+        <div class="kpi-lab">Over 10 years</div>
+        <ul class="kpis"><li>Investment over 10 years</li><li>Embodied carbon of changes</li><li>People at peak</li><li>Standards issues</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
 
-    <a class="card p-environ" href="/explorer?profile=environmental">
-      <span class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 12-4 16-9 16z"/><path d="M4 21c3-4 6-7 10-9"/></svg>
-      </span>
-      <h3>Environmental consultant</h3>
-      <div class="kpi-lab">Example KPIs</div>
-      <ul class="kpis" data-profile="environmental"><li>Upfront GWP</li><li>Whole-life GWP</li><li>Avoided GWP</li><li>Carbon payback</li><li class="more">+6 more</li></ul>
-      <span class="go">Start <span class="arrow" aria-hidden="true">→</span></span>
-    </a>
+    </div>
 
-  </div>
+    <div class="grid" id="generic-profiles" hidden>
+
+      <button type="button" class="card p-developer" data-profile="developer"
+        data-kpis="people,people_hours,evening_share,capex_cum,co2_cum,walls_changed_cum,disruption_cum,uses_count,issues">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V11h5v10"/><path d="M11 21V5h7v16"/><path d="M14 9h1M14 13h1M14 17h1"/><path d="M3 7l4-3 4 3"/></svg>
+        </span>
+        <h3>Project developer</h3>
+        <div class="kpi-lab">Example KPIs</div>
+        <ul class="kpis" data-profile-cavf="developer"><li>Transformation cost</li><li>Transformation time</li><li>Upfront GWP</li><li>Feasible alternative uses</li><li class="more">+6 more</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
+
+      <button type="button" class="card p-investor" data-profile="investor"
+        data-kpis="people,people_hours,evening_share,capex_cum,co2_cum,walls_changed_cum,disruption_cum,uses_count,issues">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01"/></svg>
+        </span>
+        <h3>Real estate investor</h3>
+        <div class="kpi-lab">Example KPIs</div>
+        <ul class="kpis" data-profile-cavf="investor"><li>Incremental NPV</li><li>Value retention</li><li>Downside loss</li><li>CRREM misalignment year</li><li class="more">+9 more</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
+
+      <button type="button" class="card p-supplier" data-profile="supplier"
+        data-kpis="people,people_hours,evening_share,capex_cum,co2_cum,walls_changed_cum,disruption_cum,uses_count,issues">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+        </span>
+        <h3>Material supplier</h3>
+        <div class="kpi-lab">Example KPIs</div>
+        <ul class="kpis" data-profile-cavf="supplier"><li>Recoverable component mass</li><li>Retained material value</li><li>Carbon premium</li><li>Upfront GWP</li><li class="more">+2 more</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
+
+      <button type="button" class="card p-finance" data-profile="finance"
+        data-kpis="people,people_hours,evening_share,capex_cum,co2_cum,walls_changed_cum,disruption_cum,uses_count,issues">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+        </span>
+        <h3>Financial consultant</h3>
+        <div class="kpi-lab">Example KPIs</div>
+        <ul class="kpis" data-profile-cavf="finance"><li>Life cycle cost</li><li>Break-even premium</li><li>Option value</li><li>Incremental NPV</li><li class="more">+9 more</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
+
+      <button type="button" class="card p-environ" data-profile="environmental"
+        data-kpis="people,people_hours,evening_share,capex_cum,co2_cum,walls_changed_cum,disruption_cum,uses_count,issues">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 12-4 16-9 16z"/><path d="M4 21c3-4 6-7 10-9"/></svg>
+        </span>
+        <h3>Environmental consultant</h3>
+        <div class="kpi-lab">Example KPIs</div>
+        <ul class="kpis" data-profile-cavf="environmental"><li>Upfront GWP</li><li>Whole-life GWP</li><li>Avoided GWP</li><li>Carbon payback</li><li class="more">+6 more</li></ul>
+        <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
+      </button>
+
+    </div>
+  </section>
+
+  <section class="step-section" id="step3-section" hidden>
+    <button type="button" class="back-link" data-back="step2-section">‹ Change profile</button>
+    <div class="start-head">
+      <h2 id="kpi-h"><span class="step">3</span>Check your KPIs</h2>
+      <p>Tracked for <b class="chosen-profile">—</b> over 10 years. Tick any others you'd like to see too.</p>
+    </div>
+    <ul class="kpi-picker" id="kpi-picker"></ul>
+    <div class="step3-actions">
+      <a class="btn btn-primary" id="go-explore" href="/explorer">Start exploring <span aria-hidden="true">→</span></a>
+      <p class="step3-note">Opens the 3D Explorer with this project, profile and KPI set.</p>
+    </div>
+  </section>
 
   <p class="skip">Just looking? <a href="/explorer">Open the 3D Explorer without a profile →</a>
     · <a href="/explorer?view=parametric">Open the parametric model (plans, bill of quantities) →</a></p>
@@ -260,80 +410,134 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
 </footer>
 
 <script>
-// Step 1 picks the project; every link into the explorer carries it (and the profile) in the URL.
 (function () {
-  var projects = document.querySelectorAll('.proj')
-  var links = document.querySelectorAll('a[href^="/explorer"]')
-  var chosen = document.getElementById('chosen')
-  links.forEach(function (a) { a.dataset.base = a.getAttribute('href') })
-
-  function select(btn) {
-    projects.forEach(function (p) { p.setAttribute('aria-checked', p === btn ? 'true' : 'false'); p.tabIndex = p === btn ? 0 : -1 })
-    var key = btn.dataset.project
-    chosen.textContent = btn.querySelector('b').textContent + ', ' + btn.querySelector('.city').textContent
-    links.forEach(function (a) {
-      var base = a.dataset.base
-      a.setAttribute('href', base + (base.indexOf('?') < 0 ? '?' : '&') + 'project=' + key)
-    })
-    showProfiles(key)
-  }
-
-  // A project with its own file brings its own profiles (the roles interviewed there); the others keep the generic ones.
-  var COLORS = ['p-developer', 'p-investor', 'p-supplier', 'p-finance', 'p-environ']
-  var KPI_LABEL = {
-    people: 'People at peak', people_hours: 'People-hours per day', evening_share: 'Evening share',
-    capex_cum: 'Investment over 10 years', co2_cum: 'Embodied carbon of changes', walls_changed_cum: 'Walls changed',
-    disruption_cum: 'Months of works', uses_count: 'Mix of uses', issues: 'Standards issues'
-  }
+  var startBtn = document.getElementById('start-exploring')
+  var main = document.getElementById('start')
+  var step1 = document.getElementById('step1-section')
+  var step2 = document.getElementById('step2-section')
+  var step3 = document.getElementById('step3-section')
   var own = document.getElementById('project-profiles')
   var generic = document.getElementById('generic-profiles')
-  function el(tag, cls, text) {
-    var e = document.createElement(tag)
-    if (cls) e.className = cls
-    if (text) e.textContent = text
-    return e
-  }
-  function showProfiles(key) {
-    fetch('/api/project/' + key).then(function (r) { return r.ok ? r.json() : null }).then(function (p) {
-      if (!p || !p.profiles || !p.profiles.length) { own.hidden = true; generic.hidden = false; return }
-      own.replaceChildren()
-      p.profiles.forEach(function (prof, i) {
-        var a = el('a', 'card ' + COLORS[i % COLORS.length])
-        a.href = '/explorer?profile=' + encodeURIComponent(prof.id) + '&project=' + encodeURIComponent(key)
-        a.appendChild(el('h3', null, prof.title))
-        a.appendChild(el('p', 'q', prof.focus))
-        a.appendChild(el('div', 'kpi-lab', 'Over 10 years'))
-        var ul = el('ul', 'kpis')
-        prof.timeline_kpis.forEach(function (k) { ul.appendChild(el('li', null, KPI_LABEL[k] || k)) })
-        a.appendChild(ul)
-        var go = el('span', 'go', 'Start ')
-        go.appendChild(el('span', 'arrow', '→'))
-        a.appendChild(go)
-        own.appendChild(a)
-      })
-      own.hidden = false; generic.hidden = true
-    }).catch(function () { own.hidden = true; generic.hidden = false })
-  }
+  var kpiPicker = document.getElementById('kpi-picker')
+  var goExplore = document.getElementById('go-explore')
 
+  // The 10-year timeline's KPIs (explorer/timeline.py KPI_META) — the same catalogue every profile's card
+  // draws its "Over 10 years" chips from, so step 3 can offer the rest as additions.
+  var KPI_CATALOGUE = [
+    { id: 'people', label: 'People at peak', note: 'People present in the building at the busiest hour.' },
+    { id: 'people_hours', label: 'People-hours per day', note: 'Total hours people spend in the building on a weekday.' },
+    { id: 'evening_share', label: 'Evening share', note: 'Share of people-hours after 17:00 — life on site outside office hours.' },
+    { id: 'capex_cum', label: 'Investment over 10 years', note: 'New walls and finishes at catalogue prices, cumulative.' },
+    { id: 'co2_cum', label: 'Embodied carbon of changes', note: 'Embodied carbon of the changes made (A1–A5, C1–C4), cumulative.' },
+    { id: 'walls_changed_cum', label: 'Walls changed', note: 'Wall area built or removed, cumulative — how much is physically disturbed.' },
+    { id: 'disruption_cum', label: 'Months of works', note: 'Estimated months of construction disruption, cumulative (placeholder figure).' },
+    { id: 'uses_count', label: 'Mix of uses', note: 'Number of distinct uses in the building at once.' },
+    { id: 'issues', label: 'Standards issues', note: 'Issues flagged by the use catalogue (fire escape, daylight, structure).' },
+  ]
+
+  var state = { project: 'marievik', projectLabel: 'Marievik, Stockholm', profile: null, profileLabel: null }
+
+  function reveal(section) { section.hidden = false }
+  function scrollTo(section) { requestAnimationFrame(function () { section.scrollIntoView({ behavior: 'smooth', block: 'start' }) }) }
+
+  // ---------------- hero: open the flow ----------------
+  startBtn.addEventListener('click', function () {
+    main.hidden = false
+    scrollTo(step1)
+  })
+
+  // ---------------- step 1: project ----------------
+  var projects = document.querySelectorAll('.proj')
+  function chooseProject(btn, userAction) {
+    projects.forEach(function (p) { p.setAttribute('aria-checked', p === btn ? 'true' : 'false'); p.tabIndex = p === btn ? 0 : -1 })
+    var key = btn.dataset.project
+    state.project = key
+    state.projectLabel = btn.querySelector('b').textContent + ', ' + btn.querySelector('.city').textContent
+    document.querySelectorAll('.chosen').forEach(function (el) { el.textContent = state.projectLabel })
+    var isOwn = own.dataset.project === key
+    own.hidden = !isOwn
+    generic.hidden = isOwn
+    if (userAction) {
+      reveal(step2); step3.hidden = true; state.profile = null
+      scrollTo(step2)
+    }
+  }
   projects.forEach(function (p, i) {
-    p.addEventListener('click', function () { select(p) })
+    p.addEventListener('click', function () { chooseProject(p, true) })
     p.addEventListener('keydown', function (e) {   // arrow keys move through the radio group
       var d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0
       if (!d) return
       e.preventDefault()
       var n = projects[(i + d + projects.length) % projects.length]
-      select(n); n.focus()
+      chooseProject(n, true); n.focus()
     })
   })
-  select(document.querySelector('.proj[aria-checked="true"]'))
+  chooseProject(document.querySelector('.proj[aria-checked="true"]'), false)   // wire up labels only; stays hidden
+
+  // ---------------- step 2: profile ----------------
+  document.querySelectorAll('#step2-section .card').forEach(function (card) {
+    card.addEventListener('click', function () {
+      var grid = card.closest('.grid')
+      grid.querySelectorAll('.card').forEach(function (c) { c.setAttribute('aria-pressed', c === card ? 'true' : 'false') })
+      state.profile = card.dataset.profile
+      state.profileLabel = card.querySelector('h3').textContent
+      state.defaultKpis = (card.dataset.kpis || '').split(',').filter(Boolean)
+      buildKpiPicker()
+      document.querySelectorAll('.chosen-profile').forEach(function (el) { el.textContent = state.profileLabel })
+      reveal(step3)
+      scrollTo(step3)
+    })
+  })
+
+  // ---------------- step 3: KPIs ----------------
+  function buildKpiPicker() {
+    kpiPicker.replaceChildren()
+    var defaults = state.defaultKpis || []
+    KPI_CATALOGUE.forEach(function (k) {
+      var li = document.createElement('li')
+      var isDefault = defaults.indexOf(k.id) > -1
+      var label = document.createElement('label')
+      var input = document.createElement('input')
+      input.type = 'checkbox'; input.value = k.id; input.checked = isDefault
+      input.addEventListener('change', updateGoExplore)
+      var span = document.createElement('span')
+      span.textContent = k.label
+      if (isDefault) {
+        var tag = document.createElement('span')
+        tag.className = 'default-tag'; tag.textContent = 'default'
+        span.appendChild(tag)
+      }
+      var note = document.createElement('span')
+      note.className = 'note'; note.textContent = k.note
+      span.appendChild(note)
+      label.appendChild(input); label.appendChild(span)
+      li.appendChild(label)
+      kpiPicker.appendChild(li)
+    })
+    updateGoExplore()
+  }
+  function updateGoExplore() {
+    var chosen = Array.prototype.filter.call(kpiPicker.querySelectorAll('input'), function (i) { return i.checked })
+      .map(function (i) { return i.value })
+    var q = new URLSearchParams()
+    q.set('project', state.project)
+    if (state.profile) q.set('profile', state.profile)
+    if (chosen.length) q.set('kpis', chosen.join(','))
+    goExplore.href = '/explorer?' + q.toString()
+  }
+
+  // ---------------- back links ----------------
+  document.querySelectorAll('.back-link').forEach(function (b) {
+    b.addEventListener('click', function () { scrollTo(document.getElementById(b.dataset.back)) })
+  })
 })()
 
-// Example KPI tags: the four shown are fixed picks; "+N more" expands the rest of the profile's KPIs, taken
-// from the explorer's profile definitions (explorer/kpis.py) so they stay right when a profile changes.
-// The card is a link, so the chip stops the click from opening the explorer.
+// Example KPI tags on the generic cards: the four shown are fixed picks; "+N more" expands the rest of the
+// profile's CAVF KPIs (explorer/kpis.py) so they stay right when a profile changes. Separate from the step-3
+// 10-year KPI picker above, and from the card's own click handler (selection), so clicks here are stopped.
 fetch('/api/methods').then(function (r) { return r.json() }).then(function (m) {
-  document.querySelectorAll('.kpis[data-profile]').forEach(function (ul) {
-    var prof = m.profiles[ul.dataset.profile]
+  document.querySelectorAll('.kpis[data-profile-cavf]').forEach(function (ul) {
+    var prof = m.profiles[ul.dataset.profileCavf]
     if (!prof) return
     var shown = Array.prototype.map.call(ul.querySelectorAll('li:not(.more)'), function (li) { return li.textContent })
     var rest = prof.kpis.map(function (k) { return (m.kpis[k] || {}).name || k })

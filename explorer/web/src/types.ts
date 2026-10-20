@@ -342,3 +342,20 @@ export interface SavedScenario {
   kpi: { gfa_m2: number; units: number; capex_sek: number; upfront_kgco2e: number; added_gfa_m2: number }
   analysis?: { building: string; floor: number; mean_df?: number; area_300?: number; comfortable_pct?: number; overheating_pct?: number }
 }
+
+// Urban context from Marievik_parametric/site/marievik_context.json (OpenStreetMap + estimates)
+export interface UrbanContext {
+  source?: string
+  clip?: [number, number, number, number]
+  roads?: { kind: string; z?: number; rings: Ring[][] }[]
+  paths?: { kind: string; surface: string; z?: number; rings: Ring[][] }[]
+  plazas?: { rings: Ring[][] }[]
+  greens?: { kind: string; rings: Ring[][]; name?: string }[]
+  water?: { rings: Ring[][]; name?: string }[]
+  piers?: { rings: Ring[][] }[]
+  rail?: { kind: string; z?: number; lines: XY[][] }[]
+  buildings?: { rings: Ring[][]; h: number; name?: string }[]
+  trees?: { p: XY; h: number; leaf?: string; src: string; species?: string }[]
+  lamps?: XY[]
+  benches?: XY[]
+}

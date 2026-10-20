@@ -84,3 +84,17 @@ Keys are `"*"` (all floors) or a floor (`"F02"`). Everything is optional.
 * Grasshopper: the *Facade, materials & roof detail* toggle (shared settings) switches this on or off. New outputs: `facade` / `facade_col` (exterior walls coloured by material), `details` / `details_col` (parapets, roof membrane, plant rooms, skylights, PV, vaults, glass roof, balconies), `massing_col`. These are drawn by the three coloured previews.
 * Code: `mvk/facade.py`. Its geometry descriptors (prism / box / vault) are plain data, so they can later go to IFC, CityGML or an energy model.
 * Roof build-up, PV and balconies are drawn but **not priced yet**.
+## Urban context: streets, greens, water, trees (added 2026-10-20)
+* `site/fetch_osm_context.py` (run in Rhino's ScriptEditor) downloads the full OpenStreetMap data around Marievik into `site/osm_context_north.json` and `site/osm_context_south.json`.
+* `site/make_context.py` (needs shapely and pyproj) turns that data into `site/marievik_context.json`. Coordinates are the same as the buildings. The file holds:
+  * street surfaces, with widths estimated per road class
+  * footpaths, cycleways and the timber boardwalk
+  * Årstaviken water, built from the shoreline
+  * piers
+  * parks, grass, woodland and scrub
+  * railway ballast
+  * about 70 neighbouring buildings as simple massing
+  * street lamps and benches
+  * trees: about 180 mapped in OpenStreetMap and about 330 estimated (woodland fill, plus the row along the quay seen in Street View, flagged in the file)
+* `site/bake_context.py` (ScriptEditor) bakes all of this under `Site::Context::...`, with one render material per layer. Running it again replaces the earlier bake.
+* The Marievik+ Explorer reads the same file, so Rhino and the browser show one context. The neighbouring buildings also shade the daylight analysis.

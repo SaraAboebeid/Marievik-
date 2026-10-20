@@ -80,7 +80,7 @@
       },
       "constraints": { "daylight_required": true, "facade_required": true },
       "depends_on": ["senior_common_kitchenette", "senior_common_wc"],
-      "shareable_with": ["community_hall", "day_centre_elderly"],
+      "shareable_with": ["community_hybrid", "day_centre_elderly"],
       "shareable_note": "Often co-used with neighbourhood activities or a municipal meeting place (träffpunkt).",
       "binding_constraint": "ground_floor_location",
       "layer": "space_plan"

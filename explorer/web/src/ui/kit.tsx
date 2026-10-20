@@ -2,11 +2,14 @@ import { useState, type ReactNode } from 'react'
 
 // Accent colour is reserved for primary actions and the selected building; everything else is neutral.
 
+/** Card and section titles: the same small bold capitals in every panel. */
+export const CARD_TITLE = 'font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink'
+
 export function Card({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
   return (
-    <section className="mb-2.5 rounded-lg border border-line bg-raised/95 px-3.5 py-3 shadow-sm">
+    <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
       <div className="mb-2 flex items-center justify-between gap-2">
-        <h4 className="font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-2">{title}</h4>
+        <h4 className={CARD_TITLE}>{title}</h4>
         {right}
       </div>
       {children}
@@ -29,16 +32,16 @@ export function Section({ id, title, right, children, defaultOpen = true }: {
     })
   }
   return (
-    <section className="mb-2.5 rounded-lg border border-line bg-raised/95 shadow-sm">
-      <div className="flex items-center justify-between gap-2 px-3.5 py-2.5">
+    <section className="mb-2.5 rounded-xl border border-line bg-raised/97 shadow-sm">
+      <div className="flex items-center justify-between gap-2 px-4 py-3">
         <button type="button" onClick={toggle} aria-expanded={open}
           className="flex min-w-0 flex-1 items-center gap-2 text-left">
           <span className={`inline-block text-[10px] text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
-          <span className="truncate font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-2">{title}</span>
+          <span className={`truncate ${CARD_TITLE}`}>{title}</span>
         </button>
         {right}
       </div>
-      {open && <div className="px-3.5 pb-3">{children}</div>}
+      {open && <div className="px-4 pb-3.5">{children}</div>}
     </section>
   )
 }
@@ -47,7 +50,7 @@ export function Row({ label, value, sub, strong }: { label: ReactNode; value: Re
   return (
     <div className={`flex items-baseline justify-between gap-3 py-[3px] ${sub ? 'pl-2 text-[12px] text-ink-2' : 'text-[13px] text-ink'} ${strong ? 'mt-1 border-t border-line pt-1.5 font-semibold' : ''}`}>
       <span className="min-w-0 truncate">{label}</span>
-      <span className="whitespace-nowrap font-mono tabular-nums">{value}</span>
+      <span className="whitespace-nowrap font-medium tabular-nums">{value}</span>
     </div>
   )
 }
@@ -55,12 +58,12 @@ export function Row({ label, value, sub, strong }: { label: ReactNode; value: Re
 /** A headline number: label, big value, small qualifier. */
 export function Stat({ label, value, unit, sub }: { label: string; value: ReactNode; unit?: string; sub?: ReactNode }) {
   return (
-    <div className="rounded-md border border-line bg-surface px-3 py-2.5">
-      <div className="text-[11.5px] leading-tight text-ink-2">{label}</div>
-      <div className="mt-1 flex items-baseline gap-1">
-        <span className="font-mono text-[20px] font-semibold leading-none tabular-nums text-ink">{value}</span>
-        {unit && <span className="text-[12px] text-ink-2">{unit}</span>}
+    <div className="rounded-lg bg-sunken/70 px-3 py-2.5">
+      <div className="flex items-baseline gap-1">
+        <span className="text-[19px] font-semibold leading-none tracking-tight tabular-nums text-ink">{value}</span>
+        {unit && <span className="text-[12px] font-medium text-ink-2">{unit}</span>}
       </div>
+      <div className="mt-1.5 text-[11.5px] leading-tight text-ink-2">{label}</div>
       {sub && <div className="mt-1 text-[11px] leading-tight text-muted">{sub}</div>}
     </div>
   )
@@ -172,7 +175,7 @@ export function Badge({ tone, children }: { tone: 'good' | 'warn' | 'serious' | 
 export function Legend({ title, bins }: { title: string; bins: { color: string; label: string }[] }) {
   return (
     <div className="rounded-md border border-line bg-raised/95 px-3 py-2 shadow-sm">
-      <div className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">{title}</div>
+      <div className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">{title}</div>
       <div className="flex gap-0.5">
         {bins.map((b) => (
           <div key={b.label} className="flex flex-col items-center">

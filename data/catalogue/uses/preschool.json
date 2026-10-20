@@ -124,7 +124,7 @@
       "size": { "rule": "per_unit", "value_m2": 0.65, "count": "children enrolled (72 children → 47 m²), plus 10 m² store", "strength": "programme", "source": "Uppsala 2015 programme p. 6 note A (0.65 m² per child regardless of size) and p. 16 (Torg/verkst-kök 47 m², Förråd till torg 10 m²)", "url": "https://bygg.uppsala.se/globalassets/uppsala-vaxer/dokument/stadsplanering--utveckling/planerade-omraden/bostadsomraden/ulleraker/markanvisning/uppsala-kommuns-generella-lokalprogram-for-forskolelokaler.pdf", "confidence": "verified" },
       "constraints": { "daylight_required": true },
       "depends_on": ["preschool_kitchen"],
-      "shareable_with": ["community_hall"],
+      "shareable_with": ["community_hybrid"],
       "shareable_note": "Evening meetings or community use when the förskola is closed.",
       "binding_constraint": "ventilation",
       "layer": "space_plan",
@@ -190,7 +190,7 @@
       "size": { "rule": "per_building", "value_m2": 65, "count": "cooking kitchen for 72 children (Uppsala's separate kitchen programme is dimensioned for 200 förskola portions)", "strength": "programme", "source": "Uppsala lokalförteckning förskola 72 barn, p. 17: 'Kök 72 barn 65* — enl. separat program tillagningskök 200 portioner fsk'. The illustration for 144 children (p. 15) shows Kök 100 m².", "url": "https://bygg.uppsala.se/globalassets/uppsala-vaxer/dokument/stadsplanering--utveckling/planerade-omraden/bostadsomraden/ulleraker/markanvisning/uppsala-kommuns-generella-lokalprogram-for-forskolelokaler.pdf", "confidence": "verified" },
       "constraints": { "goods_delivery_access_required": true, "exhaust_ventilation_required": true, "grease_separator_required": "cooking kitchen: normally yes (municipal ABVA, SS-EN 1825); receiving kitchen: municipality-dependent", "floor_drain_required": true },
       "depends_on": ["preschool_waste"],
-      "shareable_with": ["restaurant"],
+      "shareable_with": ["restaurant_cafe"],
       "binding_constraint": "ventilation_and_grease_drainage",
       "layer": "services",
       "notes": "Registration with the municipal food control authority is required at least two weeks before start (EU 852/2004 art. 6; Livsmedelsverket). Kitchens are risk-classified, and cooking for sensitive consumer groups such as small children scores higher. A cooking kitchen needs a kitchen exhaust duct to roof, make-up air, a grease separator and a goods delivery route without reversing. Malmö (p. 11) asks for deliveries to be separated from children's routes in space and time. See variants for the receiving kitchen. Night-open förskola must have kitchen access (Uppsala p. 13)."
@@ -318,7 +318,7 @@
       "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No size found in the reviewed sources. The Göteborg project (p. 12) gives a maximum 25 m carrying distance from the truck to the inside of the waste house (10 m preferred).", "url": "https://www4.goteborg.se/prod/intraservice/namndhandlingar/samrumportal.nsf/1CCC028724FEEA1DC1258B9C00395D64/$File/13%20Bilaga%202.pdf", "confidence": "sourced" },
       "constraints": { "vehicle_access_required": true },
       "depends_on": [],
-      "shareable_with": ["housing"],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing"],
       "binding_constraint": "site_access",
       "layer": "site"
     },

@@ -51,6 +51,55 @@ export interface SitePayload {
   suppliers: Supplier[]
 }
 
+// ---------------------------------------------------------------- projects and their stakeholder profiles (data/projects)
+export interface ProjectProfile {
+  id: string; title: string; title_en: string; mandate: string; focus: string; risk: string
+  timeline_kpis: string[]; needs_data: string[]; cavf_profile: string
+}
+export interface Project {
+  id: string; name: string; city: string; owner: string; pilot_buildings: string[]
+  profiles: ProjectProfile[]
+  timeline: { start_year: number; years: number; decision_years: number[]; decision_years_source: string; max_changes: number }
+}
+
+// ---------------------------------------------------------------- key figures (explorer/figures.py)
+export interface Figure { value: number | string; label: string; unit: string; status: KpiStatus; note?: string }
+export interface Distribution { label: string; use: string; rows: { category: string; m2: number; share: number }[] }
+export interface Figures {
+  building: string; key: string
+  figures: Record<'gfa_m2' | 'usable_m2' | 'occupancy' | 'capex_sek' | 'upfront_kgco2e' | 'utilization' | 'adaptability' | 'daylight_access', Figure>
+  distribution: { ground: Distribution; typical: Distribution }
+}
+
+// ---------------------------------------------------------------- 10-year timeline (explorer/timeline.py)
+export interface TimelineIssue { severity: 'blocker' | 'major' | 'info'; group: string; kind: string; text: string }
+export interface TimelineState {
+  key: string; settings: { ground_use: string; use: string }
+  groups: Record<string, { use: string; label: string; catalogue_use: string; gfa_m2: number; persons: number
+    fire_class: string; walk_m: number; walk_limit_m: number; units_without_window: number }>
+  issues: TimelineIssue[]; assumptions: string[]; blocked: boolean
+  people: number; people_hours: number; evening_share: number; uses_count: number
+}
+export interface TimelineEvent {
+  year: number; from: string; to: string; walls_new_m2: number; walls_removed_m2: number; walls_changed_m2: number
+  finish_m2: number; slab_opening_m2: number; capex_sek: number; co2_kg: number; months: number; floors_changed: number
+}
+export interface TimelineYear { year: number; state: string; event: TimelineEvent | null; kpi: Record<string, number> }
+export interface TimelineSegment {
+  id: string; label: string; segment: 1 | 2; summary?: string; events: TimelineEvent[]; years: TimelineYear[]
+  highlight?: boolean; changes?: number
+  steps?: { year: number; state: string; label: string }[]
+  totals?: { walls_changed_m2: number; capex_sek: number; people_hours_10y: number }
+}
+export interface TimelineKpiMeta { label: string; unit: string; better: 'higher' | 'lower'; status: KpiStatus; note: string }
+export interface Timeline {
+  status: 'ready'; building: string; project: string; years: number[]; decision_years: number[]
+  decision_years_source: string; today: string; states: Record<string, TimelineState>
+  segments: TimelineSegment[]; kpis: Record<string, TimelineKpiMeta>
+  assumptions: Record<string, { value: number; source: string }>; pathways_tested: number; states_tested: number
+}
+export type TimelineResponse = Timeline | { status: 'computing' | 'failed'; done: number; total: number; error?: string }
+
 // ---------------------------------------------------------------- supplier product cards (data/components/suppliers)
 export interface SupplierProduct {
   id: string; name: string; Rw_dB: number; fire_class: string; thickness_mm: number; max_height_m?: number

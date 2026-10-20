@@ -22,7 +22,7 @@ export function MapLegend({ site, level, floor }: { site: SitePayload; level: Le
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={open ? 'Hide legend' : 'Show legend'}
         className="flex flex-none items-center gap-1.5 text-left">
         <span className={`text-[10px] text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
-        <span className="whitespace-nowrap font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-2">
+        <span className="whitespace-nowrap font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">
           {inFloor ? 'Unit types' : 'Facade colours'}
         </span>
       </button>

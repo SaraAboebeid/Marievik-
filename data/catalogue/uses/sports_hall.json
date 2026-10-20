@@ -14,9 +14,10 @@
       { "ref": "AFS 2023:12 (PE teachers' workplace): 3 kap. 46–54 §§ changing and showers", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
     ],
     "permits": [
-      "Bygglov for change of use, and in practice for the structural change (removal of slabs) or a new extension (PBL 9 kap. 2 §). Detaljplan must allow sports or school use; a full-size hall is often planned as its own building.",
+      "Bygglov for change of use, and in practice for the structural change (removal of slabs) or a new extension (PBL 9 kap. 15 § 1 for the change of use since 2025-12-01, formerly 9 kap. 2 §; see cross_cutting.json cou_bygglov_trigger). Detaljplan must allow sports or school use; a full-size hall is often planned as its own building.",
       "Matches and events with an audience may need a Police permit for offentlig tillställning (Ordningslagen 1993:1617 2 kap.; not re-checked)."
     ],
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "cou_requirements_scope", "fire_vk_0", "fire_vk_2abc", "fire_egress_dimensions", "fire_change_of_use_floor", "occ_density_law_2024", "access_design_dimensions", "access_public_premises_wc", "access_public_premises_other", "access_hin", "san_public", "san_workplace", "staff_personalutrymmen_general", "staff_changing_showers_storage", "vent_workplace", "vent_change_of_use", "acoustics_premises", "acoustics_dwellings", "loads_imposed_table_4_1", "loads_barriers_stairs", "loads_structure_change"],
     "operator_oversight": "Municipality (kultur- och fritidsförvaltning for bookings; utbildningsförvaltning for school PE); Skolinspektionen indirectly (PE teaching); räddningstjänst"
   },
   "occupancy": {

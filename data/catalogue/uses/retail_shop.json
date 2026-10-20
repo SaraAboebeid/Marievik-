@@ -121,8 +121,8 @@
       "size": { "rule": "per_unit", "value_m2": 4.84, "range_m2": null, "count": "1 per started 15 employees (allmänna råd)", "strength": "guidance", "source": "AFS 2023:12 3 kap. 58 § allmänna råd: accessible WC ≥2.2 x 2.2 m.", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "confidence": "verified" },
       "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
       "depends_on": [],
-      "shareable_with": ["retail_customer_wc"],
-      "shareable_note": "One accessible WC may serve both staff and customers.",
+      "shareable_with": [],
+      "shareable_note": "One accessible WC may serve both staff and customers (see retail_customer_wc).",
       "binding_constraint": "plumbing_shafts",
       "layer": "services",
       "notes": ""
@@ -135,8 +135,8 @@
       "size": { "rule": "fixed", "value_m2": null, "range_m2": null, "count": "0 or more", "strength": "none", "source": "BFS 2024:12 gives functional dimensions, no m2.", "url": "", "confidence": "verified" },
       "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
       "depends_on": [],
-      "shareable_with": ["retail_staff_wc"],
-      "shareable_note": "",
+      "shareable_with": [],
+      "shareable_note": "May be the same room as retail_staff_wc.",
       "binding_constraint": "plumbing_shafts",
       "layer": "services",
       "notes": ""

@@ -17,12 +17,14 @@ export const PROJECTS: Record<string, { name: string; city: string; placeholder:
   gothenburg: { name: 'Gothenburg', city: 'Göteborg', placeholder: true },
 }
 
+/** A profile id is either generic (PROFILE_LABEL) or one of the project's own (data/projects/<id>.json),
+ *  which is only known once the project has loaded, so any id is accepted here. */
 export function readChoice(): { profile: string | null; project: string } {
   const q = new URLSearchParams(window.location.search)
   const profile = q.get('profile')
   const project = q.get('project')
   return {
-    profile: profile && PROFILE_LABEL[profile] ? profile : null,
+    profile: profile && /^[a-z_]+$/.test(profile) ? profile : null,
     project: project && PROJECTS[project] ? project : 'marievik',
   }
 }

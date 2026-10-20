@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { SYSTEM_LABEL, USE_LABEL, WINDOW_LABEL } from '../api'
-import type { BuildingPayload, Level, Settings, SitePayload } from '../types'
+import type { BuildingPayload, Level, SavedScenario, Settings, SitePayload } from '../types'
 import type { ViewOptions } from '../viewer/Viewer'
-import { Badge, Button, Card, ConfirmButton, Field, Section, Select, Slider, Toggle } from './kit'
+import { Badge, Button, Card, Field, Section, Select, Slider, Toggle } from './kit'
 
 export interface ScenarioStatus {
   changed: string[]          // building ids that differ from today's site
@@ -17,20 +17,43 @@ interface Props {
   settings: Settings | null
   loading: boolean
   status: ScenarioStatus
+  saved: SavedScenario[]
   onChange: (patch: Partial<Settings>) => void
   onGo: (l: Level) => void
   view: ViewOptions
   setView: (v: ViewOptions) => void
   onSave: (name: string) => void
+  onRestore: (s: SavedScenario) => void
   onCompare: () => void
   onSuppliers: () => void
   onResetBuilding: () => void
-  onResetSite: () => void
+}
+
+/** A folding block inside the setup card (Facade & roof, Core & services). */
+function Fold({ title, children }: { title: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="mb-2 rounded-lg border border-line">
+      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
+        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[13px] font-medium text-ink">
+        <span className={`text-[11px] transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>›</span>{title}
+      </button>
+      {open && <div className="px-3 pb-3 text-[12.5px] text-ink-2">{children}</div>}
+    </div>
+  )
+}
+
+const Icon = {
+  save: <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M4 3h9l3 3v11H4z" /><path d="M7 3v4h6V3M7 17v-5h6v5" /></svg>,
+  base: <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 17h14M5 17V8l5-4 5 4v9" /><path d="M8 17v-4h4v4" /></svg>,
+  scen: <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 4l9 6-9 6z" /></svg>,
 }
 
 export function ScenarioPanel(p: Props) {
   const { site, level, building, settings, loading, status, onChange, onGo, view, setView, onResetBuilding } = p
   const [added, setAdded] = useState(settings?.added_floors ?? 0)
+  const [open, setOpen] = useState(true)
+  const [naming, setNaming] = useState<string | null>(null)     // the name being typed for a new scenario
   useEffect(() => setAdded(settings?.added_floors ?? 0), [settings?.added_floors, building?.id])
 
   const useOpts: [string, string][] = ['site', ...Object.keys(site.uses)].map((u) => [u, USE_LABEL[u] ?? site.uses[u] ?? u])
@@ -38,58 +61,152 @@ export function ScenarioPanel(p: Props) {
 
   if (level.kind === 'site' || !building || !settings) {
     return (
-      <>
-        <Card title="Site">
-          <p className="text-[13px] leading-relaxed text-ink-2">
-            {site.buildings.length} buildings at {site.location.name}. <b className="font-medium text-ink">Click a building</b> to
-            open it, then a floor, then a unit.
-          </p>
-        </Card>
-        <ScenarioFlow {...p} />
-      </>
+      <Card title="Site">
+        <p className="text-[13px] leading-relaxed text-ink-2">
+          {site.buildings.length} buildings at {site.location.name}. <b className="font-medium text-ink">Pick a building</b> in the
+          top bar or click one in the model, then a floor, then a unit.
+        </p>
+      </Card>
     )
   }
 
+  const existing = building.kpi.existing_floors
+  const floors = existing + added
+  const setFloors = (n: number) => {
+    const a = Math.max(0, Math.min(site.max_added, n - existing))
+    setAdded(a)
+    onChange({ added_floors: a })
+  }
   const changed = status.changed.includes(building.id)
+  const describe = (s: SavedScenario) => {
+    const st = s.scenarios[building.id]
+    if (!st) return 'Other buildings changed'
+    const lab = (u: string) => (USE_LABEL[u] ?? site.uses[u] ?? u).replace('Current use (site data)', 'as today')
+    return `${lab(st.ground_use)} + ${lab(st.use)}`
+  }
+  const save = () => {
+    p.onSave((naming ?? '').trim() || `Scenario ${status.savedCount + 1}`)
+    setNaming(null)
+  }
+
   return (
     <>
-      <Card title={`Change building ${building.id}`} right={loading ? <span className="font-mono text-[11px] text-ink-2">updating…</span> : null}>
-        <div className="mb-1 text-[14px] font-semibold leading-snug">{building.name}</div>
-        {sb?.facade?.notes && <p className="mb-2.5 text-[12px] leading-snug text-muted">{sb.facade.notes}</p>}
-        <Field label="Ground floor use">
-          <Select value={settings.ground_use} onChange={(v) => onChange({ ground_use: v })} options={useOpts} />
-        </Field>
-        <Field label="Upper floors use">
-          <Select value={settings.use} onChange={(v) => onChange({ use: v })} options={useOpts} />
-        </Field>
-        <Field label="Partition system">
-          <Select value={settings.partition_system} onChange={(v) => onChange({ partition_system: v })}
-            options={[
-              ...site.systems.map((s): [string, string] => [s, SYSTEM_LABEL[s] ?? s]),
-              ...site.suppliers.map((x): [string, string] => [x.system, `${x.title} (supplier)`]),
-            ]} />
-        </Field>
-        <SupplierSummary site={site} system={settings.partition_system} onOpen={p.onSuppliers} />
-        <Field label="Windows">
-          <Select value={settings.windows} onChange={(v) => onChange({ windows: v })}
-            options={site.windows.map((s) => [s, WINDOW_LABEL[s] ?? s])} />
-        </Field>
-        <Field label="Add floors on top" hint={`${building.kpi.existing_floors} + ${added} = ${building.kpi.existing_floors + added}`}>
-          <Slider value={added} min={0} max={site.max_added} onChange={setAdded} onCommit={(v) => onChange({ added_floors: v })} />
-        </Field>
-        {added > 0 && (
-          <Field label="Use of the added floors">
-            <Select value={settings.added_use} onChange={(v) => onChange({ added_use: v })}
-              options={[['same', USE_LABEL.same], ...useOpts.filter(([u]) => u !== 'site')]} />
-          </Field>
+      <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
+        <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
+          className="mb-3 flex w-full items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">
+          Building setup
+          <span className="flex items-center gap-2">
+            {loading && <span className="font-normal normal-case tracking-normal text-ink-2">updating…</span>}
+            <span className={`transition-transform ${open ? '' : 'rotate-180'}`} aria-hidden>⌃</span>
+          </span>
+        </button>
+        {open && (
+          <>
+            <div className="mb-2.5 text-[13.5px] font-semibold leading-snug">{building.id} · {building.name}</div>
+            <Field label="Ground floor use">
+              <Select value={settings.ground_use} onChange={(v) => onChange({ ground_use: v })} options={useOpts} />
+            </Field>
+            <Field label="Upper floors use">
+              <Select value={settings.use} onChange={(v) => onChange({ use: v })} options={useOpts} />
+            </Field>
+            <Field label="Partition system">
+              <Select value={settings.partition_system} onChange={(v) => onChange({ partition_system: v })}
+                options={[
+                  ...site.systems.map((s): [string, string] => [s, SYSTEM_LABEL[s] ?? s]),
+                  ...site.suppliers.map((x): [string, string] => [x.system, `${x.title} (supplier)`]),
+                ]} />
+            </Field>
+            <SupplierSummary site={site} system={settings.partition_system} onOpen={p.onSuppliers} />
+            <Field label="Windows">
+              <Select value={settings.windows} onChange={(v) => onChange({ windows: v })}
+                options={site.windows.map((s) => [s, WINDOW_LABEL[s] ?? s])} />
+            </Field>
+
+            <div className="mb-1 flex items-center justify-between text-[12px] text-ink-2">
+              <span>Number of floors</span>
+              <span className="flex items-center gap-1">
+                <button type="button" onClick={() => setFloors(floors - 1)} disabled={floors <= existing} aria-label="One floor less"
+                  className="grid h-7 w-7 place-items-center rounded-md text-[16px] text-ink hover:bg-sunken disabled:opacity-30">−</button>
+                <span className="grid h-7 w-9 place-items-center rounded-md border border-line bg-surface font-mono text-[13px] text-ink">{floors}</span>
+                <button type="button" onClick={() => setFloors(floors + 1)} disabled={floors >= existing + site.max_added} aria-label="One floor more"
+                  className="grid h-7 w-7 place-items-center rounded-md border border-line text-[16px] text-ink hover:bg-sunken disabled:opacity-30">+</button>
+              </span>
+            </div>
+            <div className="mb-1">
+              <Slider value={floors} min={existing} max={existing + site.max_added} onChange={(v) => setAdded(v - existing)}
+                onCommit={(v) => setFloors(v)} />
+            </div>
+            <p className="mb-3 font-mono text-[10.5px] text-muted">{existing} existing{added ? ` + ${added} added` : ''}</p>
+            {added > 0 && (
+              <Field label="Use of the added floors">
+                <Select value={settings.added_use} onChange={(v) => onChange({ added_use: v })}
+                  options={[['same', USE_LABEL.same], ...useOpts.filter(([u]) => u !== 'site')]} />
+              </Field>
+            )}
+
+            <Fold title="Facade & roof detail">
+              {sb?.facade?.notes && <p className="mb-2 leading-snug">{sb.facade.notes}</p>}
+              <Toggle on={settings.facade} onChange={(v) => onChange({ facade: v })} label="Show facade & roof detail" />
+            </Fold>
+            <Fold title="Core & services">
+              <p className="leading-snug">
+                Cores, stairs, lifts and the facade are retained structure: a change of use works around them. Partitions,
+                finishes and doors are the space plan that changes.
+              </p>
+              <div className="mt-2">
+                <Button onClick={onResetBuilding} disabled={!changed} title={changed ? undefined : 'This building is as it is today'}>
+                  Undo changes to {building.id}
+                </Button>
+              </div>
+            </Fold>
+
+            {naming === null ? (
+              <button type="button" onClick={() => setNaming('')}
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2.5 text-[13.5px] font-semibold text-white shadow-sm hover:brightness-125">
+                {Icon.save} Save scenario
+              </button>
+            ) : (
+              <div className="mt-2 flex gap-1.5">
+                <input autoFocus value={naming} onChange={(e) => setNaming(e.target.value)} placeholder="Name, e.g. Office transformation"
+                  onKeyDown={(e) => { if (e.key === 'Enter') save(); if (e.key === 'Escape') setNaming(null) }} aria-label="Scenario name"
+                  className="min-w-0 flex-1 rounded-lg border border-line-strong bg-surface px-2.5 py-2 text-[13px] outline-none focus:border-ink-2" />
+                <button type="button" onClick={save} className="rounded-lg bg-accent px-3 text-[13px] font-semibold text-white">Save</button>
+              </div>
+            )}
+          </>
         )}
-        <Toggle on={settings.facade} onChange={(v) => onChange({ facade: v })} label="Facade & roof detail" />
-        <div className="mt-3 border-t border-line pt-2.5">
-          <Button onClick={onResetBuilding} disabled={!changed} title={changed ? undefined : 'This building is as it is today'}>
-            Undo changes to {building.id}
-          </Button>
+      </section>
+
+      <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
+        <div className="mb-2.5 flex items-center justify-between">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Scenarios</span>
+          <button type="button" onClick={() => setNaming((n) => n ?? '')} aria-label="Save a new scenario" title="Save the current setup as a scenario"
+            className="grid h-7 w-7 place-items-center rounded-md border border-line text-[16px] hover:bg-sunken">+</button>
         </div>
-      </Card>
+        <ul className="space-y-1">
+          <li>
+            <button type="button" onClick={onResetBuilding}
+              className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left ${!changed && !status.name ? 'border-l-[3px] border-accent bg-accent-soft' : 'hover:bg-sunken'}`}>
+              <span className="mt-0.5 text-ink-2">{Icon.base}</span>
+              <span><span className="block text-[13px] font-medium">Base case</span><span className="block text-[11.5px] text-ink-2">Current building</span></span>
+            </button>
+          </li>
+          {p.saved.map((s, i) => (
+            <li key={s.id}>
+              <button type="button" onClick={() => p.onRestore(s)}
+                className={`flex w-full items-start gap-2.5 rounded-lg px-2.5 py-2 text-left ${status.name === s.name ? 'border-l-[3px] border-accent bg-accent-soft' : 'hover:bg-sunken'}`}>
+                <span className="mt-0.5 text-ink-2">{Icon.scen}</span>
+                <span className="min-w-0"><span className="block truncate text-[13px] font-medium">{i + 1}. {s.name}</span>
+                  <span className="block truncate text-[11.5px] text-ink-2">{describe(s)}</span></span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <button type="button" onClick={p.onCompare} disabled={p.saved.length === 0}
+          className="mt-2.5 w-full rounded-lg border border-line-strong bg-surface px-3 py-2 text-[13px] font-medium hover:border-ink-2 disabled:opacity-40">
+          Compare scenarios
+        </button>
+      </section>
 
       {level.kind === 'building' && (
         <Section id="floors" title={`Floors (${building.floors.length})`} right={<span className="text-[11px] text-muted">click to open</span>}>
@@ -112,8 +229,6 @@ export function ScenarioPanel(p: Props) {
           </ul>
         </Section>
       )}
-
-      <ScenarioFlow {...p} />
     </>
   )
 }
@@ -153,53 +268,5 @@ function SupplierSummary({ site, system, onOpen }: { site: SitePayload; system: 
         Open product card: range, comparison in this building, open questions ›
       </button>
     </div>
-  )
-}
-
-/** One flow: change buildings → name and save → compare. The site-wide reset sits apart and asks first. */
-function ScenarioFlow({ site, status, onSave, onCompare, onResetSite }: Props) {
-  const [name, setName] = useState('')
-  const n = status.changed.length
-  const state = n === 0
-    ? { text: status.name ? `“${status.name}”` : 'Today’s site, no changes', tone: 'text-ink-2' }
-    : status.name
-      ? { text: `“${status.name}”`, tone: 'text-ink' }
-      : { text: `${n} building${n > 1 ? 's' : ''} changed, not saved`, tone: 'text-warn' }
-  const step = (i: number, text: string, done: boolean) => (
-    <li className={`flex items-start gap-2 ${done ? 'text-ink-2' : 'text-ink'}`}>
-      <span className={`mt-[1px] grid h-[18px] w-[18px] flex-none place-items-center rounded-full font-mono text-[10.5px] ${done ? 'bg-sunken text-ink-2' : 'bg-ink text-bg'}`}>
-        {done ? '✓' : i}
-      </span>
-      <span>{text}</span>
-    </li>
-  )
-  return (
-    <Section id="scenario-flow" title="Scenario">
-      <div className="mb-2.5 rounded-md bg-sunken px-2.5 py-2">
-        <div className="text-[11px] text-ink-2">On screen now</div>
-        <div className={`text-[13.5px] font-semibold ${state.tone}`}>{state.text}</div>
-        {n > 0 && <div className="mt-0.5 font-mono text-[11px] text-ink-2">{status.changed.join(' · ')}</div>}
-      </div>
-      <ol className="mb-3 space-y-1.5 text-[12.5px]">
-        {step(1, 'Open a building and change its uses, partitions, windows or floors', n > 0)}
-        {step(2, 'Name the scenario and save it', !!status.name && n > 0)}
-        {step(3, 'Compare saved scenarios side by side', false)}
-      </ol>
-      <div className="flex gap-1.5">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name, e.g. Housing + 2 floors"
-          aria-label="Scenario name"
-          className="min-w-0 flex-1 rounded border border-line-strong bg-surface px-2 py-1.5 text-[13px] outline-none focus:border-ink-2" />
-        <Button primary onClick={() => { onSave(name.trim() || `Scenario ${status.savedCount + 1}`); setName('') }}>Save</Button>
-      </div>
-      <div className="mt-2">
-        <Button onClick={onCompare}>Compare saved ({status.savedCount})</Button>
-      </div>
-      <div className="mt-3 border-t border-line pt-2.5">
-        <ConfirmButton confirm={`Put all ${site.buildings.length} buildings back to today's site? Unsaved changes are lost; saved scenarios are kept.`}
-          onConfirm={onResetSite}>
-          Reset all buildings to today…
-        </ConfirmButton>
-      </div>
-    </Section>
   )
 }

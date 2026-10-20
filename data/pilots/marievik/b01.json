@@ -1,0 +1,83 @@
+{
+  "_meta": {
+    "purpose": "Office-led scenarios for the ground and first floor of B01 (Marievik 27). The use catalogue (data/catalogue) says which spaces each use must have and which rules apply; this file only adds what the catalogue cannot: the building, and the design choices that make one office different from another. Run: python -m engine.pilot data/pilots/marievik/b01.json",
+    "updated": "2026-10-20",
+    "status": "WORKING — geometry from OpenStreetMap, design assumptions are labelled. Replace both with drawings and AMF input."
+  },
+
+  "building": {
+    "id": "B01",
+    "name": "Marievik 27 — vaulted-roof office (the study building)",
+    "plate_m": [53.47, 43.25],
+    "plate_source": "ESTIMATE: OpenStreetMap footprint, as in runs/grasshopper/B01.json (2312.6 m² footprint); verify against drawings",
+    "core": {
+      "size_m": [14.0, 8.0],
+      "position": "centre",
+      "stairs": 2,
+      "source": "ESTIMATE: core size from parametric/mvk/use_profiles.json (office_open); two stairs assumed from data/building/marievik_shell.json escape_routes = 2. Real core count and position UNKNOWN."
+    },
+    "floors": {
+      "GF": { "height_m": 4.5, "street_access": true,  "source": "runs/grasshopper/B01.json floor_heights" },
+      "F1": { "height_m": 3.5, "street_access": false, "source": "runs/grasshopper/B01.json floor_heights" }
+    }
+  },
+
+  "assumptions": {
+    "_note": "Design assumptions, not regulations. Each is used only where the catalogue has no size (strength 'none'). Change them here; every result shows which ones it used.",
+    "net_to_gross":            { "value": 0.82, "source": "engine/fit.py NET_TO_GROSS (typical 1980s flat-slab office plate)" },
+    "facade_zone_depth_m":     { "value": 6.0,  "source": "practice: useful daylight reaches roughly 2-2.5 x window head height (2.9 m in use_profiles.json); AFS 2023:12 5 kap. 25 § requires daylight and view for permanent workplaces but sets no depth" },
+    "desk_m2_in_facade_zone":  { "value": 8.0,  "source": "practice: desk plus local circulation in an open plan" },
+    "cell_room_facade_m":      { "value": 2.7,  "source": "practice: one-person cellular room on a 1.35 m window module (use_profiles.json window_module) x 2" },
+    "retail_m2_per_visitor":   { "value": 10.0, "source": "PLACEHOLDER: no source. Shoppers actually present at peak, far below the 0.5 persons/m² fire-design density (retail_shop.json), which is still used for the fire class" },
+    "restaurant_m2_per_seat":  { "value": 1.5,  "source": "practice: no Swedish source (restaurant_cafe.json rest_dining size strength 'none')" },
+    "event_m2_per_person":     { "value": 1.0,  "source": "practice: banquet layout; the legal default is 0.4 m²/person (assembly_event.json), which is the fire-design maximum" },
+    "suite_corridor_m":        { "value": 1.8,  "source": "practice: corridor clear width serving several tenancies (passage 0.90/1.20 m minimum, fire_egress_dimensions)" }
+  },
+
+  "scenarios": [
+    {
+      "id": "A_today",
+      "label": "A: Today",
+      "story": "Baseline: retail at street level, one tenant in cellular offices above.",
+      "cards": { "built": "keep", "use": "office hours only", "system": "conventional long lease" },
+      "floors": {
+        "GF": [ { "use": "retail_shop", "variant": "retail_large_2b", "share": 1.0 } ],
+        "F1": [ { "use": "office", "variant": "office_cellular", "share": 1.0, "tenancies": 1, "m2_per_person": 22 } ]
+      }
+    },
+    {
+      "id": "B_open",
+      "label": "B: Open and efficient",
+      "story": "Public lobby and café at street level; activity-based office for one large tenant above.",
+      "cards": { "built": "remove cellular walls, keep core", "use": "café open to the public", "system": "one long lease" },
+      "floors": {
+        "GF": [ { "use": "restaurant_cafe", "variant": "rest_cafe_simple", "share": 0.4 },
+                { "use": "shared_amenities", "variant": "shared_premises_led", "share": 0.6, "spaces": ["shared_entrance_lobby", "shared_meeting_rooms", "shared_bicycle_room", "shared_accessible_wc"] } ],
+        "F1": [ { "use": "office", "variant": "office_abw", "share": 1.0, "tenancies": 1, "m2_per_person": 13, "desk_ratio": 0.75 } ]
+      }
+    },
+    {
+      "id": "C_suites",
+      "label": "C: Small and flexible",
+      "story": "Coworking and shared reception at street level; 6 small suites with shared meeting rooms in the dark middle above.",
+      "cards": { "built": "new suite walls and corridor", "use": "shared meeting rooms and kitchen", "system": "short, flexible leases; tenants can grow into a bigger suite" },
+      "floors": {
+        "GF": [ { "use": "coworking", "variant": "cowork_desk_led", "share": 1.0, "m2_per_person": 12 } ],
+        "F1": [ { "use": "office", "variant": "office_open_plan", "share": 1.0, "tenancies": 6, "m2_per_person": 15 } ]
+      }
+    },
+    {
+      "id": "D_premium",
+      "label": "D: Premium",
+      "story": "Hospitality lobby with restaurant and an event/conference room that becomes a bar in the evening; premium office above with gym and lounge in the middle.",
+      "cards": { "built": "high-spec fit-out, restaurant kitchen exhaust", "use": "conference by day, event/bar by evening", "system": "premium lease with service package" },
+      "floors": {
+        "GF": [ { "use": "restaurant_cafe", "variant": "rest_full_kitchen", "share": 0.45 },
+                { "use": "assembly_event", "variant": "assembly_banquet", "share": 0.35, "alcohol": true },
+                { "use": "shared_amenities", "variant": "shared_premises_led", "share": 0.2, "spaces": ["shared_entrance_lobby", "shared_bicycle_room", "shared_accessible_wc"] } ],
+        "F1": [ { "use": "office", "variant": "office_open_plan", "share": 0.8, "tenancies": 1, "m2_per_person": 22 },
+                { "use": "gym_fitness", "variant": "gym_boutique_studio", "share": 0.2, "members_only": true } ]
+      }
+    }
+  ]
+}

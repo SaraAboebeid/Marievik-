@@ -67,7 +67,7 @@
       "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No gymnasium-specific classroom norm found. By analogy, Uppsala's grundskola programme requires lärosalar of at least 60 m² (2015 p. 11). Malmö miljöförvaltningen recommends at least 65 m² per 30 pupils (Malmö friyta guideline p. 13). Uppsala 2019 states that only the kitchen, restaurant, idrott and elevhälsa parts of its grundskola programme apply to gymnasieskolor (p. 4).", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "sourced" },
       "constraints": { "daylight_required": true, "facade_required": true },
       "depends_on": [],
-      "shareable_with": ["adult_education", "office", "conference"],
+      "shareable_with": ["adult_education", "office", "assembly_event"],
       "shareable_note": "Evening komvux, folkbildning and conference use.",
       "binding_constraint": "daylight_and_facade",
       "layer": "space_plan",
@@ -94,7 +94,7 @@
       "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium library size found. Uppsala grundskola: 80-120 m² (2019 p. 27), for reference only.", "confidence": "sourced" },
       "constraints": { "central_location": true },
       "depends_on": [],
-      "shareable_with": ["public_library"],
+      "shareable_with": ["library"],
       "binding_constraint": "none",
       "layer": "space_plan",
       "notes": "Many gymnasieskolor in rented city premises previously relied on the public library. From 2025-07-01 that needs särskilda skäl, so an on-site library becomes a real space requirement in conversions."
@@ -107,7 +107,7 @@
       "size": { "rule": "per_building", "value_m2": 75, "range_m2": [60, 75], "count": "per school; by analogy with Uppsala grundskola (60-75 m² incl. rest room and RWC)", "strength": "programme", "source": "Uppsala 2019 funktionsprogram p. 4: the elevhälsa requirements AR: T.6-T.10 also apply to gymnasieskolor. The area (lokalprogram p. 27) is set for grundskola, so its use here is by analogy.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
       "constraints": { "acoustic_privacy_required": true, "wash_basin_required": true },
       "depends_on": [],
-      "shareable_with": ["health_clinic"],
+      "shareable_with": ["primary_care_clinic"],
       "binding_constraint": "acoustics",
       "layer": "space_plan"
     },
@@ -119,7 +119,7 @@
       "size": { "rule": "per_unit", "value_m2": 0.5, "count": "enrolled students (BRA), by analogy with Uppsala grundskola", "strength": "programme", "source": "Uppsala 2019 lokalprogram översikt p. 27 (grundskola matsal 0.5 m² BRA per pupil). Restaurant functional requirements RE: T-O (p. 24) apply to gymnasium.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
       "constraints": { "daylight_required": true },
       "depends_on": ["gy_kitchen"],
-      "shareable_with": ["restaurant", "assembly_hall"],
+      "shareable_with": ["restaurant_cafe", "assembly_event"],
       "shareable_note": "Could be an existing nearby restaurant under contract. Uppsala RE: F.1 wants it usable for other activities.",
       "binding_constraint": "ventilation_and_egress",
       "layer": "space_plan",
@@ -133,7 +133,7 @@
       "size": { "rule": "per_unit", "value_m2": 0.3, "range_m2": [0.2, 0.3], "count": "students (BRA), by analogy with Uppsala grundskola 'Måltidsverksamhet'", "strength": "programme", "source": "Uppsala 2019 lokalprogram översikt p. 27; kitchen functional requirements KÖ (pp. 22-23) apply to gymnasium per p. 4", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "indicative" },
       "constraints": { "goods_delivery_access_required": true, "exhaust_ventilation_required": true, "grease_separator_required": "cooking kitchen: normally yes (ABVA; SS-EN 1825); receiving: municipality-dependent" },
       "depends_on": [],
-      "shareable_with": ["restaurant"],
+      "shareable_with": ["restaurant_cafe"],
       "binding_constraint": "ventilation_and_grease_drainage",
       "layer": "services",
       "notes": "Registration at least two weeks before start (Livsmedelsverket). See variants in school_compulsory for cooking vs receiving kitchens."
@@ -146,7 +146,7 @@
       "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "No gymnasium norm found. Uppsala 2019 p. 4 applies its idrott functional requirements (ID, pp. 25-26) to gymnasium but gives area only for grundskola (1.0 m² BRA per pupil). Malmö hall sizes 18 × 26 m (gymnastikhall) / 20 × 40 m (sporthall), p. 13.", "url": "https://www.uppsala.se/contentassets/584f9be92a704668a9b27ac0ce6ea4ab/23.-funktionsprogram-grundskola.pdf", "confidence": "sourced" },
       "constraints": {},
       "depends_on": [],
-      "shareable_with": ["sports_hall", "gym"],
+      "shareable_with": ["sports_hall", "gym_fitness"],
       "binding_constraint": "structure_span_and_height",
       "layer": "structure",
       "notes": "Normally off-site in converted buildings. An on-site fitness or movement room (smaller span) is a common compromise, but that is practice and unsourced."
@@ -196,7 +196,7 @@
       "size": { "rule": "per_unit", "value_m2": null, "strength": "none", "source": "No source found", "confidence": "indicative" },
       "constraints": {},
       "depends_on": [],
-      "shareable_with": ["cafe", "library"],
+      "shareable_with": ["restaurant_cafe", "library"],
       "binding_constraint": "none",
       "layer": "space_plan",
       "notes": "Often provided as widened circulation, a library or café zone."

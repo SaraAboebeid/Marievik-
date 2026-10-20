@@ -157,7 +157,7 @@ export function ParametricDrawer({ site, start, settingsOf, onApply, onClose }: 
           )}
 
           {/* every use x system */}
-          <h4 className="mb-1 mt-5 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">Upfront carbon per m² gross, every use × wall system, on {bid}</h4>
+          <h4 className="mb-1 mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Upfront carbon per m² gross, every use × wall system, on {bid}</h4>
           <Chart site={site} systems={systems} cells={cells} use={use} system={system} sysLabel={sysLabel}
             onPick={(u, s) => { setUse(u); setSystem(s) }} setTip={setTip} />
           <p className="mt-1 text-[11.5px] text-ink-2">
@@ -168,7 +168,7 @@ export function ParametricDrawer({ site, start, settingsOf, onApply, onClose }: 
           {/* bill */}
           {data && (
             <>
-              <h4 className="mb-1 mt-5 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">Bill of quantities, new elements, whole building</h4>
+              <h4 className="mb-1 mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Bill of quantities, new elements, whole building</h4>
               <div className="overflow-x-auto">
                 <table className="w-full text-[12.5px]">
                   <thead>

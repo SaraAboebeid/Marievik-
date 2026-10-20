@@ -14,10 +14,11 @@
       { "ref": "FMH (1998:899) 38 § (notification only for e.g. bassängbad and hygienic treatments; gyms not listed)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/" }
     ],
     "permits": [
-      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a). Detaljplan: commercial or centrum use; a gym is usually accepted under C (not verified against Boverket's planbestämmelser guide).",
+      "Bygglov for change of use from office (PBL 9 kap. 15 § 1 since 2025-12-01; formerly 9 kap. 2 § första stycket 3 a; see cross_cutting.json cou_bygglov_trigger). Detaljplan: commercial or centrum use; a gym is usually accepted under C (not verified against Boverket's planbestämmelser guide).",
       "No gym-specific operating permit. Notification under FMH 38 § is needed only if a pool (bassängbad) or professional hygienic treatments (e.g. tattooing) are added.",
       "Music played in group classes: FoHMFS 2014:15 recommended sound levels apply, supervised by the municipal miljöförvaltning."
     ],
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "cou_requirements_scope", "fire_vk_2abc", "fire_egress_dimensions", "occ_density_law_2024", "occ_density_gaps", "access_design_dimensions", "access_public_premises_wc", "access_hin", "san_public", "san_workplace", "staff_personalutrymmen_general", "staff_changing_showers_storage", "staff_eating_rest", "vent_workplace", "vent_change_of_use", "acoustics_premises", "acoustics_dwellings", "loads_imposed_table_4_1", "loads_barriers_stairs", "loads_structure_change"],
     "operator_oversight": "Kommunens miljö- och hälsoskyddsnämnd (noise, hygiene nuisance under Miljöbalken 9 kap.); byggnadsnämnd; räddningstjänst"
   },
   "occupancy": {
@@ -33,7 +34,7 @@
     "egress_design_density": {
       "persons_per_m2": null,
       "strength": "law",
-      "source": "BFS 2024:7 2 kap. 4 §: design number = maximum expected. No gym default; the samlingslokal default (2.5 p/m2) is a conservative fallback for group-exercise studios if the operator cannot commit to a maximum. The repealed BBR tabell 5:333 had no gym row (danslokal 2.5 was the nearest).",
+      "source": "BFS 2024:7 2 kap. 4 §: design number = maximum expected. No gym default; the samlingslokal default (2.5 p/m2) is a conservative fallback for group-exercise studios if the operator cannot commit to a maximum. The old BBR (repealed BBR, pre-2025) tabell 5:333 had no gym row (danslokal 2.5 was the nearest).",
       "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
       "confidence": "verified"
     },
@@ -54,7 +55,7 @@
       "shareable_note": "Weights floor is rarely time-shared; equipment is fixed.",
       "binding_constraint": "floor_load",
       "layer": "structure",
-      "notes": "Load: C4 'samlingslokaler där fysiska aktiviteter kan förekomma' 4.0 kN/m2 and 4.0 kN point load, vs office B 2.5 kN/m2 (BFS 2024:6 4 kap. 10 § tabell 4:1). 4 kap. 13 §: members shall be designed for dynamic forces from persons and objects in rapid, forceful movement (jumping crowds given as an example). Heavy racks and dropped weights add local impact loads and vibration. Sound: from lokaler to dwellings, DnT,w,50 at least 56 dB (tabell 2:1) and L'nT,w,50 at most 52 dB (tabell 2:4). The tapping-machine metric does not represent dropped weights, so isolated floating floors are standard practice (engineering judgement, indicative). The repealed BBR 7:21 allmänt råd named 'träningslokal' as noisy activity needing special insulation measures and advised LpAeq,nT 25 dB in dwellings from impulse or low-frequency noise from adjacent gyms (consolidated BBR p. 117–118). Ceiling height: 2,700 mm is guidance only (AFS 2023:12 3 kap. 5 § allmänna råd); overhead lifts and racks need more locally."
+      "notes": "Load: C4 'samlingslokaler där fysiska aktiviteter kan förekomma' 4.0 kN/m2 and 4.0 kN point load, vs office B 2.5 kN/m2 (BFS 2024:6 4 kap. 10 § tabell 4:1). 4 kap. 13 §: members shall be designed for dynamic forces from persons and objects in rapid, forceful movement (jumping crowds given as an example). Heavy racks and dropped weights add local impact loads and vibration. Sound: from lokaler to dwellings, DnT,w,50 at least 56 dB (tabell 2:1) and L'nT,w,50 at most 52 dB (tabell 2:4). The tapping-machine metric does not represent dropped weights, so isolated floating floors are standard practice (engineering judgement, indicative). The old BBR (repealed BBR, pre-2025) 7:21 allmänt råd named 'träningslokal' as noisy activity needing special insulation measures and advised LpAeq,nT 25 dB in dwellings from impulse or low-frequency noise from adjacent gyms (consolidated BBR p. 117–118). Ceiling height: 2,700 mm is guidance only (AFS 2023:12 3 kap. 5 § allmänna råd); overhead lifts and racks need more locally."
     },
     {
       "id": "gym_group_studio",
@@ -168,7 +169,7 @@
     { "ref": "BFS 2024:8: 3 kap. 4 §, 7 kap., 8 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
     { "ref": "AFS 2023:12: 3 kap. 5, 46–54 §§; 5 kap. 4 §", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-19" },
     { "ref": "FMH (1998:899) 35, 38 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/", "accessed": "2026-10-19" },
-    { "ref": "Repealed BBR 7:21 allmänt råd (consolidated BBR pp. 117–118)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "Old BBR (repealed BBR, pre-2025) 7:21 allmänt råd (consolidated BBR pp. 117–118)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
     { "ref": "FoHMFS 2014:15 Höga ljudnivåer", "url": "https://www.fohm.se/contentassets/af078ffb8b8c41e5ad7c35de0e20420d/fohmfs-2014-15.pdf", "accessed": "2026-10-19" }
   ],
   "open_questions": [

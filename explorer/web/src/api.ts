@@ -1,6 +1,6 @@
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Methods, ParametricCell,
-  ParametricPayload, Settings, SitePayload, SupplierCompare,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
+  ParametricPayload, Project, Settings, SitePayload, SupplierCompare, TimelineResponse,
 } from './types'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -38,6 +38,9 @@ export const api = {
   cell: (id: string, settings: Partial<Settings>) => call<ParametricCell>(`/api/parametric/${id}/cell`, { settings }),
   supplierCompare: (sid: string, id: string, settings: Partial<Settings>) =>
     call<SupplierCompare>(`/api/supplier/${sid}/compare/${id}`, { settings }),
+  project: (pid: string) => call<Project>(`/api/project/${pid}`),
+  figures: (id: string, settings: Partial<Settings>) => call<Figures>(`/api/figures/${id}`, { settings }),
+  timeline: (id: string, project: string) => call<TimelineResponse>(`/api/timeline/${id}`, { project }),
 }
 
 export interface FullResult {

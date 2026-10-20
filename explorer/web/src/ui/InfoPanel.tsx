@@ -47,8 +47,12 @@ const useOf = (b: BuildingPayload, sb: SiteBuilding | undefined) => {
   return g === u || g === 'same' ? lab(u) : `${lab(g)} ground floor, ${lab(u)} above`
 }
 
+/** Today's use of each building, as a colour (the same greens and pinks as the timeline and the donuts). */
+const USE_DOT: Record<string, string> = { office: '#b9d27a', residential: '#c46ba4', retail: '#c97855', hotel: '#dfa00c', school: '#8a72d8' }
+
 function SiteInfo({ site, bdata, totals, onGo }: Props) {
   const done = totals.loaded === site.buildings.length
+  const maxCo2 = Math.max(1, ...Object.values(bdata).map((b) => b.kpi.upfront_kgco2e / 1000))
   return (
     <>
       <Card title="Site · current scenario" right={!done && <span className="font-mono text-[12px] text-ink-2">{totals.loaded}/{site.buildings.length} laid out</span>}>
@@ -77,15 +81,22 @@ function SiteInfo({ site, bdata, totals, onGo }: Props) {
           <tbody>
             {site.buildings.map((sb) => {
               const b = bdata[sb.id]
+              const co2 = b ? b.kpi.upfront_kgco2e / 1000 : 0
               return (
                 <tr key={sb.id} className="cursor-pointer border-t border-line hover:bg-sunken" onClick={() => onGo({ kind: 'building', building: sb.id })}>
-                  <td className="py-1.5 pr-1">
-                    <div><span className="font-mono font-medium">{sb.id}</span> <span className="text-ink">{sb.name.split(' - ')[0]}</span></div>
-                    <div className="text-[11.5px] text-ink-2">{b ? useOf(b, sb) : '…'}</div>
+                  <td className="py-2 pr-1">
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="mt-[3px] h-2.5 w-2.5 shrink-0 self-start rounded-[3px]" style={{ background: USE_DOT[sb.current_use] ?? '#cfcdc4' }} title={sb.current_use} />
+                      <span><span className="font-semibold">{sb.id}</span> <span className="text-ink">{sb.name.split(' - ')[0]}</span></span>
+                    </div>
+                    <div className="pl-4 text-[11.5px] text-ink-2">{b ? useOf(b, sb) : '…'}</div>
                   </td>
-                  <td className="py-1.5 pl-2 text-right align-top font-mono">{b ? b.kpi.floors : sb.levels}{b?.kpi.added_floors ? <span className="text-warn" title="floors added">+</span> : ''}</td>
-                  <td className="whitespace-nowrap py-1.5 pl-3 text-right align-top font-mono">{b ? fmt(b.kpi.gfa_m2) : '…'}</td>
-                  <td className="whitespace-nowrap py-1.5 pl-3 text-right align-top font-mono">{b ? fmt(b.kpi.upfront_kgco2e / 1000) : '…'}</td>
+                  <td className="py-2 pl-2 text-right align-top tabular-nums">{b ? b.kpi.floors : sb.levels}{b?.kpi.added_floors ? <span className="text-warn" title="floors added">+</span> : ''}</td>
+                  <td className="whitespace-nowrap py-2 pl-3 text-right align-top tabular-nums">{b ? fmt(b.kpi.gfa_m2) : '…'}</td>
+                  <td className="whitespace-nowrap py-2 pl-3 text-right align-top tabular-nums">
+                    {b ? fmt(co2) : '…'}
+                    {b && <div className="ml-auto mt-1 h-1 w-12 rounded bg-sunken"><div className="h-full rounded bg-[#c97855]" style={{ width: `${Math.min(100, (100 * co2) / maxCo2)}%` }} /></div>}
+                  </td>
                 </tr>
               )
             })}
@@ -115,9 +126,9 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
   ]
   return (
     <>
-      <section className="mb-2.5 rounded-lg border-2 border-accent bg-raised/95 px-3.5 py-3 shadow-sm">
+      <section className="mb-2.5 rounded-xl border-2 border-accent bg-raised/97 px-4 py-3.5 shadow-sm">
         <div className="mb-0.5 flex items-center justify-between gap-2">
-          <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-2">Selected building · {b.id}</span>
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Selected building · {b.id}</span>
         </div>
         <h3 className="text-[16px] font-semibold leading-snug">{b.name}</h3>
         <p className="mb-2.5 text-[12.5px] text-ink-2">{useOf(b, sb)}</p>
@@ -256,8 +267,8 @@ function FloorInfo(p: Props & { b: BuildingPayload }) {
         </Card>
       ) : (
         <>
-          <section className="mb-2.5 rounded-lg border-2 border-accent bg-raised/95 px-3.5 py-3 shadow-sm">
-            <span className="font-mono text-[10.5px] font-medium uppercase tracking-[0.08em] text-ink-2">Floor {floor.index} · {b.id}</span>
+          <section className="mb-2.5 rounded-xl border-2 border-accent bg-raised/97 px-4 py-3.5 shadow-sm">
+            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Floor {floor.index} · {b.id}</span>
             <h3 className="mb-2.5 text-[15px] font-semibold leading-snug">
               {floor.use_label}{floor.added && <span className="ml-1.5 align-middle"><Badge tone="warn">added floor</Badge></span>}
             </h3>

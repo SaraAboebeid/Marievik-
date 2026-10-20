@@ -706,8 +706,10 @@ def quantities(F, catalogue=None, mode="conversion"):
 # --------------------------------------------------------------------------- building
 def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
           profiles=None, db=None, n_floors=None, mode="conversion", partition_system=None,
-          catalogue=None, mvplus=None, facade=None):
+          catalogue=None, mvplus=None, facade=None, plan=None):
     """footprint: shapely Polygon or list of (x,y); uses: str or list (one per floor, last repeats).
+    plan: a drawn plan (mvk/plan.py). A floor whose use is the use drawn for it is built from the plan;
+            any other use is generated here.
     mode: "conversion" (existing shell retained, fit-out priced) or "new_build" (everything priced).
     partition_system: None (as in the use profile) | "conventional" | "demountable" | "glass", or a
             requirement-based family ("smartax"): the cheapest build that meets each wall's requirement.
@@ -715,6 +717,10 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
             type, and a "setback" roof recesses the top floor.
     """
     import copy
+    try:
+        from . import plan as PLAN       # here, not at the top: plan.py imports this module
+    except ImportError:
+        import plan as PLAN
     profiles = profiles or load_profiles()
     db = db or load_db()
     if catalogue is None:
@@ -755,8 +761,12 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
         use = uses[min(i, len(uses) - 1)]
         h = hs[min(i, len(hs) - 1)]
         fp_i = top_fp if i == n - 1 else footprint
+        drawn = PLAN.floor_for(plan, i) if plan else None
         try:
-            F = layout_floor(fp_i, use, profiles, db, index=i, z=z, height=h, ground=(i == 0))
+            if drawn and drawn["use"] == use:
+                F = PLAN.floor_from_plan(plan, drawn, footprint, use, profiles, db, index=i, z=z, height=h)
+            else:
+                F = layout_floor(fp_i, use, profiles, db, index=i, z=z, height=h, ground=(i == 0))
         except Exception:
             if fp_i is footprint:
                 raise

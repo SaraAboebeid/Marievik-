@@ -14,11 +14,12 @@
       { "ref": "BFS 2024:10 buller: 2 kap. 2 § tabell 2:1, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf" }
     ],
     "permits": [
-      "Bygglov for change of use from office (PBL 9 kap. 2 § första stycket 3 a) when it becomes a samlingslokal open to the public.",
+      "Bygglov for change of use from office (PBL 9 kap. 15 § 1 since 2025-12-01; formerly 9 kap. 2 § första stycket 3 a; see cross_cutting.json cou_bygglov_trigger) when it becomes a samlingslokal open to the public.",
       "Boverket grant for allmänna samlingslokaler (new build, conversion and accessibility measures) is available to non-profit owners under Förordning 2016:1367. Eligibility conditions (non-profit association, democracy condition) were not re-checked in detail.",
       "Food served to the public on a regular basis requires registration of the food business with the municipality (EU Regulation 852/2004 art. 6 via Swedish food legislation). Occasional association use may be exempt (indicative, not verified).",
       "Alcohol at private parties held by external renters: serveringstillstånd rules under Alkohollagen (2010:1622) depend on whether the event is closed or public (not verified)."
     ],
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "cou_requirements_scope", "fire_vk_2abc", "fire_egress_dimensions", "fire_change_of_use_floor", "occ_density_law_2024", "occ_density_bbr_table_5333", "access_design_dimensions", "access_public_premises_wc", "access_public_premises_other", "access_hin", "san_public", "san_workplace", "staff_eating_rest", "staff_room_height_daylight", "vent_workplace", "vent_change_of_use", "acoustics_premises", "acoustics_dwellings", "loads_imposed_table_4_1"],
     "operator_oversight": "Municipality (kultur och fritid, stadsdel, äldreomsorg for träffpunkter); non-profit owners (Folkets Hus, Bygdegårdar, Våra Gårdar); Boverket (grants); räddningstjänst; miljöförvaltning (food registration, noise)"
   },
   "occupancy": {
@@ -34,7 +35,7 @@
     "egress_design_density": {
       "persons_per_m2": 2.5,
       "strength": "law",
-      "source": "BFS 2024:7 2 kap. 4 §: samlingslokal default 2.5 persons/m2 if the maximum is not known. In practice a fixed maximum (e.g. 'max 150 personer') is posted to stay in Vk 2A. Daytime meeting mode: 0.7 p/m2 (repealed BBR general advice 'konferensrum', practice).",
+      "source": "BFS 2024:7 2 kap. 4 §: samlingslokal default 2.5 persons/m2 if the maximum is not known. In practice a fixed maximum (e.g. 'max 150 personer') is posted to stay in Vk 2A. Daytime meeting mode: 0.7 p/m2 (old BBR (repealed BBR, pre-2025) general advice 'konferensrum', practice).",
       "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
       "confidence": "verified"
     },
@@ -52,9 +53,9 @@
         "rule": "per_seat",
         "value_m2": 0.4,
         "range_m2": [0.4, 1.43],
-        "count": "design occupants: 0.4 m2/person at the legal default (2.5 p/m2); 0.59 seated, 1.0 dining, 1.43 meeting (repealed BBR advice, practice)",
+        "count": "design occupants: 0.4 m2/person at the legal default (2.5 p/m2); 0.59 seated, 1.0 dining, 1.43 meeting (old BBR (repealed BBR, pre-2025) advice, practice)",
         "strength": "law",
-        "source": "BFS 2024:7 2 kap. 4 § and repealed BBR tabell 5:333 (consolidated BBR p. 52).",
+        "source": "BFS 2024:7 2 kap. 4 § and old BBR (repealed BBR, pre-2025) tabell 5:333 (consolidated BBR p. 52).",
         "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
         "confidence": "verified"
       },
@@ -64,7 +65,7 @@
       "shareable_note": "By design: office or coworking meetings by day, associations in the evening, private rentals at weekends. The fire and ventilation design must cover the peak mode, usually an evening event.",
       "binding_constraint": "ventilation",
       "layer": "space_plan",
-      "notes": "Divider: movable acoustic wall. No Swedish requirement for its sound reduction was found; the Rw 45 in space_requirements.json is unsourced. For comparison, the Uppsala sports-hall curtain is required to reach at least 30 dB (sports_hall). Room height of 2,700 mm is guidance (AFS 2023:12 3 kap. 5 § allmänna råd for rooms for many persons; repealed BBR 3:3112 for publika lokaler); rooms for at most about 16 persons may be lower (repealed BBR allmänt råd). Daylight: BFS 2024:8 4 kap. 3 § for rooms where people stay more than temporarily. Floor: C1/C3 2.5–3.0 kN/m2; dancing at parties is C4 4.0 kN/m2 with dynamics (BFS 2024:6)."
+      "notes": "Divider: movable acoustic wall. No Swedish requirement for its sound reduction was found; the Rw 45 in space_requirements.json is unsourced. For comparison, the Uppsala sports-hall curtain is required to reach at least 30 dB (sports_hall). Room height of 2,700 mm is guidance (AFS 2023:12 3 kap. 5 § allmänna råd for rooms for many persons; old BBR (repealed BBR, pre-2025) 3:3112 for publika lokaler); rooms for at most about 16 persons may be lower (old BBR (repealed BBR, pre-2025) allmänt råd). Daylight: BFS 2024:8 4 kap. 3 § for rooms where people stay more than temporarily. Floor: C1/C3 2.5–3.0 kN/m2; dancing at parties is C4 4.0 kN/m2 with dynamics (BFS 2024:6)."
     },
     {
       "id": "hybrid_small_rooms",
@@ -134,7 +135,7 @@
       "shareable_note": "Can be the shared lobby if it can be zoned so evening users do not reach other tenants.",
       "binding_constraint": "accessibility",
       "layer": "space_plan",
-      "notes": "Ground floor with a street entrance is the strongest enabler. Escape routes must remain usable when other zones are locked (assessment)."
+      "notes": "Ground floor with a street entrance is the strongest enabler. Escape routes must remain usable when other zones are locked: escape doors must open without delay with a lever or push (BFS 2024:7 7 kap. 34 §; a fixed thumb-turn is allowed for fire compartments of at most 50 persons), allow return after passage unless they lead to a safe place (7 kap. 35 §), and doors that may be locked must be interlocked against an essential function of the room (7 kap. 37 §). See shared_amenities shared_entrance_lobby for the zoning of a shared lobby."
     }
   ],
   "variants": [
@@ -159,17 +160,20 @@
   "sources": [
     { "ref": "Förordning (2016:1367) om statsbidrag till allmänna samlingslokaler, 1–2 §§ (definition stable across consolidations 2018–2022 per lagen.nu)", "url": "https://lagen.nu/2016:1367", "accessed": "2026-10-19" },
     { "ref": "BFS 2024:7: 2 kap. 4, 11–13 §§", "url": "https://lagen.nu/bfs/2024:7", "accessed": "2026-10-19" },
+    { "ref": "BFS 2024:7 (original text, PDF): 7 kap. 34, 35, 37 §§ (escape-door hardware, return after passage, interlocking of lockable doors)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-20" },
     { "ref": "BFS 2024:12: 2 kap. 1, 7 §§; 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-19" },
     { "ref": "BFS 2024:8: 4 kap. 3 §, 5 kap. 1 §", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-19" },
     { "ref": "BFS 2024:10: 2 kap. 2 §, 9 §", "url": "https://rinfo.boverket.se/BFS2024-10/pdf/BFS2024-10.pdf", "accessed": "2026-10-19" },
     { "ref": "FMH (1998:899) 35 §", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/forordning-1998899-om-miljofarlig-verksamhet-och_sfs-1998-899/", "accessed": "2026-10-19" },
-    { "ref": "Repealed BBR tabell 5:333 and 3:3112 allmänt råd (consolidated BBR pp. 26, 52)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
+    { "ref": "Old BBR (repealed BBR, pre-2025) tabell 5:333 and 3:3112 allmänt råd (consolidated BBR pp. 26, 52)", "url": "https://rinfo.boverket.se/BFS2011-6/dok/BFS2024-5_konsolidering.pdf", "accessed": "2026-10-19" },
     { "ref": "IFLA Public Library Service Guidelines 2010, 3.10.3 (p. 59), meeting rooms with separate access", "url": "https://repository.ifla.org/items/83753461-738d-4a36-a18e-60a7ae8e6c64/full", "accessed": "2026-10-19" }
   ],
   "open_questions": [
     "No municipal funktionsprogram for träffpunkt or medborgarhus was found online (searched generally). Try specific cities (Stockholm äldreförvaltningen 'träffpunkter', Göteborg 'mötesplatser', Malmö) for a space list with m2.",
     "Current consolidated text of Förordning 2016:1367 (amended by SFS 2025:390) not re-checked; the definition in 1 § is assumed unchanged.",
     "Food-registration exemption for occasional association use is not verified against Livsmedelsverket guidance.",
-    "Sound reduction requirement for movable dividing walls has no Swedish legal source found; SS 25268 (removed from Boverket's rules) may still be used in practice."
+    "Sound reduction requirement for movable dividing walls has no Swedish legal source found; SS 25268 (removed from Boverket's rules) may still be used in practice.",
+    "Bicycle parking: BFS 2026:4 (from 2026-07-01) applies on change of use only in the ombyggnad cases in 1 kap. 4 §; the count for a community room inside a mixed building is set by the building as a whole (see shared_amenities shared_bicycle_room). Confirm the municipal parking norm for the pilot.",
+    "BFS 2025:10 amendments to BFS 2024:7 (from 2025-12-01) were not checked for 2 kap. 11–13 §§ and 7 kap. 34–37 §§."
   ]
 }

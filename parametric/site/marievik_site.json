@@ -8,6 +8,7 @@
   {
    "id": "B01",
    "name": "Marievik 27 - vaulted-roof office (the study building)",
+   "plan": "data/plans/marievik/B01.json",
    "osm_id": "way/42231117",
    "osm_tags": {
     "building": "commercial",

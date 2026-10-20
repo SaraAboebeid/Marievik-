@@ -51,6 +51,21 @@ def use_programs() -> dict[str, dict]:
     return {program["id"]: program for program in raw["use_programs"]}
 
 
+@lru_cache(maxsize=None)
+def catalogue_uses() -> dict[str, dict]:
+    """The project-neutral use catalogue (data/catalogue/uses), keyed by use id."""
+    return {path.stem: load_json(f"catalogue/uses/{path.name}")
+            for path in sorted((DATA / "catalogue" / "uses").glob("*.json"))}
+
+
+@lru_cache(maxsize=None)
+def cross_cutting_rules() -> dict[str, dict]:
+    """Rules that apply across uses (data/catalogue/cross_cutting.json), keyed by rule id."""
+    raw = load_json("catalogue/cross_cutting.json")
+    return {rule["id"]: rule for section in raw.values() if isinstance(section, list)
+            for rule in section if isinstance(rule, dict) and "id" in rule}
+
+
 def supplier_files() -> list[Path]:
     """Local supplier catalogues (gitignored), merged into the catalogue when present."""
     return sorted(SUPPLIERS.glob("*.json")) if SUPPLIERS.is_dir() else []

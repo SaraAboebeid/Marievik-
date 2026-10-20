@@ -41,9 +41,10 @@ import mvk.layout as L                                           # noqa: E402
 import mvk.site as S                                             # noqa: E402
 import mvk.pricing as PR                                         # noqa: E402
 import mvk.facade as FA                                          # noqa: E402
+import mvk.plan as PL                                            # noqa: E402
 from mvk import export as MX                                     # noqa: E402
 
-USES = ["site", "office_cellular", "office_open", "residential", "hotel", "school", "retail"]
+USES = ["site", "office_ground", "office_cellular", "office_open", "residential", "hotel", "school", "retail"]
 SYSTEMS = ["as_profile", "conventional", "demountable", "glass", "smartax"]   # smartax: only with its supplier file
 WINDOWS = {"existing": None, "triple_timber": "W_TRIPLE_TIMBER", "triple_alu_wood": "W_TRIPLE_ALU_WOOD"}
 ADDED_TYPES = {"wall_exterior": "EW_TIMBER_CLT_380", "wall_core": "IW_CLT_100", "slab": "SL_CLT_240",
@@ -138,12 +139,23 @@ class Site:
         return out
 
     # ------------------------------------------------------------------ engine run
+    def plan(self, bid: str) -> dict | None:
+        """The building's drawn plan (data/plans), if it has one: today's floors are built from it."""
+        rel = self.buildings[bid].get("plan")
+        return PL.load(str(ROOT / rel)) if rel and (ROOT / rel).is_file() else None
+
     def _run(self, bid: str, s: dict) -> dict:
         b = self.buildings[bid]
         fp = S.footprint(b)
         levels = int(b["levels"])
         add = s["added_floors"]
         g_use, u_use = S.profile_uses(b, s["use"], s["ground_use"])
+        plan = self.plan(bid)
+        if plan:   # 'site' (today) means the uses drawn in the plan
+            if s["ground_use"] == "site":
+                g_use = (PL.floor_for(plan, 0) or {}).get("use", g_use)
+            if s["use"] == "site":
+                u_use = (PL.floor_for(plan, 1) or {}).get("use", u_use)
         a_use = u_use if s["added_use"] in ("same", "site") else s["added_use"]
         uses = [g_use] + [u_use] * (levels - 1) + [a_use] * add
         hs = S.floor_heights(b, levels) + [ADDED_FLOOR_H] * add
@@ -153,7 +165,7 @@ class Site:
         facade = b.get("facade") if s["facade"] else None
         res = L.build(fp, uses, floor_heights=hs, overrides=ov, n_floors=levels + add, mode="conversion",
                       partition_system=None if s["partition_system"] == "as_profile" else s["partition_system"],
-                      catalogue=self.catalogue, facade=facade)
+                      catalogue=self.catalogue, facade=facade, plan=plan)
         if add:
             self._reprice_added(res, levels)
         units = {F.index: units_of(F) for F in res["floors"]}

@@ -32,3 +32,4 @@ IW_SMARTAX_95_EI60,part.smartax.70.ei60,int_wall,Smartax 1FST22 timber stud + fi
 IW_SMARTAX_120_DBL,part.smartax.70.ei60.double,int_wall,Smartax 1FST21 double board 120 mm (45 dB EI60),m2,0.12,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
 IW_SMARTAX_120_DBL_WOOL,part.smartax.70.ei60.double.wool,int_wall,Smartax 1FST31 double board + stone wool 120 mm (52 dB EI60),m2,0.12,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
 IW_SMARTAX_185_TWIN,part.smartax.70x2.ei60,int_wall,Smartax double-stud wall 185 mm (57 dB EI60),m2,0.185,,,,,,Priced only from the local supplier file data/components/suppliers/smartax.json
+COL_CONCRETE_600,,column,Concrete column 600x600 (existing structure),m2,0.60,,,0,0,,Drawn plans only: perimeter columns. Retained; not priced.

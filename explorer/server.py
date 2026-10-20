@@ -21,7 +21,11 @@ API (all JSON)
   GET  /api/capabilities                 which simulation engines are installed
   GET  /api/methods                      CAVF KPI definitions, profiles, scenarios S0-S4, databases, constants
   POST /api/kpis/{id}                    {settings}            -> every CAVF KPI for one building scenario
-  GET  /api/models                       Rhino .3dm files in explorer/models (loaded in the viewer)"""
+  POST /api/figures/{id}                 {settings}            -> key figures and space distribution (Design panel)
+  GET  /api/project/{pid}               project, its stakeholder profiles and timeline settings
+  POST /api/timeline/{id}                {project}             -> 10 years: unchanged use + pathways of change
+                                                                  ({status: computing, done, total} until ready)
+  GET  /api/models                      Rhino .3dm files in explorer/models (loaded in the viewer)"""
 from __future__ import annotations
 
 import argparse
@@ -40,7 +44,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import climate, comfort, daylight, kpis, model as M
+from . import climate, comfort, daylight, figures, kpis, model as M, timeline
 
 HERE = Path(__file__).resolve().parent
 DIST = HERE / "web" / "dist"
@@ -138,6 +142,41 @@ def api_methods():
 def api_kpis(bid: str, body: ScenarioBody):
     _check(bid)
     return kpis.building_kpis(site(), bid, body.settings)
+
+
+@app.post("/api/figures/{bid}")
+def api_figures(bid: str, body: ScenarioBody):
+    _check(bid)
+    return figures.building_figures(site(), bid, body.settings)
+
+
+# ---------------------------------------------------------------------------- projects and the 10-year timeline
+PROJECTS = M.ROOT / "data" / "projects"
+TIMELINES = timeline.Timelines(site)
+
+
+def project_file(pid: str) -> dict | None:
+    p = PROJECTS / f"{pid}.json"
+    return json.loads(p.read_text(encoding="utf-8")) if p.parent == PROJECTS and p.is_file() else None
+
+
+@app.get("/api/project/{pid}")
+def api_project(pid: str):
+    p = project_file(pid)
+    if p is None:
+        raise HTTPException(404, "no project file data/projects/%s.json: the generic profiles apply" % pid)
+    return p
+
+
+class TimelineBody(BaseModel):
+    project: str = "marievik"
+
+
+@app.post("/api/timeline/{bid}")
+def api_timeline(bid: str, body: TimelineBody):
+    _check(bid)
+    p = project_file(body.project) or project_file("marievik")
+    return TIMELINES.get(bid, p)
 
 
 # ---------------------------------------------------------------------------- quick analysis
@@ -319,6 +358,11 @@ def _warm():
                 S.scenario(bid, {})
             except Exception as e:           # a footprint the engine cannot lay out must not stop the rest
                 print("warm-up %s failed: %s" % (bid, e), file=sys.stderr)
+        for p in sorted(PROJECTS.glob("*.json")):   # pilot buildings' timelines, ready before they are asked for
+            proj = json.loads(p.read_text(encoding="utf-8"))
+            for bid in proj.get("pilot_buildings", []):
+                if bid in S.buildings:
+                    TIMELINES.get(bid, proj)
     threading.Thread(target=work, daemon=True).start()
 
 

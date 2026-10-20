@@ -52,6 +52,58 @@
       }
     }
   },
+  "office_ground": {
+    "label": "Office - entrance floor (lobby, café, services)",
+    "_note": "Only used by drawn plans (data/plans): the ground floor of an office building as it stands. Generated layouts for it fall back to the open-plan rules.",
+    "scheme": "open",
+    "room_name": "Lobby",
+    "core": {
+      "width": 8.0,
+      "length": 14.0
+    },
+    "inner_zone": "support",
+    "support_depth": 3.0,
+    "wwr": 0.55,
+    "window_module": 1.35,
+    "sill": 0.8,
+    "head": 2.9,
+    "types": {
+      "ext_wall": "EW_CONC_INSUL_400",
+      "partition": "IW_GLASS_PARTITION",
+      "corridor": "IW_GLASS_PARTITION",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_STOREFRONT",
+      "room_door": "D_INT_GLASS_1000",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_HOLLOWCORE_270"
+    },
+    "finishes": {
+      "floor": "FL_LINOLEUM",
+      "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 35
+      },
+      "C": {
+        "Rw_dB": 30,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
+    }
+  },
   "office_cellular": {
     "label": "Office - cellular rooms",
     "scheme": "corridor",

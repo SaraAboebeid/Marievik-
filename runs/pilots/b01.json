@@ -1,0 +1,1195 @@
+{
+  "pilot": "data\\pilots\\marievik\\b01.json",
+  "building": "B01",
+  "status": "WORKING — geometry from OpenStreetMap, design assumptions are labelled. Replace both with drawings and AMF input.",
+  "plate": {
+    "gross_m2": 2312.6,
+    "perimeter_m": 193.4,
+    "facade_zone_m2": 1016.6,
+    "dark_middle_m2": 1183.9,
+    "core_m2": 112.0,
+    "ring_corridor_m": 145.4
+  },
+  "scenarios": [
+    {
+      "id": "A_today",
+      "label": "A: Today",
+      "story": "Baseline: retail at street level, one tenant in cellular offices above.",
+      "cards": {
+        "built": "keep",
+        "use": "office hours only",
+        "system": "conventional long lease"
+      },
+      "floors": {
+        "GF": [
+          {
+            "use": "retail_shop",
+            "variant": "retail_large_2b",
+            "label": "Shop / small retail unit (incl. ground-floor retail)",
+            "share": 1.0,
+            "net_m2": 1896,
+            "persons": 190,
+            "limited_by": "typical shoppers present (fire design uses 0.5 persons/m²)",
+            "fire_class": "2B",
+            "fire_basis": "occupancy by legal default density",
+            "travel_m": 21.6,
+            "travel_limit_m": 30,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": true,
+            "outdoor_air_ls": 1593,
+            "required_spaces": [
+              {
+                "id": "retail_entrance",
+                "label": "Accessible street entrance / shop window",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:12 2 kap. 1 § and 3 kap. 1 § — main entrances accessible and usable (new build/ändring); existing publika lokaler: enkelt avhjälpta hinder shall be removed (BFS 2011:13 / BFS 2013:9, HIN)."
+              },
+              {
+                "id": "retail_goods_in",
+                "label": "Goods reception",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 32 § — workplaces shall, when needed, have goods reception designed for the activity; large volumes normally need a loading dock. 3 kap. 11 § — doors in routes must be possible to hold open temporarily for deliveries; 15 § lift if heavy/frequent transports between floors."
+              },
+              {
+                "id": "retail_staff_room",
+                "label": "Staff room (eating / pause)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60–62 §§ — eating with tables and chairs with backrests; fridge, heating, dishwashing; pause space with seats with backrests. 3 kap. 28 § — those who mainly work standing shall be able to sit."
+              },
+              {
+                "id": "retail_staff_wc",
+                "label": "Staff WC",
+                "strength": "law",
+                "sized": "13 × 4.84 m² = 63 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56–58 §§."
+              },
+              {
+                "id": "retail_waste",
+                "label": "Waste and packaging room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 11 kap. 1–3 §§."
+              }
+            ],
+            "detail": {
+              "net_m2": 1896,
+              "persons": 190,
+              "legal_max_persons": 948
+            }
+          }
+        ],
+        "F1": [
+          {
+            "use": "office",
+            "variant": "office_cellular",
+            "label": "Office",
+            "share": 1.0,
+            "net_m2": 1896,
+            "persons": 72,
+            "limited_by": "daylight (workplaces need a view)",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 37.4,
+            "travel_limit_m": 45,
+            "travel_how": "from the far corner to a stair in the core",
+            "travel_ok": true,
+            "outdoor_air_ls": 1015,
+            "required_spaces": [
+              {
+                "id": "office_workplaces",
+                "label": "Workplaces (desks, open-plan or cellular)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 5 § — workplaces shall have sufficient area and free height for the activity; 3 kap. 6 § sufficient freedom of movement."
+              },
+              {
+                "id": "office_ventilation",
+                "label": "Ventilation capacity (outdoor air supply)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 5 kap. 4 § — indoor workplaces shall normally be supplied with at least 7 l/s outdoor air per person plus at least 0.35 l/s per m2 floor area during working hours; allmänna råd: 7 l/s applies to sedentary work, higher activity may need more. 5 kap. 3 § allmänna råd: air-change effectiveness should be at least 40 %."
+              },
+              {
+                "id": "office_quiet_room",
+                "label": "Quiet / focus rooms",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § — workplaces shall have the rooms needed for the activity; allmänna råd names 'tysta rum' as an example."
+              },
+              {
+                "id": "office_eating_room",
+                "label": "Eating room / staff kitchen",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60 § — employees shall be able to eat in suitable rooms with tables and chairs with backrests (also those eating brought food); 61 § — near the place where brought food is eaten there shall be a refrigerator, means to heat food and to wash dishes. 36 § — drinking water near workplaces and eating areas."
+              },
+              {
+                "id": "office_pause",
+                "label": "Pause / break area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 62 § — place for pauses with possibility for short recovery and enough seats with backrests."
+              },
+              {
+                "id": "office_rest_room",
+                "label": "Rest space / rest room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 63 § — there shall be, or be quickly arrangeable, a suitable rest space for temporary, undisturbed, lying rest. Allmänna råd: a separate vilrum may be needed when more than 50 persons are employed simultaneously in the same area; a WC should be nearby."
+              },
+              {
+                "id": "office_wc",
+                "label": "WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "5 × 4.84 m² = 24 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56 § sufficient WCs and washbasins near workplaces/pause rooms; 57 § sufficiently large, separate, lockable, washbasin, no direct connection to eating room; 58 § accessible WCs at existing workplaces for those who need them; 3 kap. 4 § p. 6 — when designing new build/ombyggnad at least one accessible WC per storey."
+              },
+              {
+                "id": "office_clothes_storage",
+                "label": "Clothes and valuables storage",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 40 § storage for private clothes for all who need it at the same time; 41 § lockable storage for personal valuables."
+              },
+              {
+                "id": "office_cleaning_service",
+                "label": "Cleaning and building-service room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § allmänna råd names spaces for property maintenance and service as examples of rooms that may be needed."
+              },
+              {
+                "id": "office_print_room",
+                "label": "Print / copy room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 7 § — processes with particular risk normally in separate room; allmänna råd names copying machines (and fans, charging batteries, dishwashers) as examples that may need a separate room."
+              },
+              {
+                "id": "office_waste",
+                "label": "Waste room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 11 kap. 1–3 §§ — waste shall be manageable in or next to the building; waste devices or waste rooms located, designed and dimensioned for hygiene and collection."
+              }
+            ],
+            "detail": {
+              "net_m2": 1896,
+              "persons": 72,
+              "corridor_m2": 0,
+              "by_area": 86,
+              "by_daylight": 72
+            }
+          }
+        ]
+      },
+      "people_peak": 143,
+      "people_hours_day": 1359,
+      "people_hours_evening": 310,
+      "hourly_people": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        11,
+        45,
+        69,
+        107,
+        119,
+        140,
+        141,
+        135,
+        138,
+        142,
+        143,
+        108,
+        49,
+        9,
+        0,
+        0,
+        0
+      ],
+      "heavy_moves": [],
+      "assumptions_used": [
+        "cell_room_facade_m",
+        "net_to_gross",
+        "retail_m2_per_visitor"
+      ]
+    },
+    {
+      "id": "B_open",
+      "label": "B: Open and efficient",
+      "story": "Public lobby and café at street level; activity-based office for one large tenant above.",
+      "cards": {
+        "built": "remove cellular walls, keep core",
+        "use": "café open to the public",
+        "system": "one long lease"
+      },
+      "floors": {
+        "GF": [
+          {
+            "use": "restaurant_cafe",
+            "variant": "rest_cafe_simple",
+            "label": "Restaurant / café",
+            "share": 0.4,
+            "net_m2": 759,
+            "persons": 303,
+            "limited_by": "seats (dining ≈ 60% of area)",
+            "fire_class": "2B",
+            "fire_basis": "design occupancy",
+            "travel_m": 21.6,
+            "travel_limit_m": 30,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": true,
+            "outdoor_air_ls": 2177,
+            "required_spaces": [
+              {
+                "id": "rest_kitchen",
+                "label": "Kitchen (storkök or simple preparation)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": "exhaust_shaft_and_drainage",
+                "basis": "Food preparation rooms must meet EU 852/2004 Annex II ch. II (design and layout permitting good hygiene, protection against contamination; facilities for cleaning/disinfecting tools; food-washing facilities where necessary) and ch. I (ventilation, drainage, lighting). Fire: storkök surfaces B-s1,d0 ceiling / C-s2,d0 wall (BFS 2024:7 5 kap. 17 §); storkök with particular fire risk = own fire cell unless an automatic extinguishing system limits the risk (5 kap. 26 §)."
+              },
+              {
+                "id": "rest_exhaust",
+                "label": "Kitchen exhaust duct (imkanal) and outlet",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": "vertical_shaft_to_roof",
+                "basis": "BFS 2024:7 4 kap. 23 §: imkanaler serving storkök at least EI 60 in byggnadsklass 1, EI 30 in byggnadsklass 2–3 (non-insulated parts allowed inside the served room with 0.10 m clearance, outdoors with 0.5 m); 24 §: storkök ducts with large combustible deposits need assured fire resistance inside the duct unless a deposit-limiting system is fitted; 5 kap. 20 §: imkanaler and hoods in storkök of non-combustible material; 4 kap. 22 §: household-type cooking (café) EI 15 or E 15. BFS 2024:8 9 kap. 1 §: exhaust outlets placed so pollutants/odours are not drawn back and no nuisance arises in the surroundings."
+              },
+              {
+                "id": "rest_dishwash",
+                "label": "Dishwashing area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. II p. 2: adequate facilities, where necessary, for cleaning, disinfecting and storage of working utensils and equipment, with hot and cold water. AFS 2023:12 3 kap. 7 § allmänna råd names dishwashers as equipment that may need a separate room."
+              },
+              {
+                "id": "rest_handwash",
+                "label": "Hand-wash basins",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. I p. 4 (adequate number, suitably located, hot and cold water, hygienic drying); kontrollwiki art. 1045 (separate from food-rinsing where necessary; must not be blocked by food/dishes)."
+              },
+              {
+                "id": "rest_staff_wc_changing",
+                "label": "Staff WC, changing room and shower",
+                "strength": "law",
+                "sized": "21 × 4.84 m² = 102 m²",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. I p. 3 (lavatories not opening directly into food-handling rooms) and p. 9 (changing facilities where necessary); AFS 2023:12 3 kap. 46 § changing room when special work clothes are worn, 48 § normally separate for men/women if used simultaneously, 51 § shower normally if work is sweaty or dirty. Kontrollwiki art. 1045: food-law WC requirement concerns staff WCs; an antechamber may be needed if the WC is close to unprotected food."
+              },
+              {
+                "id": "rest_staff_room",
+                "label": "Staff room (eating / pause / rest)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60–63 §§ (cross_cutting.json staff_eating_rest)."
+              },
+              {
+                "id": "rest_goods_in",
+                "label": "Delivery entrance",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 32 § goods reception when needed; 11 § doors can be held open for deliveries. Hygiene: deliveries/outer packaging should not cross unpackaged-food areas (kontrollwiki)."
+              },
+              {
+                "id": "rest_waste",
+                "label": "Waste room incl. food waste and used cooking oil",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. VI (removal, closable containers, adequate storage, pest-free); BFS 2024:8 11 kap. 1–3 §§. MSVA: frying oil and large amounts of fat collected separately, not to the grease separator."
+              }
+            ],
+            "detail": {
+              "net_m2": 759,
+              "persons": 303
+            }
+          },
+          {
+            "use": "shared_amenities",
+            "variant": "shared_premises_led",
+            "label": "Shared building amenities (spaces serving several uses)",
+            "share": 0.6,
+            "net_m2": 1138,
+            "persons": 0,
+            "limited_by": "amenity (no own headcount)",
+            "fire_class": "shared",
+            "fire_basis": "design occupancy",
+            "travel_m": 21.6,
+            "travel_limit_m": null,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": null,
+            "outdoor_air_ls": 398,
+            "required_spaces": [
+              {
+                "id": "shared_entrance_lobby",
+                "label": "Shared entrance, lobby and reception",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "An accessible and easily perceived main entrance is required for every building that must be accessible (BFS 2024:12 2 kap. 1 §). A reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §). A lobby that is also an escape route or access route is its own fire compartment (BFS 2024:7 5 kap. 25 § 1). A staffed reception is practice."
+              },
+              {
+                "id": "shared_bicycle_room",
+                "label": "Bicycle parking / bicycle room",
+                "strength": "law",
+                "sized": "1 × 1.14 m² = 1 m²",
+                "heavy_move": null,
+                "basis": "BFS 2026:4 (in force 2026-07-01). New flerbostadshus: at least two bicycle parking spaces per bostadslägenhet, plus a reasonable number for larger cycles (2 kap. 2 §). New lokalbyggnad: spaces for at least 15 % of the average or 10 % of the total user capacity (2 kap. 4 §). On alteration the regulation applies only to an ombyggnad that involves the electrical infrastructure where the car parking is in the building, or one done together with changes to car parking on the plot (1 kap. 4 §); then the flerbostadshus count may be adapted if two per dwelling is not possible (3 kap. 1 §). From 2027-01-01 an EXISTING lokalbyggnad with more than 20 car parking spaces inside the building must also have the 15 % / 10 % bicycle spaces (4 kap. 3-4 §§). A building is a flerbostadshus if more than half its gross area is dwellings, otherwise a lokalbyggnad (1 kap. 7 §)."
+              },
+              {
+                "id": "shared_accessible_wc",
+                "label": "Accessible WC for visitors and the public",
+                "strength": "law",
+                "sized": "4.84 m² per_building",
+                "heavy_move": null,
+                "basis": "If a publik lokal has toilets for the public, at least one must be accessible, with space to turn a wheelchair and transfer from both sides (BFS 2024:12 2 kap. 7 §; cross_cutting access_public_premises_wc). Workplaces: at least one accessible WC per storey at new build or ombyggnad (AFS 2023:12 3 kap. 4 § p. 6). Student housing using the 80 % accessibility exemption: at least one accessible WC for visitors in the building near the exempt dwellings (PBF 3 kap. 5 a § p. 3, see student_housing student_visitor_wc)."
+              }
+            ],
+            "detail": {
+              "net_m2": 1138,
+              "persons": 0
+            }
+          }
+        ],
+        "F1": [
+          {
+            "use": "office",
+            "variant": "office_abw",
+            "label": "Office",
+            "share": 1.0,
+            "net_m2": 1896,
+            "persons": 146,
+            "limited_by": "m² per person",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 37.4,
+            "travel_limit_m": 45,
+            "travel_how": "from the far corner to a stair in the core",
+            "travel_ok": true,
+            "outdoor_air_ls": 1378,
+            "required_spaces": [
+              {
+                "id": "office_workplaces",
+                "label": "Workplaces (desks, open-plan or cellular)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 5 § — workplaces shall have sufficient area and free height for the activity; 3 kap. 6 § sufficient freedom of movement."
+              },
+              {
+                "id": "office_ventilation",
+                "label": "Ventilation capacity (outdoor air supply)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 5 kap. 4 § — indoor workplaces shall normally be supplied with at least 7 l/s outdoor air per person plus at least 0.35 l/s per m2 floor area during working hours; allmänna råd: 7 l/s applies to sedentary work, higher activity may need more. 5 kap. 3 § allmänna råd: air-change effectiveness should be at least 40 %."
+              },
+              {
+                "id": "office_quiet_room",
+                "label": "Quiet / focus rooms",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § — workplaces shall have the rooms needed for the activity; allmänna råd names 'tysta rum' as an example."
+              },
+              {
+                "id": "office_eating_room",
+                "label": "Eating room / staff kitchen",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60 § — employees shall be able to eat in suitable rooms with tables and chairs with backrests (also those eating brought food); 61 § — near the place where brought food is eaten there shall be a refrigerator, means to heat food and to wash dishes. 36 § — drinking water near workplaces and eating areas."
+              },
+              {
+                "id": "office_pause",
+                "label": "Pause / break area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 62 § — place for pauses with possibility for short recovery and enough seats with backrests."
+              },
+              {
+                "id": "office_rest_room",
+                "label": "Rest space / rest room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 63 § — there shall be, or be quickly arrangeable, a suitable rest space for temporary, undisturbed, lying rest. Allmänna råd: a separate vilrum may be needed when more than 50 persons are employed simultaneously in the same area; a WC should be nearby."
+              },
+              {
+                "id": "office_wc",
+                "label": "WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "10 × 4.84 m² = 48 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56 § sufficient WCs and washbasins near workplaces/pause rooms; 57 § sufficiently large, separate, lockable, washbasin, no direct connection to eating room; 58 § accessible WCs at existing workplaces for those who need them; 3 kap. 4 § p. 6 — when designing new build/ombyggnad at least one accessible WC per storey."
+              },
+              {
+                "id": "office_clothes_storage",
+                "label": "Clothes and valuables storage",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 40 § storage for private clothes for all who need it at the same time; 41 § lockable storage for personal valuables."
+              },
+              {
+                "id": "office_cleaning_service",
+                "label": "Cleaning and building-service room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § allmänna råd names spaces for property maintenance and service as examples of rooms that may be needed."
+              },
+              {
+                "id": "office_print_room",
+                "label": "Print / copy room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 7 § — processes with particular risk normally in separate room; allmänna råd names copying machines (and fans, charging batteries, dishwashers) as examples that may need a separate room."
+              },
+              {
+                "id": "office_waste",
+                "label": "Waste room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 11 kap. 1–3 §§ — waste shall be manageable in or next to the building; waste devices or waste rooms located, designed and dimensioned for hygiene and collection."
+              }
+            ],
+            "detail": {
+              "net_m2": 1896,
+              "persons": 146,
+              "corridor_m2": 0,
+              "by_area": 146,
+              "by_daylight": 169
+            }
+          }
+        ]
+      },
+      "people_peak": 346,
+      "people_hours_day": 2664,
+      "people_hours_evening": 1064,
+      "hourly_people": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        3,
+        22,
+        79,
+        117,
+        132,
+        239,
+        346,
+        277,
+        163,
+        118,
+        104,
+        143,
+        250,
+        276,
+        212,
+        121,
+        46,
+        15
+      ],
+      "heavy_moves": [
+        "GF Restaurant / café: Kitchen (storkök or simple preparation) (exhaust_shaft_and_drainage)",
+        "GF Restaurant / café: Kitchen exhaust duct (imkanal) and outlet (vertical_shaft_to_roof)"
+      ],
+      "assumptions_used": [
+        "desk_m2_in_facade_zone",
+        "net_to_gross",
+        "restaurant_m2_per_seat"
+      ]
+    },
+    {
+      "id": "C_suites",
+      "label": "C: Small and flexible",
+      "story": "Coworking and shared reception at street level; 6 small suites with shared meeting rooms in the dark middle above.",
+      "cards": {
+        "built": "new suite walls and corridor",
+        "use": "shared meeting rooms and kitchen",
+        "system": "short, flexible leases; tenants can grow into a bigger suite"
+      },
+      "floors": {
+        "GF": [
+          {
+            "use": "coworking",
+            "variant": "cowork_desk_led",
+            "label": "Coworking / flexible workspace",
+            "share": 1.0,
+            "net_m2": 1896,
+            "persons": 127,
+            "limited_by": "daylight (workplaces need a view)",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 21.6,
+            "travel_limit_m": 45,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": true,
+            "outdoor_air_ls": 1286,
+            "required_spaces": [
+              {
+                "id": "cowork_desks",
+                "label": "Hot desks and fixed desks",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 5–6 §§ sufficient area, free height and movement; 5 kap. 25 § daylight and view."
+              },
+              {
+                "id": "cowork_phone_booths",
+                "label": "Phone booths / focus rooms",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § allmänna råd: 'tysta rum' as example of rooms that may be needed."
+              },
+              {
+                "id": "cowork_ventilation",
+                "label": "Ventilation capacity",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 5 kap. 4 §: at least 7 l/s per person + 0.35 l/s per m2."
+              },
+              {
+                "id": "cowork_pantry",
+                "label": "Member kitchen / eating area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60–61 §§ (tables and chairs with backrests; fridge, heating, dishwashing) for employees; 36 § drinking water."
+              },
+              {
+                "id": "cowork_pause_rest",
+                "label": "Pause and rest space",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 62 § (pause), 63 § (rest space for lying rest; separate vilrum may be needed when >50 persons simultaneously employed — allmänna råd)."
+              },
+              {
+                "id": "cowork_wc",
+                "label": "WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "9 × 4.84 m² = 44 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56–58 §§, 3 kap. 4 § p. 6 (accessible WC per storey at new build/ombyggnad). If WCs are provided for the public in a publik lokal, at least one accessible (BFS 2024:12 2 kap. 7 §)."
+              },
+              {
+                "id": "cowork_lockers",
+                "label": "Lockers / storage",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 40–41 §§ (clothes storage; lockable valuables)."
+              }
+            ],
+            "detail": {
+              "net_m2": 1896,
+              "persons": 127,
+              "corridor_m2": 0,
+              "by_area": 158,
+              "by_daylight": 127
+            }
+          }
+        ],
+        "F1": [
+          {
+            "use": "office",
+            "variant": "office_open_plan",
+            "label": "Office",
+            "share": 1.0,
+            "net_m2": 1896,
+            "persons": 109,
+            "limited_by": "m² per person",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 37.4,
+            "travel_limit_m": 45,
+            "travel_how": "from the far corner to a stair in the core",
+            "travel_ok": true,
+            "outdoor_air_ls": 1198,
+            "required_spaces": [
+              {
+                "id": "office_workplaces",
+                "label": "Workplaces (desks, open-plan or cellular)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 5 § — workplaces shall have sufficient area and free height for the activity; 3 kap. 6 § sufficient freedom of movement."
+              },
+              {
+                "id": "office_ventilation",
+                "label": "Ventilation capacity (outdoor air supply)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 5 kap. 4 § — indoor workplaces shall normally be supplied with at least 7 l/s outdoor air per person plus at least 0.35 l/s per m2 floor area during working hours; allmänna råd: 7 l/s applies to sedentary work, higher activity may need more. 5 kap. 3 § allmänna råd: air-change effectiveness should be at least 40 %."
+              },
+              {
+                "id": "office_quiet_room",
+                "label": "Quiet / focus rooms",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § — workplaces shall have the rooms needed for the activity; allmänna råd names 'tysta rum' as an example."
+              },
+              {
+                "id": "office_eating_room",
+                "label": "Eating room / staff kitchen",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60 § — employees shall be able to eat in suitable rooms with tables and chairs with backrests (also those eating brought food); 61 § — near the place where brought food is eaten there shall be a refrigerator, means to heat food and to wash dishes. 36 § — drinking water near workplaces and eating areas."
+              },
+              {
+                "id": "office_pause",
+                "label": "Pause / break area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 62 § — place for pauses with possibility for short recovery and enough seats with backrests."
+              },
+              {
+                "id": "office_rest_room",
+                "label": "Rest space / rest room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 63 § — there shall be, or be quickly arrangeable, a suitable rest space for temporary, undisturbed, lying rest. Allmänna råd: a separate vilrum may be needed when more than 50 persons are employed simultaneously in the same area; a WC should be nearby."
+              },
+              {
+                "id": "office_wc",
+                "label": "WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "8 × 4.84 m² = 39 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56 § sufficient WCs and washbasins near workplaces/pause rooms; 57 § sufficiently large, separate, lockable, washbasin, no direct connection to eating room; 58 § accessible WCs at existing workplaces for those who need them; 3 kap. 4 § p. 6 — when designing new build/ombyggnad at least one accessible WC per storey."
+              },
+              {
+                "id": "office_clothes_storage",
+                "label": "Clothes and valuables storage",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 40 § storage for private clothes for all who need it at the same time; 41 § lockable storage for personal valuables."
+              },
+              {
+                "id": "office_cleaning_service",
+                "label": "Cleaning and building-service room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § allmänna råd names spaces for property maintenance and service as examples of rooms that may be needed."
+              },
+              {
+                "id": "office_print_room",
+                "label": "Print / copy room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 7 § — processes with particular risk normally in separate room; allmänna råd names copying machines (and fans, charging batteries, dishwashers) as examples that may need a separate room."
+              },
+              {
+                "id": "office_waste",
+                "label": "Waste room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 11 kap. 1–3 §§ — waste shall be manageable in or next to the building; waste devices or waste rooms located, designed and dimensioned for hygiene and collection."
+              }
+            ],
+            "detail": {
+              "net_m2": 1896,
+              "persons": 109,
+              "corridor_m2": 262,
+              "by_area": 109,
+              "by_daylight": 127
+            }
+          }
+        ]
+      },
+      "people_peak": 165,
+      "people_hours_day": 1410,
+      "people_hours_evening": 126,
+      "hourly_people": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        5,
+        29,
+        99,
+        153,
+        165,
+        148,
+        124,
+        153,
+        165,
+        142,
+        101,
+        54,
+        31,
+        21,
+        13,
+        6,
+        0,
+        0
+      ],
+      "heavy_moves": [],
+      "assumptions_used": [
+        "desk_m2_in_facade_zone",
+        "net_to_gross",
+        "suite_corridor_m"
+      ]
+    },
+    {
+      "id": "D_premium",
+      "label": "D: Premium",
+      "story": "Hospitality lobby with restaurant and an event/conference room that becomes a bar in the evening; premium office above with gym and lounge in the middle.",
+      "cards": {
+        "built": "high-spec fit-out, restaurant kitchen exhaust",
+        "use": "conference by day, event/bar by evening",
+        "system": "premium lease with service package"
+      },
+      "floors": {
+        "GF": [
+          {
+            "use": "restaurant_cafe",
+            "variant": "rest_full_kitchen",
+            "label": "Restaurant / café",
+            "share": 0.45,
+            "net_m2": 853,
+            "persons": 341,
+            "limited_by": "seats (dining ≈ 60% of area)",
+            "fire_class": "2B",
+            "fire_basis": "design occupancy",
+            "travel_m": 21.6,
+            "travel_limit_m": 30,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": true,
+            "outdoor_air_ls": 2449,
+            "required_spaces": [
+              {
+                "id": "rest_kitchen",
+                "label": "Kitchen (storkök or simple preparation)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": "exhaust_shaft_and_drainage",
+                "basis": "Food preparation rooms must meet EU 852/2004 Annex II ch. II (design and layout permitting good hygiene, protection against contamination; facilities for cleaning/disinfecting tools; food-washing facilities where necessary) and ch. I (ventilation, drainage, lighting). Fire: storkök surfaces B-s1,d0 ceiling / C-s2,d0 wall (BFS 2024:7 5 kap. 17 §); storkök with particular fire risk = own fire cell unless an automatic extinguishing system limits the risk (5 kap. 26 §)."
+              },
+              {
+                "id": "rest_exhaust",
+                "label": "Kitchen exhaust duct (imkanal) and outlet",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": "vertical_shaft_to_roof",
+                "basis": "BFS 2024:7 4 kap. 23 §: imkanaler serving storkök at least EI 60 in byggnadsklass 1, EI 30 in byggnadsklass 2–3 (non-insulated parts allowed inside the served room with 0.10 m clearance, outdoors with 0.5 m); 24 §: storkök ducts with large combustible deposits need assured fire resistance inside the duct unless a deposit-limiting system is fitted; 5 kap. 20 §: imkanaler and hoods in storkök of non-combustible material; 4 kap. 22 §: household-type cooking (café) EI 15 or E 15. BFS 2024:8 9 kap. 1 §: exhaust outlets placed so pollutants/odours are not drawn back and no nuisance arises in the surroundings."
+              },
+              {
+                "id": "rest_dishwash",
+                "label": "Dishwashing area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. II p. 2: adequate facilities, where necessary, for cleaning, disinfecting and storage of working utensils and equipment, with hot and cold water. AFS 2023:12 3 kap. 7 § allmänna råd names dishwashers as equipment that may need a separate room."
+              },
+              {
+                "id": "rest_handwash",
+                "label": "Hand-wash basins",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. I p. 4 (adequate number, suitably located, hot and cold water, hygienic drying); kontrollwiki art. 1045 (separate from food-rinsing where necessary; must not be blocked by food/dishes)."
+              },
+              {
+                "id": "rest_staff_wc_changing",
+                "label": "Staff WC, changing room and shower",
+                "strength": "law",
+                "sized": "23 × 4.84 m² = 111 m²",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. I p. 3 (lavatories not opening directly into food-handling rooms) and p. 9 (changing facilities where necessary); AFS 2023:12 3 kap. 46 § changing room when special work clothes are worn, 48 § normally separate for men/women if used simultaneously, 51 § shower normally if work is sweaty or dirty. Kontrollwiki art. 1045: food-law WC requirement concerns staff WCs; an antechamber may be needed if the WC is close to unprotected food."
+              },
+              {
+                "id": "rest_staff_room",
+                "label": "Staff room (eating / pause / rest)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60–63 §§ (cross_cutting.json staff_eating_rest)."
+              },
+              {
+                "id": "rest_goods_in",
+                "label": "Delivery entrance",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 32 § goods reception when needed; 11 § doors can be held open for deliveries. Hygiene: deliveries/outer packaging should not cross unpackaged-food areas (kontrollwiki)."
+              },
+              {
+                "id": "rest_waste",
+                "label": "Waste room incl. food waste and used cooking oil",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "EU 852/2004 Annex II ch. VI (removal, closable containers, adequate storage, pest-free); BFS 2024:8 11 kap. 1–3 §§. MSVA: frying oil and large amounts of fat collected separately, not to the grease separator."
+              }
+            ],
+            "detail": {
+              "net_m2": 853,
+              "persons": 341
+            }
+          },
+          {
+            "use": "assembly_event",
+            "variant": "assembly_banquet",
+            "label": "Assembly / event venue / conference",
+            "share": 0.35,
+            "net_m2": 664,
+            "persons": 664,
+            "limited_by": "banquet layout",
+            "fire_class": "0",
+            "fire_basis": "occupancy by legal default density",
+            "travel_m": 21.6,
+            "travel_limit_m": null,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": null,
+            "outdoor_air_ls": 3949,
+            "required_spaces": [
+              {
+                "id": "assembly_hall",
+                "label": "Main assembly hall (divisible)",
+                "strength": "law",
+                "sized": "0.4 m² per_seat",
+                "heavy_move": null,
+                "basis": "Defining space of the use. Its occupant number sets the fire class (BFS 2024:7 2 kap. 11–13 §§) and egress (7 kap.). BFS 2024:12 3 kap. 6 §: samlingssalar shall have a system for sound transfer to hearing aids (teleslinga/IR or equivalent), and the sound environment shall give good audibility and speech intelligibility."
+              },
+              {
+                "id": "assembly_foyer",
+                "label": "Foyer / arrival and queuing",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "Function follows from egress: in 2B/2C the alternative exit leads to the main entrance or equivalent (BFS 2024:7 7 kap. 17 §), and the main entrance must be accessible (BFS 2024:12 2 kap. 1 §). If the foyer has a reception, it needs a hearing-aid system (BFS 2024:12 3 kap. 6 §). No size requirement."
+              },
+              {
+                "id": "assembly_wc",
+                "label": "Visitor WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "FMH (1998:899) 35 §: there shall be sufficient toilets in or next to buildings where people stay. BFS 2024:12 2 kap. 7 §: if there are public toilets in a publik lokal, at least one shall be accessible, with room to turn a wheelchair and side transfer on both sides. See cross_cutting.json access_public_premises_wc and san_public."
+              },
+              {
+                "id": "assembly_technical",
+                "label": "AV / control room, stage and back-of-house",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "The hearing-aid sound transfer system is required in samlingssalar (BFS 2024:12 3 kap. 6 §). Stage accessibility was explicit in the old BBR (repealed BBR, pre-2025) 3:1452 ('podier och scener ska dock alltid vara tillgängliga') but is not named in BFS 2024:12. The general accessibility rules still apply. Control room and dressing rooms are practice."
+              },
+              {
+                "id": "assembly_staff",
+                "label": "Staff facilities",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 staff facilities apply to employees. See cross_cutting.json staff_facilities (not duplicated here)."
+              }
+            ],
+            "detail": {
+              "net_m2": 664,
+              "persons": 664,
+              "legal_max_persons": 1659
+            }
+          },
+          {
+            "use": "shared_amenities",
+            "variant": "shared_premises_led",
+            "label": "Shared building amenities (spaces serving several uses)",
+            "share": 0.2,
+            "net_m2": 379,
+            "persons": 0,
+            "limited_by": "amenity (no own headcount)",
+            "fire_class": "shared",
+            "fire_basis": "design occupancy",
+            "travel_m": 21.6,
+            "travel_limit_m": null,
+            "travel_how": "to the nearest facade door",
+            "travel_ok": null,
+            "outdoor_air_ls": 133,
+            "required_spaces": [
+              {
+                "id": "shared_entrance_lobby",
+                "label": "Shared entrance, lobby and reception",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "An accessible and easily perceived main entrance is required for every building that must be accessible (BFS 2024:12 2 kap. 1 §). A reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §). A lobby that is also an escape route or access route is its own fire compartment (BFS 2024:7 5 kap. 25 § 1). A staffed reception is practice."
+              },
+              {
+                "id": "shared_bicycle_room",
+                "label": "Bicycle parking / bicycle room",
+                "strength": "law",
+                "sized": "1 × 1.14 m² = 1 m²",
+                "heavy_move": null,
+                "basis": "BFS 2026:4 (in force 2026-07-01). New flerbostadshus: at least two bicycle parking spaces per bostadslägenhet, plus a reasonable number for larger cycles (2 kap. 2 §). New lokalbyggnad: spaces for at least 15 % of the average or 10 % of the total user capacity (2 kap. 4 §). On alteration the regulation applies only to an ombyggnad that involves the electrical infrastructure where the car parking is in the building, or one done together with changes to car parking on the plot (1 kap. 4 §); then the flerbostadshus count may be adapted if two per dwelling is not possible (3 kap. 1 §). From 2027-01-01 an EXISTING lokalbyggnad with more than 20 car parking spaces inside the building must also have the 15 % / 10 % bicycle spaces (4 kap. 3-4 §§). A building is a flerbostadshus if more than half its gross area is dwellings, otherwise a lokalbyggnad (1 kap. 7 §)."
+              },
+              {
+                "id": "shared_accessible_wc",
+                "label": "Accessible WC for visitors and the public",
+                "strength": "law",
+                "sized": "4.84 m² per_building",
+                "heavy_move": null,
+                "basis": "If a publik lokal has toilets for the public, at least one must be accessible, with space to turn a wheelchair and transfer from both sides (BFS 2024:12 2 kap. 7 §; cross_cutting access_public_premises_wc). Workplaces: at least one accessible WC per storey at new build or ombyggnad (AFS 2023:12 3 kap. 4 § p. 6). Student housing using the 80 % accessibility exemption: at least one accessible WC for visitors in the building near the exempt dwellings (PBF 3 kap. 5 a § p. 3, see student_housing student_visitor_wc)."
+              }
+            ],
+            "detail": {
+              "net_m2": 379,
+              "persons": 0
+            }
+          }
+        ],
+        "F1": [
+          {
+            "use": "office",
+            "variant": "office_open_plan",
+            "label": "Office",
+            "share": 0.8,
+            "net_m2": 1517,
+            "persons": 69,
+            "limited_by": "m² per person",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 37.4,
+            "travel_limit_m": 45,
+            "travel_how": "from the far corner to a stair in the core",
+            "travel_ok": true,
+            "outdoor_air_ls": 869,
+            "required_spaces": [
+              {
+                "id": "office_workplaces",
+                "label": "Workplaces (desks, open-plan or cellular)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 5 § — workplaces shall have sufficient area and free height for the activity; 3 kap. 6 § sufficient freedom of movement."
+              },
+              {
+                "id": "office_ventilation",
+                "label": "Ventilation capacity (outdoor air supply)",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 5 kap. 4 § — indoor workplaces shall normally be supplied with at least 7 l/s outdoor air per person plus at least 0.35 l/s per m2 floor area during working hours; allmänna råd: 7 l/s applies to sedentary work, higher activity may need more. 5 kap. 3 § allmänna råd: air-change effectiveness should be at least 40 %."
+              },
+              {
+                "id": "office_quiet_room",
+                "label": "Quiet / focus rooms",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § — workplaces shall have the rooms needed for the activity; allmänna råd names 'tysta rum' as an example."
+              },
+              {
+                "id": "office_eating_room",
+                "label": "Eating room / staff kitchen",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 60 § — employees shall be able to eat in suitable rooms with tables and chairs with backrests (also those eating brought food); 61 § — near the place where brought food is eaten there shall be a refrigerator, means to heat food and to wash dishes. 36 § — drinking water near workplaces and eating areas."
+              },
+              {
+                "id": "office_pause",
+                "label": "Pause / break area",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 62 § — place for pauses with possibility for short recovery and enough seats with backrests."
+              },
+              {
+                "id": "office_rest_room",
+                "label": "Rest space / rest room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 63 § — there shall be, or be quickly arrangeable, a suitable rest space for temporary, undisturbed, lying rest. Allmänna råd: a separate vilrum may be needed when more than 50 persons are employed simultaneously in the same area; a WC should be nearby."
+              },
+              {
+                "id": "office_wc",
+                "label": "WCs incl. accessible WC",
+                "strength": "law",
+                "sized": "5 × 4.84 m² = 24 m²",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 56 § sufficient WCs and washbasins near workplaces/pause rooms; 57 § sufficiently large, separate, lockable, washbasin, no direct connection to eating room; 58 § accessible WCs at existing workplaces for those who need them; 3 kap. 4 § p. 6 — when designing new build/ombyggnad at least one accessible WC per storey."
+              },
+              {
+                "id": "office_clothes_storage",
+                "label": "Clothes and valuables storage",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 40 § storage for private clothes for all who need it at the same time; 41 § lockable storage for personal valuables."
+              },
+              {
+                "id": "office_cleaning_service",
+                "label": "Cleaning and building-service room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 2 § allmänna råd names spaces for property maintenance and service as examples of rooms that may be needed."
+              },
+              {
+                "id": "office_print_room",
+                "label": "Print / copy room",
+                "strength": "guidance",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12 3 kap. 7 § — processes with particular risk normally in separate room; allmänna råd names copying machines (and fans, charging batteries, dishwashers) as examples that may need a separate room."
+              },
+              {
+                "id": "office_waste",
+                "label": "Waste room",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 11 kap. 1–3 §§ — waste shall be manageable in or next to the building; waste devices or waste rooms located, designed and dimensioned for hygiene and collection."
+              }
+            ],
+            "detail": {
+              "net_m2": 1517,
+              "persons": 69,
+              "corridor_m2": 0,
+              "by_area": 69,
+              "by_daylight": 102
+            }
+          },
+          {
+            "use": "gym_fitness",
+            "variant": "gym_boutique_studio",
+            "label": "Gym / fitness centre",
+            "share": 0.2,
+            "net_m2": 379,
+            "persons": 0,
+            "limited_by": "amenity (no own headcount)",
+            "fire_class": "1",
+            "fire_basis": "design occupancy",
+            "travel_m": 37.4,
+            "travel_limit_m": 45,
+            "travel_how": "from the far corner to a stair in the core",
+            "travel_ok": true,
+            "outdoor_air_ls": 133,
+            "required_spaces": [
+              {
+                "id": "gym_ventilation",
+                "label": "Ventilation capacity for high activity",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "BFS 2024:8 3 kap. 4 § (functional: continuous air change, removal of pollutants from the intended use). AFS 2023:12 5 kap. 4 §: at least 7 l/s per person plus 0.35 l/s per m2 for workplaces; allmänna råd: 7 l/s is for sedentary work and higher activity may need more."
+              },
+              {
+                "id": "gym_reception",
+                "label": "Reception / access control",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "If staffed, a reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §). Accessible main entrance (2 kap. 1 §)."
+              },
+              {
+                "id": "gym_staff",
+                "label": "Staff facilities",
+                "strength": "law",
+                "sized": "required — no size in any source; size by design",
+                "heavy_move": null,
+                "basis": "AFS 2023:12. Instructors do sweaty work, so changing rooms and showers apply (3 kap. 46, 52 §§). See cross_cutting.json staff_changing_showers_storage."
+              }
+            ],
+            "detail": {
+              "net_m2": 379,
+              "persons": 0
+            }
+          }
+        ]
+      },
+      "people_peak": 840,
+      "people_hours_day": 6300,
+      "people_hours_evening": 3499,
+      "hourly_people": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        10,
+        108,
+        231,
+        282,
+        411,
+        541,
+        449,
+        316,
+        241,
+        212,
+        346,
+        675,
+        840,
+        770,
+        535,
+        250,
+        83
+      ],
+      "heavy_moves": [
+        "GF Restaurant / café: Kitchen (storkök or simple preparation) (exhaust_shaft_and_drainage)",
+        "GF Restaurant / café: Kitchen exhaust duct (imkanal) and outlet (vertical_shaft_to_roof)"
+      ],
+      "assumptions_used": [
+        "desk_m2_in_facade_zone",
+        "event_m2_per_person",
+        "net_to_gross",
+        "restaurant_m2_per_seat"
+      ]
+    }
+  ]
+}

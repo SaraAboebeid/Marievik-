@@ -176,7 +176,7 @@
       "label_sv": "Rehabgym, mottagningsrum fysioterapi/arbetsterapi, hjälpmedelsförråd",
       "required": { "strength": "programme", "basis": "PTS p. 17-18 (where rehab is part of the mission).", "url": "https://www.ptsforum.se/media/3522/konceptprogram-primaervaard-220520.pdf" },
       "size": { "rule": "per_building", "value_m2": null, "strength": "none", "source": "no m² given", "confidence": "verified" },
-      "shareable_with": ["gym", "community_hall"],
+      "shareable_with": ["gym_fitness", "community_hybrid"],
       "layer": "space_plan"
     },
     {

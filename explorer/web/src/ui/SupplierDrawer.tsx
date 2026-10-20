@@ -75,7 +75,7 @@ export function SupplierDrawer({ suppliers, building, settings, onApply, onClose
       </div>
 
       {/* the range */}
-      <h4 className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">The range, per m² of wall</h4>
+      <h4 className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">The range, per m² of wall</h4>
       <div className="mb-4 overflow-x-auto">
         <table className="w-full text-[12.5px]">
           <thead>
@@ -116,7 +116,7 @@ export function SupplierDrawer({ suppliers, building, settings, onApply, onClose
 
       {/* in the open building */}
       <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
-        <h4 className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">
+        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">
           {building ? `In ${building.id} ${building.name.split(' - ')[0]}, same uses, three ways to build the walls` : 'In a building'}
         </h4>
         {building && (using
@@ -133,13 +133,13 @@ export function SupplierDrawer({ suppliers, building, settings, onApply, onClose
       {/* what is still open */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <h4 className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">Open questions to {sup.supplier.split(' ')[0]}</h4>
+          <h4 className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Open questions to {sup.supplier.split(' ')[0]}</h4>
           <ol className="list-decimal space-y-1 pl-4 text-[12.5px] leading-snug text-ink">
             {sup.open_questions.map((q) => <li key={q}>{q}</li>)}
           </ol>
         </div>
         <div>
-          <h4 className="mb-1 font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">Sources</h4>
+          <h4 className="mb-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Sources</h4>
           <dl className="space-y-1 text-[12px] leading-snug">
             {Object.entries(sup.sources).map(([k, v]) => (
               <div key={k}><dt className="inline font-medium text-ink-2">{k.replace('_', ' ')}: </dt><dd className="inline text-ink">{v}</dd></div>

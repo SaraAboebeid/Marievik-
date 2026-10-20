@@ -14,8 +14,9 @@
   --color-ink: #1e3434;
   --color-ink-2: #3e5352;
   --color-muted: #627370;
-  --color-accent: #1e3434;
-  --color-accent-soft: #e6efc4;
+  /* Accent and soft wash: AMF Marievik's brand blue and pale ice-blue (amffastigheter.se/marievik/). */
+  --color-accent: #0528ca;
+  --color-accent-soft: #e5f0f5;
 
   --color-c1: #3d8fd1;
   --color-c2: #c97855;
@@ -35,6 +36,8 @@
 
   --font-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  /* Brand moments only (wordmark, headline figures) — Fredoka stands in for AMF's licensed ABC Maxi Round. */
+  --font-display: "Fredoka", "Archivo", sans-serif;
 }
 
 /* Dark mode overrides the variables at runtime. (An @theme block inside @media is hoisted by
@@ -50,8 +53,8 @@
     --color-ink: #f4f2eb;
     --color-ink-2: #c3cdc8;
     --color-muted: #869793;
-    --color-accent: #c97855;
-    --color-accent-soft: #2e3f24;
+    --color-accent: #fd876e;
+    --color-accent-soft: #13233a;
 
     --color-c1: #4a97d6;
     --color-c2: #d0845f;

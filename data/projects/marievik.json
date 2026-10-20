@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "purpose": "One project: its owner, its stakeholder profiles and the 10-year timeline settings. Profiles belong to a project: each pilot brings the roles that were interviewed there. Projects without a file fall back to the generic CAVF profiles (explorer/kpis.py PROFILES).",
+    "updated": "2026-10-20",
+    "source": "Profiles from the AMF workshop board (sticky notes, 2026). Titles and mandates as written there; focus and risks summarised. Colour-to-role mapping not yet confirmed with the workshop owner."
+  },
+  "id": "marievik",
+  "name": "Marievik",
+  "city": "Stockholm",
+  "owner": "AMF Fastigheter",
+  "pilot_buildings": ["B01"],
+
+  "profiles": [
+    {
+      "id": "projektutvecklare",
+      "title": "Projektutvecklare",
+      "title_en": "Project developer",
+      "mandate": "Get companies to come to the place, from a B2B perspective: business. The place's self-image: relevant and interesting over time.",
+      "focus": "Attract companies, flexible leases, multi-use premises, reuse that pays",
+      "risk": "Losing profitability",
+      "timeline_kpis": ["people", "walls_changed_cum", "capex_cum", "uses_count", "issues"],
+      "needs_data": ["Lease terms and tenant turnover, to show whether flexible leases keep tenants longer"],
+      "cavf_profile": "developer"
+    },
+    {
+      "id": "projektledare",
+      "title": "Projektledare",
+      "title_en": "Project manager",
+      "mandate": "Mandate 2.5 billion SEK; result responsibility for 4 projects (4–5 under way): profitability first in design and concept, then construction cost.",
+      "focus": "Cost and time, build less and right faster, value of reuse in the calculation",
+      "risk": "Marievik becoming an island, quickly irrelevant",
+      "timeline_kpis": ["capex_cum", "disruption_cum", "walls_changed_cum", "co2_cum", "issues"],
+      "needs_data": ["Project budget and schedule, to compare against the investment line"],
+      "cavf_profile": "developer"
+    },
+    {
+      "id": "marknadsomradeschef",
+      "title": "Marknadsområdeschef",
+      "title_en": "Market area manager",
+      "mandate": "Responsible for the operational management of Marievik: sitting tenants, contracts, negotiation.",
+      "focus": "Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants",
+      "risk": "Not being relevant; competition from vacancies in new buildings",
+      "timeline_kpis": ["people", "people_hours", "co2_cum", "issues"],
+      "needs_data": ["Rent and operating cost per use (överskottsgrad)", "Current vacancy and lease expiries"],
+      "cavf_profile": "investor"
+    },
+    {
+      "id": "platsutvecklare",
+      "title": "Platsutvecklare",
+      "title_en": "Place developer",
+      "mandate": "Get people to want to be at the place. Sets direction, steers how Marievik appears and how the place is experienced.",
+      "focus": "A destination for food, culture and recreation; life on site; connection to the surroundings",
+      "risk": "Vacancies and falling value",
+      "timeline_kpis": ["people_hours", "evening_share", "uses_count", "people"],
+      "needs_data": ["Visitor counts today, to calibrate people-hours"],
+      "cavf_profile": "developer"
+    },
+    {
+      "id": "projektchef",
+      "title": "Projektchef",
+      "title_en": "Project director",
+      "mandate": "Result responsibility, mandate within board decisions. Steers, coordinates, follows up.",
+      "focus": "Rent and income, project result, sustainability; long-lived buildings",
+      "risk": "Customers choosing other areas; missing growing companies",
+      "timeline_kpis": ["capex_cum", "co2_cum", "people", "issues"],
+      "needs_data": ["Rent per use, to turn the timeline into a project result"],
+      "cavf_profile": "finance"
+    }
+  ],
+
+  "timeline": {
+    "start_year": 2026,
+    "years": 10,
+    "decision_years": [2027, 2030, 2033],
+    "decision_years_source": "ASSUMPTION: points where a lease could end and a floor could change use. Replace with AMF's real lease expiries.",
+    "max_changes": 2
+  }
+}

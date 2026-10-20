@@ -35,7 +35,7 @@ export function SunBar({ sun, setSun, view, setView }: Props) {
   }
   return (
     <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-raised/95 px-3.5 py-2 shadow-sm">
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">Sun</span>
+      <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Sun</span>
       <select value={sun.month} onChange={(e) => setSun({ ...sun, month: Number(e.target.value), day: Math.min(sun.day, 28) })}
         className="rounded border border-line-strong bg-surface px-1.5 py-0.5 text-[12.5px]" aria-label="Month">
         {MONTHS.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
@@ -54,7 +54,7 @@ export function SunBar({ sun, setSun, view, setView }: Props) {
         {PRESETS.map((p, i) => <option key={p[0]} value={i}>{p[0]}</option>)}
       </select>
       <span className="text-line-strong">|</span>
-      <span className="font-mono text-[10.5px] uppercase tracking-[0.08em] text-ink-2">View</span>
+      <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">View</span>
       <Toggle on={view.sky} onChange={(v) => setView({ ...view, sky: v })} label="Sky" />
       <Toggle on={view.shadows} onChange={(v) => setView({ ...view, shadows: v })} label="Shadows" />
       <Toggle on={view.ao} onChange={(v) => setView({ ...view, ao: v })} label="Soft shading" />

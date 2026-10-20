@@ -6,14 +6,18 @@
 <title>Marievik+ Digital Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Palette: Chalk #F4F2EB, Mist #D7DFDA, Deep pine #1E3434, Regenerative lime #B9D35B, Terracotta #C97855 */
+/* Palette: Chalk #F4F2EB, Mist #D7DFDA, Deep pine #1E3434, Regenerative lime #B9D35B, Terracotta #C97855
+   Brand accents, from AMF Marievik's own site (amffastigheter.se/marievik/): brand blue, coral, terracotta,
+   teal, pink, green. ABC Maxi Round (their display face) is a commercial font; Fredoka stands in for it. */
 :root{
   --chalk:#F4F2EB; --mist:#D7DFDA; --pine:#1E3434; --lime:#B9D35B; --terra:#C97855;
+  --blue:#0528CA; --coral:#FD876E; --rust:#943B2E; --teal:#4AA3B5; --pink:#F4A7DD; --green:#03B05F;
   --bg:var(--chalk); --card:#FAF9F5; --ink:var(--pine); --ink-2:#3E5352; --muted:#627370;
   --line:var(--mist);
   --sans:"Archivo", "Segoe UI", system-ui, sans-serif;
+  --display:"Fredoka", "Archivo", sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark){
@@ -27,25 +31,31 @@ a{color:inherit; text-decoration:none}
 .mono{font-family:var(--mono); text-transform:uppercase; letter-spacing:.09em; font-size:11px}
 
 /* ---------- hero ---------- */
-.hero{background:var(--pine); color:var(--chalk); border-bottom:4px solid var(--lime); position:relative; overflow:hidden}
+.hero{background:var(--blue); color:var(--chalk); border-bottom:4px solid var(--coral); position:relative; overflow:hidden}
 .hero::after{ /* a quiet floor-plan grid, the shell everything starts from */
   content:""; position:absolute; inset:0; pointer-events:none; opacity:.09;
-  background-image:linear-gradient(var(--mist) 1px, transparent 1px), linear-gradient(90deg, var(--mist) 1px, transparent 1px);
+  background-image:linear-gradient(var(--chalk) 1px, transparent 1px), linear-gradient(90deg, var(--chalk) 1px, transparent 1px);
   background-size:48px 48px; mask-image:linear-gradient(100deg, transparent 35%, #000 90%);
 }
-.top{display:flex; align-items:baseline; gap:12px; padding-block:22px}
-.top b{font-size:30px; font-weight:800; letter-spacing:-.03em}
-.top .mono{color:var(--lime); font-size:16px}
+/* Circles with a big offset box-shadow, the way amffastigheter.se/marievik/ builds its own background blobs. */
+.hero .blobs{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.hero .blobs span{position:absolute; width:120px; height:120px; border-radius:50%; opacity:.5}
+.hero .blobs span:nth-child(1){top:-40px; right:220px; box-shadow:140px 90px var(--coral)}
+.hero .blobs span:nth-child(2){bottom:-70px; right:60px; box-shadow:-60px 120px var(--teal)}
+.hero .blobs span:nth-child(3){top:60px; right:40px; box-shadow:0 0 var(--green); width:70px; height:70px}
+.top{display:flex; align-items:baseline; gap:12px; padding-block:22px; position:relative; z-index:1}
+.top b{font-family:var(--display); font-size:30px; font-weight:600; letter-spacing:-.01em}
+.top .mono{color:var(--coral); font-size:16px}
 .top .who{margin-left:auto; color:var(--chalk); font-size:15px; font-weight:500}
 .hero-body{padding:56px 0 64px; position:relative; z-index:1; max-width:780px}
-.hero h1{font-size:clamp(32px, 5vw, 54px); line-height:1.05; letter-spacing:-.035em; font-weight:800; margin:0 0 20px}
-.hero h1 em{font-style:normal; color:var(--lime)}
-.hero p{font-size:18px; line-height:1.55; color:var(--mist); margin:0; max-width:620px}
+.hero h1{font-family:var(--display); font-size:clamp(30px, 4.6vw, 50px); line-height:1.08; letter-spacing:-.01em; font-weight:600; margin:0 0 20px}
+.hero h1 em{font-style:normal; color:var(--coral)}
+.hero p{font-size:18px; line-height:1.55; color:var(--chalk); opacity:.9; margin:0; max-width:620px}
 
 /* ---------- profiles ---------- */
 .start{padding:56px 0 24px}
 .start-head{display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:22px}
-.start h2{font-size:28px; letter-spacing:-.025em; margin:0; font-weight:800}
+.start h2{font-family:var(--display); font-size:27px; letter-spacing:-.01em; margin:0; font-weight:600}
 .start-head p{margin:0; color:var(--muted); font-size:14.5px}
 .grid{display:grid; grid-template-columns:repeat(5, 1fr); gap:14px}
 @media (max-width:1180px){ .grid{grid-template-columns:repeat(3, 1fr)} }
@@ -83,14 +93,15 @@ a{color:inherit; text-decoration:none}
 .arrow{width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:var(--c); color:var(--on-c); transition:transform .18s ease}
 .card:hover .arrow{transform:translateX(4px)}
 
-.p-developer{--c:#5E7A76; --on-c:var(--chalk)}
-.p-investor{--c:var(--pine);  --on-c:var(--chalk)}
-.p-supplier{--c:var(--terra); --on-c:#fff}
-.p-finance {--c:var(--mist);  --on-c:var(--pine)}
-.p-environ {--c:var(--lime);  --on-c:var(--pine)}
+/* Five profiles, five of AMF Marievik's own secondary colours. */
+.p-developer{--c:var(--teal);  --on-c:#fff}
+.p-investor{--c:var(--blue);   --on-c:var(--chalk)}
+.p-supplier{--c:var(--coral);  --on-c:var(--ink)}
+.p-finance {--c:var(--pink);   --on-c:var(--ink)}
+.p-environ {--c:var(--green);  --on-c:#fff}
 @media (prefers-color-scheme: dark){
-  .p-investor{--c:var(--chalk); --on-c:var(--pine)}
-  .p-finance{--c:#5E7A76; --on-c:var(--chalk)}
+  .p-investor{--c:#5b8dff; --on-c:var(--pine)}
+  .p-finance{--c:var(--pink); --on-c:var(--pine)}
 }
 
 /* ---------- projects ---------- */
@@ -109,7 +120,7 @@ a{color:inherit; text-decoration:none}
 }
 .proj:hover{border-color:var(--ink-2); transform:translateY(-2px)}
 .proj:focus-visible{outline:2px solid var(--lime); outline-offset:3px}
-.proj b{font-size:17px; letter-spacing:-.015em}
+.proj b{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.005em}
 .proj .city{font-size:13px; color:var(--muted)}
 .proj .pin{width:12px; height:12px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); background:var(--terra); margin-bottom:8px}
 .proj .tag{position:absolute; top:12px; right:12px; font-family:var(--mono); font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
@@ -124,6 +135,7 @@ a{color:inherit; text-decoration:none}
   .proj[aria-checked="true"] .pin{background:var(--pine)}
 }
 .chosen{color:var(--ink); font-weight:600}
+.grid[hidden]{display:none}
 
 .skip{margin:26px 0 0; font-size:14px; color:var(--muted)}
 .skip a{color:var(--ink); font-weight:600; border-bottom:1px solid var(--line)}
@@ -137,6 +149,7 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
 <body>
 
 <header class="hero">
+  <div class="blobs" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="wrap">
     <div class="top">
       <b>Marievik+</b><span class="mono">Digital Lab</span>
@@ -179,7 +192,10 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
     <p>Pick the profile closest to your role, for <span class="chosen" id="chosen">Marievik, Stockholm</span>.</p>
   </div>
 
-  <div class="grid">
+  <!-- the chosen project's own profiles (data/projects/<id>.json), filled in by the script below -->
+  <div class="grid" id="project-profiles" hidden></div>
+
+  <div class="grid" id="generic-profiles">
 
     <a class="card p-developer" href="/explorer?profile=developer">
       <span class="icon" aria-hidden="true">
@@ -259,6 +275,44 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
       var base = a.dataset.base
       a.setAttribute('href', base + (base.indexOf('?') < 0 ? '?' : '&') + 'project=' + key)
     })
+    showProfiles(key)
+  }
+
+  // A project with its own file brings its own profiles (the roles interviewed there); the others keep the generic ones.
+  var COLORS = ['p-developer', 'p-investor', 'p-supplier', 'p-finance', 'p-environ']
+  var KPI_LABEL = {
+    people: 'People at peak', people_hours: 'People-hours per day', evening_share: 'Evening share',
+    capex_cum: 'Investment over 10 years', co2_cum: 'Embodied carbon of changes', walls_changed_cum: 'Walls changed',
+    disruption_cum: 'Months of works', uses_count: 'Mix of uses', issues: 'Standards issues'
+  }
+  var own = document.getElementById('project-profiles')
+  var generic = document.getElementById('generic-profiles')
+  function el(tag, cls, text) {
+    var e = document.createElement(tag)
+    if (cls) e.className = cls
+    if (text) e.textContent = text
+    return e
+  }
+  function showProfiles(key) {
+    fetch('/api/project/' + key).then(function (r) { return r.ok ? r.json() : null }).then(function (p) {
+      if (!p || !p.profiles || !p.profiles.length) { own.hidden = true; generic.hidden = false; return }
+      own.replaceChildren()
+      p.profiles.forEach(function (prof, i) {
+        var a = el('a', 'card ' + COLORS[i % COLORS.length])
+        a.href = '/explorer?profile=' + encodeURIComponent(prof.id) + '&project=' + encodeURIComponent(key)
+        a.appendChild(el('h3', null, prof.title))
+        a.appendChild(el('p', 'q', prof.focus))
+        a.appendChild(el('div', 'kpi-lab', 'Over 10 years'))
+        var ul = el('ul', 'kpis')
+        prof.timeline_kpis.forEach(function (k) { ul.appendChild(el('li', null, KPI_LABEL[k] || k)) })
+        a.appendChild(ul)
+        var go = el('span', 'go', 'Start ')
+        go.appendChild(el('span', 'arrow', '→'))
+        a.appendChild(go)
+        own.appendChild(a)
+      })
+      own.hidden = false; generic.hidden = true
+    }).catch(function () { own.hidden = true; generic.hidden = false })
   }
 
   projects.forEach(function (p, i) {

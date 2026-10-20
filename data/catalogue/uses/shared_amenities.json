@@ -1,0 +1,587 @@
+{
+  "id": "shared_amenities",
+  "label_en": "Shared building amenities (spaces serving several uses)",
+  "label_sv": "Gemensamma utrymmen i flerfunktionsbyggnad",
+  "family": "community",
+  "summary": "Building-level spaces that serve several uses at once in a mixed-use conversion: entrance/lobby, bicycle room, waste and recycling room (incl. food waste), bulky-waste room, shared laundry, residents' storage, bulky-item storage, roof terrace or courtyard, bookable meeting rooms, shared kitchen/lounge, accessible visitor WC, parcel room and goods loading. This is not a use on its own: it records, per space, which catalogue uses REQUIRE it (and by which rule), which uses can share it, and which constraints come from mixing uses. Key points: Swedish law makes many of these functions mandatory (waste room BFS 2024:8 11 kap.; laundry, storage and bulky storage for dwellings BFS 2024:11 2 kap. 4-6 §§; bicycle parking BFS 2026:4; accessible WC BFS 2024:12 2 kap. 7 §) but almost never sizes them in m². Bicycle parking is the exception: BFS 2026:4 sets both a count and a default space size. Mixing is limited mainly by fire compartmentation (each verksamhet its own fire compartment, BFS 2024:7 5 kap. 25 § 2), by the housing rules that tie some shared functions to the dwellings ('i bostädernas närhet', 'i anslutning till boendeenheterna'), by egress doors that must open without delay even when access-controlled (BFS 2024:7 7 kap. 34-37 §§), and by municipal waste practice, which generally discourages shared waste rooms between businesses and dwellings.",
+  "regulatory": {
+    "bbr_verksamhetsklass": "Varies by space. Lägenhetsförråd (residents' storage rooms) are Vk 1 (BFS 2024:7 2 kap. 10 §). A shared room otherwise takes the class of the activity that uses it: a meeting room open to visitors is Vk 2A (up to 150 persons) or 2B (2 kap. 11-12 §§); shared rooms belonging to boendeenheter are part of Vk 3B (2 kap. 15 §); shared rooms in special housing are Vk 5B (2 kap. 19 §). Each verksamhet must be its own fire compartment (5 kap. 25 § 2), and an internal escape route or access route including any lift shaft is its own fire compartment (5 kap. 25 § 1). See cross_cutting.json fire_vk_overview.",
+    "key_laws": [
+      { "ref": "BFS 2024:7 brandskydd: 2 kap. 3, 10-20, 24 §§; 5 kap. 24-26 §§; 7 kap. 33-37 §§", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf" },
+      { "ref": "BFS 2024:8 hygien, hälsa och miljö samt hushållning med vatten och avfall: 11 kap. 1-3 §§ (avfall); 12 kap. 3 § (ändrad användning)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf" },
+      { "ref": "BFS 2024:9 säkerhet vid användning: 2 kap. 10-11 §§ (skydd mot fall, incl. takterrasser), 14 § (öppningar, avfallsinkast)", "url": "https://rinfo.boverket.se/BFS2024-9/pdf/BFS2024-9.pdf" },
+      { "ref": "BFS 2024:11 bostäders lämplighet: 2 kap. 4-8 §§, 10-11 §§; 3 kap. 2 §", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf" },
+      { "ref": "BFS 2024:12 tillgänglighet: 1 kap. 6 §; 2 kap. 1, 7 §§; 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf" },
+      { "ref": "BFS 2026:4 hållbar mobilitet (in force 2026-07-01; 4 kap. 3-4 §§ from 2027-01-01): 1 kap. 4, 7 §§; 2 kap. 2, 4 §§; 3 kap. 1 §; 4 kap. 4 §", "url": "https://rinfo.boverket.se/BFS2026-4/pdf/BFS2026-4.pdf" },
+      { "ref": "Avfallsförordning (2020:614) 3 kap. 2, 2 a, 5, 7, 8, 11, 36, 37 §§ (consolidated to SFS 2026:1447)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/avfallsforordning-2020614_sfs-2020-614/" },
+      { "ref": "Plan- och bygglag (2010:900) 8 kap. 9-10 §§ (friyta; parkering, lastning och lossning)", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/" },
+      { "ref": "AFS 2023:12 Utformning av arbetsplatser: 3 kap. 58, 60-61 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf" }
+    ],
+    "permits": [
+      "Bygglov for change of use, PBL 9 kap. 15 § 1 (since 2025-12-01; formerly 9 kap. 2 § 3 a), for the uses the shared spaces serve; see cross_cutting.json cou_bygglov_trigger. A new or moved waste room, bicycle room or laundry in an existing building is normally part of that application or of an anmälan.",
+      "Anmälan (PBF 6 kap. 1 §) for the ventilation, water and drainage changes that a laundry, waste room or shared kitchen usually needs; see cross_cutting.json cou_anmalan.",
+      "Waste room location, collection point and dragväg must match the municipality's avfallsföreskrifter and avfallstaxa (local regulations under Avfallsförordningen 3 kap. 4 § and Miljöbalken 15 kap.). Agree them with the municipal waste organisation before the bygglov drawings are fixed.",
+      "A shared kitchen used for regular food service to the public needs food-business registration (see restaurant_cafe, community_hybrid)."
+    ],
+    "cross_cutting_refs": ["cou_bygglov_trigger", "cou_anmalan", "cou_requirements_scope", "fire_vk_overview", "fire_vk_1", "fire_vk_2abc", "fire_vk_3abc", "fire_vk_5abc", "fire_change_of_use_floor", "fire_egress_dimensions", "fire_load_density", "occ_density_law_2024", "access_design_dimensions", "access_public_premises_wc", "access_public_premises_other", "access_dwellings", "access_hin", "san_dwelling", "san_public", "san_workplace", "staff_eating_rest", "acoustics_dwellings", "loads_imposed_table_4_1", "loads_barriers_stairs"],
+    "operator_oversight": "Fastighetsägaren (building owner) runs the shared spaces; kommunens byggnadsnämnd (bygglov, OVK); kommunens avfallsorganisation and miljönämnd (waste collection, avfallsföreskrifter, nuisance); räddningstjänsten (systematiskt brandskyddsarbete under LSO when several operators share a building); Arbetsmiljöverket for staff and waste-collector work environment."
+  },
+  "occupancy": {
+    "unit": "building",
+    "gross_m2_per_unit": {
+      "value": null,
+      "range": null,
+      "strength": "none",
+      "source": "No Swedish source gives the area of shared amenities as a share of a mixed building. Each space is sized from the uses it serves (see spaces).",
+      "confidence": "indicative"
+    },
+    "staff_per_unit": { "value": null, "strength": "none", "source": "Usually property staff or a lobby host shared by tenants; no source." },
+    "egress_design_density": {
+      "persons_per_m2": null,
+      "strength": "law",
+      "source": "BFS 2024:7 2 kap. 4 §: the expected maximum number of persons. A shared meeting or event room with an unknown maximum uses the samlingslokal default of 2.5 persons/m2. Storage, waste, bicycle and laundry rooms are not rooms where people stay for long; their occupants are counted in the use they come from.",
+      "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+      "confidence": "verified"
+    },
+    "hours_profile": "24_7",
+    "hourly_presence": [0.03, 0.02, 0.02, 0.02, 0.03, 0.08, 0.25, 0.45, 0.55, 0.5, 0.45, 0.45, 0.5, 0.5, 0.45, 0.5, 0.6, 0.7, 0.65, 0.55, 0.45, 0.3, 0.15, 0.06],
+    "hourly_presence_note": "Indicative modelling assumption, not sourced. Combined profile for a typical office-to-mixed-use conversion with housing, ground-floor public uses and some offices. Morning peak (07-09: residents leaving, deliveries, office arrivals); daytime plateau (lobby, meeting rooms, parcel room, deliveries); evening peak (16-19: residents returning, laundry, bicycle room, community and gym users). Laundry and waste rooms in housing are typically used 07-22 (house rules, practice). Weekend: a flatter profile around 0.3-0.5 from 09 to 20. Model each shared space separately where the uses it serves are known."
+  },
+  "spaces": [
+    {
+      "id": "shared_entrance_lobby",
+      "label_en": "Shared entrance, lobby and reception",
+      "label_sv": "Gemensam entré, entréhall och reception",
+      "required": {
+        "strength": "law",
+        "basis": "An accessible and easily perceived main entrance is required for every building that must be accessible (BFS 2024:12 2 kap. 1 §). A reception in a publik lokal needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §). A lobby that is also an escape route or access route is its own fire compartment (BFS 2024:7 5 kap. 25 § 1). A staffed reception is practice.",
+        "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf",
+        "required_by": [
+          { "use": "all uses", "rule": "BFS 2024:12 2 kap. 1 § accessible main entrance", "strength": "law" },
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "BFS 2024:12 2 kap. 1-2 §§, 3 kap. 2 § (stretcher transport to every dwelling) — see housing_apartment entrance_stair_lift", "strength": "law" },
+          { "use": "hotel, gym_fitness, library, primary_care_clinic", "rule": "reception as a publik lokal: hearing loop, BFS 2024:12 3 kap. 6 §", "strength": "law" },
+          { "use": "elderly_care_home", "rule": "Uppsala programme p. 20: seating, accessible WC at the entrance, wheelchair store, kept apart from goods handling (see elderly_care_home sabo_main_entrance)", "strength": "programme" },
+          { "use": "school_compulsory, preschool", "rule": "own entrances per age group / vindfång and entrétorg (school_compulsory school_entrance, preschool_public_entrance)", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "one per building or per access zone; wheelchair dimensions 0.70 x 1.30 m, turning circle 1.50 m, clear door passage at least 0.80 m (BFS 2024:12 1 kap. 6 §)",
+        "strength": "none",
+        "source": "No m2 for a lobby in law or guidance. The dimensions in 'count' are binding for accessibility, not for the room area.",
+        "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["office", "coworking", "housing_apartment", "student_housing", "co_living", "senior_housing", "hotel", "retail_shop", "restaurant_cafe", "gym_fitness", "library", "community_hybrid", "culture_makerspace", "primary_care_clinic"],
+      "shareable_note": "A single lobby works when it is zoned: a public zone (reception, parcel room, visitor WC, meeting rooms) and an access-controlled zone leading to housing lifts and stairs. Preschool, school, care home and LSS entrances should not pass through it (see mixing_constraints).",
+      "mixing_constraints": [
+        "Fire: if the lobby is part of an escape route it is its own fire compartment (BFS 2024:7 5 kap. 25 § 1). Shops, cafés or lounges cannot simply open onto it without fire separation; a café counter in the lobby turns the lobby into a verksamhet (assessment).",
+        "Stairs: a Tr2 stairwell may connect directly through an own-compartment space only to dwellings and offices (BFS 2024:7 2 kap. 24 §). Other uses (assembly, retail, care) need a brandsluss to the stair, so a shared housing/office core cannot be opened to public uses without one.",
+        "Access control: escape doors must be usable without delay, with a lever or push (BFS 2024:7 7 kap. 34 §). Key or tag release is allowed only in Vk 1, 3A, 3B and 3C fire compartments for at most 10 persons who all have a key; a fixed thumb-turn up to 50 persons. Doors that may be locked must be interlocked against an essential function (7 kap. 37 §). Doors must allow return after passage (7 kap. 35 §), and always in Vk 5A-5C (36 §).",
+        "Housing vs public: residents' lifts and stairs should sit behind the access-control line so that evening public users (gym, community, assembly) cannot reach the residential floors (practice). The same stair may still be the residents' escape route, so it must open outwards without a key (7 kap. 34 §).",
+        "Care and children: elderly_care_home and lss_group_home have their own main entrance in their programmes, and preschool/school entrances face the friyta; sharing a public lobby is not recommended (programme, see those files)."
+      ],
+      "binding_constraint": "fire_egress_and_stair_count",
+      "layer": "space_plan",
+      "notes": "Office lobbies are usually generous and accessible, which makes them strong enablers. Hearing loop in receptions: BFS 2024:12 3 kap. 6 § (new build); HIN may require simple fixes in existing public premises (cross_cutting access_hin)."
+    },
+    {
+      "id": "shared_bicycle_room",
+      "label_en": "Bicycle parking / bicycle room",
+      "label_sv": "Cykelparkering / cykelrum",
+      "required": {
+        "strength": "law",
+        "basis": "BFS 2026:4 (in force 2026-07-01). New flerbostadshus: at least two bicycle parking spaces per bostadslägenhet, plus a reasonable number for larger cycles (2 kap. 2 §). New lokalbyggnad: spaces for at least 15 % of the average or 10 % of the total user capacity (2 kap. 4 §). On alteration the regulation applies only to an ombyggnad that involves the electrical infrastructure where the car parking is in the building, or one done together with changes to car parking on the plot (1 kap. 4 §); then the flerbostadshus count may be adapted if two per dwelling is not possible (3 kap. 1 §). From 2027-01-01 an EXISTING lokalbyggnad with more than 20 car parking spaces inside the building must also have the 15 % / 10 % bicycle spaces (4 kap. 3-4 §§). A building is a flerbostadshus if more than half its gross area is dwellings, otherwise a lokalbyggnad (1 kap. 7 §).",
+        "url": "https://rinfo.boverket.se/BFS2026-4/pdf/BFS2026-4.pdf",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "BFS 2026:4 2 kap. 2 § (2 per apartment; may be adapted for one-person dwellings or residents who normally do not cycle)", "strength": "law" },
+          { "use": "office, coworking, retail_shop, grocery_store, school_compulsory, school_upper_secondary, library, gym_fitness, hotel, primary_care_clinic, restaurant_cafe, food_hall, assembly_event, sports_hall, culture_makerspace, community_hybrid", "rule": "BFS 2026:4 2 kap. 4 § (lokalbyggnad: 15 % of average or 10 % of total user capacity; may be adapted where people normally do not arrive by bicycle)", "strength": "law" },
+          { "use": "all", "rule": "Municipal parking or mobility norm applied in the bygglov under PBL 8 kap. 9 § första stycket 4 and 10 § ('i skälig utsträckning')", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 1.14,
+        "range_m2": [1.14, 3.0],
+        "count": "per bicycle space: standard cycle 0.60 x 1.90 m = 1.14 m2; cargo or larger cycle 1.20 x 2.50 m = 3.0 m2; each with sufficient free space behind (aisle not quantified). Number: flerbostadshus >= 2 x bostadslägenheter; lokalbyggnad >= 15 % of average or 10 % of total user capacity.",
+        "strength": "law",
+        "source": "BFS 2026:4 1 kap. 7 § (definition of cykelparkeringsplats: the area a space is deemed to take if no special racks are provided), 2 kap. 2 § and 4 § (counts). Text read from the PDF.",
+        "url": "https://rinfo.boverket.se/BFS2026-4/pdf/BFS2026-4.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing", "office", "coworking", "hotel", "library", "gym_fitness", "school_upper_secondary", "culture_makerspace", "community_hybrid"],
+      "shareable_note": "Housing and office spaces can be pooled in one room if each user group's count is met; residents' spaces should be in an access-controlled part. Visitor and customer spaces are better outdoors near entrances. Can be combined with the bulky-item storage (shared_bulky_storage) for residents.",
+      "mixing_constraints": [
+        "Counting in a mixed building: BFS 2026:4 classifies the WHOLE building as flerbostadshus or lokalbyggnad by the >50 % gross-area test (1 kap. 7 §). How the minority use is counted (e.g. offices in a flerbostadshus) is not stated; see open_questions.",
+        "Security: residents' bicycles and staff bicycles in one room need individual access rights; public users should not reach the residential zone through the bicycle room (practice).",
+        "E-bikes and mobility scooters: charging many batteries in one room raises fire risk. BFS 2024:7 5 kap. 26 § requires an own fire compartment for 'energilager med batterier' above 20 kWh and other spaces with elevated fire probability; whether a charging bicycle room falls under it is not stated (see open_questions).",
+        "Step-free route from the street: ramps max 1:12 (cross_cutting access_level_changes_ramps_lifts); basement bicycle rooms reached only by stairs fail in practice."
+      ],
+      "binding_constraint": "ground_floor_area",
+      "layer": "site",
+      "notes": "Conversion: a plain change of use without work on car parking or electrical infrastructure for parking does not trigger BFS 2026:4 (1 kap. 4 §), so the legal count may not apply; the municipal parking norm in the bygglov usually still asks for bicycle parking. Worked example (indicative): 60 apartments x 2 x 1.14 m2 = 137 m2 net rack area before aisles. Office garages with more than 20 car spaces are affected by 4 kap. 4 § from 2027-01-01 even without a permit."
+    },
+    {
+      "id": "shared_waste_room",
+      "label_en": "Waste and recycling room (incl. food waste and packaging)",
+      "label_sv": "Avfallsutrymme / miljörum (rest-, mat- och förpackningsavfall)",
+      "required": {
+        "strength": "law",
+        "basis": "BFS 2024:8 11 kap. 1 §: waste must be manageable in or next to the building, and there must be avfallsanordningar or avfallsutrymmen (not for one- and two-dwelling houses, and not where unnecessary given the use). 2 §: placed, designed and dimensioned to limit risks to users' and neighbours' hygiene and health. 3 §: so that the waste can be handled and removed in the way required; dwellings must have space for temporary storage of waste. Sorting duties: everyone with waste must sort out the listed waste types (Avfallsförordningen 3 kap. 2 §), bioavfall including biodegradable food and kitchen waste (3 kap. 7 §) and packaging by material (3 kap. 8 §); businesses must sort further types (3 kap. 2 a §) and deliver business packaging themselves (3 kap. 11 §). The municipality must collect food or kitchen waste, packaging waste and residual waste fastighetsnära, from one and the same place; for flerbostadshus the municipality and owner may agree on different places (3 kap. 36 §), with exceptions in 37 §.",
+        "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf",
+        "required_by": [
+          { "use": "all uses except one- and two-dwelling houses", "rule": "BFS 2024:8 11 kap. 1-3 §§", "strength": "law" },
+          { "use": "housing_apartment, student_housing, co_living, senior_housing, lss_group_home", "rule": "Avfallsförordningen 3 kap. 36 § fastighetsnära collection of food waste, packaging and residual waste from one place (households)", "strength": "law" },
+          { "use": "restaurant_cafe, food_hall, grocery_store, hotel, school_compulsory, preschool, elderly_care_home", "rule": "Avfallsförordningen 3 kap. 2 a §, 7 § (food waste sorting incl. edible oil; professional used cooking fat under 2 a §), 11 § (business packaging to a collection system); kitchen waste often cooled (see restaurant_cafe, hotel)", "strength": "law" },
+          { "use": "elderly_care_home", "rule": "Uppsala programme p. 23: waste room not reached past the main entrance, next to goods handling (see sabo_waste_room)", "strength": "programme" },
+          { "use": "school_compulsory", "rule": "delivery and waste yard about 70 m2 (Uppsala 2019 lokalprogram p. 27, see school_delivery_waste)", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "derived",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "1) weekly volume per household (Avfall Sverige 'normal' scenario, l/week/household): returpapper 5, paper packaging 40-50, plastic packaging 20-30, metal 2, coloured glass 2, clear glass 2, food waste 10, residual waste 45-55 ('low' for e.g. student housing, 'high' for families). 2) containers = volume x collection interval / container size (common sizes 140-660 l; collection weekly for residual, food, paper and plastic, fortnightly for paper and glass, monthly for metal is common). 3) floor area = container footprints incl. spacing (140 l 0.50 x 0.60 m; 190 l 0.60 x 0.75; 240 l 0.70 x 0.75; 370 l 0.75 x 0.90; 660 l 1.40 x 0.90; add lid depth if lids open) plus a free aisle of at least 1.5 m. Businesses: from the operator's own waste volumes.",
+        "strength": "programme",
+        "source": "Avfall Sverige, PM 'Uppdatering av dimensionering för avfallsutrymmen' (Ramboll, Sept 2023) tabell 15-16 pp. 31-32 and collection frequencies p. 30; the same values, container footprints and the 1.5 m aisle are reproduced from Avfall Sveriges Handbok för avfallsutrymmen in Sysav 'Handbok för avfallshantering' (2025) printed pp. 14-18. Municipalities adopt or adjust these in their avfallsföreskrifter; BFS 2024:8 sets no m2.",
+        "url": "https://www.avfallsverige.se/media/awdltdok/pm-uppdatering-av-dimensionering-av-avfallsutrymmen.pdf",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": ["shared_goods_loading"],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing", "office", "coworking", "retail_shop", "library", "culture_makerspace", "community_hybrid", "gym_fitness"],
+      "shareable_note": "Household uses can share one room. Low-volume office-type businesses can sometimes join with a separate container set and agreement. Restaurants, grocery stores, food halls, schools and care homes should have their own room (volumes, smell, cooled food waste, separate collectors).",
+      "mixing_constraints": [
+        "Municipal practice: Avfall Sverige's 2023 consultation found that municipalities and municipal waste companies generally do NOT want samlokaliserade waste rooms shared between businesses and/or dwellings, because they need more individual arrangements (PM 2023 p. 28).",
+        "Different collection systems: household waste (incl. household packaging) is collected fastighetsnära by the municipality (Avfallsförordningen 3 kap. 36 §), while business packaging must be delivered by the business to a collection system (3 kap. 11 §). Mixing containers in one room makes responsibility and billing unclear (assessment).",
+        "Collector access: the room should be next to the collection vehicle's stopping point; dragväg longer than 10 m should be avoided, at least 1.2 m wide (1.35 m at turns), at least 2.1 m clear height, even, no steps or cobbles, preferably flat and never steeper than 1:12; doors without thresholds and easy to open (Sysav 2025, printed pp. 12-13, 18, from Avfall Sverige's handbook). Maximum dragväg is set in the municipal avfallstaxa.",
+        "Care and school safety: elderly_care_home programme says the waste room must not be reached past the main entrance (Uppsala p. 23); school programmes separate delivery and waste vehicles from pupil routes (school_compulsory school_delivery_waste).",
+        "Waste chutes (inkast): openings must be protected so that a young child cannot get stuck or someone fall (BFS 2024:9 2 kap. 14 §)."
+      ],
+      "binding_constraint": "collection_vehicle_access",
+      "layer": "site",
+      "notes": "Office buildings usually have one small waste room sized for paper and residual waste; housing adds food waste and up to eight fractions. Food-waste containers are small (often 140 l) but frequent. The repealed BBR advice recommended a cooled room for food waste in some cases (repealed BBR, pre-2025); now a municipal or operator requirement. Ventilation, lighting, temperature and cleaning details are in Avfall Sverige's Handbok för avfallsutrymmen (not read here, see open_questions)."
+    },
+    {
+      "id": "shared_bulky_waste",
+      "label_en": "Bulky-waste and special-waste room (grovavfall, electronics, hazardous waste)",
+      "label_sv": "Grovavfallsrum / rum för el- och farligt avfall",
+      "required": {
+        "strength": "programme",
+        "basis": "Bulky municipal waste, electrical products, batteries and hazardous waste must be sorted out by whoever has them (Avfallsförordningen 3 kap. 2 §), but the regulation does not require a room in the building. Whether bulky waste is collected at the property, and the room it needs, follows from the municipal avfallsföreskrifter. Sysav 2025 p. 16: if bulky waste is collected at the property, a separate space is needed so it does not obstruct the containers.",
+        "url": "https://www.sysav.se/media/y2fnidqi/handbok-för-avfallshantering_2025_web.pdf",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "municipal avfallsföreskrifter where fastighetsnära grovavfall collection is offered", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": 0.13,
+        "range_m2": null,
+        "count": "m2 floor area per household per week between collections (e.g. 4-weekly collection x 50 households x 0.13 = 26 m2)",
+        "strength": "practice",
+        "source": "Avfall Sveriges Handbok för avfallsutrymmen 2018 recommendation (0.13 m2 floor area per week and household), reported as still used by most municipalities that dimension bulky waste at all, in Avfall Sverige PM 2023 pp. 28-29. The PM also notes a shift from permanent bulky-waste rooms to temporary solutions because of cost.",
+        "url": "https://www.avfallsverige.se/media/awdltdok/pm-uppdatering-av-dimensionering-av-avfallsutrymmen.pdf",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": ["shared_waste_room"],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing"],
+      "shareable_note": "Residential only. Businesses dispose of bulky and hazardous waste through their own contractors.",
+      "mixing_constraints": [
+        "Hazardous waste and batteries should be in a lockable, separate cabinet or room (practice); not accessible to public users.",
+        "Fire load: a room collecting furniture and bulky items behaves like storage (BFS 2024:7 2 kap. 3 § gives 1,600 MJ/m2 for storage); place it as its own fire compartment or away from escape routes (assessment)."
+      ],
+      "binding_constraint": "collection_vehicle_access",
+      "layer": "site",
+      "notes": "Many municipalities now offer mobile or temporary bulky-waste collection instead (Avfall Sverige PM 2023 p. 28)."
+    },
+    {
+      "id": "shared_laundry",
+      "label_en": "Shared laundry room",
+      "label_sv": "Tvättstuga",
+      "required": {
+        "strength": "law",
+        "basis": "Every dwelling needs space for washing and drying laundry. It may be placed outside the dwelling and shared by several dwellings; it must be near the dwellings and sized for the dwellings sharing it (BFS 2024:11 2 kap. 4 §). A shared laundry must have fixed equipment for machine washing and drying, sized for the dwellings sharing it (3 kap. 2 §). If each dwelling has its own machines, no shared laundry is needed.",
+        "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "BFS 2024:11 2 kap. 4 §, 3 kap. 2 § (shared laundry OR machines in each dwelling)", "strength": "law" },
+          { "use": "elderly_care_home", "rule": "Uppsala programme p. 21-22: a laundry for the whole house with clean and dirty zones, a second for workwear (sabo_laundry)", "strength": "programme" },
+          { "use": "lss_group_home", "rule": "Stockholm checklista p. 7: washer and dryer reached from the group-home corridor (lss_laundry)", "strength": "programme" },
+          { "use": "preschool, hotel, gym_fitness", "rule": "operational laundry (towels, linen, workwear); see preschool preschool_laundry", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "machines sized for the number and type of dwellings sharing it",
+        "strength": "none",
+        "source": "No m2 or machine ratio in BFS 2024:11 or Boverket's guidance page on dwelling fittings.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing"],
+      "shareable_note": "One laundry can serve all ordinary residential uses in the building if it is 'i bostädernas närhet' and sized for all of them.",
+      "mixing_constraints": [
+        "Only for dwellings: commercial or care laundry (hotel linen, care workwear, gym towels) has different hygiene needs and volumes and should not share the residents' laundry (programme; elderly_care_home requires clean/dirty zones).",
+        "Proximity: the room must be near the dwellings it serves (BFS 2024:11 2 kap. 4 §); a laundry in a distant wing behind a public zone may fail this (assessment).",
+        "Noise: machines next to dwellings must meet installation-noise limits in sleeping and living rooms, LAeq 30 dB / LAFmax 35 dB (BFS 2024:10, cross_cutting acoustics_dwellings).",
+        "Accessibility: at least the route and the equipment must be usable (BFS 2024:12); place on an accessible level."
+      ],
+      "binding_constraint": "drainage_and_exhaust",
+      "layer": "services",
+      "notes": "Needs floor drain, water, extract and often a drying room or tumble dryers. Office cores rarely have drainage in the right place; a ground-floor or basement laundry next to existing risers is typical."
+    },
+    {
+      "id": "shared_storage_dwellings",
+      "label_en": "Residents' storage rooms (non-daily storage)",
+      "label_sv": "Lägenhetsförråd (förvaring som inte är för dagligt bruk)",
+      "required": {
+        "strength": "law",
+        "basis": "Storage not for daily use may be placed outside the dwelling but near it; if outside, it must be separated off (avskilt) (BFS 2024:11 2 kap. 5 §). Fire class: lägenhetsförråd are Vk 1 (BFS 2024:7 2 kap. 10 §) with a default fire load of 600 MJ/m2 (2 kap. 3 §).",
+        "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "BFS 2024:11 2 kap. 5 § (if not inside the dwelling)", "strength": "law" },
+          { "use": "elderly_care_home", "rule": "about 1 m2 per apartment storage (programme, see sabo_apartment_storage)", "strength": "programme" },
+          { "use": "lss_group_home", "rule": "about 2 m2 per apartment storage (programme, see lss_apartment_storage)", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "one separated storage per dwelling",
+        "strength": "none",
+        "source": "BFS 2024:11 sets no m2. The old BBR general advice figures (repealed BBR, pre-2025) are not carried over.",
+        "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing"],
+      "shareable_note": "The room is shared, each dwelling's compartment is separated and lockable.",
+      "mixing_constraints": [
+        "Residents only, inside the residential access zone (practice).",
+        "Tenant storage for offices or shops (Vk 1 or storage at 1,600 MJ/m2) should be separate rooms; mixing business goods into a residents' storage room changes the fire load assumption (BFS 2024:7 2 kap. 3 §, assessment)."
+      ],
+      "binding_constraint": "none",
+      "layer": "space_plan",
+      "notes": "Dark deep-plan office cores and basements are well suited."
+    },
+    {
+      "id": "shared_bulky_storage",
+      "label_en": "Room for bulky items in daily use (prams, wheelchairs, walkers, mobility scooters)",
+      "label_sv": "Rum för skrymmande föremål för dagligt bruk (barnvagns-, rullstols- och rollatorförråd)",
+      "required": {
+        "strength": "law",
+        "basis": "A room for storing bulky items in daily use may be placed outside the dwelling and shared by several dwellings; it must be sized for the dwellings sharing it (BFS 2024:11 2 kap. 6 §). Boverket's guidance lists bicycles, wheelchairs, walkers and prams as examples (see housing_apartment storage_bulky_shared).",
+        "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "BFS 2024:11 2 kap. 6 §", "strength": "law" },
+          { "use": "elderly_care_home", "rule": "store for transport wheelchairs with charging at the entrance (Uppsala p. 20)", "strength": "programme" },
+          { "use": "lss_group_home", "rule": "wheelchair store (lss_wheelchair_store)", "strength": "programme" },
+          { "use": "preschool", "rule": "pram/stroller storage at entrance (programme, see preschool file)", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "sized for the dwellings sharing it",
+        "strength": "none",
+        "source": "No m2 in BFS 2024:11.",
+        "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/utformning/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing"],
+      "shareable_note": "Often combined with the residents' part of the bicycle room.",
+      "mixing_constraints": [
+        "Step-free and near the entrance, or it is not usable for prams and wheelchairs (practice; BFS 2024:12 1 kap. 6 § dimensions).",
+        "Charging mobility scooters and e-bikes: see fire note under shared_bicycle_room (BFS 2024:7 5 kap. 26 §)."
+      ],
+      "binding_constraint": "step_free_access_from_entrance",
+      "layer": "space_plan",
+      "notes": ""
+    },
+    {
+      "id": "shared_outdoor_terrace_courtyard",
+      "label_en": "Shared roof terrace or courtyard (friyta, outdoor stay)",
+      "label_sv": "Gemensam takterrass eller gård (friyta)",
+      "required": {
+        "strength": "law",
+        "basis": "A plot with dwellings, or with premises for fritidshem, förskola, skola or similar, must have a sufficiently large friyta for play and outdoor stay on or near the plot, prioritised over parking (PBL 8 kap. 9 § andra stycket); on an already built plot 'i skälig utsträckning' (8 kap. 10 §). A roof terrace needs protection against falls where there is a particular risk of injury (BFS 2024:9 2 kap. 10 §), with a height suited to the use and fall height and resisting a person's dynamic load; where young children may be, 0.8 m of the height must resist climbing and vertical openings may be at most 100 mm (2 kap. 11 §).",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing", "rule": "PBL 8 kap. 9 § andra stycket, 10 § (friyta, no m2)", "strength": "law" },
+          { "use": "preschool", "rule": "PBL 8 kap. 9 §; Boverket rapport 2015:8: 40 m2 friyta per child, total preferably > 3,000 m2 (preschool_outdoor_friyta)", "strength": "guidance" },
+          { "use": "school_compulsory, school_upper_secondary", "rule": "PBL 8 kap. 9 §; Boverket rapport 2015:8: 30 m2 per pupil in grundskola (school_outdoor_friyta)", "strength": "guidance" },
+          { "use": "elderly_care_home", "rule": "garden 15-20 m2 per resident (Göteborg förstudie p. 4, sabo_garden)", "strength": "programme" },
+          { "use": "office, coworking", "rule": "not required; amenity", "strength": "practice" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "the sum of the friyta needs of the uses that rely on it; preschool and school figures are per child / per pupil (see those files)",
+        "strength": "none",
+        "source": "PBL sets no m2 for housing friyta. The per-child figures belong to the school and preschool files and are guidance, not law.",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing", "preschool", "school_compulsory", "office", "coworking", "elderly_care_home", "community_hybrid", "restaurant_cafe"],
+      "shareable_note": "Time-sharing works: preschool or school friyta in the daytime on weekdays, residents and community use in evenings and weekends (preschool and school files note evening and weekend use).",
+      "mixing_constraints": [
+        "Children's friyta is exclusive during opening hours: preschool friyta should be at the building with direct access from the entrance (Boverket 2015:8 p. 44; Malmö requires direct connection), fenced, and not shared with the public while children are present (programme).",
+        "Roof friyta counts only as complementary for school and preschool (Boverket 2015:8, see school and preschool files).",
+        "Dementia and LSS gardens need to be enclosed and safe for residents who may wander; they are generally not shared with the public (programme; see elderly_care_home sabo_garden).",
+        "Guard rails: if young children can be on a terrace, the stricter BFS 2024:9 2 kap. 11 § andra stycket applies to the whole terrace.",
+        "Structure: an accessible roof terrace carries the imposed load of its use (cross_cutting loads_imposed_table_4_1; mapping to a category is indicative), far above the 0.4 kN/m2 for roofs accessible only for maintenance. This is usually the binding constraint on an office roof.",
+        "Noise from a shared terrace or play yard to dwellings: plan quiet hours (practice)."
+      ],
+      "binding_constraint": "structure_roof_load",
+      "layer": "structure",
+      "notes": "Office plots in business parks often have parking but no friyta; a nearby park may satisfy 'i närheten' for housing. Fire: a roof terrace for many people needs its own escape route assessment (BFS 2024:7, assessment)."
+    },
+    {
+      "id": "shared_meeting_rooms",
+      "label_en": "Shared bookable meeting and event rooms",
+      "label_sv": "Gemensamma bokningsbara mötesrum / samlingslokal",
+      "required": {
+        "strength": "practice",
+        "basis": "No use requires a building-shared meeting room by law. If the room is a samlingssal in a publik lokal it needs a hearing-aid sound transfer system (BFS 2024:12 3 kap. 6 §), and its occupant number sets the fire class (Vk 2A up to 150 persons, 2B above; BFS 2024:7 2 kap. 11-12 §§).",
+        "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf",
+        "required_by": [
+          { "use": "office, coworking, community_hybrid, library", "rule": "programme or practice (see office_meeting, cowork_meeting, hybrid_main_room, library_meeting_room)", "strength": "practice" }
+        ]
+      },
+      "size": {
+        "rule": "per_seat",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "design occupants by layout; egress default 2.5 persons/m2 for samlingslokal if the maximum is unknown (BFS 2024:7 2 kap. 4 §)",
+        "strength": "none",
+        "source": "No Swedish m2-per-seat source. Repealed BBR advice gave 0.7 persons/m2 for conference rooms (repealed BBR, pre-2025; practice).",
+        "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": false },
+      "depends_on": ["shared_accessible_wc"],
+      "shareable_with": ["office", "coworking", "community_hybrid", "library", "assembly_event", "student_housing", "co_living", "culture_makerspace", "school_upper_secondary"],
+      "shareable_note": "Office and coworking tenants by day, residents and associations in the evening (see community_hybrid).",
+      "mixing_constraints": [
+        "Each verksamhet is its own fire compartment (BFS 2024:7 5 kap. 25 § 2). A room rented out to different users at different times should be designed for the strictest mode (usually an evening event, possibly Vk 2B or 2C with alcohol).",
+        "After-hours use needs a route from the street to the room, WC and exits that does not open the residential or office floors (practice; see community_hybrid hybrid_entrance).",
+        "Room height: AFS 2023:12 3 kap. 5 § allmänna råd suggest 2.70 m in rooms for many people; 2.40 m in general (cross_cutting staff_room_height_daylight)."
+      ],
+      "binding_constraint": "ventilation",
+      "layer": "space_plan",
+      "notes": "Existing office conference suites are the strongest candidates. Daylight: BFS 2024:8 4 kap. 3 § where people stay more than temporarily."
+    },
+    {
+      "id": "shared_kitchen",
+      "label_en": "Shared kitchen, lounge and staff eating room",
+      "label_sv": "Gemensamt kök / lounge / matrum",
+      "required": {
+        "strength": "law",
+        "basis": "Workplaces: employees must be able to eat in a suitable room with tables and chairs with backrests, with a fridge, food heating and dishwashing nearby (AFS 2023:12 3 kap. 60-61 §§). A building-shared lounge kitchen can meet this for several small employers. Dwellings with boendeenheter: shared cooking, eating and living functions must be 'i anslutning till boendeenheterna' and sized for those sharing them; cooking may be shared by at most twelve persons (BFS 2024:11 2 kap. 7 §), so a building-wide kitchen does NOT replace the co-living or student corridor kitchens.",
+        "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf",
+        "required_by": [
+          { "use": "office, coworking, retail_shop, culture_makerspace, library, gym_fitness", "rule": "AFS 2023:12 3 kap. 60-61 §§ staff eating (can be met by a shared room)", "strength": "law" },
+          { "use": "co_living, student_housing", "rule": "BFS 2024:11 2 kap. 7 § shared kitchens per group of units, max 12 persons per cooking function, next to the units — a separate requirement", "strength": "law" },
+          { "use": "community_hybrid", "rule": "practice: serving kitchen for träffpunkt and celebrations (hybrid_kitchen)", "strength": "practice" }
+        ]
+      },
+      "size": {
+        "rule": "per_unit",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "seats for those eating at the same time (AFS 2023:12 3 kap. 38 §)",
+        "strength": "none",
+        "source": "No m2 in AFS 2023:12 or BFS 2024:11.",
+        "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": 2400, "daylight_required": true, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["office", "coworking", "community_hybrid", "culture_makerspace", "library", "retail_shop", "co_living", "student_housing"],
+      "shareable_note": "Works as a building lounge for employers and as an extra social room for residents; for co-living and student housing only as a complement to their own kitchens.",
+      "mixing_constraints": [
+        "An eating room must not connect directly to a WC (AFS 2023:12 3 kap. 57 §).",
+        "Serving food to the public on a regular basis makes it a food business (registration, see restaurant_cafe); keep the shared lounge at household-type level to avoid commercial grease extract (assessment).",
+        "Shared rooms belonging to boendeenheter are Vk 3B and must be in the same fire compartment group as the units (BFS 2024:7 5 kap. 25 § 4); a building-wide lounge open to office tenants is a separate verksamhet and fire compartment."
+      ],
+      "binding_constraint": "ventilation",
+      "layer": "services",
+      "notes": "community_hybrid refers to this space id (hybrid_kitchen shareable_note)."
+    },
+    {
+      "id": "shared_accessible_wc",
+      "label_en": "Accessible WC for visitors and the public",
+      "label_sv": "Tillgänglig toalett för besökare (RWC)",
+      "required": {
+        "strength": "law",
+        "basis": "If a publik lokal has toilets for the public, at least one must be accessible, with space to turn a wheelchair and transfer from both sides (BFS 2024:12 2 kap. 7 §; cross_cutting access_public_premises_wc). Workplaces: at least one accessible WC per storey at new build or ombyggnad (AFS 2023:12 3 kap. 4 § p. 6). Student housing using the 80 % accessibility exemption: at least one accessible WC for visitors in the building near the exempt dwellings (PBF 3 kap. 5 a § p. 3, see student_housing student_visitor_wc).",
+        "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf",
+        "required_by": [
+          { "use": "retail_shop, restaurant_cafe, food_hall, assembly_event, library, gym_fitness, primary_care_clinic, hotel, community_hybrid, culture_makerspace, sports_hall", "rule": "BFS 2024:12 2 kap. 7 § (if public WCs exist)", "strength": "law" },
+          { "use": "all uses with employees", "rule": "AFS 2023:12 3 kap. 4 § p. 6, 58 §", "strength": "law" },
+          { "use": "student_housing", "rule": "PBF 3 kap. 5 a § p. 3 visitor WC when the exemption is used", "strength": "law" },
+          { "use": "lss_group_home, elderly_care_home", "rule": "visitor RWC (lss_visitor_wc; Uppsala p. 20 accessible WC at the main entrance)", "strength": "programme" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": 4.84,
+        "range_m2": null,
+        "count": "at least one per publik lokal with public WCs; for workplaces one accessible WC per storey (new build/ombyggnad)",
+        "strength": "guidance",
+        "source": "AFS 2023:12 3 kap. 58 § allmänna råd: an accessible toilet should be at least 2.2 x 2.2 m (4.84 m2). The same figure was in repealed BBR 3:1453 (repealed BBR, pre-2025). BFS 2024:12 itself gives no room size.",
+        "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf",
+        "confidence": "verified"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": [],
+      "shareable_with": ["retail_shop", "restaurant_cafe", "library", "gym_fitness", "community_hybrid", "culture_makerspace", "assembly_event", "office", "coworking", "student_housing"],
+      "shareable_note": "One RWC in the public lobby zone can serve several small public premises on the same level if reachable from each without passing locked or private areas. The student-housing visitor WC must be near the exempt dwellings, so a ground-floor lobby WC only counts if they are on the same floor or close.",
+      "mixing_constraints": [
+        "Reachability: it must be usable from each premises it serves during all its opening hours (practice); evening users must not be locked out.",
+        "Staff vs public: AFS 2023:12 staff WCs can be the same rooms, but staff counts (1 per started 15 employees, allmänna råd) are separate from public provision (cross_cutting san_workplace).",
+        "Food premises: guest WCs must not open directly into food handling areas (restaurant_cafe, EU 852/2004)."
+      ],
+      "binding_constraint": "plumbing_shafts",
+      "layer": "services",
+      "notes": "Alarm and contrast markings are recommended in AFS 2023:12 3 kap. 58 § allmänna råd."
+    },
+    {
+      "id": "shared_parcel_room",
+      "label_en": "Parcel and delivery room / mailboxes",
+      "label_sv": "Paketrum / leveransrum / postboxar",
+      "required": {
+        "strength": "practice",
+        "basis": "No building rule requires a parcel room. Mail delivery arrangements (letterboxes or fastighetsboxar) follow postal rules that were not checked here (see open_questions).",
+        "url": "",
+        "required_by": [
+          { "use": "housing_apartment, student_housing, co_living, senior_housing, office, coworking", "rule": "practice; e-commerce volumes", "strength": "practice" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "",
+        "strength": "none",
+        "source": "No Swedish public source found.",
+        "url": "",
+        "confidence": "indicative"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": false },
+      "depends_on": ["shared_entrance_lobby"],
+      "shareable_with": ["housing_apartment", "student_housing", "co_living", "senior_housing", "office", "coworking", "hotel"],
+      "shareable_note": "Smart lockers serve all tenants from one place.",
+      "mixing_constraints": [
+        "Place at the boundary of the access-controlled zone so couriers do not get access to residential floors (practice).",
+        "Cooled lockers for grocery deliveries need power and ventilation (practice)."
+      ],
+      "binding_constraint": "none",
+      "layer": "stuff",
+      "notes": "A dead corner of an office lobby is usually enough."
+    },
+    {
+      "id": "shared_goods_loading",
+      "label_en": "Goods reception, loading bay and waste collection point",
+      "label_sv": "Varumottagning / lastplats / angöring för avfallshämtning",
+      "required": {
+        "strength": "law",
+        "basis": "The plot must have suitable space for parking, loading and unloading 'i skälig utsträckning' on or near it (PBL 8 kap. 9 § första stycket 4), and this applies 'i skälig utsträckning' also to an already built plot (8 kap. 10 §). Workplaces need a goods reception where needed (AFS 2023:12 3 kap. 32 §, as cited in elderly_care_home; not re-read here). Waste must be removable 'på det sätt som krävs' (BFS 2024:8 11 kap. 3 §).",
+        "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/",
+        "required_by": [
+          { "use": "grocery_store, retail_shop, restaurant_cafe, food_hall", "rule": "goods-in (grocery_goods_in, retail_goods_in, rest_goods_in, fh_goods_in)", "strength": "law" },
+          { "use": "school_compulsory, preschool, elderly_care_home", "rule": "kitchen deliveries and waste yard separated from children and from the main entrance (school_delivery_waste, sabo_goods_reception_food_store)", "strength": "programme" },
+          { "use": "all", "rule": "PBL 8 kap. 9-10 §§ loading and unloading; collection vehicle access for waste", "strength": "law" }
+        ]
+      },
+      "size": {
+        "rule": "per_building",
+        "value_m2": null,
+        "range_m2": null,
+        "count": "collection vehicle: transport road at least 3.5 m wide (5.5 m two-way), clear height 4.7 m, turning circle 18 m diameter plus 1.5 m clear strip, or a turning loop (Sysav 2025 printed pp. 10-11, after Avfall Sverige)",
+        "strength": "programme",
+        "source": "Sysav 'Handbok för avfallshantering' (2025), section Framkomlighet och transportväg; vehicle dimensions are guidance for refuse trucks, not loading-bay sizes. School programme example: 70 m2 delivery and waste yard (Uppsala 2019, school_compulsory).",
+        "url": "https://www.sysav.se/media/y2fnidqi/handbok-för-avfallshantering_2025_web.pdf",
+        "confidence": "sourced"
+      },
+      "constraints": { "min_ceiling_height_mm": null, "daylight_required": false, "facade_required": true },
+      "depends_on": [],
+      "shareable_with": ["grocery_store", "retail_shop", "restaurant_cafe", "food_hall", "hotel", "office", "coworking", "culture_makerspace", "housing_apartment"],
+      "shareable_note": "One loading bay and goods corridor can serve all commercial tenants and the waste collection; time-slot deliveries.",
+      "mixing_constraints": [
+        "Children's safety: delivery and waste vehicles should not reverse across pupil or child routes; keep the yard apart from the preschool/school friyta (school_compulsory, preschool programmes).",
+        "Care homes: deliveries should not come through the main entrance (Uppsala SÄBO programme p. 23).",
+        "Food hygiene: food deliveries must not pass through waste handling areas (EU 852/2004, see restaurant_cafe, grocery_store).",
+        "Night deliveries and waste collection next to dwellings cause noise complaints; municipal rules or the bygglov may restrict hours (assessment)."
+      ],
+      "binding_constraint": "site_access",
+      "layer": "site",
+      "notes": "Office buildings often have only a small goods entrance; grocery and restaurant conversions usually fail here first."
+    }
+  ],
+  "variants": [
+    { "id": "shared_housing_led", "label": "Housing-led mixed building (flerbostadshus with ground-floor premises)", "changes": "More than half the gross area is dwellings, so BFS 2026:4 treats it as a flerbostadshus (2 bicycle spaces per apartment). Laundry, storage, bulky storage, friyta and household waste room are legal requirements. Ground-floor premises get their own waste room and goods route." },
+    { "id": "shared_premises_led", "label": "Premises-led mixed building (lokalbyggnad with some dwellings)", "changes": "Bicycle count is 15 % average / 10 % total user capacity for the building; the residents' share of laundry, storage and friyta still follows BFS 2024:11 and PBL 8 kap. 9 §. A shared lobby with access-controlled housing core is typical." },
+    { "id": "shared_with_care_or_children", "label": "Mixed building including preschool, school, care home or LSS", "changes": "These uses keep their own entrance, friyta or garden, goods reception and waste route (programmes). Sharing is limited to time-shared rooms (meeting rooms, hall) and the outdoor space outside opening hours. Fire: 5A/5B/5C compartments and sprinkler for 5B/5C cannot be adapted on change of use (cross_cutting fire_change_of_use_floor)." }
+  ],
+  "conversion_from_office": {
+    "typical_blockers": [
+      "Waste room location: office waste rooms are small and often in a garage or courtyard that the municipal collection vehicle cannot reach within the allowed dragväg; household food waste and up to eight fractions need much more space.",
+      "Friyta for housing, preschool or school on an office plot that is mostly parking (PBL 8 kap. 9-10 §§).",
+      "Roof terrace loads and guard rails on office roofs designed for maintenance only.",
+      "Tr2 stairs in office cores may connect directly only to dwellings and offices; adding public uses to a shared core needs brandsluss (BFS 2024:7 2 kap. 24 §).",
+      "Laundry drainage and extract far from existing risers."
+    ],
+    "typical_enablers": [
+      "Generous office lobbies with reception, accessible entrance and lifts.",
+      "Basement garages and deep dark cores suit bicycle rooms, storage and bulky storage.",
+      "Existing conference suites become shared meeting rooms with little work.",
+      "BFS 2026:4 bicycle counts are not triggered by a plain change of use (1 kap. 4 §), so the municipal norm decides (but see 4 kap. 4 § from 2027 for buildings with large indoor car parks)."
+    ]
+  },
+  "sources": [
+    { "ref": "BFS 2024:7 brandskydd (original text): 2 kap. 3, 4, 10-20, 24 §§; 5 kap. 24-26 §§; 7 kap. 33-37 §§ (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-7/pdf/BFS2024-7.pdf", "accessed": "2026-10-20" },
+    { "ref": "BFS 2024:8: 11 kap. 1-3 §§; 12 kap. 3 §; 13 kap. 3 § (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-8/pdf/BFS2024-8.pdf", "accessed": "2026-10-20" },
+    { "ref": "BFS 2024:9: 2 kap. 10, 11, 14 §§ (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-9/pdf/BFS2024-9.pdf", "accessed": "2026-10-20" },
+    { "ref": "BFS 2024:11: 2 kap. 4-11 §§; 3 kap. 2 § (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2024-11/pdf/BFS2024-11.pdf", "accessed": "2026-10-20" },
+    { "ref": "BFS 2024:12: 1 kap. 6 §; 2 kap. 1, 7 §§; 3 kap. 6 §", "url": "https://rinfo.boverket.se/BFS2024-12/pdf/BFS2024-12.pdf", "accessed": "2026-10-20" },
+    { "ref": "BFS 2026:4 Boverkets föreskrifter och allmänna råd om hållbar mobilitet (beslutad 2026-06-09): 1 kap. 4, 7 §§; 2 kap. 2, 4 §§; 3 kap. 1 §; 4 kap. 3-4 §§; ikraftträdande (text extracted from PDF)", "url": "https://rinfo.boverket.se/BFS2026-4/pdf/BFS2026-4.pdf", "accessed": "2026-10-20" },
+    { "ref": "Avfallsförordning (2020:614), consolidated to SFS 2026:1447: 3 kap. 2 § (versions to/from 2028-01-01), 2 a, 4, 5, 7, 8, 11, 36, 37 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/avfallsforordning-2020614_sfs-2020-614/", "accessed": "2026-10-20" },
+    { "ref": "Plan- och bygglag (2010:900) 8 kap. 9-10 §§", "url": "https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/plan-och-bygglag-2010900_sfs-2010-900/", "accessed": "2026-10-20" },
+    { "ref": "Avfall Sverige / Ramboll, PM 'Uppdatering av dimensionering för avfallsutrymmen' (Sept 2023), pp. 28-32 (co-located waste rooms, 0.13 m2 bulky waste, tabell 15-16)", "url": "https://www.avfallsverige.se/media/awdltdok/pm-uppdatering-av-dimensionering-av-avfallsutrymmen.pdf", "accessed": "2026-10-20" },
+    { "ref": "Sysav, 'Handbok för avfallshantering' (2025), printed pp. 10-18 (transport road, dragväg, container footprints, 1.5 m aisle, volumes; figures from Avfall Sveriges Handbok för avfallsutrymmen)", "url": "https://www.sysav.se/media/y2fnidqi/handbok-för-avfallshantering_2025_web.pdf", "accessed": "2026-10-20" },
+    { "ref": "AFS 2023:12 Utformning av arbetsplatser: 3 kap. 4, 38, 57-58, 60-61 §§", "url": "https://www.av.se/globalassets/filer/publikationer/foreskrifter/utformning-av-arbetsplatser-afs2023-12.pdf", "accessed": "2026-10-20" },
+    { "ref": "Boverket PBL kunskapsbanken: Bostäders inredning och utrustning / utformning (laundry, storage guidance)", "url": "https://www.boverket.se/sv/PBL-kunskapsbanken/regler-om-byggande/bostaders-lamplighet/inredning/", "accessed": "2026-10-20" }
+  ],
+  "open_questions": [
+    "Stockholm Vatten och Avfall 'Handbok för avfallsutrymmen' and Göteborg's (Kretslopp och vatten) waste-room guidelines were not found online in this pass; the sizing here relies on Avfall Sverige's figures as reproduced by Sysav. Fetch the pilot municipality's own avfallsföreskrifter and avfallstaxa (max dragväg, walking distance from entrance, cooled food waste).",
+    "Avfall Sveriges full 'Handbok för avfallsutrymmen' (updated edition after the 2023 PM) was not read; it holds the room details (ventilation, lighting, door widths, walking distance for residents).",
+    "BFS 2026:4 in a mixed building: the whole building is either flerbostadshus or lokalbyggnad (1 kap. 7 §). Does a flerbostadshus also need bicycle spaces for its premises' users, and vice versa? Check Boverket's guidance on hållbar mobilitet.",
+    "E-bike and mobility-scooter charging in shared rooms: does BFS 2024:7 5 kap. 26 § ('energilager med batterier' > 20 kWh, 'andra utrymmen med förhöjd sannolikhet för uppkomst av brand') apply? Check Boverket and MSB guidance.",
+    "Locked dementia units in elderly_care_home: whether residents are 'held locked in' (BFS 2024:7 2 kap. 9 § 3, which would make the space Vk 0) and the legal basis for locked doors under SoL are unresolved (see elderly_care_home open_questions). This affects how a shared entrance or garden can connect to them.",
+    "Postal rules for letterboxes or fastighetsboxar in flerbostadshus (Postförordningen / PTS rules) were not checked.",
+    "AFS 2023:12 3 kap. 32 § (goods reception) is cited from the elderly_care_home file and was not re-read here.",
+    "Avfallsförordningen 3 kap. 2 § changes on 2028-01-01 (bulky waste sorting by material under new 15 §); re-check the bulky-waste room assumptions then.",
+    "BFS 2024:7 was read in its original text; BFS 2025:10 amendments (from 2025-12-01) were not checked for 5 kap. 25-26 §§ and 7 kap. 33-37 §§."
+  ]
+}

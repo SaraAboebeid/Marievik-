@@ -2,9 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, fmt, fmt1 } from './api'
 import type { FullResult } from './api'
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, FloorPayload, KpiResult, Level, Methods, SavedScenario,
-  Settings, SitePayload, Unit, UnitComfort,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Level, Methods, Project, SavedScenario,
+  Settings, SitePayload, TimelineResponse, Unit, UnitComfort,
 } from './types'
+import { TimelineDrawer } from './ui/TimelineDrawer'
+import { KeyFigures } from './ui/KeyFigures'
+import { TopBar, type Tab } from './ui/TopBar'
 import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
 import { ProfileKpis } from './ui/ProfileKpis'
 import { MethodsDrawer } from './ui/MethodsDrawer'
@@ -15,7 +18,6 @@ import { Legend } from './ui/kit'
 import { ScenarioPanel } from './ui/ScenarioPanel'
 import { InfoPanel } from './ui/InfoPanel'
 import { SunBar } from './ui/SunBar'
-import { RhinoPanel, type RhinoLayer } from './ui/RhinoPanel'
 import { CompareDrawer } from './ui/CompareDrawer'
 import { MapLegend } from './ui/MapLegend'
 import { ParametricDrawer } from './ui/ParametricDrawer'
@@ -33,7 +35,11 @@ export default function App() {
   const [scen, setScen] = useState<Record<string, Settings>>({})
   const [bdata, setBdata] = useState<Record<string, BuildingPayload>>({})
   const [loading, setLoading] = useState<Record<string, boolean>>({})
-  const [level, setLevel] = useState<Level>({ kind: 'site' })
+  // ?building=B01 opens that building straight away (a shareable link)
+  const [level, setLevel] = useState<Level>(() => {
+    const id = new URLSearchParams(window.location.search).get('building')
+    return id && /^[A-Za-z0-9_-]+$/.test(id) ? { kind: 'building', building: id } : { kind: 'site' }
+  })
   const [floorData, setFloorData] = useState<FloorPayload | null>(null)
   const [dl, setDl] = useState<DaylightResult | null>(null)
   const [cf, setCf] = useState<ComfortResult | null>(null)
@@ -54,14 +60,10 @@ export default function App() {
   const [showCompare, setShowCompare] = useState(false)
   const [showParametric, setShowParametric] = useState(() => new URLSearchParams(window.location.search).get('view') === 'parametric')
   const [showSuppliers, setShowSuppliers] = useState(false)
-  const [rhinoLayers, setRhinoLayers] = useState<RhinoLayer[]>([])
-  const [showGenerated, setShowGenerated] = useState(true)
-  const [models, setModels] = useState<{ name: string; url: string; bytes: number }[]>([])
   const [choice, setChoice] = useState(readChoice)
   const [methods, setMethods] = useState<Methods | null>(null)
   const [kpiResult, setKpiResult] = useState<KpiResult | null>(null)
   const [explain, setExplain] = useState<string | null>(null)   // Methods panel open (KPI id to show, or '')
-  const [rhinoName, setRhinoName] = useState<string | null>(null)
   // the saved scenario on screen: its name and its settings when saved or loaded (cleared once anything changes)
   const [shownScenario, setShownScenario] = useState<{ name: string; settings: string } | null>(null)
   const [panels, setPanels] = useState<{ left: boolean; right: boolean }>(() => {
@@ -73,8 +75,56 @@ export default function App() {
     return next
   })
 
+  const [tab, setTab] = useState<Tab>('explore')
+  const [figures, setFigures] = useState<Figures | null>(null)
+  const [projectData, setProjectData] = useState<Project | null>(null)
+  const [showTimeline, setShowTimeline] = useState(false)
+  const [tl, setTl] = useState<TimelineResponse | null>(null)
+  const [tlYear, setTlYear] = useState(0)
+  const [tlPath, setTlPath] = useState('least_change')
+
   const buildingId = level.kind === 'site' ? null : level.building
   const settingsOf = useCallback((id: string) => scen[id] ?? site?.defaults, [scen, site])
+
+  // ------------------------------------------------------------ the project's own profiles (data/projects), else the generic ones
+  useEffect(() => {
+    let alive = true
+    api.project(choice.project).then((p) => { if (alive) setProjectData(p) }).catch(() => { if (alive) setProjectData(null) })
+    return () => { alive = false }
+  }, [choice.project])
+  const projectProfile = projectData?.profiles.find((p) => p.id === choice.profile) ?? null
+  // the CAVF KPI set behind the chosen profile: a project profile names the generic profile it reads like
+  const cavfProfile = projectProfile?.cavf_profile ?? (choice.profile && PROFILE_LABEL[choice.profile] ? choice.profile : null)
+  const profileOptions: [string, string][] = projectData
+    ? projectData.profiles.map((p) => [p.id, p.title])
+    : Object.entries(PROFILE_LABEL)
+
+  // ------------------------------------------------------------ 10-year timeline: computed once per building, polled until ready
+  useEffect(() => {
+    if (!showTimeline || !buildingId) return
+    let alive = true
+    let t = 0
+    setTl(null)
+    const poll = () => api.timeline(buildingId, choice.project).then((r) => {
+      if (!alive) return
+      setTl(r)
+      if (r.status === 'ready') setTlYear((y) => (r.years.includes(y) ? y : r.years[0]))
+      else if (r.status === 'computing') t = window.setTimeout(poll, 2000)
+    }).catch((e) => { if (alive) setError(String(e)) })
+    poll()
+    return () => { alive = false; window.clearTimeout(t) }
+  }, [showTimeline, buildingId, choice.project])
+
+  // ------------------------------------------------------------ key figures of the open building's scenario (Design panel)
+  const figKey = buildingId ? bdata[buildingId]?.key : undefined
+  useEffect(() => {
+    if (!buildingId || !figKey) return
+    let alive = true
+    api.figures(buildingId, settingsOf(buildingId) ?? {})
+      .then((r) => { if (alive) setFigures(r) })
+      .catch((e) => { if (alive) setError(String(e)) })
+    return () => { alive = false }
+  }, [buildingId, figKey, tab]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ------------------------------------------------------------ profile KPIs and their methods
   useEffect(() => { writeChoice(choice.profile, choice.project) }, [choice])
@@ -127,7 +177,6 @@ export default function App() {
       viewer.current?.frameSite(true)
     }).catch((e) => setError(`Cannot reach the explorer server: ${(e as Error).message}`))
     api.capabilities().then(setCaps).catch(() => setCaps(null))
-    api.models().then((m) => setModels(m.models)).catch(() => {})
     return () => { alive = false }
   }, [])
 
@@ -164,6 +213,17 @@ export default function App() {
     })
     setDl(null); setCf(null); setUnitComfort(null); setOverlay('type')
   }, [site])
+
+  // the timeline drives the 3D model: the chosen pathway's state in the chosen year
+  useEffect(() => {
+    if (!showTimeline || !buildingId || !site || !tl || tl.status !== 'ready' || tl.building !== buildingId) return
+    const seg = tl.segments.find((s) => s.id === tlPath) ?? tl.segments[0]
+    const row = seg.years.find((r) => r.year === tlYear) ?? seg.years[0]
+    const want = tl.states[row.state].settings
+    const cur = settingsOf(buildingId)
+    if (cur?.ground_use !== want.ground_use || cur?.use !== want.use) updateScenario(buildingId, want)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showTimeline, buildingId, tl, tlPath, tlYear])
 
   // ------------------------------------------------------------ level changes
   const go = useCallback((l: Level) => {
@@ -393,26 +453,6 @@ export default function App() {
     }
   }
 
-  // every building back to today's defaults, back to the site view, analyses and exploded view cleared
-  const resetSite = () => {
-    if (!site) return
-    for (const id of site.buildings.map((x) => x.id)) updateScenario(id, { ...site.defaults })
-    setView((v) => ({ ...v, explode: 0 }))
-    setFloorData(null)
-    go({ kind: 'site' })
-  }
-
-  // ------------------------------------------------------------ Rhino
-  const loadRhino = async (src: string | ArrayBuffer, label: string) => {
-    setBusy(`Loading ${label}…`)
-    try {
-      const layers = await viewer.current!.loadRhino(src)
-      setRhinoLayers(layers)
-      setRhinoName(label)
-      setError(null)
-    } catch (e) { setError(`Rhino: ${(e as Error).message}`) } finally { setBusy(null) }
-  }
-
   // ------------------------------------------------------------ render
   const b = buildingId ? bdata[buildingId] : null
   const crumbs: { label: string; to: Level }[] = [{ label: 'Marievik', to: { kind: 'site' } }]
@@ -438,7 +478,7 @@ export default function App() {
   const working = busy ?? (Object.values(loading).some(Boolean) ? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…` : null)
   const sc = scenarioStatus
   const scenarioLabel = sc.name ? sc.name : sc.changed.length ? `${sc.changed.length} building${sc.changed.length > 1 ? 's' : ''} changed · not saved` : 'Today’s site'
-  const panelTop = 'top-[5.5rem]'
+  const panelTop = 'top-[6.9rem]'
   // hover label: above and right of the pointer, flipped to the left near the right edge so it never runs off screen
   const hoverLeft = hover ? (hover.x > window.innerWidth - 360 ? hover.x - 16 : hover.x + 16) : 0
   const hoverFlip = hover ? hover.x > window.innerWidth - 360 : false
@@ -447,54 +487,40 @@ export default function App() {
     <div className="relative h-full w-full">
       <div ref={host} className="absolute inset-0" />
 
-      {/* top bar: project and scenario first; everything else grouped on the right */}
-      <header className="pointer-events-none absolute left-3 right-3 top-3 z-10 flex items-start justify-between gap-3">
-        <div className="pointer-events-auto rounded-lg border border-line bg-raised/95 px-3.5 py-2 shadow-sm">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <a href="/" className="text-[12.5px] text-ink-2 hover:text-ink" title="Back to the Digital Lab home page">← Home</a>
-            <span className="h-4 w-px bg-line" aria-hidden />
-            <span className="flex items-baseline gap-1.5" title={project.placeholder ? 'Placeholder project: shows the Marievik model until its own is added' : undefined}>
-              <span className="text-[16px] font-semibold tracking-tight">{project.name}</span>
-              <span className="text-[13px] text-ink-2">{project.city}</span>
-              {project.placeholder && <span className="rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
-            </span>
-            <span className="h-4 w-px bg-line" aria-hidden />
-            <button onClick={() => setShowCompare(true)} title="Open scenarios"
-              className="flex items-baseline gap-1.5 rounded px-1 text-[13px] hover:bg-sunken">
-              <span className="text-ink-2">Scenario:</span>
-              <span className={`font-medium ${sc.changed.length && !sc.name ? 'text-warn' : 'text-ink'}`}>{scenarioLabel}</span>
-            </button>
-          </div>
-          <nav className="mt-1 flex flex-wrap items-center gap-1 text-[12.5px]" aria-label="Level">
-            {crumbs.map((c, i) => (
-              <span key={i} className="flex items-center gap-1">
-                {i > 0 && <span className="text-muted">›</span>}
-                <button className={`rounded px-1 ${i === crumbs.length - 1 ? 'font-medium text-ink' : 'text-ink-2 underline-offset-2 hover:text-ink hover:underline'}`}
-                  onClick={() => go(c.to)}>{c.label}</button>
-              </span>
-            ))}
-            {level.kind !== 'site' && (
-              <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11.5px] text-ink-2 hover:text-ink" title="Up one level (Esc)">↑ up</button>
-            )}
-          </nav>
-        </div>
+      <TopBar site={site} tab={tab}
+        setTab={(t) => { setTab(t); if (t === 'compare') setShowCompare(true) }}
+        building={buildingId} onBuilding={(id) => go(id ? { kind: 'building', building: id } : { kind: 'site' })}
+        location={`${project.name}, ${project.city}`}
+        profile={{ value: choice.profile ?? '', options: profileOptions, onChange: (v) => setChoice((c) => ({ ...c, profile: v || null })) }} />
 
+      {/* under the bar: where you are, and the tools */}
+      <div className="pointer-events-none absolute left-3 right-3 top-[60px] z-10 flex items-start justify-between gap-3">
+        <nav className="pointer-events-auto flex flex-wrap items-center gap-1 rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 text-[12.5px] shadow-sm" aria-label="Level">
+          {crumbs.map((c, i) => (
+            <span key={i} className="flex items-center gap-1">
+              {i > 0 && <span className="text-muted">›</span>}
+              <button className={`rounded px-1 ${i === crumbs.length - 1 ? 'font-medium text-ink' : 'text-ink-2 underline-offset-2 hover:text-ink hover:underline'}`}
+                onClick={() => go(c.to)}>{c.label}</button>
+            </span>
+          ))}
+          {level.kind !== 'site' && (
+            <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11.5px] text-ink-2 hover:text-ink" title="Up one level (Esc)">↑ up</button>
+          )}
+          <span className="mx-1.5 h-4 w-px bg-line" aria-hidden />
+          <span className={`text-[12px] ${sc.changed.length && !sc.name ? 'text-warn' : 'text-ink-2'}`}>{scenarioLabel}</span>
+          {project.placeholder && <span className="ml-1 rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
+        </nav>
         <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-1.5">
           {working && (
             <span className="rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-sm">{working}</span>
           )}
-          <label className="flex items-center gap-1.5 rounded-lg border border-line bg-raised/95 py-1 pl-2.5 pr-1 text-[12.5px] text-ink-2 shadow-sm">
-            View as
-            <select value={choice.profile ?? ''} onChange={(e) => setChoice((c) => ({ ...c, profile: e.target.value || null }))}
-              className="rounded bg-transparent px-1 py-0.5 text-[12.5px] font-medium text-ink outline-none">
-              <option value="">No profile</option>
-              {Object.entries(PROFILE_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}
-            </select>
-          </label>
-          <button onClick={() => setShowCompare((s) => !s)}
-            className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
-            {saved.length ? `Scenarios (${saved.length})` : 'Scenarios · none saved'}
-          </button>
+          {buildingId && (
+            <button onClick={() => setShowTimeline((s) => !s)} aria-pressed={showTimeline}
+              title="Ten years: the building unchanged against pathways of change, played on the model"
+              className={`rounded-lg border px-3 py-1.5 text-[12.5px] font-medium shadow-sm ${showTimeline ? 'border-accent bg-accent text-white' : 'border-line bg-raised/95 hover:border-line-strong'}`}>
+              10-year timeline
+            </button>
+          )}
           <button onClick={() => setShowParametric(true)} title="Plans, bill of quantities and every use × wall system for one building"
             className="rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] shadow-sm hover:border-line-strong">
             Parametric model
@@ -510,57 +536,45 @@ export default function App() {
             Methods & data
           </button>
         </div>
-      </header>
+      </div>
 
       {error && (
-        <div className="absolute left-1/2 top-24 z-20 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
+        <div className="absolute left-1/2 top-28 z-30 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
           <button className="float-right ml-3 font-mono" onClick={() => setError(null)} aria-label="Dismiss">×</button>
           {error}
         </div>
       )}
 
-      {/* left: scenario controls + Rhino import (collapsible) */}
-      {panels.left ? (
-        <aside className={`panel-scroll absolute left-3 ${panelTop} z-10 w-[20rem]`}>
-          <button onClick={() => togglePanel('left')} className="mb-1.5 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
-            ◂ Hide panel
-          </button>
+      {/* left: building setup and scenarios */}
+      {(panels.left ? (
+        <aside className={`panel-scroll absolute left-3 ${panelTop} z-10 w-[19rem]`}>
           {site && (
             <ScenarioPanel
               site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
-              loading={buildingId ? !!loading[buildingId] : false} status={sc}
+              loading={buildingId ? !!loading[buildingId] : false} status={sc} saved={saved}
               onChange={(patch) => buildingId && updateScenario(buildingId, patch)}
               onGo={go} view={view} setView={setView}
-              onSave={saveScenario} onCompare={() => setShowCompare(true)} onSuppliers={() => setShowSuppliers(true)}
+              onSave={saveScenario} onRestore={restoreSaved} onCompare={() => setShowCompare(true)} onSuppliers={() => setShowSuppliers(true)}
               onResetBuilding={() => buildingId && updateScenario(buildingId, { ...site.defaults })}
-              onResetSite={resetSite}
             />
           )}
-          <RhinoPanel models={models} layers={rhinoLayers} loaded={rhinoName}
-            onLoad={loadRhino}
-            onLayers={(vis) => {
-              setRhinoLayers((ls) => ls.map((l) => ({ ...l, visible: vis.has(l.name) })))
-              viewer.current?.applyRhinoLayers(vis)
-            }}
-            showGenerated={showGenerated}
-            setShowGenerated={(v) => { setShowGenerated(v); viewer.current?.setBuildingsVisible(v) }} />
+          <button onClick={() => togglePanel('left')} className="mb-2 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
+            ◂ Hide panel
+          </button>
         </aside>
       ) : (
         <button onClick={() => togglePanel('left')}
           className={`absolute left-3 ${panelTop} z-10 rounded-lg border border-line bg-raised/95 px-3 py-1.5 text-[12.5px] font-medium shadow-sm hover:border-line-strong`}>
-          Scenario ▸
+          Building setup ▸
         </button>
-      )}
+      ))}
 
-      {/* right: KPIs and analysis for the current level (collapsible) */}
+      {/* right: the building's key figures, or the site / floor / unit figures and analysis */}
       {panels.right ? (
-        <aside className={`panel-scroll absolute right-3 ${panelTop} z-10 w-[23rem]`}>
-          <div className="flex justify-end">
-            <button onClick={() => togglePanel('right')} className="mb-1.5 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
-              Hide panel ▸
-            </button>
-          </div>
-          {site && (
+        <aside className={`panel-scroll absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+          {level.kind === 'building' && buildingId ? (
+            <KeyFigures data={figures && figures.building === buildingId ? figures : null} loading={!!loading[buildingId] || figures?.key !== bdata[buildingId]?.key} />
+          ) : site && (
             <InfoPanel
               site={site} level={level} bdata={bdata} totals={totals} floor={floorData}
               dl={dl} cf={cf} unitComfort={unitComfort} overlay={overlay} setOverlay={setOverlay}
@@ -568,10 +582,23 @@ export default function App() {
               onQuick={runQuick} onFull={runFull} onGo={go}
             />
           )}
-          {site && choice.profile && (
-            <ProfileKpis profile={choice.profile} methods={methods} result={kpiResult} building={buildingId}
+          {projectProfile && (
+            <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3 text-[12.5px] shadow-sm">
+              <div className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Viewing as {projectProfile.title}</div>
+              <p className="mt-1 leading-snug text-ink-2">{projectProfile.mandate}</p>
+              <p className="mt-1 leading-snug text-ink-2"><span className="text-ink">Looks at:</span> {projectProfile.focus}.
+                {' '}<span className="text-ink">Fears:</span> {projectProfile.risk}.</p>
+            </section>
+          )}
+          {site && cavfProfile && (
+            <ProfileKpis profile={cavfProfile} methods={methods} result={kpiResult} building={buildingId}
               onExplain={(k) => setExplain(k)} />
           )}
+          <div className="flex justify-end">
+            <button onClick={() => togglePanel('right')} className="mb-2 rounded-md border border-line bg-raised/95 px-2 py-0.5 text-[12px] text-ink-2 shadow-sm hover:text-ink">
+              Hide panel ▸
+            </button>
+          </div>
         </aside>
       ) : (
         <button onClick={() => togglePanel('right')}
@@ -588,12 +615,19 @@ export default function App() {
 
       {/* bottom: map legend + sun/view controls, both foldable */}
       <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-end gap-2">
-        {site && <div className="pointer-events-auto min-w-0 max-w-[58rem]"><MapLegend site={site} level={level} floor={floorData} /></div>}
-        <div className="pointer-events-auto"><SunBar sun={sun} setSun={setSun} view={view} setView={setView} level={level} /></div>
+        {showTimeline && buildingId ? (
+          <TimelineDrawer tl={tl && (tl.status !== 'ready' || tl.building === buildingId) ? tl : null} profile={projectProfile}
+            year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={() => setShowTimeline(false)} />
+        ) : (
+          <>
+            {site && <div className="pointer-events-auto min-w-0 max-w-[58rem]"><MapLegend site={site} level={level} floor={floorData} /></div>}
+            <div className="pointer-events-auto"><SunBar sun={sun} setSun={setSun} view={view} setView={setView} level={level} /></div>
+          </>
+        )}
       </div>
 
       {showCompare && (
-        <CompareDrawer saved={saved} current={totals} onClose={() => setShowCompare(false)}
+        <CompareDrawer saved={saved} current={totals} onClose={() => { setShowCompare(false); if (tab === 'compare') setTab('design') }}
           onRemove={removeSaved} onRestore={restoreSaved} onSave={saveScenario} />
       )}
 
@@ -610,7 +644,7 @@ export default function App() {
       )}
 
       {explain !== null && methods && (
-        <MethodsDrawer methods={methods} profile={choice.profile} focus={explain}
+        <MethodsDrawer methods={methods} profile={cavfProfile} focus={explain}
           result={kpiResult && kpiResult.building === buildingId ? kpiResult : null} onClose={() => setExplain(null)} />
       )}
 

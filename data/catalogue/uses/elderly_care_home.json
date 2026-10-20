@@ -259,7 +259,7 @@
       "label_sv": "Aktivitetsrum / samlingssal",
       "required": { "strength": "programme", "basis": "Uppsala p. 21: at least one larger adaptable activity room with an accessible WC next to it. Botkyrka p. 43: assembly hall for 50-60 seated people.", "url": "https://www.botkyrka.se/download/18.13554ca8173e7b670d1ec11/1598379351184/Riktlinjer%20f%C3%B6r%20lokalfunktionsprogram%20f%C3%B6r%20s%C3%A4rskilda%20boenden%20m%20m.pdf" },
       "size": { "rule": "per_building", "value_m2": null, "count": "1 per home; capacity 50-60 seated (Botkyrka)", "strength": "none", "source": "Capacity is given, area is not.", "confidence": "verified" },
-      "shareable_with": ["community_hall", "day_centre_elderly"],
+      "shareable_with": ["community_hybrid", "day_centre_elderly"],
       "shareable_note": "Uppsala and Botkyrka both see co-location with day activities as positive.",
       "layer": "space_plan"
     },

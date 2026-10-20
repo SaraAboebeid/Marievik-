@@ -18,7 +18,7 @@
       "mandate": "Get companies to come to the place, from a B2B perspective: business. The place's self-image: relevant and interesting over time.",
       "focus": "Attract companies, flexible leases, multi-use premises, reuse that pays",
       "risk": "Losing profitability",
-      "timeline_kpis": ["people", "walls_changed_cum", "capex_cum", "uses_count", "issues"],
+      "timeline_kpis": ["feasible_uses", "transformation_cost", "use_diversity", "data_quality"],
       "needs_data": ["Lease terms and tenant turnover, to show whether flexible leases keep tenants longer"],
       "cavf_profile": "developer"
     },
@@ -29,7 +29,7 @@
       "mandate": "Mandate 2.5 billion SEK; result responsibility for 4 projects (4–5 under way): profitability first in design and concept, then construction cost.",
       "focus": "Cost and time, build less and right faster, value of reuse in the calculation",
       "risk": "Marievik becoming an island, quickly irrelevant",
-      "timeline_kpis": ["capex_cum", "disruption_cum", "walls_changed_cum", "co2_cum", "issues"],
+      "timeline_kpis": ["transformation_cost", "transformation_time", "upfront_gwp", "data_quality"],
       "needs_data": ["Project budget and schedule, to compare against the investment line"],
       "cavf_profile": "developer"
     },
@@ -40,7 +40,7 @@
       "mandate": "Responsible for the operational management of Marievik: sitting tenants, contracts, negotiation.",
       "focus": "Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants",
       "risk": "Not being relevant; competition from vacancies in new buildings",
-      "timeline_kpis": ["people", "people_hours", "co2_cum", "issues"],
+      "timeline_kpis": ["utilization", "use_diversity", "upfront_gwp", "data_quality"],
       "needs_data": ["Rent and operating cost per use (överskottsgrad)", "Current vacancy and lease expiries"],
       "cavf_profile": "investor"
     },
@@ -51,8 +51,8 @@
       "mandate": "Get people to want to be at the place. Sets direction, steers how Marievik appears and how the place is experienced.",
       "focus": "A destination for food, culture and recreation; life on site; connection to the surroundings",
       "risk": "Vacancies and falling value",
-      "timeline_kpis": ["people_hours", "evening_share", "uses_count", "people"],
-      "needs_data": ["Visitor counts today, to calibrate people-hours"],
+      "timeline_kpis": ["use_diversity", "utilization", "feasible_uses"],
+      "needs_data": ["Visitor counts today, to calibrate people-hours — 'people-hours' and 'evening share' were dropped from the KPI picker since they are not in the project handbook's KPI list; tell us if they should be added to the handbook as a new Social KPI"],
       "cavf_profile": "developer"
     },
     {
@@ -62,7 +62,7 @@
       "mandate": "Result responsibility, mandate within board decisions. Steers, coordinates, follows up.",
       "focus": "Rent and income, project result, sustainability; long-lived buildings",
       "risk": "Customers choosing other areas; missing growing companies",
-      "timeline_kpis": ["capex_cum", "co2_cum", "people", "issues"],
+      "timeline_kpis": ["transformation_cost", "upfront_gwp", "data_quality"],
       "needs_data": ["Rent per use, to turn the timeline into a project result"],
       "cavf_profile": "finance"
     }

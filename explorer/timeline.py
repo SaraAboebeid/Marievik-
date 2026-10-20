@@ -33,6 +33,8 @@ from shapely.ops import unary_union
 from engine import loader
 from . import model as M
 
+PLACEHOLDERS = json.loads((loader.DATA / "kpi" / "placeholders.json").read_text(encoding="utf-8"))
+
 # layout-engine use -> catalogue use (data/catalogue/uses)
 CATALOGUE_USE = {"office_ground": "office", "office_cellular": "office", "office_open": "office", "residential": "housing_apartment",
                  "hotel": "hotel", "school": "school_compulsory", "retail": "retail_shop"}
@@ -52,27 +54,36 @@ ASSUME = {
     "hotel_guests_per_room": (1.4, "PLACEHOLDER: average guests per occupied room"),
 }
 
+# The project handbook's own 29 KPIs (CAVF KPI cheat sheet; see explorer/kpis.py KPIS for the full set with
+# formulas — that panel is the authority). These 7 are the ones this pathway engine can genuinely compute
+# per year, from what a layout actually contains; the rest of the handbook (Delivered service, Disruption,
+# Adaptability profile, Energy use intensity, Access and affordability, POE performance, Decision influence,
+# Institutionalization, CRREM misalignment year, …) needs data this engine does not model (metering, surveys,
+# governance records) and is not offered here rather than invented.
 KPI_META = {
-    "people":            {"label": "People in the building at peak", "unit": "people", "better": "higher", "status": "partial",
-                          "note": "Gross area / catalogue m² per person (office 15, school 16, housing 45, hotel 38 per room); "
-                                  "peak of the hourly presence profiles."},
-    "people_hours":      {"label": "People-hours per weekday", "unit": "h", "better": "higher", "status": "partial",
-                          "note": "Persons × the catalogue's hourly presence profile, summed over 24 h. Profiles are indicative."},
-    "evening_share":     {"label": "Share of people-hours after 17:00", "unit": "%", "better": "higher", "status": "partial",
-                          "note": "17:00–24:00 share of the weekday people-hours."},
-    "capex_cum":         {"label": "Investment, cumulative", "unit": "SEK", "better": "lower", "status": "partial",
-                          "note": "New walls and finishes at catalogue prices, plus demounting removed walls. Doors, services "
-                                  "and slab openings are not priced yet."},
-    "co2_cum":           {"label": "Embodied carbon of changes, cumulative", "unit": "kg CO₂e", "better": "lower", "status": "partial",
-                          "note": "A1–A5 of new walls and finishes plus C1–C4 of removed walls (catalogue)."},
-    "walls_changed_cum": {"label": "Walls built or removed, cumulative", "unit": "m²", "better": "lower", "status": "computed",
-                          "note": "Wall area that differs between two layouts, by geometry and wall type."},
-    "disruption_cum":    {"label": "Months of works, cumulative", "unit": "months", "better": "lower", "status": "placeholder",
-                          "note": "data/kpi/placeholders.json: fixed months per change plus months per 1000 m² changed."},
-    "uses_count":        {"label": "Different uses in the building", "unit": "uses", "better": "higher", "status": "computed",
-                          "note": "Distinct uses across the floor groups."},
-    "issues":            {"label": "Standards issues", "unit": "issues", "better": "lower", "status": "computed",
-                          "note": "Catalogue checks: walk to exit vs. fire class, units without windows, imposed load, slab openings."},
+    "transformation_cost": {"label": "Transformation cost", "group": "Change", "unit": "SEK", "better": "lower", "status": "partial",
+                            "note": "CAVF cheat sheet, Change group. New walls and finishes at catalogue prices, cumulative "
+                                    "over the pathway — adapted to price only the area that changes at each step, not the "
+                                    "whole building. Doors, services and slab openings are not priced yet."},
+    "transformation_time": {"label": "Transformation time", "group": "Change", "unit": "months", "better": "lower", "status": "placeholder",
+                            "note": "CAVF cheat sheet, Change group. data/kpi/placeholders.json formula (fixed months + "
+                                    "months per 1000 m² changed), cumulative over the pathway."},
+    "upfront_gwp":          {"label": "Upfront GWP", "group": "Carbon", "unit": "kg CO₂e", "better": "lower", "status": "partial",
+                            "note": "CAVF cheat sheet, Carbon group (A1–A5). Adapted here to the changes made (plus C1–C4 "
+                                    "of removed walls), cumulative over the pathway, rather than a single design snapshot."},
+    "use_diversity":        {"label": "Use diversity", "group": "Use", "unit": "uses", "better": "higher", "status": "computed",
+                            "note": "CAVF cheat sheet, Use group. Distinct uses across the floor groups — not inherently "
+                                    "good or bad, context-dependent."},
+    "data_quality":         {"label": "Decision-critical data quality", "group": "Data", "unit": "%", "better": "higher", "status": "computed",
+                            "note": "CAVF cheat sheet, Data group. Share of priced elements resting on verified (not "
+                                    "placeholder or estimated) catalogue data, at this year's state. The same measure the "
+                                    "Methods & data panel reports as a letter grade."},
+    "feasible_uses":        {"label": "Feasible alternative uses", "group": "Feasibility", "unit": "uses", "better": "higher", "status": "placeholder",
+                            "note": "CAVF cheat sheet, Feasibility group. data/kpi/placeholders.json; a whole-building "
+                                    "figure, not yet computed per state of this pathway."},
+    "utilization":          {"label": "Utilization", "group": "Use", "unit": "%", "better": "higher", "status": "placeholder",
+                            "note": "CAVF cheat sheet, Use group. data/kpi/placeholders.json; a whole-building figure, not "
+                                    "yet computed per state of this pathway."},
 }
 
 
@@ -193,6 +204,9 @@ def evaluate_state(site: M.Site, bid: str, ground: str, upper: str) -> dict:
         "people": round(max(hourly)), "people_hours": round(total),
         "evening_share": round(sum(hourly[h] for h in EVENING) / total, 3) if total else 0.0,
         "uses_count": len({g["catalogue_use"] for g in out_groups.values()}),
+        # CAVF "Decision-critical data quality": share of this state's priced elements that rest on verified
+        # (not placeholder/estimated) catalogue data — the same figure explorer/kpis.py reports as a grade.
+        "data_quality": round(1 - sc["kpi"].get("placeholder_share", 1.0), 3),
         "blocked": any(i["severity"] == "blocker" for i in issues),
     }
 
@@ -249,10 +263,9 @@ def transition(site: M.Site, bid: str, a: dict, b: dict) -> dict:
                 capex += p["capex_sek"]
                 co2 += p["upfront_kgco2e"]
         void_m2 += max(0.0, sum(v.area for v in B.voids) - sum(v.area for v in A.voids))
-    ph = json.loads((loader.DATA / "kpi" / "placeholders.json").read_text(encoding="utf-8"))
     changed_area = sum(B.footprint.area for A, B in zip(fa, fb) if A.use != B.use)
-    months = (ph["transformation_months_base"]["value"]
-              + ph["transformation_months_per_1000m2"]["value"] * changed_area / 1000) if floors_changed else 0.0
+    months = (PLACEHOLDERS["transformation_months_base"]["value"]
+              + PLACEHOLDERS["transformation_months_per_1000m2"]["value"] * changed_area / 1000) if floors_changed else 0.0
     return {"walls_new_m2": round(new_m2), "walls_removed_m2": round(removed_m2),
             "walls_changed_m2": round(new_m2 + removed_m2), "finish_m2": round(finish_m2),
             "slab_opening_m2": round(void_m2), "capex_sek": round(capex), "co2_kg": round(co2),
@@ -282,10 +295,21 @@ def _series(path: list[tuple[int, str]], years: list[int], states: dict, trans) 
             current = path[idx][1]
         s = states[current]
         rows.append({"year": y, "state": current, "event": event,
-                     "kpi": {"people": s["people"], "people_hours": s["people_hours"],
-                             "evening_share": s["evening_share"], "uses_count": s["uses_count"],
-                             "issues": sum(1 for i in s["issues"] if i["severity"] in ("blocker", "major")),
-                             **{k: round(v, 1) for k, v in cum.items()}}})
+                     "kpi": {
+                         # the 7 handbook KPIs this engine can compute (KPI_META) — see there for sourcing
+                         "transformation_cost": round(cum["capex_cum"], 1),
+                         "transformation_time": round(cum["disruption_cum"], 1),
+                         "upfront_gwp": round(cum["co2_cum"], 1),
+                         "use_diversity": s["uses_count"],
+                         "data_quality": s["data_quality"],
+                         "feasible_uses": PLACEHOLDERS["feasible_uses"]["value"],
+                         "utilization": PLACEHOLDERS["utilization"]["value"],
+                         # kept for the per-year narrative and pathway scoring, not offered as a pickable KPI
+                         "people": s["people"], "people_hours": s["people_hours"],
+                         "evening_share": s["evening_share"], "uses_count": s["uses_count"],
+                         "issues": sum(1 for i in s["issues"] if i["severity"] in ("blocker", "major")),
+                         **{k: round(v, 1) for k, v in cum.items()},
+                     }})
     return rows, cum
 
 

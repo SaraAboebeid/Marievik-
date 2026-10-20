@@ -87,7 +87,12 @@ export class Viewer {
   constructor(private container: HTMLElement) {
     const w = container.clientWidth
     const h = container.clientHeight
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true })
+    // logarithmicDepthBuffer: the camera's near:far ratio (0.5 / 20000 = 40 000:1) badly starves a linear depth
+    // buffer at distance, so thinly z-stacked context layers (water -0.02, ground -0.05, roads 0.04, …) z-fight
+    // and visibly swap which one is "in front" once the camera is more than a couple hundred units out.
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true, logarithmicDepthBuffer: true,
+    })
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(w, h)
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping

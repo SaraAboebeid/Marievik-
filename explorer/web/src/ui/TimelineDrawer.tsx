@@ -73,7 +73,7 @@ export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathwa
   const path = ready.segments.find((s) => s.id === pathway) ?? ready.segments.find((s) => s.segment === 2) ?? base
   const years = ready.years
   const yi = Math.max(0, years.indexOf(year))
-  const kpiIds = (kpiOverride?.length ? kpiOverride : profile?.timeline_kpis ?? ['capex_cum', 'co2_cum', 'people', 'evening_share'])
+  const kpiIds = (kpiOverride?.length ? kpiOverride : profile?.timeline_kpis ?? Object.keys(ready.kpis))
     .filter((k) => ready.kpis[k])
   const stateNow = ready.states[path.years[yi].state]
   const eventNow = path.events.find((e) => e.year === year)
@@ -249,16 +249,15 @@ function Gantt({ tl, seg, year, onYear }: { tl: Timeline; seg: TimelineSegment; 
   )
 }
 
+// Icons for the handbook's 7 computable KPIs (explorer/timeline.py KPI_META).
 const ICONS: Record<string, ReactNode> = {
-  capex_cum: <path d="M4 16V11M9 16V7M14 16V4" />,
-  co2_cum: <><path d="M5 15c0-6 4-10 11-11-1 7-5 11-11 11z" /><path d="M5 15l5-5" /></>,
-  people: <><circle cx="7" cy="7" r="2.5" /><circle cx="13.5" cy="7.5" r="2" /><path d="M2.5 16c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4M12 12.2c2.5-.4 4.5 1 4.5 3.8" /></>,
-  people_hours: <><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5V10l2.5 1.5" /></>,
-  evening_share: <><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5V10l2.5 1.5" /></>,
-  walls_changed_cum: <><path d="M3 5h14M3 10h14M3 15h14M7 5v5M13 10v5" /></>,
-  disruption_cum: <><rect x="3.5" y="4.5" width="13" height="12" rx="1.5" /><path d="M3.5 8h13M7 3v3M13 3v3" /></>,
-  uses_count: <><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="11" y="3" width="6" height="6" rx="1" /><rect x="3" y="11" width="6" height="6" rx="1" /><rect x="11" y="11" width="6" height="6" rx="1" /></>,
-  issues: <><path d="M10 3l8 14H2z" /><path d="M10 8v4M10 14.5v.5" /></>,
+  transformation_cost: <path d="M4 16V11M9 16V7M14 16V4" />,
+  transformation_time: <><rect x="3.5" y="4.5" width="13" height="12" rx="1.5" /><path d="M3.5 8h13M7 3v3M13 3v3" /></>,
+  upfront_gwp: <><path d="M5 15c0-6 4-10 11-11-1 7-5 11-11 11z" /><path d="M5 15l5-5" /></>,
+  use_diversity: <><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="11" y="3" width="6" height="6" rx="1" /><rect x="3" y="11" width="6" height="6" rx="1" /><rect x="11" y="11" width="6" height="6" rx="1" /></>,
+  data_quality: <><path d="M10 3l7 3.5v5c0 4-3 6.5-7 8.5-4-2-7-4.5-7-8.5v-5z" /><path d="M7 10l2 2 4-4" /></>,
+  feasible_uses: <><rect x="3" y="3" width="14" height="14" rx="2" /><path d="M3 9h14M9 3v14" /></>,
+  utilization: <><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5V10l2.5 1.5" /></>,
 }
 
 const show = (meta: TimelineKpiMeta, v: number) =>

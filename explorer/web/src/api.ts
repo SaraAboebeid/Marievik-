@@ -1,6 +1,6 @@
 import type {
   BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
-  ParametricPayload, Project, Settings, SitePayload, UrbanContext, SupplierCompare, TimelineResponse,
+  ParametricPayload, Project, Settings, SitePayload, UrbanContext, UrbanSummary, SupplierCompare, TimelineResponse,
 } from './types'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -20,6 +20,7 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
 export const api = {
   site: () => call<SitePayload>('/api/site'),
   context: () => call<UrbanContext>('/api/context'),
+  urban: () => call<UrbanSummary>('/api/urban'),
   building: (id: string, settings: Partial<Settings>) => call<BuildingPayload>(`/api/building/${id}`, { settings }),
   floor: (id: string, index: number, settings: Partial<Settings>) =>
     call<FloorPayload>(`/api/floor/${id}/${index}`, { settings }),
@@ -41,7 +42,10 @@ export const api = {
     call<SupplierCompare>(`/api/supplier/${sid}/compare/${id}`, { settings }),
   project: (pid: string) => call<Project>(`/api/project/${pid}`),
   figures: (id: string, settings: Partial<Settings>) => call<Figures>(`/api/figures/${id}`, { settings }),
-  timeline: (id: string, project: string) => call<TimelineResponse>(`/api/timeline/${id}`, { project }),
+  timeline: (id: string, project: string, floor?: number) =>
+    call<TimelineResponse>(`/api/timeline/${id}`, { project, floor: floor ?? null }),
+  /** One floor at a given use, every other floor untouched — the 3D view behind the floor timeline. */
+  floorUse: (id: string, index: number, use: string) => call<FloorPayload>(`/api/floor/${id}/${index}/use/${use}`, {}),
 }
 
 export interface FullResult {
@@ -71,6 +75,7 @@ export const USE_LABEL: Record<string, string> = {
   hotel: 'Hotel',
   school: 'School',
   retail: 'Retail',
+  restaurant_cafe: 'Restaurant / café',
   same: 'Same as upper floors',
 }
 export const SYSTEM_LABEL: Record<string, string> = {

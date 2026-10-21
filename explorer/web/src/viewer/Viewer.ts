@@ -507,12 +507,19 @@ export class Viewer {
     this.applyFocus(animate)
   }
 
+  /** Buildings to ghost regardless of focus — District's unselected buildings, Urban's receded massing. */
+  setDimmed(ids: Iterable<string> | null) {
+    this.dimmed = new Set(ids ?? [])
+    this.applyFocus(false)
+  }
+  private dimmed: Set<string> = new Set()
+
   private applyFocus(animate: boolean) {
     this.invalidate()
     const f = this.focus
     for (const [id, bv] of this.buildings) {
       const active = f.kind !== 'site' && 'building' in f && f.building === id
-      const ghost = f.kind !== 'site' && !active
+      const ghost = (f.kind !== 'site' && !active) || this.dimmed.has(id)
       for (const mm of bv.mats) {
         const sm = mm as THREE.MeshStandardMaterial
         sm.transparent = ghost

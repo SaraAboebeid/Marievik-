@@ -377,5 +377,57 @@
         "Rw_dB": 0
       }
     }
+  },
+  "restaurant_cafe": {
+    "label": "Restaurant / café",
+    "scheme": "open",
+    "room_name": "Retail",
+    "core": {
+      "width": 8.0,
+      "length": 14.0
+    },
+    "inner_zone": "support",
+    "support_depth": 4.0,
+    "wwr": 0.75,
+    "window_module": 3.0,
+    "sill": 0.1,
+    "head": 3.4,
+    "types": {
+      "ext_wall": "EW_CONC_INSUL_400",
+      "partition": "IW_GYPSUM_STEEL_100",
+      "corridor": "IW_GYPSUM_STEEL_100",
+      "support": "IW_GYPSUM_STEEL_100",
+      "core": "IW_CONCRETE_200",
+      "interior": "IW_GYPSUM_STEEL_100",
+      "window": "W_STOREFRONT",
+      "room_door": "D_INT_SINGLE_900",
+      "core_door": "D_FIRE_EI60_1000",
+      "interior_door": "D_INT_SINGLE_900",
+      "entrance": "D_EXT_DOUBLE_1800",
+      "slab": "SL_CONCRETE_250"
+    },
+    "finishes": {
+      "floor": "FL_LINOLEUM",
+      "ceiling": "CE_MINERAL_GRID"
+    },
+    "wall_requirements": {
+      "P": {
+        "Rw_dB": 44,
+        "fire": "EI60"
+      },
+      "C": {
+        "Rw_dB": 35,
+        "fire": "EI30"
+      },
+      "S": {
+        "Rw_dB": 35
+      },
+      "I": {
+        "Rw_dB": 0
+      },
+      "A": {
+        "Rw_dB": 0
+      }
+    }
   }
 }

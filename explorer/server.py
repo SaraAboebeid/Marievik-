@@ -23,7 +23,10 @@ API (all JSON)
   POST /api/kpis/{id}                    {settings}            -> every CAVF KPI for one building scenario
   POST /api/figures/{id}                 {settings}            -> key figures and space distribution (Design panel)
   GET  /api/project/{pid}               project, its stakeholder profiles and timeline settings
-  POST /api/timeline/{id}                {project}             -> 10 years: unchanged use + pathways of change
+  POST /api/timeline/{id}                {project, floor?}     -> 10 years: unchanged use + pathways of change
+                                                                  (whole building, or one floor if floor is set)
+  POST /api/floor/{id}/{index}/use/{use}                       -> that one floor at `use`, every other floor
+                                                                  untouched (the 3D view for the floor timeline)
                                                                   ({status: computing, done, total} until ready)
   GET  /api/models                      Rhino .3dm files in explorer/models (loaded in the viewer)"""
 from __future__ import annotations
@@ -94,6 +97,11 @@ def api_site():
 @app.get("/api/context")
 def api_context():
     return site().context()
+
+
+@app.get("/api/urban")
+def api_urban():
+    return {"buildings": site().urban_summary(), "radius_m": site().URBAN_RADIUS_M}
 
 
 @app.post("/api/building/{bid}")
@@ -175,13 +183,32 @@ def api_project(pid: str):
 
 class TimelineBody(BaseModel):
     project: str = "marievik"
+    floor: int | None = None          # one floor's own 10-year timeline, instead of the whole building
 
 
 @app.post("/api/timeline/{bid}")
 def api_timeline(bid: str, body: TimelineBody):
     _check(bid)
     p = project_file(body.project) or project_file("marievik")
-    return TIMELINES.get(bid, p)
+    if body.floor is not None:
+        n = len(site().scenario(bid, {})["res"]["floors"])
+        if not 0 <= body.floor < n:
+            raise HTTPException(404, "floor %d does not exist" % body.floor)
+    return TIMELINES.get(bid, p, body.floor)
+
+
+@app.post("/api/floor/{bid}/{index}/use/{use}")
+def api_floor_use(bid: str, index: int, use: str):
+    """One floor at a given use, every other floor left exactly as it is today — the 3D view behind
+    the single-floor 10-year timeline, since the ordinary ?settings-based /api/floor/{bid}/{index}
+    always moves every 'upper' floor together."""
+    _check(bid)
+    if use not in M.USES:
+        raise HTTPException(404, "unknown use %s" % use)
+    sc = site().scenario(bid, {})
+    if not 0 <= index < len(sc["res"]["floors"]):
+        raise HTTPException(404, "floor %d does not exist" % index)
+    return site().floor_payload_override(bid, index, use)
 
 
 # ---------------------------------------------------------------------------- quick analysis

@@ -41,18 +41,17 @@ export function InfoPanel(p: Props) {
 }
 
 const nf1 = (v: number) => fmt1(v)
-const useOf = (b: BuildingPayload, sb: SiteBuilding | undefined) => {
+export const useOf = (b: BuildingPayload, sb: SiteBuilding | undefined) => {
   const lab = (u: string) => (u === 'site' ? (sb?.current_use ?? 'current use') : (USE_LABEL[u] ?? u))
   const g = b.settings.ground_use, u = b.settings.use
   return g === u || g === 'same' ? lab(u) : `${lab(g)} ground floor, ${lab(u)} above`
 }
 
 /** Today's use of each building, as a colour (the same greens and pinks as the timeline and the donuts). */
-const USE_DOT: Record<string, string> = { office: '#b9d27a', residential: '#c46ba4', retail: '#c97855', hotel: '#dfa00c', school: '#8a72d8' }
+export const USE_DOT: Record<string, string> = { office: '#b9d27a', residential: '#c46ba4', retail: '#c97855', hotel: '#dfa00c', school: '#8a72d8' }
 
-function SiteInfo({ site, bdata, totals, onGo }: Props) {
+function SiteInfo({ site, totals }: Props) {
   const done = totals.loaded === site.buildings.length
-  const maxCo2 = Math.max(1, ...Object.values(bdata).map((b) => b.kpi.upfront_kgco2e / 1000))
   return (
     <>
       <Card title="Site · current scenario" right={!done && <span className="font-mono text-[12px] text-ink-2">{totals.loaded}/{site.buildings.length} laid out</span>}>
@@ -69,40 +68,6 @@ function SiteInfo({ site, bdata, totals, onGo }: Props) {
           placeholder values until EPDs and tenders replace them.
         </p>
       </Card>
-      <Section id="site-buildings" title={`All buildings (${site.buildings.length})`}>
-        <table className="w-full text-[12.5px]">
-          <thead>
-            <tr className="text-left font-mono text-[10.5px] uppercase tracking-wide text-ink-2">
-              <th className="pb-1.5 font-medium">Building</th>
-              <th className="pb-1.5 pl-2 text-right font-medium">Floors</th><th className="whitespace-nowrap pb-1.5 pl-3 text-right font-medium">GFA m²</th>
-              <th className="whitespace-nowrap pb-1.5 pl-3 text-right font-medium">t CO₂e</th>
-            </tr>
-          </thead>
-          <tbody>
-            {site.buildings.map((sb) => {
-              const b = bdata[sb.id]
-              const co2 = b ? b.kpi.upfront_kgco2e / 1000 : 0
-              return (
-                <tr key={sb.id} className="cursor-pointer border-t border-line hover:bg-sunken" onClick={() => onGo({ kind: 'building', building: sb.id })}>
-                  <td className="py-2 pr-1">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="mt-[3px] h-2.5 w-2.5 shrink-0 self-start rounded-[3px]" style={{ background: USE_DOT[sb.current_use] ?? '#cfcdc4' }} title={sb.current_use} />
-                      <span><span className="font-semibold">{sb.id}</span> <span className="text-ink">{sb.name.split(' - ')[0]}</span></span>
-                    </div>
-                    <div className="pl-4 text-[11.5px] text-ink-2">{b ? useOf(b, sb) : '…'}</div>
-                  </td>
-                  <td className="py-2 pl-2 text-right align-top tabular-nums">{b ? b.kpi.floors : sb.levels}{b?.kpi.added_floors ? <span className="text-warn" title="floors added">+</span> : ''}</td>
-                  <td className="whitespace-nowrap py-2 pl-3 text-right align-top tabular-nums">{b ? fmt(b.kpi.gfa_m2) : '…'}</td>
-                  <td className="whitespace-nowrap py-2 pl-3 text-right align-top tabular-nums">
-                    {b ? fmt(co2) : '…'}
-                    {b && <div className="ml-auto mt-1 h-1 w-12 rounded bg-sunken"><div className="h-full rounded bg-[#c97855]" style={{ width: `${Math.min(100, (100 * co2) / maxCo2)}%` }} /></div>}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </Section>
     </>
   )
 }

@@ -1,10 +1,15 @@
 import type { ReactNode } from 'react'
-import type { SitePayload } from '../types'
+import type { SiteBuilding } from '../types'
 
 export type Tab = 'explore' | 'design' | 'analyse' | 'compare'
 export const TABS: [Tab, string, string][] = [
   ['explore', 'Explore', 'Move through the site, a building, a floor and a unit; set up the building and see its figures'],
 ]
+
+/** A building's street address, the part of its name before the " - description" (e.g. "Marievik 27"). */
+export function buildingAddress(b: SiteBuilding): string {
+  return b.name.split(' - ')[0]
+}
 
 // AMF Marievik's own palette (amffastigheter.se/marievik/): deep ink bar, brand blue and coral accents.
 const INK = '#202020'
@@ -12,18 +17,16 @@ const BLUE = '#0528ca'
 const CORAL = '#fd876e'
 
 interface Props {
-  site: SitePayload | null
   tab: Tab
   setTab: (t: Tab) => void
-  building: string | null
-  onBuilding: (id: string | null) => void
   location: string
   profile: { value: string; options: [string, string][]; onChange: (v: string) => void }
+  tools?: { label: string; title?: string; open: boolean; onClick: () => void }[]
   right?: ReactNode
 }
 
 /** The lab's bar: brand, the four ways of working, where you are and which building, who you are looking as. */
-export function TopBar({ site, tab, setTab, building, onBuilding, location, profile, right }: Props) {
+export function TopBar({ tab, setTab, location, profile, tools, right }: Props) {
   const initials = (profile.options.find(([k]) => k === profile.value)?.[1] ?? '')
     .split(/[\s-]+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()
   return (
@@ -43,6 +46,13 @@ export function TopBar({ site, tab, setTab, building, onBuilding, location, prof
             {tab === id && <span className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: BLUE }} />}
           </button>
         ))}
+        {tools?.map((t) => (
+          <button key={t.label} onClick={t.onClick} title={t.title} aria-pressed={t.open}
+            className={`relative px-5 font-medium transition-colors ${t.open ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white'}`}>
+            {t.label}
+            {t.open && <span className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: BLUE }} />}
+          </button>
+        ))}
       </nav>
       <div className="ml-auto flex items-center gap-3">
         {right}
@@ -52,13 +62,6 @@ export function TopBar({ site, tab, setTab, building, onBuilding, location, prof
           </svg>
           {location}
         </span>
-        <select value={building ?? ''} onChange={(e) => onBuilding(e.target.value || null)} aria-label="Building"
-          className="max-w-[15rem] rounded-md border border-white/15 bg-white/10 px-2.5 py-1.5 text-[12.5px] text-white outline-none">
-          <option value="" className="text-black">Whole site</option>
-          {site?.buildings.map((b) => (
-            <option key={b.id} value={b.id} className="text-black">{b.id} – {b.name.split(' - ')[0]}{b.name.includes(' - ') ? ` (${b.name.split(' - ')[1].split(' (')[0]})` : ''}</option>
-          ))}
-        </select>
         <label className="relative" title="View as: the stakeholder profile whose KPIs are shown">
           <select value={profile.value} onChange={(e) => profile.onChange(e.target.value)} aria-label="View as profile"
             className="absolute inset-0 cursor-pointer opacity-0">

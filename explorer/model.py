@@ -44,7 +44,7 @@ import mvk.facade as FA                                          # noqa: E402
 import mvk.plan as PL                                            # noqa: E402
 from mvk import export as MX                                     # noqa: E402
 
-USES = ["site", "office_ground", "office_cellular", "office_open", "residential", "hotel", "school", "retail"]
+USES = ["site", "office_ground", "office_cellular", "office_open", "residential", "hotel", "school", "retail", "restaurant_cafe"]
 SYSTEMS = ["as_profile", "conventional", "demountable", "glass", "smartax"]   # smartax: only with its supplier file
 WINDOWS = {"existing": None, "triple_timber": "W_TRIPLE_TIMBER", "triple_alu_wood": "W_TRIPLE_ALU_WOOD"}
 ADDED_TYPES = {"wall_exterior": "EW_TIMBER_CLT_380", "wall_core": "IW_CLT_100", "slab": "SL_CLT_240",
@@ -256,7 +256,12 @@ class Site:
 
     def floor_payload(self, bid: str, index: int, raw: dict | None = None) -> dict:
         sc = self.scenario(bid, raw)
-        F = sc["res"]["floors"][index]
+        return self._floor_payload_from(bid, sc["res"]["floors"][index], sc["res"]["rows"], sc["units"][index],
+                                        added=index >= sc["levels"])
+
+    def _floor_payload_from(self, bid: str, F, rows: list[dict], units: list[dict], added: bool) -> dict:
+        """The 3D/plan JSON for one already-built floor. Shared by floor_payload() (a whole-building
+        scenario) and floor_payload_override() (one floor built on its own, every other floor untouched)."""
         base = F.z + F.slab_t
         walls, pieces = [], []
         cats = "ECSKPIA"
@@ -277,16 +282,51 @@ class Site:
                              "new": bool(o.get("new")), "a": [_r(w["a"][0] + ux * o["s0"]), _r(w["a"][1] + uy * o["s0"])],
                              "b": [_r(w["a"][0] + ux * o["s1"]), _r(w["a"][1] + uy * o["s1"])],
                              "z0": _r(base + o["z0"]), "z1": _r(base + o["z1"]), "t": _r(F.thick(w))})
-        rows = [r for r in sc["res"]["rows"] if r["floor"] == index]
-        return {"building": bid, "index": index, "z": _r(F.z), "base": _r(base), "height": _r(F.height),
+        frows = [r for r in rows if r["floor"] == F.index]
+        return {"building": bid, "index": F.index, "z": _r(F.z), "base": _r(base), "height": _r(F.height),
                 "wall_h": _r(F.wall_h), "use": F.use, "use_label": self.profiles[F.use]["label"],
-                "added": index >= sc["levels"], "rings": _rings(F.footprint),
+                "added": added, "rings": _rings(F.footprint),
                 "voids": [_rings(v) for v in F.voids], "walls": walls, "pieces": pieces, "openings": openings,
                 "rooms": [{"id": r["id"], "name": _room_name(r["name"]), "area": r["area"],
                            "poly": [[_r(x), _r(y)] for x, y in r["poly"]],
                            "label": [_r(r["label_pt"][0]), _r(r["label_pt"][1])]} for r in F.rooms],
-                "units": sc["units"][index],
-                "kpi": floor_kpi(F, rows, sc["units"][index])}
+                "units": units, "kpi": floor_kpi(F, frows, units)}
+
+    # ------------------------------------------------------------------ one floor, every other floor untouched
+    def floor_scenario(self, bid: str, floor_index: int, use: str | None = None) -> dict:
+        """Today's building with one floor's use swapped for `use` (or left at today's own use), and
+        nothing else changed — not even the other 'upper' floors, which the ordinary ground/upper
+        Settings always move together. Used by the single-floor 10-year timeline (explorer/timeline.py),
+        so a change on the floor being viewed never silently changes its neighbours."""
+        b = self.buildings[bid]
+        fp = S.footprint(b)
+        levels = int(b["levels"])
+        g_use, u_use = S.profile_uses(b, "site", "site")
+        plan = self.plan(bid)
+        if plan:
+            g_use = (PL.floor_for(plan, 0) or {}).get("use", g_use)
+            u_use = (PL.floor_for(plan, 1) or {}).get("use", u_use)
+        uses = [g_use] + [u_use] * (levels - 1)
+        if use is not None:
+            uses[floor_index] = use
+        key = "%s:floor%02d:%s" % (bid, floor_index, use or "today")
+        with self._lock:
+            hit = self._cache.get(key)
+        if hit:
+            return hit
+        hs = S.floor_heights(b, levels)
+        res = L.build(fp, uses, floor_heights=hs, n_floors=levels, mode="conversion",
+                      partition_system=None, catalogue=self.catalogue, facade=b.get("facade"), plan=plan)
+        units = {F.index: units_of(F) for F in res["floors"]}
+        out = {"building": bid, "key": key, "res": res, "levels": levels, "units": units, "uses": uses}
+        with self._lock:
+            self._cache[key] = out
+        return out
+
+    def floor_payload_override(self, bid: str, floor_index: int, use: str | None = None) -> dict:
+        sc = self.floor_scenario(bid, floor_index, use)
+        return self._floor_payload_from(bid, sc["res"]["floors"][floor_index], sc["res"]["rows"],
+                                        sc["units"][floor_index], added=False)
 
     # ------------------------------------------------------------------ supplier product card
     def supplier_compare(self, sid: str, bid: str, raw: dict | None = None) -> dict:
@@ -372,6 +412,46 @@ class Site:
             except (OSError, ValueError):
                 self._context = {}
         return self._context
+
+    # Urban scale: how far a comfortable walk reaches, to judge whether a building's ground floor is
+    # near any public green or plaza space. A working value, not a walkability model — it draws a flat
+    # circle around the footprint, ignoring streets, crossings and actual pedestrian routes.
+    URBAN_RADIUS_M = 150.0
+
+    def urban_summary(self) -> list[dict]:
+        """Each of the 13 study buildings' ground-floor use, and the public green and plaza area within
+        URBAN_RADIUS_M of its footprint, from the urban context (parametric/site/make_context.py). A
+        first pass at 'urban scale, linked with the ground floors' — not full walkability or daylight."""
+        ctx = self.context()
+
+        def polys(entries, kinds=None):
+            out = []
+            for e in entries or []:
+                if kinds and e.get("kind") not in kinds:
+                    continue
+                for piece in e["rings"]:
+                    p = Polygon(piece[0], piece[1:])
+                    if p.is_valid and p.area > 1:
+                        out.append(p)
+            return out
+
+        greens = unary_union(polys(ctx.get("greens")))
+        plazas = unary_union(polys(ctx.get("plazas")))
+        out = []
+        for bid, b in self.buildings.items():
+            fp = S.footprint(b)
+            buf = fp.buffer(self.URBAN_RADIUS_M).difference(fp)
+            g_use, _ = S.profile_uses(b, "site", "site")
+            plan = self.plan(bid)
+            if plan:
+                g_use = (PL.floor_for(plan, 0) or {}).get("use", g_use)
+            out.append({
+                "id": bid, "name": b["name"],
+                "ground_use": g_use, "ground_use_label": self.profiles[g_use]["label"],
+                "green_m2": round(buf.intersection(greens).area), "plaza_m2": round(buf.intersection(plazas).area),
+                "radius_m": self.URBAN_RADIUS_M,
+            })
+        return out
 
     def context_prisms(self, raw_by_building: dict | None = None) -> list[dict]:
         """Every building as (rings, top height) for daylight obstruction, with its current scenario height."""

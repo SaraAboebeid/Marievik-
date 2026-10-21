@@ -18,7 +18,7 @@ export function MapLegend({ site, level, floor }: { site: SitePayload; level: Le
     : []
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-line bg-raised/95 px-3 py-1.5 shadow-sm">
+    <div className="flex min-w-0 items-center gap-3 rounded-lg border border-line bg-raised/95 px-3 py-1.5 shadow-sm">
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={open ? 'Hide legend' : 'Show legend'}
         className="flex flex-none items-center gap-1.5 text-left">
         <span className={`text-[10px] text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
@@ -27,7 +27,7 @@ export function MapLegend({ site, level, floor }: { site: SitePayload; level: Le
         </span>
       </button>
       {open && (
-        <ul className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[12px] text-ink-2">
+        <ul className="flex min-w-0 flex-nowrap items-center gap-x-2.5 overflow-x-auto text-[11.5px] text-ink-2">
           {inFloor ? (
             <>
               {unitTypes.map(([name, col]) => <Item key={name} swatch={col} label={name} />)}

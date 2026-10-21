@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { fmt, msek, tco2 } from '../api'
-import type { ProjectProfile, Timeline, TimelineKpiMeta, TimelineResponse, TimelineSegment } from '../types'
+import type { ProjectProfile, Timeline, TimelineResponse, TimelineSegment } from '../types'
 import { Badge } from './kit'
 
 /** One colour per layout use, so a floor's use reads the same in every row — AMF Marievik's own palette
@@ -8,6 +8,9 @@ import { Badge } from './kit'
 export const USE_COLOR: Record<string, [string, string]> = {          // [bar, text]
   office_ground: ['#943b2e', '#ffffff'], office_open: ['#0528ca', '#ffffff'], office_cellular: ['#4aa3b5', '#ffffff'],
   retail: ['#fd876e', '#202020'], residential: ['#f4a7dd', '#202020'], hotel: ['#f7df81', '#202020'], school: ['#03b05f', '#ffffff'],
+  restaurant_cafe: ['#d6336c', '#ffffff'],
+  // the catalogue uses a mixed ground-floor state (MIX_STATES) can be made of, beyond the 7 above
+  assembly_event: ['#e08a1e', '#202020'], shared_amenities: ['#8a93a6', '#ffffff'],
 }
 const TERRA = '#fd876e'
 const STEP_MS = 1400
@@ -16,8 +19,6 @@ const title = 'font-mono text-[11px] font-semibold uppercase tracking-[0.1em] te
 interface Props {
   tl: TimelineResponse | null
   profile: ProjectProfile | null
-  /** KPIs picked on the landing page's step 3 (?kpis=a,b,c), overriding the profile's own default set. */
-  kpiOverride: string[] | null
   year: number
   setYear: (y: number) => void
   pathway: string
@@ -26,7 +27,7 @@ interface Props {
 }
 
 /** Ten years of one building as a Gantt chart, played on the 3D model: the chosen pathway against the unchanged building. */
-export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathway, setPathway, onClose }: Props) {
+export function TimelineDrawer({ tl, profile, year, setYear, pathway, setPathway, onClose }: Props) {
   const [playing, setPlaying] = useState(false)
   const [details, setDetails] = useState(false)
   const ready = tl && tl.status === 'ready' ? (tl as Timeline) : null
@@ -40,11 +41,12 @@ export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathwa
   }, [playing, year, ready, setYear])
 
   const shell = (controls: ReactNode, body: ReactNode) => (
-    <section className="pointer-events-auto max-h-[44vh] w-[calc(100vw-1.5rem)] overflow-y-auto rounded-xl border border-line bg-raised/97 px-5 py-3.5 shadow-lg"
+    <section className="pointer-events-auto max-h-[38vh] w-[calc(100vw-1.5rem)] overflow-y-auto rounded-xl border border-line bg-raised/97 px-5 py-3.5 shadow-lg"
       aria-label="Ten-year scenario timeline">
       <div className="mb-3 flex flex-wrap items-center gap-3">
-        <h4 className={title}>10-year scenario timeline{ready ? ` · ${ready.building}` : ''}</h4>
-        {profile && <span className="text-[12px] text-ink-2">as {profile.title}</span>}
+        <h4 className={title}>10-year scenario timeline{ready ? ` · ${ready.building}` : ''}
+          {ready?.floor !== undefined ? ` · floor ${ready.floor}` : ''}</h4>
+        {profile && <span className="text-[12px] text-ink-2">as {profile.title_en}</span>}
         <span className="ml-auto flex flex-wrap items-center gap-2">
           {controls}
           <button onClick={onClose} className="px-1 text-[12px] text-ink-2 hover:text-ink" aria-label="Close timeline">✕</button>
@@ -73,8 +75,6 @@ export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathwa
   const path = ready.segments.find((s) => s.id === pathway) ?? ready.segments.find((s) => s.segment === 2) ?? base
   const years = ready.years
   const yi = Math.max(0, years.indexOf(year))
-  const kpiIds = (kpiOverride?.length ? kpiOverride : profile?.timeline_kpis ?? Object.keys(ready.kpis))
-    .filter((k) => ready.kpis[k])
   const stateNow = ready.states[path.years[yi].state]
   const eventNow = path.events.find((e) => e.year === year)
   const highlights = ready.segments.filter((s) => s.highlight)
@@ -109,12 +109,7 @@ export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathwa
 
   return shell(controls,
     <>
-      <Gantt tl={ready} seg={path} year={year} onYear={(y) => { setPlaying(false); setYear(y) }} />
-
-      {/* KPI tiles at the chosen year, against the unchanged building */}
-      <div className="mt-3 grid gap-2" style={{ gridTemplateColumns: `repeat(${Math.min(kpiIds.length, 5)}, minmax(0, 1fr))` }}>
-        {kpiIds.map((k) => <KpiTile key={k} id={k} meta={ready.kpis[k]} base={base} path={path} yi={yi} />)}
-      </div>
+      <Gantt tl={ready} base={base} path={path} year={year} onYear={(y) => { setPlaying(false); setYear(y) }} />
 
       <button onClick={() => setDetails((d) => !d)} className="mt-2 text-[12px] text-ink-2 hover:text-ink" aria-expanded={details}>
         {details ? '▾' : '▸'} {year}: {Object.values(stateNow.groups).map((g) => g.label).join(' / ')}
@@ -160,24 +155,78 @@ export function TimelineDrawer({ tl, profile, kpiOverride, year, setYear, pathwa
   )
 }
 
-/** Year columns; one row per floor group with its use over time; a row for the changes (works, then the open window). */
-function Gantt({ tl, seg, year, onYear }: { tl: Timeline; seg: TimelineSegment; year: number; onYear: (y: number) => void }) {
+/** Year columns, one shared axis; segment 1 (unchanged) and segment 2 (the chosen pathway) each get
+ *  their own labeled block of rows below it, so the two are compared directly, not one hidden behind
+ *  a toggle; then one "Potential change" row for segment 2's events. */
+function Gantt({ tl, base, path, year, onYear }: { tl: Timeline; base: TimelineSegment; path: TimelineSegment; year: number; onYear: (y: number) => void }) {
   const years = tl.years
   const n = years.length
   const col = (i: number) => `${(100 * i) / n}%`
   const span = (a: number, b: number) => `${(100 * (b - a)) / n}%`
   const yi = Math.max(0, years.indexOf(year))
-  const rows = (['ground', 'upper'] as const).map((g) => {
-    const runs: { use: string; label: string; from: number; to: number }[] = []
+  const label = 'w-[11rem] shrink-0 pr-3 text-[12.5px] leading-tight'
+
+  const rowsOf = (seg: TimelineSegment) => Object.keys(tl.group_titles).map((g) => {
+    const runs: { use: string; label: string; from: number; to: number; mix?: { use: string; label: string; share: number }[] }[] = []
     seg.years.forEach((r, i) => {
       const grp = tl.states[r.state]?.groups[g]
       const last = runs[runs.length - 1]
       if (last && last.use === grp?.use) last.to = i
-      else if (grp) runs.push({ use: grp.use, label: grp.label, from: i, to: i })
+      else if (grp) runs.push({ use: grp.use, label: grp.label, from: i, to: i, mix: grp.mix })
     })
     return { g, runs, first: runs[0] }
   })
-  const label = 'w-[11rem] shrink-0 pr-3 text-[12.5px] leading-tight'
+
+  /** A mixed ground-floor state (several AMF-interview uses on one floor, by share) as a proportional
+   *  multi-colour gradient, so the split actually reads from the bar instead of one flat colour. */
+  const mixBackground = (parts: { use: string; share: number }[]) => {
+    let at = 0
+    const stops = parts.flatMap((p) => {
+      const [c] = USE_COLOR[p.use] ?? ['#888', '#fff']
+      const from = at
+      at += p.share * 100
+      return [`${c} ${from}%`, `${c} ${at}%`]
+    })
+    return `linear-gradient(to right, ${stops.join(', ')})`
+  }
+
+  const Section = ({ seg, kind }: { seg: TimelineSegment; kind: 'unchanged' | 'changed' }) => (
+    <>
+      <div className="flex items-baseline gap-2 pb-1 pt-3 first:pt-0">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-muted">
+          {kind === 'unchanged' ? 'Segment 1 · use as it is' : 'Segment 2 · different uses over time'}
+        </span>
+        {kind === 'changed' && <span className="truncate text-[11.5px] text-ink-2">— {seg.label}</span>}
+      </div>
+      {rowsOf(seg).map(({ g, runs, first }) => (
+        <div key={g} className="flex items-center border-t border-line/70 py-2">
+          <span className={label}>
+            <span className="block font-medium text-ink">{tl.group_titles[g]}</span>
+            <span className="block truncate text-[11.5px] text-ink-2">{first?.label}</span>
+          </span>
+          <div className="relative h-8 flex-1">
+            {runs.map((r) => {
+              const [bg, fg] = USE_COLOR[r.use] ?? ['#888', '#fff']
+              const background = r.mix ? mixBackground(r.mix) : bg
+              const title = r.mix
+                ? `${r.label}: ${r.mix.map((m) => `${m.label} ${Math.round(m.share * 100)}%`).join(' · ')} (${years[r.from]}–${years[r.to]})`
+                : `${r.label}: ${years[r.from]}–${years[r.to]}`
+              return (
+                <button key={r.from} onClick={() => onYear(years[r.from])} title={title}
+                  className="absolute top-0 flex h-full items-center overflow-hidden rounded-md px-3 text-left text-[12px] font-medium"
+                  style={{ left: `calc(${col(r.from)} + 2px)`, width: `calc(${span(r.from, r.to + 1)} - 4px)`, background, color: r.mix ? '#ffffff' : fg }}>
+                  <span className="truncate" style={r.mix ? { textShadow: '0 1px 2px rgba(0,0,0,.55)' } : undefined}>
+                    {r.from === 0 ? 'In use' : r.label}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </>
+  )
+
   return (
     <div className="select-none">
       {/* year header */}
@@ -195,37 +244,19 @@ function Gantt({ tl, seg, year, onYear }: { tl: Timeline; seg: TimelineSegment; 
         </div>
       </div>
       <div className="relative">
-        {/* grid and the chosen year */}
+        {/* grid and the chosen year, spanning both segments */}
         <div className="pointer-events-none absolute bottom-0 left-[11rem] right-0 top-0">
           {years.map((_, i) => <span key={i} className="absolute bottom-0 top-0 border-l border-line/70" style={{ left: col(i) }} />)}
           <span className="absolute bottom-0 top-0 bg-ink/[0.06]" style={{ left: col(yi), width: span(0, 1) }} />
         </div>
-        {rows.map(({ g, runs, first }) => (
-          <div key={g} className="flex items-center border-t border-line/70 py-2">
-            <span className={label}>
-              <span className="block font-medium text-ink">{g === 'ground' ? 'Ground floor' : 'Upper floors'}</span>
-              <span className="block truncate text-[11.5px] text-ink-2">{first?.label}</span>
-            </span>
-            <div className="relative h-8 flex-1">
-              {runs.map((r) => {
-                const [bg, fg] = USE_COLOR[r.use] ?? ['#888', '#fff']
-                return (
-                  <button key={r.from} onClick={() => onYear(years[r.from])} title={`${r.label}: ${years[r.from]}–${years[r.to]}`}
-                    className="absolute top-0 flex h-full items-center overflow-hidden rounded-md px-3 text-left text-[12px] font-medium"
-                    style={{ left: `calc(${col(r.from)} + 2px)`, width: `calc(${span(r.from, r.to + 1)} - 4px)`, background: bg, color: fg }}>
-                    <span className="truncate">{r.from === 0 ? 'In use' : r.label}</span>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-        ))}
+        <Section seg={base} kind="unchanged" />
+        <Section seg={path} kind="changed" />
         {/* changes: months of works (solid), then the window until the next decision year (dashed) */}
         <div className="flex items-center border-t border-line/70 py-2">
           <span className={`${label} font-medium text-ink`}>Potential change</span>
           <div className="relative h-8 flex-1">
-            {seg.events.length === 0 && <span className="absolute inset-y-0 left-2 flex items-center text-[12px] text-muted">No change in this scenario</span>}
-            {seg.events.map((e) => {
+            {path.events.length === 0 && <span className="absolute inset-y-0 left-2 flex items-center text-[12px] text-muted">No change in this scenario</span>}
+            {path.events.map((e) => {
               const i = years.indexOf(e.year)
               const works = Math.max(0.6, e.months / 12)
               const next = tl.decision_years.find((y) => y > e.year) ?? years[years.length - 1] + 1
@@ -244,43 +275,76 @@ function Gantt({ tl, seg, year, onYear }: { tl: Timeline; seg: TimelineSegment; 
             })}
           </div>
         </div>
+        <CostCarbonChart years={years} label={label} path={path} onYear={onYear} />
       </div>
     </div>
   )
 }
 
-// Icons for the handbook's 7 computable KPIs (explorer/timeline.py KPI_META).
-const ICONS: Record<string, ReactNode> = {
-  transformation_cost: <path d="M4 16V11M9 16V7M14 16V4" />,
-  transformation_time: <><rect x="3.5" y="4.5" width="13" height="12" rx="1.5" /><path d="M3.5 8h13M7 3v3M13 3v3" /></>,
-  upfront_gwp: <><path d="M5 15c0-6 4-10 11-11-1 7-5 11-11 11z" /><path d="M5 15l5-5" /></>,
-  use_diversity: <><rect x="3" y="3" width="6" height="6" rx="1" /><rect x="11" y="3" width="6" height="6" rx="1" /><rect x="3" y="11" width="6" height="6" rx="1" /><rect x="11" y="11" width="6" height="6" rx="1" /></>,
-  data_quality: <><path d="M10 3l7 3.5v5c0 4-3 6.5-7 8.5-4-2-7-4.5-7-8.5v-5z" /><path d="M7 10l2 2 4-4" /></>,
-  feasible_uses: <><rect x="3" y="3" width="14" height="14" rx="2" /><path d="M3 9h14M9 3v14" /></>,
-  utilization: <><circle cx="10" cy="10" r="6.5" /><path d="M10 6.5V10l2.5 1.5" /></>,
-}
+const GWP_COLOR = '#7fa067'
 
-const show = (meta: TimelineKpiMeta, v: number) =>
-  meta.unit === 'SEK' ? msek(v) : meta.unit === 'kg CO₂e' ? tco2(v) : meta.unit === '%' ? `${Math.round(v * 100)} %` : `${fmt(v)} ${meta.unit}`
+/** Cumulative investment cost and upfront carbon across the chosen pathway's ten years, as a pair of
+ *  gradient-filled lines sharing the Gantt's own year axis — each on its own scale (cost and carbon
+ *  are different units and sizes), so a small floor and a whole building both read clearly. */
+function CostCarbonChart({ years, label, path, onYear }: {
+  years: number[]; label: string; path: TimelineSegment; onYear: (y: number) => void
+}) {
+  const n = years.length
+  const costs = path.years.map((r) => r.kpi.transformation_cost ?? 0)
+  const gwps = path.years.map((r) => r.kpi.upfront_gwp ?? 0)
+  const maxCost = Math.max(1, ...costs)
+  const maxGwp = Math.max(1, ...gwps)
+  const cx = (i: number) => (100 * (i + 0.5)) / n
+  const cy = (v: number, max: number) => 92 - 78 * (v / max)
+  const line = (vals: number[], max: number) => vals.map((v, i) => `${i === 0 ? 'M' : 'L'} ${cx(i).toFixed(2)} ${cy(v, max).toFixed(2)}`).join(' ')
+  const area = (vals: number[], max: number) => `${line(vals, max)} L ${cx(n - 1).toFixed(2)} 100 L ${cx(0).toFixed(2)} 100 Z`
 
-function KpiTile({ id, meta, base, path, yi }: { id: string; meta: TimelineKpiMeta; base: TimelineSegment; path: TimelineSegment; yi: number }) {
-  const b = path.years[yi].kpi[id] ?? 0
-  const a = base.years[yi].kpi[id] ?? 0
-  const diff = b - a
-  const good = diff === 0 ? null : (diff > 0) === (meta.better === 'higher')
   return (
-    <div className="flex items-start justify-between gap-2 rounded-lg border border-line bg-surface px-3.5 py-2.5" title={`${meta.note} (${meta.status})`}>
-      <div className="min-w-0">
-        <div className="truncate text-[12px] text-ink-2">{meta.label}</div>
-        <div className="mt-1 text-[19px] font-semibold leading-none tabular-nums">{show(meta, b)}</div>
-        <div className={`mt-1 font-mono text-[10.5px] ${good === null ? 'text-muted' : good ? 'text-good' : 'text-critical'}`}>
-          {diff === 0 ? 'same as unchanged' : `${diff > 0 ? '+' : '−'}${show(meta, Math.abs(diff))} vs unchanged`}
-          {meta.status === 'placeholder' && <span className="ml-1 text-warn">· placeholder</span>}
+    <div className="border-t border-line/70 pt-2.5">
+      <div className="flex items-center gap-4">
+        <span className={label}>
+          <span className="block font-medium text-ink">Cost &amp; carbon</span>
+          <span className="block truncate text-[11.5px] text-ink-2">cumulative, this pathway</span>
+        </span>
+        <span className="flex items-center gap-1.5 text-[11.5px] text-ink-2">
+          <span className="h-2 w-2 rounded-full" style={{ background: TERRA }} /> Investment
+          <span className="font-mono font-medium text-ink">{msek(costs[n - 1] ?? 0)}</span>
+        </span>
+        <span className="flex items-center gap-1.5 text-[11.5px] text-ink-2">
+          <span className="h-2 w-2 rounded-full" style={{ background: GWP_COLOR }} /> Upfront carbon
+          <span className="font-mono font-medium text-ink">{tco2(gwps[n - 1] ?? 0)}</span>
+        </span>
+      </div>
+      <div className="flex">
+        <span className={label} />
+        <div className="relative h-24 flex-1">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="h-full w-full overflow-visible">
+            <defs>
+              <linearGradient id="tl-cost-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={TERRA} stopOpacity="0.3" />
+                <stop offset="100%" stopColor={TERRA} stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="tl-gwp-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={GWP_COLOR} stopOpacity="0.26" />
+                <stop offset="100%" stopColor={GWP_COLOR} stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <line x1="0" y1="92" x2="100" y2="92" className="stroke-line" strokeWidth="0.4" />
+            <path d={area(gwps, maxGwp)} fill="url(#tl-gwp-fill)" />
+            <path d={area(costs, maxCost)} fill="url(#tl-cost-fill)" />
+            <path d={line(gwps, maxGwp)} fill="none" stroke={GWP_COLOR} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={line(costs, maxCost)} fill="none" stroke={TERRA} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+            {costs.map((v, i) => <circle key={`c${i}`} cx={cx(i)} cy={cy(v, maxCost)} r="1.3" fill={TERRA} />)}
+            {gwps.map((v, i) => <circle key={`g${i}`} cx={cx(i)} cy={cy(v, maxGwp)} r="1.3" fill={GWP_COLOR} />)}
+          </svg>
+          <div className="absolute inset-0 flex">
+            {years.map((y, i) => (
+              <button key={y} onClick={() => onYear(y)}
+                title={`${y}: ${msek(costs[i])} · ${tco2(gwps[i])}`} className="flex-1" aria-label={`Jump to ${y}`} />
+            ))}
+          </div>
         </div>
       </div>
-      <svg viewBox="0 0 20 20" className="h-6 w-6 shrink-0" fill="none" stroke={id === 'capex_cum' ? TERRA : '#7fa067'} strokeWidth="1.6" strokeLinecap="round" aria-hidden>
-        {ICONS[id]}
-      </svg>
     </div>
   )
 }

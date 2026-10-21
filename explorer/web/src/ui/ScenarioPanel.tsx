@@ -27,6 +27,7 @@ interface Props {
   onCompare: () => void
   onSuppliers: () => void
   onResetBuilding: () => void
+  timeline: { label: string; title: string; onOpen: () => void }
 }
 
 /** A folding block inside the setup card (Facade & roof, Core & services). */
@@ -173,6 +174,13 @@ export function ScenarioPanel(p: Props) {
                 <button type="button" onClick={save} className="rounded-lg bg-accent px-3 text-[13px] font-semibold text-white">Save</button>
               </div>
             )}
+            <button type="button" onClick={p.timeline.onOpen} title={p.timeline.title}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-[#fd876e] px-3 py-2.5 text-[13.5px] font-semibold text-[#202020] shadow-sm hover:brightness-105">
+              <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                <path d="M2 10h16" /><circle cx="5" cy="10" r="1.6" fill="currentColor" /><circle cx="10" cy="10" r="1.6" fill="currentColor" /><circle cx="15" cy="10" r="1.6" fill="currentColor" />
+              </svg>
+              {p.timeline.label}
+            </button>
           </>
         )}
       </section>

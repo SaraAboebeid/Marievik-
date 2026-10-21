@@ -40,8 +40,8 @@
       "mandate": "Responsible for the operational management of Marievik: sitting tenants, contracts, negotiation.",
       "focus": "Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants",
       "risk": "Not being relevant; competition from vacancies in new buildings",
-      "timeline_kpis": ["utilization", "use_diversity", "upfront_gwp", "data_quality"],
-      "needs_data": ["Rent and operating cost per use (överskottsgrad)", "Current vacancy and lease expiries"],
+      "timeline_kpis": ["utilization", "use_diversity", "recoverable_mass", "data_quality"],
+      "needs_data": ["Rent and operating cost per use (överskottsgrad — her first stated KPI; closest handbook match is incremental_npv or life-cycle cost, needs real rent data to compute per state)", "Current vacancy and lease expiries"],
       "cavf_profile": "investor"
     },
     {
@@ -62,8 +62,8 @@
       "mandate": "Result responsibility, mandate within board decisions. Steers, coordinates, follows up.",
       "focus": "Rent and income, project result, sustainability; long-lived buildings",
       "risk": "Customers choosing other areas; missing growing companies",
-      "timeline_kpis": ["transformation_cost", "upfront_gwp", "data_quality"],
-      "needs_data": ["Rent per use, to turn the timeline into a project result"],
+      "timeline_kpis": ["incremental_npv", "transformation_cost", "upfront_gwp", "data_quality"],
+      "needs_data": ["Rent per use, to turn the timeline into a real project result — her stated chain is 'Hyra/intäkt → projektresultat → Hållbarhet'; incremental_npv is a flat building-wide placeholder until real rent data lets it be computed per state"],
       "cavf_profile": "finance"
     }
   ],

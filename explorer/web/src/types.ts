@@ -76,7 +76,10 @@ export interface TimelineIssue { severity: 'blocker' | 'major' | 'info'; group: 
 export interface TimelineState {
   key: string; settings: { ground_use: string; use: string }
   groups: Record<string, { use: string; label: string; catalogue_use: string; gfa_m2: number; persons: number
-    fire_class: string; walk_m: number; walk_limit_m: number; units_without_window: number }>
+    fire_class: string; walk_m: number; walk_limit_m: number; units_without_window: number
+    /** Present only for a mixed ground-floor state (explorer/timeline.py MIX_STATES): its AMF-interview
+     *  component uses by area share — several uses on one floor, approximated by one representative layout. */
+    mix?: { use: string; label: string; share: number }[] }>
   issues: TimelineIssue[]; assumptions: string[]; blocked: boolean
   people: number; people_hours: number; evening_share: number; uses_count: number
 }
@@ -96,6 +99,10 @@ export interface Timeline {
   status: 'ready'; building: string; project: string; years: number[]; decision_years: number[]
   decision_years_source: string; today: string; states: Record<string, TimelineState>
   segments: TimelineSegment[]; kpis: Record<string, TimelineKpiMeta>
+  /** Row key -> title in the Gantt chart: {ground, upper} for the whole building, {floor} for one floor. */
+  group_titles: Record<string, string>
+  /** Present only for a single-floor timeline (?floor= was set): which floor index this is. */
+  floor?: number
   assumptions: Record<string, { value: number; source: string }>; pathways_tested: number; states_tested: number
 }
 export type TimelineResponse = Timeline | { status: 'computing' | 'failed'; done: number; total: number; error?: string }
@@ -359,3 +366,10 @@ export interface UrbanContext {
   lamps?: XY[]
   benches?: XY[]
 }
+
+// Urban scale (explorer/model.py Site.urban_summary): each study building's ground-floor use and the
+// public green/plaza area within a radius of its footprint, from the same context data.
+export interface UrbanBuilding {
+  id: string; name: string; ground_use: string; ground_use_label: string; green_m2: number; plaza_m2: number; radius_m: number
+}
+export interface UrbanSummary { buildings: UrbanBuilding[]; radius_m: number }

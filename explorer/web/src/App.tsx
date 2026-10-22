@@ -11,7 +11,20 @@ import { TopBar, buildingAddress, type Tab } from './ui/TopBar'
 import { DistrictPanel, UrbanPanel } from './ui/ScalePanel'
 import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
 import { MethodsDrawer } from './ui/MethodsDrawer'
-import { Viewer, type Pick, type ViewOptions } from './viewer/Viewer'
+import { Viewer, type Pick, type StudioView, type ViewOptions } from './viewer/Viewer'
+import { fromPayload, layoutFor, layoutForUse, setGeometry } from './studio/engine'
+import type { CompareRow, Occupancy, Params, StudioMeta, StudioModel, YearKpi } from './studio/engine'
+import { Crowd, type Scenario } from './studio/crowd'
+import type { FloorTenancy } from './studio/tenancy'
+import { StudioPanel, type CapacityState } from './ui/StudioPanel'
+import { DayPanel } from './ui/DayPanel'
+import { EvacPanel } from './ui/EvacPanel'
+import { DistrictModel, UrbanModel } from './ui/DistrictModel'
+import { LayerBar, LAYER_LEGEND } from './ui/LayerBar'
+import { busyColour, evacDensity, evacFrames, riskColour } from './layers'
+import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, Layer, LayerData } from './layers'
+import { BuildingOverview, FloorTenancyCard } from './ui/OverviewPanel'
+import type { FloorRow } from './ui/OverviewPanel'
 import { dayOfYear, sunPosition } from './viewer/sun'
 import { COMFORT_BINS, DF_BINS, comfortColor } from './viewer/colors'
 import { Legend } from './ui/kit'
@@ -101,6 +114,245 @@ export default function App() {
   const buildingId = level.kind === 'site' ? null : level.building
   const settingsOf = useCallback((id: string) => scen[id] ?? site?.defaults, [scen, site])
 
+  // ------------------------------------------------------------ studio floors: furnished layouts, people, tenancy and ten years
+  // laid out and checked on the server (explorer/studio); B01 only until other buildings have drawn plans. Mock-up data.
+  const [studioMeta, setStudioMeta] = useState<StudioMeta | null>(null)
+  useEffect(() => {
+    api.studioMeta().then((m) => { setGeometry(m.geometry); setStudioMeta(m) }).catch(() => {
+      setStudioMeta(null)
+      // the page is newer than the server behind it: say so rather than quietly showing the old floors
+      setError('The explorer server is running older code than this page, so the floor studio, layers and district model are missing. Restart it (python -m explorer.server) and reload.')
+    })
+  }, [])
+  const studioRef = useRef(false)
+  const [studioView, setStudioView] = useState<StudioView>('furniture')
+  const [studioLayout, setStudioLayout] = useState<Record<number, string>>({})
+  const [studioParams, setStudioParams] = useState<Record<number, Params>>({})
+  const [scenario, setScenario] = useState<Scenario>('day')
+  const [studioHeat, setStudioHeat] = useState(true)
+  const [crowdNote, setCrowdNote] = useState('')
+  const [capacity, setCapacity] = useState<CapacityState>({ busy: null, result: null, rows: null })
+  const [tlHidden, setTlHidden] = useState(false)   // the bottom timeline on a studio floor, closed with its ✕
+  const studioFloor = studioMeta && buildingId && studioMeta.buildings.includes(buildingId) && (level.kind === 'floor' || level.kind === 'unit') ? level.floor : null
+  studioRef.current = studioFloor !== null
+  // The 10-year timeline plays one segment on the furnished floor: segment 1 keeps today's layout while its
+  // running costs, replacements and people move on; segment 2 follows the chosen pathway, so a change of use
+  // swaps in the furnished layout that stands for it.
+  const [tlSeg, setTlSeg] = useState<1 | 2>(2)
+  const tlReady = tl && tl.status === 'ready' && tl.building === buildingId && tl.floor === studioFloor ? tl : null
+  const floorLayout = studioFloor === null || !studioMeta ? null : studioLayout[studioFloor] ?? layoutFor(studioMeta, studioFloor)
+  const mapUse = (use: string) => (studioMeta ? layoutForUse(studioMeta, use, studioFloor === 0) : null)
+  const layoutName = (id: string) => studioMeta?.layouts[id]?.name.toLowerCase() ?? id
+  const tlPathSeg = tlReady ? tlReady.segments.find((s) => s.id === tlPath) ?? tlReady.segments.find((s) => s.segment === 2) ?? tlReady.segments[0] : null
+  const tlBase = tlReady?.segments.find((s) => s.id === 'unchanged')
+  const baseUse = tlReady && tlBase ? tlReady.states[tlBase.years[0].state]?.groups.floor?.use : undefined
+  const s2Uses = tlReady && tlPathSeg ? tlPathSeg.years.map((r) => tlReady.states[r.state]?.groups.floor) : []
+  const s2Layouts = floorLayout ? s2Uses.map((g) => (!g || g.use === baseUse ? floorLayout : mapUse(g.use) ?? floorLayout)) : []
+  const s2Key = s2Layouts.join('|')
+  // years whose use has no furnished layout (school, housing, hotel): that use's running costs and the
+  // timeline's own people and works figures; works the furnished layouts cannot show come from the timeline too
+  const s2Over = tlPathSeg ? tlPathSeg.years.map((r, i) => {
+    const g = s2Uses[i]
+    const unfurnished = !!g && g.use !== baseUse && !mapUse(g.use)
+    const ev = tlPathSeg.events.find((e) => e.year === r.year)
+    const works = ev && !(i > 0 && s2Layouts[i] !== s2Layouts[i - 1]) ? { sek: ev.capex_sek, kg: ev.co2_kg, months: ev.months } : undefined
+    return unfurnished || works ? { opexUse: unfurnished ? g.use : undefined, people: unfurnished ? g.persons : undefined, works } : null
+  }) : []
+  const s2OverKey = JSON.stringify(s2Over)
+  const yiNow = tlReady ? Math.max(0, tlReady.years.indexOf(tlYear)) : 0
+  const tlLayout = tlSeg === 2 && s2Layouts[yiNow] && s2Layouts[yiNow] !== floorLayout ? s2Layouts[yiNow] : null
+  const gNow = s2Uses[yiNow]
+  const sLayout = tlLayout ?? floorLayout
+  const sParamsKey = JSON.stringify((tlLayout || studioFloor === null ? undefined : studioParams[studioFloor]) ?? {})
+  const studioLayouts = studioMeta ? (studioFloor === 0 ? studioMeta.ground : studioMeta.typical) : []
+  const tlNote = !tlReady || !floorLayout ? null
+    : tlSeg === 1 ? `Segment 1 on the model, ${tlYear}: ${layoutName(floorLayout)} all ten years. Only running costs, replacements and people change.`
+    : gNow && gNow.use !== baseUse
+      ? mapUse(gNow.use)
+        ? `Segment 2 on the model, ${tlYear}: ${gNow.label}, shown as ${layoutName(s2Layouts[yiNow])}.`
+        : `Segment 2 on the model, ${tlYear}: ${gNow.label}. No furnished layout for this use yet, so today's layout is shown.`
+      : `Segment 2 on the model, ${tlYear}: still ${layoutName(floorLayout)}.`
+
+  // the floor itself, laid out and checked on the server (slider drags are debounced)
+  const [studioModel, setStudioModel] = useState<StudioModel | null>(null)
+  const [studioLoading, setStudioLoading] = useState(false)
+  useEffect(() => {
+    if (studioFloor === null || !sLayout || !buildingId) { setStudioModel(null); return }
+    let alive = true
+    setStudioLoading(true)
+    const t = window.setTimeout(() => {
+      api.studioFloor(buildingId, studioFloor, sLayout, JSON.parse(sParamsKey))
+        .then((p) => { if (alive) setStudioModel(fromPayload(p)) })
+        .catch((e) => { if (alive) setError(`Floor studio: ${(e as Error).message}`) })
+        .finally(() => { if (alive) setStudioLoading(false) })
+    }, 120)
+    return () => { alive = false; window.clearTimeout(t) }
+  }, [buildingId, studioFloor, sLayout, sParamsKey])
+  useEffect(() => { setCapacity({ busy: null, result: null, rows: null }) }, [studioFloor])
+
+  // simulated working days on the floor as laid out (explorer/studio/occupancy.py)
+  const [occ, setOcc] = useState<Occupancy | null>(null)
+  const [occBusy, setOccBusy] = useState(false)
+  const [occHour, setOccHour] = useState(10)
+  const [attendance, setAttendance] = useState<number | null>(null)
+  const [demand, setDemand] = useState(1)
+  useEffect(() => {
+    if (studioFloor === null || !sLayout || !buildingId) { setOcc(null); return }
+    let alive = true
+    setOccBusy(true)
+    const t = window.setTimeout(() => {
+      api.studioOccupancy(buildingId, studioFloor, sLayout, JSON.parse(sParamsKey), { attendance, demand })
+        .then((o) => { if (alive) setOcc(o) })
+        .catch((e) => { if (alive) setError(`Occupancy: ${(e as Error).message}`) })
+        .finally(() => { if (alive) setOccBusy(false) })
+    }, 300)
+    return () => { alive = false; window.clearTimeout(t) }
+  }, [buildingId, studioFloor, sLayout, sParamsKey, attendance, demand])
+  const occNow = occ && occ.layout === sLayout ? occ : null
+  const roomUseKey = occNow ? JSON.stringify(Object.fromEntries(Object.entries(occNow.roomUse).map(([k, v]) => [k, v[Math.max(0, occNow.hours.indexOf(occHour))]]))) : ''
+
+  // evacuation of the floor as laid out (JuPedSim, explorer/studio/evacuation.py): a background job, played back
+  const [evac, setEvac] = useState<EvacResult | null>(null)
+  const [evacBusy, setEvacBusy] = useState(false)
+  const [evacErr, setEvacErr] = useState<string | null>(null)
+  const [evacT, setEvacT] = useState(0)
+  const [evacPlaying, setEvacPlaying] = useState(false)
+  const [evacDense, setEvacDense] = useState(true)
+  const evacKey = studioFloor !== null && sLayout ? `${studioFloor}|${sLayout}|${sParamsKey}` : ''
+  const evacNow = evac && evacKey === `${evac.floor}|${evac.layout}|${sParamsKey}` ? evac : null
+  const evacFramesRef = useRef<{ key: string; frames: Float32Array[] } | null>(null)
+  const runEvac = () => {
+    if (!buildingId || studioFloor === null || !sLayout) return
+    setEvacBusy(true); setEvacErr(null); setEvacPlaying(false)
+    api.studioEvacuation(buildingId, studioFloor, sLayout, JSON.parse(sParamsKey))
+      .then(async ({ job }) => {
+        for (let i = 0; i < 400; i++) {
+          const j = await api.evacJob(job)
+          if (j.status === 'complete' && j.result) { setEvac(j.result); setEvacT(0); setEvacPlaying(true); return }
+          if (j.status === 'failed') throw new Error(j.error?.split('\n').filter(Boolean).slice(-1)[0] ?? 'evacuation failed')
+          await new Promise((r) => setTimeout(r, 1500))
+        }
+        throw new Error('the evacuation took too long')
+      })
+      .catch((e) => setEvacErr((e as Error).message))
+      .finally(() => setEvacBusy(false))
+  }
+  useEffect(() => { setEvacPlaying(false) }, [evacKey])
+  // play: four times real time
+  useEffect(() => {
+    if (!evacPlaying || !evacNow) return
+    const end = evacNow.frames.n * evacNow.frames.dt
+    let last = performance.now(), raf = 0
+    const tick = (now: number) => {
+      const dt = (now - last) / 1000 * 4
+      last = now
+      setEvacT((t) => { const n = t + dt; if (n >= end) { setEvacPlaying(false); return end } return n })
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [evacPlaying, evacNow])
+
+  // ------------------------------------------------------------ layers: movement, fire escape, capacity (and vacancy from the district model)
+  const [layer, setLayerState] = useState<Layer>('none')
+  const [layerData, setLayerData] = useState<LayerData | null>(null)
+  const setLayer = (l: Layer) => {
+    setLayerState(l)
+    if (studioRef.current) setStudioView(l === 'movement' ? 'move' : l === 'fire' ? 'fire' : l === 'capacity' ? 'capacity' : 'furniture')
+  }
+  const b01Layouts = studioMeta ? Object.fromEntries(Array.from({ length: 7 }, (_, f) => [f, studioLayout[f] ?? layoutFor(studioMeta, f)])) : null
+  const layersKey = b01Layouts && (layer === 'movement' || layer === 'fire' || layer === 'capacity') ? JSON.stringify([b01Layouts, studioParams]) : ''
+  useEffect(() => {
+    if (!layersKey) return
+    const [lay, par] = JSON.parse(layersKey) as [Record<number, string>, Record<number, Params>]
+    let alive = true
+    api.layers(lay, par).then((d) => { if (alive) setLayerData(d) }).catch((e) => { if (alive) setError(`Layers: ${(e as Error).message}`) })
+    return () => { alive = false }
+  }, [layersKey])
+
+  // ------------------------------------------------------------ the district over ten years (explorer/district.py)
+  const [districtMeta, setDistrictMeta] = useState<DistrictMeta | null>(null)
+  const [districtCards, setDistrictCards] = useState<Set<string>>(new Set(['activate_ground', 'flexible_fitout']))
+  const [districtRes, setDistrictRes] = useState<{ strategy: DistrictResult; baseline: DistrictResult } | null>(null)
+  const [districtBusy, setDistrictBusy] = useState(false)
+  const [distYear, setDistYear] = useState(2035)
+  const [cardRows, setCardRows] = useState<CompareCardRow[] | null>(null)
+  const [cardBusy, setCardBusy] = useState(false)
+  useEffect(() => {
+    if (districtMeta || (scale !== 'district' && scale !== 'urban')) return
+    api.districtMeta().then((m) => { setDistrictMeta(m); setDistYear(m.start_year + m.years - 1) }).catch(() => {})
+  }, [scale, districtMeta])
+  const runDistrict = (cards = districtCards) => {
+    setDistrictBusy(true)
+    api.districtRun([...cards], 20)
+      .then((r) => { setDistrictRes(r); setLayerState((l) => (l === 'none' ? 'vacancy' : l)) })
+      .catch((e) => setError(`District model: ${(e as Error).message}`))
+      .finally(() => setDistrictBusy(false))
+  }
+  const runCardCompare = () => {
+    setCardBusy(true)
+    api.districtCompare(10).then((r) => setCardRows(r.rows)).catch((e) => setError(`District comparison: ${(e as Error).message}`)).finally(() => setCardBusy(false))
+  }
+  const pickCardRow = (id: string) => {
+    const all = districtMeta?.strategies.map((s) => s.id) ?? []
+    const cards = new Set(id === 'none' ? [] : id === 'all' ? all : [id])
+    setDistrictCards(cards)
+    runDistrict(cards)
+  }
+
+  // both segments' KPIs, year by year, from the furnished layouts
+  const [tlKpis, setTlKpis] = useState<{ s1: YearKpi[]; s2: YearKpi[] } | null>(null)
+  const kpiKey = tlReady && floorLayout && studioFloor !== null && buildingId
+    ? JSON.stringify([buildingId, studioFloor, tlReady.years, floorLayout, studioParams[studioFloor] ?? {}, s2Key, s2OverKey]) : ''
+  useEffect(() => {
+    if (!kpiKey) { setTlKpis(null); return }
+    const [bid, fl, years, today, p, s2k, over] = JSON.parse(kpiKey) as [string, number, number[], string, Params, string, string]
+    let alive = true
+    Promise.all([api.studioSeries(bid, fl, years.map(() => today), years, p, []), api.studioSeries(bid, fl, s2k.split('|'), years, p, JSON.parse(over))])
+      .then(([a, b]) => { if (alive) setTlKpis({ s1: a.years, s2: b.years }) })
+      .catch((e) => { if (alive) setError(`Timeline KPIs: ${(e as Error).message}`) })
+    return () => { alive = false }
+  }, [kpiKey])
+
+  // the capacity search: this layout's walls for the most people, or every layout compared
+  const runMaximise = () => {
+    if (!buildingId || studioFloor === null || !floorLayout) return
+    const fl = studioFloor
+    setCapacity((c) => ({ ...c, busy: 'maximise' }))
+    api.studioMaximise(buildingId, fl, floorLayout, studioParams[fl] ?? {})
+      .then((r) => { setStudioParams((s) => ({ ...s, [fl]: r.params })); setCapacity((c) => ({ ...c, busy: null, result: { before: r.before, after: r.after } })) })
+      .catch((e) => { setError(`Capacity search: ${(e as Error).message}`); setCapacity((c) => ({ ...c, busy: null })) })
+  }
+  const runCompare = () => {
+    if (!buildingId || studioFloor === null || !floorLayout) return
+    setCapacity((c) => ({ ...c, busy: 'compare' }))
+    api.studioCompare(buildingId, studioFloor, floorLayout, studioParams[studioFloor] ?? {})
+      .then((r) => setCapacity((c) => ({ ...c, busy: null, rows: r.rows })))
+      .catch((e) => { setError(`Layout comparison: ${(e as Error).message}`); setCapacity((c) => ({ ...c, busy: null })) })
+  }
+  const pickRow = (r: CompareRow) => {
+    if (studioFloor === null) return
+    setStudioLayout((s) => ({ ...s, [studioFloor]: r.layout }))
+    setStudioParams((s) => ({ ...s, [studioFloor]: r.params }))
+  }
+
+  // who rents what, per building (data/projects/<project>/leases.json, or example occupancy)
+  const [tenancy, setTenancy] = useState<Record<string, FloorTenancy[]>>({})
+  const tenancyFor = buildingId && bdata[buildingId] && !tenancy[buildingId] ? buildingId : null
+  useEffect(() => {
+    if (!tenancyFor) return
+    const bp = bdata[tenancyFor]
+    api.tenancy(choice.project, tenancyFor, bp.floors.map((f) => ({ floor: f.index, gfa: ringsArea(f.rings) })))
+      .then((r) => setTenancy((t) => ({ ...t, [tenancyFor]: r.floors })))
+      .catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenancyFor, choice.project])
+  const floorTenancy = studioFloor !== null && buildingId ? tenancy[buildingId]?.[studioFloor] ?? null : null
+
+  // on a studio floor the 10-year timeline sits open in the bottom bar; elsewhere it opens from Building setup
+  const tlAuto = studioFloor !== null && !tlHidden
+  const tlOpen = showTimeline || tlAuto
+
   // ------------------------------------------------------------ the project's own profiles (data/projects), else the generic ones
   useEffect(() => {
     let alive = true
@@ -121,7 +373,7 @@ export default function App() {
   // ------------------------------------------------------------ 10-year timeline: computed once per building
   // (or once per building+floor), polled until ready
   useEffect(() => {
-    if (!showTimeline || !buildingId) return
+    if (!tlOpen || !buildingId) return
     let alive = true
     let t = 0
     let misses = 0
@@ -142,7 +394,7 @@ export default function App() {
     })
     poll()
     return () => { alive = false; window.clearTimeout(t) }
-  }, [showTimeline, buildingId, choice.project, timelineFloor])
+  }, [tlOpen, buildingId, choice.project, timelineFloor])
 
   // ------------------------------------------------------------ key figures of the open building's scenario (Design panel)
   const figKey = buildingId ? bdata[buildingId]?.key : undefined
@@ -250,17 +502,19 @@ export default function App() {
   // the one-floor override endpoint directly and pushes the result straight into the viewer.
   const floorOverrideActive = useRef(false)
   useEffect(() => {
-    if (!showTimeline || !buildingId || !site || !tl || tl.status !== 'ready' || tl.building !== buildingId) return
-    const seg = tl.segments.find((s) => s.id === tlPath) ?? tl.segments[0]
+    if (!tlOpen || !buildingId || !site || !tl || tl.status !== 'ready' || tl.building !== buildingId) return
+    // segment 1 plays the building as it is; segment 2 the chosen pathway
+    const seg = (tlSeg === 1 ? tl.segments.find((s) => s.id === 'unchanged') : tl.segments.find((s) => s.id === tlPath)) ?? tl.segments[0]
     const row = seg.years.find((r) => r.year === tlYear) ?? seg.years[0]
     if (tl.floor !== undefined) {
       if (!(level.kind === 'floor' && level.floor === tl.floor)) return   // navigated away mid-fetch
+      if (studioRef.current) return   // B01's furnished floor follows the timeline year itself (tlLayout)
       const use = tl.states[row.state].groups.floor.use
       floorOverrideActive.current = true
       api.floorUse(buildingId, tl.floor, use).then((fp) => {
         const tagged = Object.assign(fp, { __key: `tl:${buildingId}:${tl.floor}:${use}` })
         setFloorData(tagged)
-        viewer.current?.setFloor(tagged)
+        if (!(studioRef.current && buildingId === 'B01')) viewer.current?.setFloor(tagged)
       }).catch((e) => setError((e as Error).message))
       return
     }
@@ -268,22 +522,22 @@ export default function App() {
     const cur = settingsOf(buildingId)
     if (cur?.ground_use !== want.ground_use || cur?.use !== want.use) updateScenario(buildingId, want)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showTimeline, buildingId, tl, tlPath, tlYear, level])
+  }, [tlOpen, buildingId, tl, tlPath, tlYear, level, tlSeg])
 
   // Leaving floor-timeline mode (closed, or switched to the whole-building timeline): put the floor back
   // to its plain, Settings-driven view, so nothing is left showing a year's one-off override.
   const tlFloorReady = tl?.status === 'ready' ? tl.floor : undefined
   useEffect(() => {
-    if (!floorOverrideActive.current || (showTimeline && tlFloorReady !== undefined)) return
+    if (!floorOverrideActive.current || (tlOpen && tlFloorReady !== undefined)) return
     floorOverrideActive.current = false
     if (!buildingId || level.kind !== 'floor') return
     const b = bdata[buildingId]
     api.floor(buildingId, level.floor, settingsOf(buildingId) ?? {}).then((fp) => {
       setFloorData(Object.assign(fp, { __key: b?.key }))
-      viewer.current?.setFloor(fp)
+      if (!(studioRef.current && buildingId === 'B01')) viewer.current?.setFloor(fp)
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }).catch(() => {})
-  }, [showTimeline, tlFloorReady])
+  }, [tlOpen, tlFloorReady])
 
   // ------------------------------------------------------------ level changes
   const go = useCallback((l: Level) => {
@@ -314,10 +568,118 @@ export default function App() {
       setFloorData(tagged)
       setDl(null); setCf(null); setUnitComfort(null); setOverlay('type')
       v.setFocus(level, false)
-      v.setFloor(tagged)
+      // the floor studio draws B01's floor itself; the explorer's own floor waits until it is switched off
+      if (!(studioRef.current && level.building === 'B01')) v.setFloor(tagged)
     }).catch((e) => setError((e as Error).message)).finally(() => setBusy(null))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level, bKey])
+
+  // ------------------------------------------------------------ floor studio in 3D: the floor, then the people walking on it
+  const studioShown = useRef<number | null>(null)
+  const b01Floor = studioFloor !== null ? bdata.B01?.floors[studioFloor] : undefined
+  const studioBase = b01Floor ? b01Floor.z + b01Floor.slab_t : null
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    if (studioModel && studioBase !== null && studioModel.floor === studioFloor) {   // never draw a floor that is still loading
+      if (level.kind === 'floor' || level.kind === 'unit') v.setFocus(level, false)   // show the floors below this one
+      v.setStudio(studioModel, studioBase, studioView, studioShown.current !== studioFloor, floorTenancy?.suites ?? [],
+        studioView === 'use' && roomUseKey ? JSON.parse(roomUseKey) : null)
+      studioShown.current = studioFloor
+      return
+    }
+    if (studioShown.current === null) return
+    studioShown.current = null
+    // studio switched off: put the explorer's own floor back
+    if ((level.kind === 'floor' || level.kind === 'unit') && floorData && floorData.building === level.building && floorData.index === level.floor) v.setFloor(floorData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [studioModel, studioView, studioBase, studioView === 'use' ? roomUseKey : ''])
+  useEffect(() => {
+    const v = viewer.current
+    if (!v || !studioModel || studioView !== 'move') return
+    const crowd = new Crowd(studioModel, scenario)
+    setCrowdNote(`${crowd.agents.length} people shown${crowd.step > 1 ? ` (one in ${crowd.step})` : ''}`)
+    if (!studioHeat) v.setStudioHeat(null)
+    let raf = 0, last = performance.now(), frame = 0
+    const loop = (t: number) => {
+      crowd.tick(Math.min(0.1, (t - last) / 1000))
+      last = t
+      v.setStudioAgents(crowd.agents)
+      if (studioHeat && frame++ % 15 === 0) v.setStudioHeat(crowd.heat)
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+    return () => cancelAnimationFrame(raf)
+  }, [studioModel, studioView, scenario, studioHeat])
+
+  // the evacuation on the plan: people at time t (out = hidden), and how crowded it got
+  useEffect(() => {
+    const v = viewer.current
+    if (!v || !studioModel || studioView !== 'fire' || !evacNow) return
+    const key = `${evacNow.floor}|${evacNow.layout}|${evacNow.total}|${evacNow.frames.n}`
+    if (evacFramesRef.current?.key !== key) evacFramesRef.current = { key, frames: evacFrames(evacNow) }
+    const frames = evacFramesRef.current.frames
+    const f = Math.min(frames.length - 1, Math.floor(evacT / evacNow.frames.dt))
+    const fr = frames[f], first = frames[0]
+    const walkers = Array.from({ length: evacNow.frames.agents }, (_, i) => {
+      const x = fr[2 * i], y = fr[2 * i + 1]
+      const gone = !isFinite(x)
+      return { x: gone ? first[2 * i] : x, y: gone ? first[2 * i + 1] : y, gone,
+        moving: !gone && Math.hypot(x - first[2 * i], y - first[2 * i + 1]) > 0.3 }
+    })
+    v.setStudioAgents(walkers)
+  }, [studioModel, studioView, evacNow, evacT])
+  useEffect(() => {
+    const v = viewer.current
+    if (!v || !studioModel) return
+    v.setStudioDensity(studioView === 'fire' && evacNow && evacDense ? evacDensity(evacNow) : null, evacNow?.heat.nx ?? 0, evacNow?.heat.ny ?? 0, evacNow?.heat.cell ?? 1)
+  }, [studioModel, studioView, evacNow, evacDense])
+
+  // layers on the buildings: each floor tinted by its figure, a label over the roof, flows to the station
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    const onFloor = studioFloor !== null || level.kind === 'floor' || level.kind === 'unit'
+    if (layer === 'none' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
+    if (layer === 'vacancy') {
+      v.setFlows(null)
+      if (!districtRes) { v.setLayerTint(null); return }
+      const yi = Math.max(0, districtRes.strategy.years.indexOf(distYear))
+      v.setLayerTint(Object.fromEntries(districtRes.strategy.buildings.map((bd) => {
+        const vac = bd.vacancy[yi], n = bdata[bd.id]?.floors.length ?? 8
+        return [bd.id, { floors: Array(n).fill(riskColour(vac / 0.15)), label: `${bd.id} ${Math.round(vac * 100)} %` }]
+      })))
+      return
+    }
+    if (!layerData) return
+    const tints: Record<string, { floors: (string | null)[]; label?: string }> = {}
+    const maxPeak = Math.max(1, ...layerData.buildings.flatMap((bd) => bd.floors.map((f) => f.peak)))
+    for (const bd of layerData.buildings) {
+      if (layer === 'capacity') {
+        const planned = bd.floors.reduce((a, f) => a + f.planned, 0), legal = bd.floors.reduce((a, f) => a + f.legalMax, 0)
+        const fails = bd.floors.filter((f) => f.checksOk === false).length
+        tints[bd.id] = {
+          floors: bd.floors.map((f) => (f.checksOk === false ? '#d8342b' : f.source === 'estimate' ? '#b9b6ac' : riskColour(f.planned / Math.max(1, f.legalMax)))),
+          label: bd.id === 'B01' || bd.id === buildingId ? `${bd.id} ${planned} / ${legal} people${fails ? ` · ${fails} floor${fails > 1 ? 's' : ''} fail a check` : ''}` : undefined,
+        }
+      } else if (layer === 'fire') {
+        const plan = bd.floors.filter((f) => f.escape_m !== null)
+        const worst = plan.length ? plan.reduce((a, f) => ((f.escape_m ?? 0) > (a.escape_m ?? 0) ? f : a)) : null
+        tints[bd.id] = {
+          floors: bd.floors.map((f) => (f.escape_m === null ? '#9a978e' : riskColour(f.escape_m / f.escapeLimit))),
+          label: worst ? `${bd.id} longest escape ${worst.escape_m?.toFixed(1)} m (floor ${worst.floor}) · out in ~${Math.ceil((worst.evac_s ?? 0) / 60)} min` : undefined,
+        }
+      } else {
+        tints[bd.id] = { floors: bd.floors.map((f) => busyColour(f.peak / maxPeak)), label: bd.id === 'B01' || bd.id === buildingId ? `${bd.id} ${bd.peak} at the peak` : undefined }
+      }
+    }
+    v.setLayerTint(tints)
+    if (layer === 'movement') {
+      const trips = layerData.buildings.reduce((a, bd) => a + bd.stationTrips, 0)
+      v.setFlows(layerData.buildings.map((bd) => ({ from: bd.c, to: layerData.station.xy, trips: bd.stationTrips })),
+        { at: layerData.station.xy, text: `Liljeholmen station · ${trips.toLocaleString('sv-SE')} trips a day` })
+    } else v.setFlows(null)
+  }, [layer, layerData, districtRes, distYear, bdata, studioFloor, level.kind, buildingId])
 
   // ------------------------------------------------------------ scale: urban / district / building
   // Urban and District both look at the whole site at once; only Building drills into one building/floor/unit.
@@ -547,7 +909,17 @@ export default function App() {
 
   // ------------------------------------------------------------ render
   const b = buildingId ? bdata[buildingId] : null
-  const crumbs: { label: string; to: Level }[] = [{ label: 'Marievik', to: { kind: 'site' } }]
+  // the 10-year timeline in the bottom bar; the side panels stop above it
+  const bottomBar = tlOpen && !!buildingId
+  const closeTl = () => { if (showTimeline) toggleTimeline(); else setTlHidden(true) }
+  // building overview: each floor's use and area, and how much of it is rented (B01 from the floor studio)
+  const overviewRows: FloorRow[] | null = b ? b.floors.map((f) => {
+    const area = ringsArea(f.rings)
+    const studioUse = studioMeta?.buildings.includes(b.id) ? studioMeta.layouts[studioLayout[f.index] ?? layoutFor(studioMeta, f.index)]?.use : undefined
+    const ten = tenancy[b.id]?.[f.index]
+    return ten ? { n: f.index, label: f.index === 0 ? 'GF' : `F${f.index}`, use: studioUse ? USE_FAMILY[studioUse] ?? f.use_label : f.use_label, area, ten } : null
+  }).filter((r): r is FloorRow => r !== null) : null
+  const crumbs:{ label: string; to: Level }[] = [{ label: 'Marievik', to: { kind: 'site' } }]
   if (level.kind !== 'site') crumbs.push({ label: `${level.building} ${b?.name ?? ''}`, to: { kind: 'building', building: level.building } })
   if (level.kind === 'floor' || level.kind === 'unit') crumbs.push({ label: `Floor ${level.floor}${b?.floors[level.floor]?.added ? ' (added)' : ''}`, to: { kind: 'floor', building: level.building, floor: level.floor } })
   if (level.kind === 'unit') crumbs.push({ label: floorData?.units.find((u) => u.id === level.unit)?.name ?? level.unit, to: level })
@@ -607,6 +979,7 @@ export default function App() {
             </button>
           ))}
         </nav>
+        <LayerBar layer={layer} setLayer={setLayer} vacancy={!!districtRes} />
         {scale === 'building' && site && (
           <select value={buildingId ?? ''}
             onChange={(e) => go(e.target.value ? { kind: 'building', building: e.target.value } : { kind: 'site' })}
@@ -648,12 +1021,19 @@ export default function App() {
 
       {/* left: building setup and scenarios (nothing to set up on the whole site) */}
       {level.kind !== 'site' && (panels.left ? (
-        <aside className={`panel-scroll absolute left-3 ${panelTop} z-10 w-[19rem]`}>
+        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute left-3 ${panelTop} z-10 w-[19rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('left')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
           </div>
-          {site && (
+          {floorTenancy && studioFloor !== null ? (
+            <FloorTenancyCard ten={floorTenancy} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} />
+          ) : site && (
+            <>
+            {level.kind === 'building' && buildingId && overviewRows && (
+              <BuildingOverview name={`${buildingId} ${b?.name.split(' - ')[0] ?? ''}`} floors={overviewRows}
+                onFloor={(n) => go({ kind: 'floor', building: buildingId, floor: n })} />
+            )}
             <ScenarioPanel
               site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
               loading={buildingId ? !!loading[buildingId] : false} status={sc} saved={saved}
@@ -669,6 +1049,7 @@ export default function App() {
                 onOpen: toggleTimeline,
               }}
             />
+            </>
           )}
         </aside>
       ) : (
@@ -680,7 +1061,7 @@ export default function App() {
 
       {/* right: the building's key figures, or the site / floor / unit figures and analysis */}
       {panels.right ? (
-        <aside className={`panel-scroll absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -691,8 +1072,33 @@ export default function App() {
               onAll={() => setDistrictHidden(new Set())}
               onNone={() => setDistrictHidden(new Set(site.buildings.map((bd) => bd.id)))} />
           )}
+          {site && scale === 'district' && studioFloor === null && (
+            <DistrictModel meta={districtMeta} res={districtRes} busy={districtBusy} cards={districtCards}
+              toggle={(id) => setDistrictCards((c) => { const n = new Set(c); n.has(id) ? n.delete(id) : n.add(id); return n })}
+              onRun={() => runDistrict()} year={distYear} setYear={(y) => { setDistYear(y); if (layer === 'none') setLayerState('vacancy') }}
+              compare={cardRows} compareBusy={cardBusy} onCompare={runCardCompare} onPickCompare={pickCardRow} />
+          )}
+          {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
-          {level.kind === 'building' && buildingId ? (
+          {studioModel && studioMeta && studioFloor !== null && sLayout ? (
+            <StudioPanel model={studioModel} meta={studioMeta} view={studioView} setView={setStudioView}
+              floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} layout={floorLayout ?? sLayout} layouts={studioLayouts}
+              setLayout={(id) => { setStudioLayout((s) => ({ ...s, [studioFloor]: id })); setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
+              setParam={(key, v) => setStudioParams((s) => ({ ...s, [studioFloor]: { ...(s[studioFloor] ?? {}), [key]: +v.toFixed(2) } }))}
+              onReset={() => { setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
+              scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
+              timelineShown={tlOpen} onTimeline={() => (tlOpen ? closeTl() : setTlHidden(false))}
+              capacity={capacity} onMaximise={runMaximise} onCompare={runCompare} onPickRow={pickRow} loading={studioLoading}>
+              <DayPanel occ={occNow} busy={occBusy} hour={occHour} setHour={(h) => { setOccHour(h); setStudioView('use') }}
+                attendance={attendance} setAttendance={setAttendance} demand={demand} setDemand={setDemand}
+                showUse={studioView === 'use'} onShowUse={() => setStudioView(studioView === 'use' ? 'furniture' : 'use')} />
+              {studioView === 'fire' && (
+                <EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
+                  playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
+                  t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />
+              )}
+            </StudioPanel>
+          ) : level.kind === 'building' && buildingId ? (
             <KeyFigures data={figures && figures.building === buildingId ? figures : null} loading={!!loading[buildingId] || figures?.key !== bdata[buildingId]?.key} />
           ) : site && (
             <InfoPanel
@@ -714,13 +1120,17 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
+        {layer !== 'none' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (layer !== 'vacancy' || districtRes) && (
+          <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
+        )}
       </div>
 
       {/* bottom: map legend + sun/view controls, both foldable */}
       <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-end gap-2">
-        {showTimeline && buildingId ? (
+        {bottomBar ? (
           <TimelineDrawer tl={tl && (tl.status !== 'ready' || tl.building === buildingId) ? tl : null} profile={projectProfile}
-            year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={toggleTimeline} />
+            year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={closeTl}
+            segment={tlSeg} setSegment={setTlSeg} kpis={studioFloor !== null ? tlKpis : null} note={studioFloor !== null ? tlNote : null} />
         ) : (
           <>
             {site && <div className="pointer-events-auto min-w-0"><MapLegend site={site} level={level} floor={floorData} /></div>}
@@ -777,6 +1187,14 @@ export default function App() {
       )}
     </div>
   )
+}
+
+const USE_FAMILY: Record<string, string> = { office: 'Office', cowork: 'Coworking', ground: 'Reception & building services', cafe: 'Café', restaurant: 'Restaurant' }
+
+/** Plan area of a floor outline: the outer ring less any holes (shoelace). */
+function ringsArea(rings: [number, number][][]) {
+  const one = (r: [number, number][]) => Math.abs(r.reduce((a, p, i) => { const q = r[(i + 1) % r.length]; return a + p[0] * q[1] - q[0] * p[1] }, 0)) / 2
+  return rings.length ? Math.max(0, one(rings[0]) - rings.slice(1).reduce((a, h) => a + one(h), 0)) : 0
 }
 
 declare module './types' {

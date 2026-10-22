@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "purpose": "Rent roll for Marievik: lettable suites per floor and who rents them. Read by explorer/studio/tenancy.py for the explorer's rented / vacant views and, later, the district model.",
+    "status": "EXAMPLE DATA: fictional tenants, rents and lease dates for discussion. Replace with AMF's rent roll (leases and agreements) when it arrives; keep the same shape.",
+    "updated": "2026-10-22",
+    "units": "metres in each building's own plan frame (data/plans/marievik/<building>.json); rent in SEK per m2 and year"
+  },
+  "tenants": {
+    "Tenant A": { "sector": "Tech company", "colour": "#4aa3b5" },
+    "Tenant B": { "sector": "Consultancy", "colour": "#f4a7dd" },
+    "Tenant C": { "sector": "Public agency", "colour": "#f5d66b" },
+    "Tenant D": { "sector": "Engineering firm", "colour": "#03b05f" },
+    "Tenant E": { "sector": "Media house", "colour": "#77ccff" },
+    "Tenant F": { "sector": "Start-up hub", "colour": "#c9a0f0" },
+    "Tenant G": { "sector": "Coworking operator", "colour": "#fd876e" },
+    "Tenant H": { "sector": "Law firm", "colour": "#e2b07a" },
+    "Café operator": { "sector": "Food and drink", "colour": "#fd876e" }
+  },
+  "buildings": {
+    "B01": {
+      "suites": {
+        "ground": [
+          { "id": "C", "label": "Café", "rect": [0, 0, 16, 11] },
+          { "id": "L", "label": "Lobby, meeting rooms and lounge (shared)", "rect": [0, 11, 16.6, 42.6], "shared": true },
+          { "id": "B", "label": "Building services and back office (owner)", "rect": [16.6, 35, 43.25, 53.47], "shared": true },
+          { "id": "R", "label": "Reception and security (owner)", "rect": [16, 0, 43.25, 35], "shared": true }
+        ],
+        "typical": [
+          { "id": "S", "label": "South suite", "rect": [0, 0, 43.25, 13] },
+          { "id": "W", "label": "West suite", "rect": [0, 13, 12, 38.5] },
+          { "id": "E", "label": "East suite", "rect": [31.2, 13, 43.25, 38.5] },
+          { "id": "N", "label": "North suite", "rect": [0, 38.5, 43.25, 53.47] }
+        ]
+      },
+      "leases": [
+        { "tenant": "Café operator", "floor": 0, "suites": ["C"], "rent_sek_m2": 2600, "start": 2023, "end": 2028 },
+        { "tenant": "Tenant A", "floor": 1, "suites": ["S", "W"], "rent_sek_m2": 3400, "start": 2022, "end": 2029 },
+        { "tenant": "Tenant B", "floor": 1, "suites": ["E"], "rent_sek_m2": 3200, "start": 2022, "end": 2027 },
+        { "tenant": "Tenant C", "floor": 2, "suites": ["S", "W", "E", "N"], "rent_sek_m2": 2900, "start": 2021, "end": 2031 },
+        { "tenant": "Tenant D", "floor": 3, "suites": ["S", "E"], "rent_sek_m2": 3100, "start": 2023, "end": 2028 },
+        { "tenant": "Tenant E", "floor": 4, "suites": ["S", "W", "N"], "rent_sek_m2": 3300, "start": 2020, "end": 2030 },
+        { "tenant": "Tenant F", "floor": 4, "suites": ["E"], "rent_sek_m2": 2800, "start": 2024, "end": 2027 },
+        { "tenant": "Tenant G", "floor": 5, "suites": ["S", "W", "E", "N"], "rent_sek_m2": 3000, "start": 2022, "end": 2030 },
+        { "tenant": "Tenant H", "floor": 6, "suites": ["S", "E", "N"], "rent_sek_m2": 3600, "start": 2019, "end": 2032 }
+      ]
+    }
+  },
+  "other_buildings": {
+    "_note": "No suites or leases yet for the other buildings: an example share of each floor is shown as vacant (0, 0, 15, 30, 50 or 100 %), fixed per building and floor, so the overview reads like the real thing.",
+    "lettable_share_of_gfa": 0.85
+  }
+}

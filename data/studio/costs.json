@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "purpose": "Every price, carbon figure and running cost the floor studio uses (explorer/studio). One file so each number can be replaced by AMF's own figures, tenders or EPDs without touching code.",
+    "status": "PLACEHOLDER: round example values for discussion, not sourced. Replace with AMF operating data (energy, maintenance, cleaning), contractor prices and product EPDs.",
+    "updated": "2026-10-22",
+    "units": "SEK and kg CO2e; per m2 of gross floor area per year for running costs, per m2 of wall face for partitions, per item for doors and furniture"
+  },
+  "energy": { "sek_per_kwh": 1.35, "kgco2e_per_kwh": 0.035, "source": "placeholder" },
+  "opex_per_m2_year": {
+    "office":     { "kwh": 85,  "maint": 140, "clean": 190, "source": "placeholder" },
+    "cowork":     { "kwh": 95,  "maint": 150, "clean": 230, "source": "placeholder" },
+    "cafe":       { "kwh": 170, "maint": 220, "clean": 380, "source": "placeholder" },
+    "restaurant": { "kwh": 260, "maint": 300, "clean": 520, "source": "placeholder" },
+    "ground":     { "kwh": 110, "maint": 180, "clean": 240, "source": "placeholder" },
+    "school":     { "kwh": 110, "maint": 160, "clean": 260, "source": "placeholder" },
+    "residential":{ "kwh": 95,  "maint": 120, "clean": 60,  "source": "placeholder" },
+    "hotel":      { "kwh": 180, "maint": 220, "clean": 420, "source": "placeholder" },
+    "retail":     { "kwh": 140, "maint": 180, "clean": 260, "source": "placeholder" }
+  },
+  "partitions": {
+    "wall_height_m": 2.7,
+    "new_solid":  { "sek_m2": 2400, "kgco2e_m2": 28 },
+    "new_glass":  { "sek_m2": 4800, "kgco2e_m2": 45 },
+    "take_down":  { "sek_m2": 250,  "kgco2e_m2": 2 },
+    "reinstall":  { "sek_m2": 900,  "kgco2e_m2": 4 },
+    "reuse_share": 0.6,
+    "source": "placeholder; reuse share = part of demountable panels taken down that can go up again"
+  },
+  "door": { "sek": 9000, "kgco2e": 60, "source": "placeholder" },
+  "finishes_per_m2": { "sek": 450, "kgco2e": 6, "source": "placeholder" },
+  "moving_an_item": { "sek": 300, "kgco2e": 1.5, "source": "placeholder" },
+  "services_per_m2": {
+    "same_use": { "sek": 150, "kgco2e": 3, "what": "Lighting and sprinkler adjustments" },
+    "office":     { "sek": 150,  "kgco2e": 3 },
+    "cowork":     { "sek": 250,  "kgco2e": 4 },
+    "cafe":       { "sek": 900,  "kgco2e": 8 },
+    "restaurant": { "sek": 2600, "kgco2e": 14 },
+    "ground":     { "sek": 400,  "kgco2e": 5 },
+    "what": "Ventilation, water, electrics for the new use",
+    "source": "placeholder"
+  },
+  "replacements": {
+    "_note": "Replacements that fall due if nothing changes; installation years assumed. per = m2 (gross floor area) or chair. fitout = renewed anyway by a change of use.",
+    "office": [
+      { "year": 2028, "what": "Carpet tiles reach end of life", "sek": 300, "kgco2e": 9, "per": "m2", "fitout": true },
+      { "year": 2029, "what": "Task chairs replaced", "sek": 4000, "kgco2e": 70, "per": "chair", "fitout": true },
+      { "year": 2031, "what": "Lighting renewed (LED)", "sek": 260, "kgco2e": 7, "per": "m2", "fitout": false },
+      { "year": 2033, "what": "Paint and wall finishes", "sek": 120, "kgco2e": 2, "per": "m2", "fitout": true }
+    ],
+    "ground": [
+      { "year": 2028, "what": "Stone floor polished", "sek": 80, "kgco2e": 1, "per": "m2", "fitout": true },
+      { "year": 2030, "what": "Access control and CCTV renewed", "sek": 190, "kgco2e": 1.4, "per": "m2", "fitout": false },
+      { "year": 2031, "what": "Lighting renewed (LED)", "sek": 260, "kgco2e": 7, "per": "m2", "fitout": false }
+    ],
+    "food": [
+      { "year": 2030, "what": "Kitchen equipment overhaul", "sek": 380, "kgco2e": 6, "per": "m2", "fitout": true },
+      { "year": 2031, "what": "Lighting renewed (LED)", "sek": 260, "kgco2e": 7, "per": "m2", "fitout": false }
+    ]
+  },
+  "furniture": {
+    "_note": "Price and carbon per item (new). Plant and pallets are building services / stock, not furniture.",
+    "desk": [6500, 110], "chair": [4000, 70], "stool": [1500, 25], "lchair": [7000, 110], "sofa": [15000, 240],
+    "mtable": [12000, 180], "ctable": [2500, 40], "dtable": [4000, 70], "htable": [6000, 90], "coffee": [2500, 40],
+    "counter": [30000, 400], "cubicle": [45000, 300], "acc": [90000, 520], "basin": [8000, 60], "rack": [20000, 250],
+    "shelf": [3000, 60], "kitchen": [120000, 900], "fridge": [15000, 200], "bed": [9000, 120], "locker": [6000, 90],
+    "planter": [2000, 30], "stage": [25000, 300], "bench": [5000, 80], "ahu": [0, 0], "pallet": [0, 0],
+    "source": "placeholder"
+  }
+}

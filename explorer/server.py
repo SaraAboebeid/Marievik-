@@ -47,7 +47,8 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import climate, comfort, daylight, figures, kpis, model as M, timeline
+from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, timeline
+from .studio import capacity as studio_capacity, engine as studio, layouts as studio_layouts, money as studio_money, occupancy as studio_occupancy, tenancy as studio_tenancy
 
 HERE = Path(__file__).resolve().parent
 DIST = HERE / "web" / "dist"
@@ -179,6 +180,227 @@ def api_project(pid: str):
     if p is None:
         raise HTTPException(404, "no project file data/projects/%s.json: the generic profiles apply" % pid)
     return p
+
+
+# ---------------------------------------------------------------- floor studio (B01 mock-up: explorer/studio)
+STUDIO_BUILDINGS = {"B01"}   # the studio's geometry is B01's traced plan; other buildings need their own plans first
+
+
+def _studio_check(bid: str, floor: int, layout: str | None = None):
+    if bid not in STUDIO_BUILDINGS:
+        raise HTTPException(404, f"no floor studio for {bid}: only {', '.join(sorted(STUDIO_BUILDINGS))} has drawn plans")
+    if layout is not None and layout not in studio_layouts.LAYOUTS:
+        raise HTTPException(400, f"unknown layout {layout}")
+    if layout is not None and studio_layouts.LAYOUTS[layout].ground != (floor == 0):
+        raise HTTPException(400, f"{layout} is a {'ground' if studio_layouts.LAYOUTS[layout].ground else 'upper'}-floor layout")
+
+
+@app.get("/api/studio/layouts")
+def api_studio_layouts():
+    """The layouts a floor can take, today's layout per floor, B01's frame and fixed geometry, and which layout
+    stands for each of the 10-year timeline's floor uses."""
+    L = studio_layouts
+    uses = timeline.SINGLE_FLOOR_USES + list(timeline.MIX_STATES)
+    return {"layouts": {lid: {"name": x.name, "short": x.short, "use": x.use, "ground": x.ground} for lid, x in L.LAYOUTS.items()},
+            "ground": L.GROUND_LAYOUTS, "typical": L.TYPICAL_LAYOUTS, "defaultFloor": L.DEFAULT_FLOOR_LAYOUT,
+            "useToLayout": {"ground": {u: L.layout_for_use(u, True) for u in uses}, "typical": {u: L.layout_for_use(u, False) for u in uses}},
+            "geometry": {"frame": L.FRAME, "plate": [L.W, L.H], "cell": L.CELL, "nx": L.NX, "ny": L.NY, "cores": L.CORES, "atrium": L.ATRIUM,
+                         "lifts": L.LIFTS, "escapeLimit": L.ESCAPE_LIMIT, "wallH": L.WALL_H},
+            "buildings": sorted(STUDIO_BUILDINGS)}
+
+
+class StudioBody(BaseModel):
+    layout: str | None = None
+    params: dict[str, float] = {}
+
+
+@app.post("/api/studio/{bid}/{floor}")
+def api_studio_floor(bid: str, floor: int, body: StudioBody):
+    """One floor in one layout: rooms, doors, partitions, furniture, walking grid, escape routes and every check,
+    plus what moving the walls from the layout as drawn would cost."""
+    lid = body.layout or studio_layouts.layout_for(floor)
+    _studio_check(bid, floor, lid)
+    m = studio.build(lid, body.params, floor)
+    extra = {}
+    if any(abs(m["p"][k] - v) > 1e-6 for k, v in m["L"].defaults.items()):
+        ch = studio_money.change_cost(studio.build(lid, {}, floor), m)
+        walls = ch["rows"][:4]
+        base = studio.build(lid, {}, floor)["fig"]
+        extra["edit"] = {"rows": walls, "sek": sum(r["sek"] for r in walls), "kg": sum(r["kg"] for r in walls),
+                         "seatsDelta": m["fig"]["seatsAll"] - base["seatsAll"], "peopleDelta": m["fig"]["people"] - base["people"]}
+    return studio.payload(m, extra)
+
+
+class SeriesBody(BaseModel):
+    layouts: list[str]
+    years: list[int]
+    params: dict[str, float] = {}
+    overrides: list[dict | None] = []
+
+
+@app.post("/api/studio/{bid}/{floor}/series")
+def api_studio_series(bid: str, floor: int, body: SeriesBody):
+    """Year-by-year KPIs (running costs, replacements, works, carbon, people) for a sequence of layouts."""
+    if len(body.layouts) != len(body.years):
+        raise HTTPException(400, "one layout per year")
+    for lid in set(body.layouts):
+        _studio_check(bid, floor, lid)
+    return {"years": studio_money.series(body.layouts, body.years, floor, body.params, body.overrides)}
+
+
+@app.post("/api/studio/{bid}/{floor}/maximise")
+def api_studio_maximise(bid: str, floor: int, body: StudioBody):
+    """The wall positions that fit the most people in this layout while every standards and safety check passes."""
+    lid = body.layout or studio_layouts.layout_for(floor)
+    _studio_check(bid, floor, lid)
+    start = studio.build(lid, body.params, floor)
+    res = studio_capacity.maximise(lid, floor, body.params)
+    m = res["model"]
+    return {"layout": lid, "params": m["p"], "tried": res["tried"],
+            "before": {"people": start["fig"]["people"], "seats": start["fig"]["seatsAll"], "allOk": start["fig"]["allOk"]},
+            "after": {"people": m["fig"]["people"], "seats": m["fig"]["seatsAll"], "allOk": m["fig"]["allOk"],
+                      "failed": [c["text"] for c in m["fig"]["checks"] if not c["ok"]]}}
+
+
+@app.post("/api/studio/{bid}/{floor}/compare")
+def api_studio_compare(bid: str, floor: int, body: StudioBody):
+    """Every layout this floor can take, each with its walls placed for the most people: people, checks, and the
+    cost of changing from today's layout."""
+    lid = body.layout or studio_layouts.layout_for(floor)
+    _studio_check(bid, floor, lid)
+    return {"today": lid, "rows": studio_capacity.compare_layouts(floor, lid, body.params)}
+
+
+class OccupancyBody(StudioBody):
+    days: int = 20
+    seed: int = 1
+    attendance: float | None = None   # share of staff in at the peak; None = the use catalogue's
+    demand: float = 1.0               # guest arrivals against the catalogue's profile
+
+
+@app.post("/api/studio/{bid}/{floor}/occupancy")
+def api_studio_occupancy(bid: str, floor: int, body: OccupancyBody):
+    """Simulated working days on the floor: people hour by hour, desks, meeting and focus rooms, lunch, WC queues,
+    walking. Uncalibrated until there is sensor data."""
+    lid = body.layout or studio_layouts.layout_for(floor)
+    _studio_check(bid, floor, lid)
+    if not 1 <= body.days <= 120:
+        raise HTTPException(400, "days must be 1-120")
+    if body.attendance is not None and not 0 < body.attendance <= 1:
+        raise HTTPException(400, "attendance is a share, 0-1")
+    m = studio.build(lid, body.params, floor)
+    return {"layout": lid, **studio_occupancy.simulate(m, body.days, body.seed, body.attendance, max(0.0, body.demand))}
+
+
+class EvacuationBody(StudioBody):
+    people: int | None = None   # None = the floor's planned people
+    seed: int = 1
+
+
+def _run_evacuation(job_id: str, case: dict):
+    """JuPedSim in its own process, so a long run never holds up the server."""
+    job = JOBS[job_id]
+    folder = Path(tempfile.mkdtemp(prefix="mvx_evac_"))
+    cf, rf = folder / "case.json", folder / "result.json"
+    cf.write_text(json.dumps(case), encoding="utf-8")
+    job.update(status="running", started=time.time())
+    try:
+        with open(folder / "log.txt", "w") as log:
+            subprocess.run([sys.executable, "-m", "explorer.studio.evacuation", str(cf), str(rf)], cwd=str(M.ROOT),
+                           stdout=log, stderr=subprocess.STDOUT, timeout=1800)
+        if rf.is_file():
+            job.update(status="complete", result=json.loads(rf.read_text(encoding="utf-8")))
+        else:
+            job.update(status="failed", error=(folder / "log.txt").read_text(errors="ignore")[-3000:])
+    except Exception as e:
+        job.update(status="failed", error=str(e))
+    job["finished"] = time.time()
+
+
+@app.post("/api/studio/{bid}/{floor}/evacuation")
+def api_studio_evacuation(bid: str, floor: int, body: EvacuationBody):
+    """Start a JuPedSim evacuation of the floor as laid out; poll /api/jobs/{job} for the result."""
+    lid = body.layout or studio_layouts.layout_for(floor)
+    _studio_check(bid, floor, lid)
+    try:
+        import jupedsim  # noqa: F401
+    except ImportError:
+        raise HTTPException(409, "JuPedSim is not installed in the server's Python (pip install jupedsim)")
+    if body.people is not None and not 1 <= body.people <= 2000:
+        raise HTTPException(400, "people must be 1-2000")
+    case = {"layout": lid, "params": body.params, "floor": floor, "people": body.people, "seed": body.seed}
+    key = json.dumps(case, sort_keys=True)
+    for j in JOBS.values():   # the same run asked for again: hand back the job already there
+        if j.get("evacuation") == key and j["status"] in ("queued", "running", "complete"):
+            return {"job": j["id"], "status": j["status"]}
+    job_id = uuid.uuid4().hex[:10]
+    JOBS[job_id] = {"id": job_id, "status": "queued", "evacuation": key, "building": bid, "floor": floor, "created": time.time()}
+    threading.Thread(target=_run_evacuation, args=(job_id, case), daemon=True).start()
+    return {"job": job_id, "status": "queued"}
+
+
+# ---------------------------------------------------------------- the district over ten years (explorer/district.py)
+class DistrictBody(BaseModel):
+    cards: list[str] = []
+    runs: int = 20
+    seed: int = 1
+    project: str = "marievik"
+
+
+@app.get("/api/district/meta")
+def api_district_meta():
+    """The strategy cards and tenant types of the district model."""
+    return district.meta()
+
+
+def _district_check(body: DistrictBody, max_runs: int):
+    unknown = set(body.cards) - set(district.market()["strategies"])
+    if unknown:
+        raise HTTPException(400, f"unknown strategy card(s): {', '.join(sorted(unknown))}")
+    if not 1 <= body.runs <= max_runs:
+        raise HTTPException(400, f"runs must be 1-{max_runs}")
+
+
+@app.post("/api/district/run")
+def api_district_run(body: DistrictBody):
+    """Ten years of tenants choosing Marievik or elsewhere under the chosen strategy cards, against business as
+    usual: vacancy, income, carbon and life per building, for the district and the wider area."""
+    _district_check(body, 60)
+    return {"strategy": district.simulate(site(), body.cards, body.runs, body.seed, body.project),
+            "baseline": district.simulate(site(), [], body.runs, body.seed, body.project)}
+
+
+@app.post("/api/district/compare")
+def api_district_compare(body: DistrictBody):
+    """Every strategy card alone, all of them, and none: 10-year value against carbon."""
+    _district_check(body, 30)
+    return district.compare(site(), body.runs, body.seed, body.project)
+
+
+class LayersBody(BaseModel):
+    studio: dict[str, str] = {}             # B01 floor -> floor-studio layout (as chosen in the explorer)
+    params: dict[str, dict[str, float]] = {}
+
+
+@app.post("/api/layers")
+def api_layers(body: LayersBody):
+    """Movement, fire escape and capacity for every building and floor (B01 from plans, others estimated)."""
+    lay = {int(k): v for k, v in body.studio.items()}
+    for f, lid in lay.items():
+        _studio_check("B01", f, lid)
+    return layers.site_layers(site(), lay, {int(k): v for k, v in body.params.items()})
+
+
+class TenancyBody(BaseModel):
+    project: str = "marievik"
+    building: str
+    floors: list[dict]   # [{floor, gfa}]
+
+
+@app.post("/api/tenancy")
+def api_tenancy(body: TenancyBody):
+    """Who rents which suite on each floor (data/projects/<project>/leases.json), or example occupancy."""
+    return {"floors": [studio_tenancy.floor_tenancy(body.project, body.building, int(f["floor"]), float(f.get("gfa", 0))) for f in body.floors]}
 
 
 class TimelineBody(BaseModel):

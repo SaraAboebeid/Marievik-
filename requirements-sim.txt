@@ -21,3 +21,9 @@
 # lbt-recipes needs lbt-honeybee>=0.9.488. Upgrade the two together.
 lbt-honeybee==0.9.498
 lbt-recipes==0.29.1
+
+# Evacuation of the floor-studio floors (explorer/studio/evacuation.py). jupedsim 1.4.2 asks for numpy>=2.2,
+# but honeybee-radiance-postprocess pins numpy==2.1.0; jupedsim runs fine on 2.1.0 (tests/test_evacuation.py),
+# so install it without letting pip upgrade numpy:
+#   .venv-sim/Scripts/pip install jupedsim==1.4.2 && .venv-sim/Scripts/pip install numpy==2.1.0
+jupedsim==1.4.2

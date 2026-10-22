@@ -1,0 +1,68 @@
+{
+  "_meta": {
+    "purpose": "Inputs of the 10-year district model (explorer/district.py): who looks for space around Marievik, what they value, what they pay, and what AMF's strategies cost. Read with data/projects/marievik/leases.json (who is in today) and data/studio/costs.json (running costs, energy).",
+    "status": "EXAMPLE DATA: working values for discussion, not market research. Replace with AMF's rent roll, letting history and market reports (e.g. vacancy and rent statistics for Stockholm south / Liljeholmen) when available; keep the same shape.",
+    "updated": "2026-10-22",
+    "units": "rents and costs in SEK per m2 lettable and year (capex SEK per m2 once); carbon in kg CO2e per m2; demand as new tenants looking per year in the submarket that Marievik competes in"
+  },
+  "start_year": 2026,
+  "years": 10,
+  "unit_m2": 900,
+  "lettable_share": 0.85,
+  "station": {"name": "Liljeholmen (tunnelbana, Tvärbanan, buses)", "xy": [-190, -310], "note": "approximate: where the light rail and railway meet in the urban context, in the site's local frame (SWEREF 99 TM minus origin)"},
+  "outside_option": 0.0,
+  "choice_spread": 0.35,
+  "attributes": {
+    "transit": "exp(-walk metres to the station / 450)",
+    "life": "active ground floors (food, retail, gym, cowork, culture) within 150 m, saturating at 8",
+    "green": "public green and plaza m2 within 150 m, saturating at 12 000",
+    "water": "exp(-metres to the water / 80)",
+    "quality": "fit-out and building standard, 0-1 (retrofit and flexible fit-outs raise it)",
+    "flex": "1 when the space has demountable partitions",
+    "evening": "evening activity within 150 m (food, gym, homes), saturating"
+  },
+  "tenants": {
+    "office_corporate": {"label": "Corporate office", "uses": ["office"], "per_year": 1.3, "trend": -0.04, "wtp": 3000, "lease_years": 6, "units": [1, 3],
+                          "w": {"transit": 1.0, "life": 0.6, "green": 0.3, "water": 0.4, "quality": 1.0, "flex": 0.3, "evening": 0.1}, "rent_sense": 2.0, "renew": 0.75},
+    "office_sme": {"label": "Small firm / start-up", "uses": ["office"], "per_year": 3.0, "trend": 0.0, "wtp": 2500, "lease_years": 3, "units": [1, 1],
+                   "w": {"transit": 0.8, "life": 0.9, "green": 0.3, "water": 0.2, "quality": 0.4, "flex": 0.7, "evening": 0.3}, "rent_sense": 3.0, "renew": 0.6},
+    "public_agency": {"label": "Public agency", "uses": ["office"], "per_year": 0.6, "trend": 0.0, "wtp": 2800, "lease_years": 10, "units": [2, 4],
+                      "w": {"transit": 1.2, "life": 0.2, "green": 0.2, "water": 0.1, "quality": 0.9, "flex": 0.2, "evening": 0.0}, "rent_sense": 2.5, "renew": 0.8},
+    "cowork": {"label": "Coworking operator", "uses": ["office"], "per_year": 0.6, "trend": 0.05, "wtp": 2400, "lease_years": 5, "units": [1, 2],
+               "w": {"transit": 1.0, "life": 1.2, "green": 0.4, "water": 0.5, "quality": 0.5, "flex": 1.0, "evening": 0.6}, "rent_sense": 2.5, "renew": 0.7},
+    "food": {"label": "Café / restaurant", "uses": ["ground"], "per_year": 2.0, "trend": 0.02, "wtp": 3200, "lease_years": 5, "units": [1, 1],
+             "w": {"transit": 0.6, "life": 1.0, "green": 0.6, "water": 1.0, "quality": 0.3, "flex": 0.2, "evening": 1.0, "workers": 1.2}, "rent_sense": 3.0, "renew": 0.65},
+    "retail": {"label": "Shop", "uses": ["ground"], "per_year": 1.5, "trend": -0.03, "wtp": 3400, "lease_years": 5, "units": [1, 1],
+               "w": {"transit": 1.0, "life": 1.2, "green": 0.2, "water": 0.3, "quality": 0.3, "flex": 0.1, "evening": 0.4, "workers": 0.8}, "rent_sense": 3.0, "renew": 0.6},
+    "gym": {"label": "Gym / health", "uses": ["ground", "office"], "per_year": 0.5, "trend": 0.03, "wtp": 1900, "lease_years": 8, "units": [1, 2],
+            "w": {"transit": 0.8, "life": 0.4, "green": 0.3, "water": 0.3, "quality": 0.2, "flex": 0.2, "evening": 0.8, "workers": 0.8}, "rent_sense": 2.5, "renew": 0.75},
+    "school": {"label": "School / preschool operator", "uses": ["school"], "per_year": 0.5, "trend": 0.02, "wtp": 2100, "lease_years": 10, "units": [2, 4],
+               "w": {"transit": 0.8, "life": 0.2, "green": 1.2, "water": 0.2, "quality": 0.6, "flex": 0.4, "evening": 0.0}, "rent_sense": 2.0, "renew": 0.85},
+    "households": {"label": "Rental homes (households)", "uses": ["residential"], "per_year": 9.0, "trend": 0.02, "wtp": 2300, "lease_years": 8, "units": [1, 1],
+                   "w": {"transit": 1.0, "life": 0.6, "green": 0.8, "water": 0.8, "quality": 0.5, "flex": 0.0, "evening": 0.5}, "rent_sense": 1.5, "renew": 0.9},
+    "hotel": {"label": "Hotel / aparthotel operator", "uses": ["hotel"], "per_year": 0.3, "trend": 0.03, "wtp": 2400, "lease_years": 15, "units": [3, 6],
+              "w": {"transit": 1.2, "life": 0.8, "green": 0.3, "water": 0.9, "quality": 0.6, "flex": 0.0, "evening": 0.6}, "rent_sense": 2.0, "renew": 0.9}
+  },
+  "people_per_100m2": {"office": 6.0, "ground": 12.0, "school": 8.0, "residential": 2.8, "hotel": 3.5},
+  "evening_share": {"office": 0.05, "ground": 0.45, "school": 0.02, "residential": 0.7, "hotel": 0.6},
+  "active_ground": ["food", "retail", "gym", "cowork"],
+  "fit_out": {"sek": 3500, "kg": 45, "quarters": 1, "flexible": {"sek": 2400, "kg": 18, "quarters": 0}},
+  "conversion": {
+    "residential": {"sek": 14000, "kg": 160, "quarters": 5, "quality": 0.8},
+    "hotel": {"sek": 12000, "kg": 140, "quarters": 4, "quality": 0.8},
+    "school": {"sek": 9000, "kg": 110, "quarters": 3, "quality": 0.75},
+    "ground": {"sek": 8000, "kg": 90, "quarters": 2, "quality": 0.7},
+    "office": {"sek": 4000, "kg": 50, "quarters": 1, "quality": 0.7}
+  },
+  "strategies": {
+    "activate_ground": {"label": "Open the ground floors", "card": "U", "text": "Office and back-office ground floors become cafés, shops and a gym as they fall vacant; lettable area moves to the street."},
+    "flexible_fitout": {"label": "Demountable fit-outs", "card": "S", "text": "Every new letting gets demountable partitions: cheaper, lower-carbon fit-outs, re-let a quarter sooner, office floors can switch to cowork or school without a full conversion."},
+    "convert_vacant": {"label": "Convert long-vacant offices", "card": "U", "text": "Office units vacant for a year are converted to the use with most unmet demand (homes, hotel, school)."},
+    "public_realm": {"label": "Plaza, quay and green", "card": "B", "text": "Invest in the public realm between the buildings: more green and plaza within reach of every building, more life on the ground.", "sek": 30000000, "kg": 400000, "green_m2": 6000, "life": 2.0},
+    "energy_retrofit": {"label": "Energy retrofit", "card": "B", "text": "Retrofit envelopes and systems building by building (one per year): energy down 35 %, quality up.", "sek_m2": 3000, "kg_m2": 60, "energy_cut": 0.35, "quality": 0.15},
+    "rent_flex": {"label": "Flexible rents", "card": "U", "text": "Asking rent 12 % lower on units vacant two quarters or more; short leases allowed.", "cut": 0.12},
+    "shared_amenities": {"label": "Shared amenities hub", "card": "U", "text": "One unit in B01 becomes a shared meeting, event and fitness hub for every office tenant in the district: lettable area lost, quality up for all offices.", "quality": 0.12}
+  },
+  "rent_index": 0.02,
+  "discount_rate": 0.05
+}

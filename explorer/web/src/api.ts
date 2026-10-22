@@ -2,6 +2,9 @@ import type {
   BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
   ParametricPayload, Project, Settings, SitePayload, UrbanContext, UrbanSummary, SupplierCompare, TimelineResponse,
 } from './types'
+import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, YearKpi, YearOverride } from './studio/engine'
+import type { FloorTenancy } from './studio/tenancy'
+import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, LayerData } from './layers'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(path, body === undefined ? undefined : {
@@ -46,6 +49,27 @@ export const api = {
     call<TimelineResponse>(`/api/timeline/${id}`, { project, floor: floor ?? null }),
   /** One floor at a given use, every other floor untouched — the 3D view behind the floor timeline. */
   floorUse: (id: string, index: number, use: string) => call<FloorPayload>(`/api/floor/${id}/${index}/use/${use}`, {}),
+  // floor studio (explorer/studio): furnished layouts, checks, capacity search, year-by-year KPIs, tenancy
+  studioMeta: () => call<StudioMeta>('/api/studio/layouts'),
+  studioFloor: (id: string, floor: number, layout: string, params: Params) => call<StudioPayload>(`/api/studio/${id}/${floor}`, { layout, params }),
+  studioSeries: (id: string, floor: number, layouts: string[], years: number[], params: Params, overrides: (YearOverride | null)[]) =>
+    call<{ years: YearKpi[] }>(`/api/studio/${id}/${floor}/series`, { layouts, years, params, overrides }),
+  studioMaximise: (id: string, floor: number, layout: string, params: Params) =>
+    call<{ layout: string; params: Params; tried: number; before: { people: number; seats: number; allOk: boolean }; after: { people: number; seats: number; allOk: boolean; failed: string[] } }>(
+      `/api/studio/${id}/${floor}/maximise`, { layout, params }),
+  studioCompare: (id: string, floor: number, layout: string, params: Params) =>
+    call<{ today: string; rows: CompareRow[] }>(`/api/studio/${id}/${floor}/compare`, { layout, params }),
+  studioOccupancy: (id: string, floor: number, layout: string, params: Params, opts: { days?: number; attendance?: number | null; demand?: number }) =>
+    call<Occupancy>(`/api/studio/${id}/${floor}/occupancy`, { layout, params, ...opts }),
+  studioEvacuation: (id: string, floor: number, layout: string, params: Params, people?: number | null) =>
+    call<{ job: string; status: string }>(`/api/studio/${id}/${floor}/evacuation`, { layout, params, people: people ?? null }),
+  evacJob: (job: string) => call<{ status: string; error?: string; result?: EvacResult }>(`/api/jobs/${job}`),
+  layers: (studio: Record<number, string>, params: Record<number, Params>) => call<LayerData>('/api/layers', { studio, params }),
+  districtMeta: () => call<DistrictMeta>('/api/district/meta'),
+  districtRun: (cards: string[], runs = 20) => call<{ strategy: DistrictResult; baseline: DistrictResult }>('/api/district/run', { cards, runs }),
+  districtCompare: (runs = 10) => call<{ rows: CompareCardRow[]; runs: number }>('/api/district/compare', { runs }),
+  tenancy: (project: string, building: string, floors: { floor: number; gfa: number }[]) =>
+    call<{ floors: FloorTenancy[] }>('/api/tenancy', { project, building, floors }),
 }
 
 export interface FullResult {

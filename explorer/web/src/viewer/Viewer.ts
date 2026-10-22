@@ -11,6 +11,33 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit, UrbanContext } from '../types'
 import { UNIT_BOX, detailGeometry, disposeTree, flat, localBox, prism, segmentBox } from './geometry'
 import { dfColor, unitColor } from './colors'
+import { ATRIUM, CELL, CORES, ESCAPE_LIMIT, FRAME, H, NX, NY, TYPES, W, WALL_H, cellXY, subtract } from '../studio/engine'
+import type { Rect, StudioModel } from '../studio/engine'
+import type { Walker } from '../studio/crowd'
+import type { Suite } from '../studio/tenancy'
+
+export type StudioView = 'furniture' | 'capacity' | 'tenancy' | 'use' | 'fire' | 'move'
+// furniture in the floor studio: colour and height (m) per kind
+const STUDIO_FURN: Record<string, [string, number]> = {
+  desk: ['#f4f1e6', 0.74], chair: ['#0528ca', 0.5], stool: ['#0528ca', 0.65], lchair: ['#f4a7dd', 0.7], sofa: ['#f4a7dd', 0.75],
+  mtable: ['#f4f1e6', 0.74], ctable: ['#f4f1e6', 0.74], dtable: ['#f4f1e6', 0.74], htable: ['#f4f1e6', 1.05], coffee: ['#d9cfb4', 0.42],
+  counter: ['#b9ab88', 1.1], cubicle: ['#e3eaee', 2.1], acc: ['#cfe0f2', 2.1], basin: ['#ffffff', 0.85], rack: ['#3b3a36', 2.0],
+  shelf: ['#cfc6ad', 1.9], kitchen: ['#b9bfc4', 0.9], fridge: ['#b9bfc4', 1.9], bed: ['#ffffff', 0.6], locker: ['#cfc6ad', 1.9],
+  planter: ['#6fae5a', 1.4], stage: ['#d9cfb4', 0.45], bench: ['#b88c55', 0.45], ahu: ['#b4b1a8', 2.2], pallet: ['#c9ac78', 1.2],
+}
+/** Distance colours: green near an exit, yellow, coral, red at the 45 m limit. */
+function rampColor(t: number): [number, number, number] {
+  const stops: [number, [number, number, number]][] = [[0, [3, 176, 95]], [0.55, [245, 214, 107]], [0.85, [253, 135, 110]], [1, [180, 50, 31]]]
+  t = Math.max(0, Math.min(1, t))
+  for (let i = 1; i < stops.length; i++) if (t <= stops[i][0]) {
+    const [a0, a] = stops[i - 1], [b0, b] = stops[i], f = (t - a0) / (b0 - a0)
+    return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f]
+  }
+  return stops[3][1]
+}
+const P = (x: number, y: number): [number, number] => [FRAME.origin[0] + x * FRAME.x[0] - y * FRAME.x[1], FRAME.origin[1] + x * FRAME.x[1] + y * FRAME.x[0]]
+const rectRing = (r: Rect): Ring => [P(r[0], r[1]), P(r[2], r[1]), P(r[2], r[3]), P(r[0], r[3])]
+const studioBox = (x0: number, y0: number, x1: number, y1: number, z0: number, z1: number) => localBox(FRAME.origin, FRAME.x, x0, x1, y0, y1, z0, z1)
 
 export type Pick =
   | { type: 'building'; building: string; floor: number }
@@ -582,7 +609,7 @@ export class Viewer {
       box.setFromObject(bv.group)
       return this.flyToBox(box, 1.25, 0.7)
     }
-    if (f.kind === 'floor' && this.floor) {
+    if (f.kind === 'floor' && (this.floor || this.studioOn)) {
       this.floorGroup.updateWorldMatrix(true, true)
       box.setFromObject(this.floorGroup)
       return this.flyToBox(box, 1.0, 1.05)
@@ -632,6 +659,346 @@ export class Viewer {
     this.labelGroup.clear()
     this.unitMeshes.clear()
     this.floor = null
+    this.studioOn = false
+    this.studioAgents = null
+    this.studioHeat = null
+    this.studioDensity = null
+  }
+
+  // ------------------------------------------------------------------ floor studio (B01 mock-up)
+  private studioOn = false
+  private studioBase = 0
+  private studioAgents: THREE.InstancedMesh | null = null
+  private studioHeat: { canvas: HTMLCanvasElement; tex: THREE.CanvasTexture } | null = null
+  private studioDensity: THREE.Mesh | null = null
+
+  private studioLabel(text: string, x: number, y: number, z: number, cls = '') {
+    const el = document.createElement('div')
+    el.className = `studio-label ${cls}`
+    el.textContent = text
+    const lab = new CSS2DObject(el)
+    const [px, py] = P(x, y)
+    lab.position.set(px, py, z)
+    this.labelGroup.add(lab)
+  }
+
+  /** A plane over the whole plate at height z, coloured cell by cell (escape distance or busy routes). */
+  private studioGridPlane(z: number, colour: (c: number) => [number, number, number, number] | null) {
+    const canvas = document.createElement('canvas')
+    canvas.width = NX; canvas.height = NY
+    this.paintGrid(canvas, colour)
+    const tex = new THREE.CanvasTexture(canvas)
+    tex.colorSpace = THREE.SRGBColorSpace
+    tex.magFilter = THREE.LinearFilter
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }))
+    plane.matrixAutoUpdate = false
+    plane.matrix.copy(studioBox(0, 0, NX * CELL, NY * CELL, z, z + 0.001))
+    plane.renderOrder = 2
+    this.floorGroup.add(plane)
+    return { canvas, tex }
+  }
+
+  private paintGrid(canvas: HTMLCanvasElement, colour: (c: number) => [number, number, number, number] | null) {
+    const ctx = canvas.getContext('2d')!
+    const img = ctx.createImageData(NX, NY)
+    for (let j = 0; j < NY; j++) for (let i = 0; i < NX; i++) {
+      const v = colour(j * NX + i)
+      if (!v) continue
+      const o = ((NY - 1 - j) * NX + i) * 4   // canvas rows run top-down; plan y runs up
+      img.data[o] = v[0]; img.data[o + 1] = v[1]; img.data[o + 2] = v[2]; img.data[o + 3] = v[3]
+    }
+    ctx.putImageData(img, 0, 0)
+  }
+
+  /** Draw one B01 floor from the floor studio in place of the explorer's own floor. */
+  setStudio(m: StudioModel, base: number, view: StudioView, fly = false, suites: Suite[] = [], use: Record<string, number> | null = null) {
+    this.invalidate()
+    this.clearFloor()
+    this.studioOn = true
+    this.studioBase = base
+    const g = this.floorGroup
+    const add = (geo: THREE.BufferGeometry | null, mat: THREE.Material, shadows = true) => {
+      if (!geo) return
+      const mesh = new THREE.Mesh(geo, mat)
+      mesh.castShadow = mesh.receiveShadow = shadows
+      g.add(mesh)
+    }
+    const boxMesh = (mat: THREE.Material, mtx: THREE.Matrix4) => {
+      const mesh = new THREE.Mesh(UNIT_BOX, mat)
+      mesh.matrixAutoUpdate = false
+      mesh.matrix.copy(mtx)
+      mesh.castShadow = mesh.receiveShadow = true
+      g.add(mesh)
+    }
+    // slab, with the atrium open from floor 1 up
+    add(prism([rectRing([0, 0, W, H]), ...(m.ground ? [] : [rectRing(ATRIUM)])], base - 0.3, base), new THREE.MeshStandardMaterial({ color: '#c9c6bf', roughness: 0.95 }))
+    // room floors, tinted by type
+    for (const r of m.rooms) {
+      add(flat([rectRing(r.r)], base + 0.015), new THREE.MeshStandardMaterial({ color: TYPES[r.t]?.fill ?? '#ece9e0', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -1 }), false)
+    }
+    // the glazed facade, low so the floor reads from above
+    const glass = new THREE.MeshStandardMaterial({ color: '#9fc3d6', transparent: true, opacity: 0.2, roughness: 0.1, depthWrite: false })
+    const corners = [[0, 0], [W, 0], [W, H], [0, H]]
+    corners.forEach((a, i) => {
+      const b = corners[(i + 1) % 4], pa = P(a[0], a[1]), pb = P(b[0], b[1])
+      const mesh = new THREE.Mesh(UNIT_BOX, glass)
+      mesh.matrixAutoUpdate = false
+      mesh.matrix.copy(segmentBox(pa[0], pa[1], pb[0], pb[1], base, base + 1.1, 0.06))
+      g.add(mesh)
+    })
+    // cores
+    const coreMat = new THREE.MeshStandardMaterial({ color: '#4a4944', roughness: 0.9 })
+    for (const c of CORES) boxMesh(coreMat, studioBox(c.r[0], c.r[1], c.r[2], c.r[3], base, base + 3.2))
+    // partitions, with the door openings left out
+    const solid: number[][] = [], glassW: number[][] = []
+    for (const L of Object.values(m.walls)) {
+      const gaps = m.doors.filter((d) => d.o === L.o && Math.abs(d.c - L.c) < 0.06).map((d) => [d.pos - d.w / 2, d.pos + d.w / 2] as [number, number])
+      for (const [list, out] of [[L.solid, solid], [L.glass, glassW]] as const) {
+        for (const s of subtract(list, gaps)) out.push(L.o === 'h' ? [s[0], L.c, s[1], L.c] : [L.c, s[0], L.c, s[1]])
+      }
+    }
+    for (const [list, mat] of [[solid, new THREE.MeshStandardMaterial({ color: '#efece4', roughness: 0.9 })],
+      [glassW, new THREE.MeshStandardMaterial({ color: '#7fb0d8', transparent: true, opacity: 0.38, roughness: 0.1, depthWrite: false })]] as const) {
+      if (!list.length) continue
+      const inst = new THREE.InstancedMesh(UNIT_BOX, mat, list.length)
+      list.forEach((s, i) => { const a = P(s[0], s[1]), b = P(s[2], s[3]); inst.setMatrixAt(i, segmentBox(a[0], a[1], b[0], b[1], base, base + WALL_H, 0.1)) })
+      inst.instanceMatrix.needsUpdate = true
+      inst.castShadow = inst.receiveShadow = true
+      g.add(inst)
+    }
+    // furniture, one instanced mesh coloured per kind
+    if (m.items.length) {
+      const inst = new THREE.InstancedMesh(UNIT_BOX, new THREE.MeshStandardMaterial({ roughness: 0.8 }), m.items.length)
+      const col = new THREE.Color()
+      m.items.forEach((it, i) => {
+        const [c, h] = STUDIO_FURN[it.k] ?? ['#cccccc', 0.8]
+        inst.setMatrixAt(i, studioBox(it.x, it.y, it.x + it.w, it.y + it.h, base + 0.02, base + h))
+        inst.setColorAt(i, col.set(c))
+      })
+      inst.instanceMatrix.needsUpdate = true
+      if (inst.instanceColor) inst.instanceColor.needsUpdate = true
+      inst.castShadow = inst.receiveShadow = true
+      g.add(inst)
+    }
+    // labels
+    const lz = base + WALL_H + 0.6
+    if (view === 'capacity') {
+      for (const rf of m.roomFig) {
+        if (rf.max === 0 && !rf.seats) continue
+        this.studioLabel(`${rf.seats} / ${rf.max}`, (rf.r.r[0] + rf.r.r[2]) / 2, (rf.r.r[1] + rf.r.r[3]) / 2, lz, rf.seats > rf.max ? 'over' : '')
+      }
+      if (m.openSeats) this.studioLabel(`Open area: ${m.openSeats} seats`, 21.6, 10.5, lz, 'open')
+    } else if (view === 'furniture') {
+      for (const r of m.rooms) if (r.area >= 18) this.studioLabel(r.name, (r.r[0] + r.r[2]) / 2, (r.r[1] + r.r[3]) / 2, lz, 'name')
+    } else if (view === 'tenancy') {
+      // each lettable suite tinted in its tenant's colour, vacant ones grey, shared parts left plain
+      for (const s of suites) {
+        if (s.shared) continue
+        const mat = new THREE.MeshBasicMaterial({ color: s.colour, transparent: true, opacity: s.tenant ? 0.62 : 0.5, depthWrite: false, toneMapped: false })
+        const geo = flat([rectRing(s.r)], base + 0.04)
+        if (!geo) continue
+        const mesh = new THREE.Mesh(geo, mat)
+        mesh.renderOrder = 2
+        g.add(mesh)
+        this.studioLabel(s.tenant ? `${s.tenant} · ${Math.round(s.area)} m²` : `Vacant · ${Math.round(s.area)} m²`,
+          (s.r[0] + s.r[2]) / 2, (s.r[1] + s.r[3]) / 2, lz, s.tenant ? 'tenant' : 'vacant')
+      }
+    } else if (view === 'use' && use) {
+      // how much of each room is in use at the chosen hour (simulated days): pale = idle, coral = full
+      const idle = new THREE.Color('#f4f1e8'), full = new THREE.Color('#e4572e')
+      for (const r of m.rooms) {
+        const v = use[r.id]
+        if (v === undefined) continue
+        const geo = flat([rectRing(r.r)], base + 0.04)
+        if (!geo) continue
+        const mesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: idle.clone().lerp(full, Math.min(1, v)), transparent: true, opacity: 0.72, depthWrite: false, toneMapped: false }))
+        mesh.renderOrder = 2
+        g.add(mesh)
+        if (r.area >= 9) this.studioLabel(`${Math.round(v * 100)} %`, (r.r[0] + r.r[2]) / 2, (r.r[1] + r.r[3]) / 2, lz, v > 0.85 ? 'over' : '')
+      }
+      if (use.open !== undefined) this.studioLabel(`Open desks: ${Math.round(use.open * 100)} % in use`, 21.6, 10.5, lz, 'open')
+    }
+    // fire: distance to the nearest exit painted on the floor, exits, and the floor's longest walk
+    if (view === 'fire') {
+      this.studioGridPlane(base + 0.03, (c) => {
+        const d = m.escape.dist[c]
+        if (!m.grid[c] || !isFinite(d)) return null
+        const [r, gg, b] = rampColor(d / ESCAPE_LIMIT)
+        return [r, gg, b, 150]
+      })
+      const exitMat = new THREE.MeshStandardMaterial({ color: '#03b05f', roughness: 0.6 })
+      m.exits.forEach((e, i) => {
+        boxMesh(exitMat, studioBox(e.x - 0.5, e.y - 0.5, e.x + 0.5, e.y + 0.5, base, base + 2.4))
+        this.studioLabel(`${e.id} · ${m.fig.exitLoad[i].people} people`, e.x, e.y, base + 3.2, 'exit')
+      })
+      const w0 = m.fig.worst
+      if (w0) {
+        const path = m.worstRoute.map(cellXY)
+        if (path.length > 1) {
+          const inst = new THREE.InstancedMesh(UNIT_BOX, new THREE.MeshStandardMaterial({ color: '#202020' }), path.length - 1)
+          for (let i = 0; i < path.length - 1; i++) {
+            const a = P(path[i][0], path[i][1]), b = P(path[i + 1][0], path[i + 1][1])
+            inst.setMatrixAt(i, segmentBox(a[0], a[1], b[0], b[1], base + 0.05, base + 0.2, 0.22))
+          }
+          inst.instanceMatrix.needsUpdate = true
+          g.add(inst)
+          this.studioLabel(`Longest walk ${w0.d.toFixed(1)} m`, path[0][0], path[0][1], base + 2.2, 'exit')
+        }
+      }
+    }
+    this.applyFocus(fly)
+  }
+
+  /** People walking on the studio floor (positions in B01's plan frame). */
+  setStudioAgents(walkers: Walker[]) {
+    if (!this.studioOn) return
+    if (!this.studioAgents || this.studioAgents.count !== walkers.length) {
+      if (this.studioAgents) { this.floorGroup.remove(this.studioAgents); this.studioAgents.geometry.dispose() }
+      const geo = new THREE.CylinderGeometry(0.24, 0.24, 1.6, 10)
+      geo.rotateX(Math.PI / 2)   // stand up along plan z
+      this.studioAgents = new THREE.InstancedMesh(geo, new THREE.MeshStandardMaterial({ roughness: 0.6 }), Math.max(1, walkers.length))
+      this.studioAgents.castShadow = true
+      this.floorGroup.add(this.studioAgents)
+    }
+    const m = new THREE.Matrix4(), col = new THREE.Color()
+    walkers.forEach((w, i) => {
+      const [x, y] = P(w.x, w.y)
+      m.makeTranslation(x, y, this.studioBase + 0.82)
+      if (w.gone) m.makeScale(0, 0, 0)   // already out: hidden, the instance kept so counts never change mid-play
+      this.studioAgents!.setMatrixAt(i, m)
+      this.studioAgents!.setColorAt(i, col.set(w.moving ? '#fd876e' : '#0528ca'))
+    })
+    this.studioAgents.instanceMatrix.needsUpdate = true
+    if (this.studioAgents.instanceColor) this.studioAgents.instanceColor.needsUpdate = true
+    this.invalidate(1)
+  }
+
+  /** Footfall painted on the floor: the routes people use most. Pass null to remove it. */
+  setStudioHeat(heat: Float32Array | null) {
+    if (!this.studioOn) return
+    let mx = 0
+    if (heat) for (let k = 0; k < heat.length; k++) if (heat[k] > mx) mx = heat[k]
+    const colour = (c: number): [number, number, number, number] | null => {
+      if (!heat || mx <= 0) return null
+      const v = heat[c] / mx
+      if (v < 0.02) return null
+      const [r, g, b] = rampColor(0.35 + v * 0.65)
+      return [r, g, b, Math.min(210, 40 + v * 220)]
+    }
+    if (!this.studioHeat) this.studioHeat = this.studioGridPlane(this.studioBase + 0.03, colour)
+    else { this.paintGrid(this.studioHeat.canvas, colour); this.studioHeat.tex.needsUpdate = true }
+    this.invalidate(1)
+  }
+
+  /** Crowd density during an evacuation (people per m², the highest each cell saw), on its own coarse grid. */
+  setStudioDensity(d: Float32Array | null, nx: number, ny: number, cell: number) {
+    if (!this.studioOn) return
+    if (this.studioDensity) { this.floorGroup.remove(this.studioDensity); disposeTree(this.studioDensity) ; this.studioDensity = null }
+    if (!d) { this.invalidate(1); return }
+    const canvas = document.createElement('canvas')
+    canvas.width = nx; canvas.height = ny
+    const ctx = canvas.getContext('2d')!
+    const img = ctx.createImageData(nx, ny)
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const v = d[j * nx + i]
+      if (v < 0.5) continue
+      const [r, g, b] = rampColor(Math.min(1, v / 4))   // 4 people per m² and up: red
+      const o = ((ny - 1 - j) * nx + i) * 4
+      img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b; img.data[o + 3] = 170
+    }
+    ctx.putImageData(img, 0, 0)
+    const tex = new THREE.CanvasTexture(canvas)
+    tex.colorSpace = THREE.SRGBColorSpace
+    tex.magFilter = THREE.NearestFilter
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false }))
+    plane.matrixAutoUpdate = false
+    plane.matrix.copy(studioBox(0, 0, nx * cell, ny * cell, this.studioBase + 0.035, this.studioBase + 0.036))
+    plane.renderOrder = 3
+    this.floorGroup.add(plane)
+    this.studioDensity = plane
+    this.invalidate(1)
+  }
+
+  // ------------------------------------------------------------------ layers: floors tinted by a figure, flows to the station
+  private layerGroup = new THREE.Group()
+  private layerMeshes: THREE.Object3D[] = []
+
+  /** Tint each listed building floor by floor (colour per floor, null = leave as is), with a label over the roof.
+   *  The tints ride on the building's own floor groups, so they follow explode and floor focus. */
+  setLayerTint(tints: Record<string, { floors: (string | null)[]; label?: string }> | null) {
+    this.invalidate()
+    for (const o of this.layerMeshes) { o.parent?.remove(o); disposeTree(o) }
+    this.layerMeshes = []
+    this.layerGroup.children.forEach((c) => (c as CSS2DObject).element?.remove())
+    disposeTree(this.layerGroup)
+    this.layerGroup.clear()
+    if (!this.layerGroup.parent) this.world.add(this.layerGroup)
+    if (!tints) return
+    const mats = new Map<string, THREE.Material>()
+    const mat = (c: string) => {
+      if (!mats.has(c)) mats.set(c, new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.86, toneMapped: false }))
+      return mats.get(c)!
+    }
+    for (const [id, t] of Object.entries(tints)) {
+      const bv = this.buildings.get(id)
+      if (!bv) continue
+      let top = 0, cx = 0, cy = 0
+      bv.payload.floors.forEach((f, i) => {
+        top = Math.max(top, f.z + f.height)
+        const c = t.floors[i]
+        if (!c || !bv.floors[i]) return
+        const geo = prism(f.rings, f.z + 0.03, f.z + f.height - 0.08)
+        if (!geo) return
+        geo.computeBoundingBox()
+        const bb = geo.boundingBox!
+        cx = (bb.min.x + bb.max.x) / 2; cy = (bb.min.y + bb.max.y) / 2
+        geo.translate(-cx, -cy, 0); geo.scale(1.015, 1.015, 1); geo.translate(cx, cy, 0)   // just proud of the facade
+        const mesh = new THREE.Mesh(geo, mat(c))
+        mesh.userData = { pick: 'building', building: id, floor: f.index, shell: true, layer: true }
+        bv.floors[i].add(mesh)
+        this.layerMeshes.push(mesh)
+      })
+      if (t.label) {
+        const el = document.createElement('div')
+        el.className = 'studio-label layer'
+        el.textContent = t.label
+        const lab = new CSS2DObject(el)
+        lab.position.set(cx, cy, top + 4)
+        this.layerGroup.add(lab)
+      }
+    }
+  }
+
+  /** Ribbons on the ground from each building to a point (people heading for the station), width by trips. */
+  setFlows(flows: { from: [number, number]; to: [number, number]; trips: number }[] | null, label?: { at: [number, number]; text: string }) {
+    this.invalidate()
+    const old = this.layerGroup.getObjectByName('flows')
+    if (old) { this.layerGroup.remove(old); disposeTree(old) }
+    this.layerGroup.children.filter((c) => c.name === 'flow-label').forEach((c) => { (c as CSS2DObject).element?.remove(); this.layerGroup.remove(c) })
+    if (!this.layerGroup.parent) this.world.add(this.layerGroup)
+    if (!flows?.length) return
+    const g = new THREE.Group()
+    g.name = 'flows'
+    const mx = Math.max(...flows.map((f) => f.trips), 1)
+    const mat = new THREE.MeshBasicMaterial({ color: '#0528ca', transparent: true, opacity: 0.55, depthWrite: false, toneMapped: false })
+    for (const f of flows) {
+      const w = 1.5 + 7 * (f.trips / mx)
+      const mesh = new THREE.Mesh(UNIT_BOX, mat)
+      mesh.matrixAutoUpdate = false
+      mesh.matrix.copy(segmentBox(f.from[0], f.from[1], f.to[0], f.to[1], 0.15, 0.35, w))
+      mesh.renderOrder = 2
+      g.add(mesh)
+    }
+    this.layerGroup.add(g)
+    if (label) {
+      const el = document.createElement('div')
+      el.className = 'studio-label exit'
+      el.textContent = label.text
+      const lab = new CSS2DObject(el)
+      lab.name = 'flow-label'
+      lab.position.set(label.at[0], label.at[1], 8)
+      this.layerGroup.add(lab)
+    }
   }
 
   setFloor(fp: FloorPayload, colorFor?: (u: Unit) => string | null) {

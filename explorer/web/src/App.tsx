@@ -575,7 +575,7 @@ export default function App() {
   const working = busy ?? (Object.values(loading).some(Boolean) ? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…` : null)
   const sc = scenarioStatus
   const scenarioLabel = sc.name ? sc.name : sc.changed.length ? `${sc.changed.length} building${sc.changed.length > 1 ? 's' : ''} changed · not saved` : 'Today’s site'
-  const panelTop = 'top-[6.9rem]'
+  const panelTop = 'top-[8rem]'
   // hover label: above and right of the pointer, flipped to the left near the right edge so it never runs off screen
   const hoverLeft = hover ? (hover.x > window.innerWidth - 360 ? hover.x - 16 : hover.x + 16) : 0
   const hoverFlip = hover ? hover.x > window.innerWidth - 360 : false
@@ -597,7 +597,7 @@ export default function App() {
         ]} />
 
       {/* under the bar: where you are, and the tools */}
-      <div className="pointer-events-none absolute left-3 right-3 top-[60px] z-10 flex items-start justify-between gap-3">
+      <div className="pointer-events-none absolute left-3 right-3 top-[78px] z-10 flex items-start justify-between gap-3">
         <div className="pointer-events-auto flex flex-wrap items-center gap-2">
         <nav className="flex items-center gap-0.5 rounded-lg border border-line bg-raised/95 p-1 text-[12.5px] shadow-sm" aria-label="Scale">
           {SCALE_TABS.map(([id, label, hint]) => (
@@ -640,7 +640,7 @@ export default function App() {
       </div>
 
       {error && (
-        <div className="absolute left-1/2 top-28 z-30 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
+        <div className="absolute left-1/2 top-32 z-30 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
           <button className="float-right ml-3 font-mono" onClick={() => setError(null)} aria-label="Dismiss">×</button>
           {error}
         </div>

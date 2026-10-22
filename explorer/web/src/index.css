@@ -1,22 +1,32 @@
 @import "tailwindcss";
 
 /* Design tokens as Tailwind theme variables, so `bg-surface`, `text-ink`,
-   `border-line` etc. are real utilities. Concrete neutrals biased slightly
-   cool-green; the categorical hues are the CVD-validated set from the
-   project's palette. */
+   `border-line` etc. are real utilities. "Checkerboard" style: warm beige ground,
+   ink outlines with hard offset shadows, near-square corners, Marievik blue and coral.
+   The categorical hues are the CVD-validated set from the project's palette. */
 @theme {
-  --color-bg: #f4f2eb;
-  --color-surface: #faf9f5;
-  --color-raised: #ffffff;
-  --color-sunken: #eaede7;
-  --color-line: #d7dfda;
-  --color-line-strong: #b9c6bf;
-  --color-ink: #1e3434;
-  --color-ink-2: #3e5352;
-  --color-muted: #627370;
+  --color-bg: #ebe8d7;
+  --color-surface: #fffdf6;
+  --color-raised: #fffdf6;
+  --color-sunken: #f2efe2;
+  --color-line: #d8d3bf;
+  --color-line-strong: #b5ae96;
+  --color-ink: #202020;
+  --color-ink-2: #47443c;
+  --color-muted: #6e6a5e;
   /* Accent and soft wash: AMF Marievik's brand blue and pale ice-blue (amffastigheter.se/marievik/). */
   --color-accent: #0528ca;
   --color-accent-soft: #e5f0f5;
+  --color-coral: #fd876e;
+  /* the outline and hard shadow of everything that floats over the model */
+  --color-edge: #202020;
+
+  --shadow-sm: 3px 3px 0 var(--color-edge);
+  --shadow-md: 4px 4px 0 var(--color-edge);
+  --shadow-lg: 5px 5px 0 var(--color-edge);
+  --radius-md: 5px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
 
   --color-c1: #3d8fd1;
   --color-c2: #c97855;
@@ -34,27 +44,27 @@
   --color-critical: #ac2e23;
   --color-critical-bg: #f8e3e1;
 
-  --font-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
-  /* Brand moments only (wordmark, headline figures) — Fredoka stands in for AMF's licensed ABC Maxi Round. */
-  --font-display: "Fredoka", "Archivo", sans-serif;
+  --font-display: "Bricolage Grotesque", "Arial Black", sans-serif;
 }
 
 /* Dark mode overrides the variables at runtime. (An @theme block inside @media is hoisted by
    Tailwind v4 and would apply the dark values everywhere, so plain :root is used here.) */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #0f1c1c;
-    --color-surface: #152525;
-    --color-raised: #1c2e2e;
-    --color-sunken: #0c1818;
-    --color-line: #26393a;
-    --color-line-strong: #3a5050;
-    --color-ink: #f4f2eb;
-    --color-ink-2: #c3cdc8;
-    --color-muted: #869793;
+    --color-bg: #161614;
+    --color-surface: #1f1e1b;
+    --color-raised: #24231f;
+    --color-sunken: #1a1916;
+    --color-line: #3a3832;
+    --color-line-strong: #57544a;
+    --color-ink: #f1eee2;
+    --color-ink-2: #c9c4b4;
+    --color-muted: #8f8a7b;
     --color-accent: #fd876e;
-    --color-accent-soft: #13233a;
+    --color-accent-soft: #2a2018;
+    --color-edge: #000000;
 
     --color-c1: #4a97d6;
     --color-c2: #d0845f;
@@ -97,7 +107,27 @@ body {
   white-space: nowrap;
   transform: translateY(-50%);
 }
-.panel-scroll { max-height: calc(100vh - 10rem); overflow-y: auto; }
+.panel-scroll { max-height: calc(100vh - 10.5rem); overflow-y: auto; padding: 0 5px 5px 0; }
+
+/* Checkerboard: a bordered card or chip with a shadow is something floating over the model, so it gets
+   the ink outline to match its hard shadow. Plain dividers (border-line without a shadow) stay hairlines. */
+.border.shadow-sm, .border.shadow-md, .border.shadow-lg { border-color: var(--color-edge); border-width: 2px; }
+
+/* Card title band: coral, with a row of checker squares along its bottom edge.
+   Its text is always ink, whatever the theme, because coral is light in both. */
+.checker-band {
+  --color-ink: #202020; --color-ink-2: #3a372f; --color-muted: #4a473f;
+  color: #202020;
+  background:
+    linear-gradient(var(--color-coral), var(--color-coral)) top / 100% calc(100% - 6px) no-repeat,
+    conic-gradient(#202020 25%, var(--color-coral) 0 50%, #202020 0 75%, var(--color-coral) 0) 0 0 / 12px 12px;
+  border-bottom: 2px solid var(--color-edge);
+}
+/* the blue-and-beige checker ribbon under the top bar */
+.checker-ribbon {
+  background: conic-gradient(#0528ca 25%, #ebe8d7 0 50%, #0528ca 0 75%, #ebe8d7 0) 0 0 / 10px 10px;
+  border-bottom: 2px solid #202020;
+}
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }

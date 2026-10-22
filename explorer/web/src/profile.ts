@@ -14,7 +14,9 @@ export const PROJECTS: Record<string, { name: string; city: string; placeholder:
   lindangen: { name: 'Lindängen', city: 'Malmö', placeholder: true },
   sandvangen: { name: 'Sandvången', city: 'Malmö', placeholder: true },
   uppsala: { name: 'Uppsala', city: 'Uppsala', placeholder: true },
-  gothenburg: { name: 'Gothenburg', city: 'Göteborg', placeholder: true },
+  lillabommen: { name: 'Lilla Bommen', city: 'Göteborg', placeholder: true },
+  gothenburg_schools: { name: 'Schools', city: 'Göteborg', placeholder: true },
+  skelleftea_campus: { name: 'University campus', city: 'Skellefteå', placeholder: true },
 }
 
 /** A profile id is either generic (PROFILE_LABEL) or one of the project's own (data/projects/<id>.json),

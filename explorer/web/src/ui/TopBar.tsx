@@ -11,10 +11,20 @@ export function buildingAddress(b: SiteBuilding): string {
   return b.name.split(' - ')[0]
 }
 
-// AMF Marievik's own palette (amffastigheter.se/marievik/): deep ink bar, brand blue and coral accents.
+// Checkerboard style: a Marievik-blue bar, coral for whatever is active, ink outlines.
 const INK = '#202020'
 const BLUE = '#0528ca'
 const CORAL = '#fd876e'
+
+function BarTab({ on, onClick, title, children }: { on: boolean; onClick: () => void; title?: string; children: ReactNode }) {
+  return (
+    <button onClick={onClick} title={title} aria-pressed={on}
+      className={`whitespace-nowrap rounded-md border-2 px-3.5 py-1.5 font-semibold transition-transform hover:-translate-y-px ${on ? '' : 'border-transparent text-white hover:bg-white/15'}`}
+      style={on ? { background: CORAL, color: INK, borderColor: INK, boxShadow: `3px 3px 0 ${INK}` } : undefined}>
+      {children}
+    </button>
+  )
+}
 
 interface Props {
   tab: Tab
@@ -30,33 +40,25 @@ export function TopBar({ tab, setTab, location, profile, tools, right }: Props) 
   const initials = (profile.options.find(([k]) => k === profile.value)?.[1] ?? '')
     .split(/[\s-]+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase()
   return (
-    <header className="absolute inset-x-0 top-0 z-20 flex h-[52px] items-center gap-6 px-5 text-[13.5px] shadow-md"
-      style={{ background: INK, color: '#eef0ef' }}>
+    <header className="absolute inset-x-0 top-0 z-20">
+    <div className="flex h-[52px] items-center gap-6 px-5 text-[13.5px]" style={{ background: BLUE, color: '#fff' }}>
       <a href="/" className="flex items-baseline gap-2.5" title="Back to the Digital Lab home page">
-        <span className="text-[22px] tracking-tight" style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}>
-          Marievik<span style={{ color: BLUE }}>+</span>
+        <span className="text-[23px] tracking-tight" style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}>
+          Marievik<span style={{ color: CORAL }}>+</span>
         </span>
-        <span className="font-mono text-[11px] tracking-[0.12em]" style={{ color: CORAL }}>DIGITAL LAB</span>
+        <span className="font-mono text-[11px] font-medium tracking-[0.14em]" style={{ color: CORAL }}>DIGITAL LAB</span>
       </a>
-      <nav className="ml-8 flex h-full items-stretch" aria-label="Mode">
+      <nav className="ml-6 flex items-center gap-1.5" aria-label="Mode">
         {TABS.map(([id, label, hint]) => (
-          <button key={id} onClick={() => setTab(id)} title={hint} aria-pressed={tab === id}
-            className={`relative px-5 font-medium transition-colors ${tab === id ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white'}`}>
-            {label}
-            {tab === id && <span className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: BLUE }} />}
-          </button>
+          <BarTab key={id} on={tab === id} onClick={() => setTab(id)} title={hint}>{label}</BarTab>
         ))}
         {tools?.map((t) => (
-          <button key={t.label} onClick={t.onClick} title={t.title} aria-pressed={t.open}
-            className={`relative px-5 font-medium transition-colors ${t.open ? 'bg-white/10 text-white' : 'text-white/80 hover:text-white'}`}>
-            {t.label}
-            {t.open && <span className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: BLUE }} />}
-          </button>
+          <BarTab key={t.label} on={t.open} onClick={t.onClick} title={t.title}>{t.label}</BarTab>
         ))}
       </nav>
       <div className="ml-auto flex items-center gap-3">
         {right}
-        <span className="hidden items-center gap-1.5 text-white/85 xl:flex">
+        <span className="hidden items-center gap-1.5 font-medium text-white xl:flex">
           <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
             <path d="M10 18s6-5.5 6-10a6 6 0 1 0-12 0c0 4.5 6 10 6 10z" /><circle cx="10" cy="8" r="2.2" />
           </svg>
@@ -68,11 +70,14 @@ export function TopBar({ tab, setTab, location, profile, tools, right }: Props) 
             <option value="">No profile</option>
             {profile.options.map(([k, l]) => <option key={k} value={k}>{l}</option>)}
           </select>
-          <span className="grid h-9 w-9 place-items-center rounded-full text-[12.5px] font-semibold" style={{ background: BLUE, color: '#fff' }}>
+          <span className="grid h-9 w-9 place-items-center rounded-full border-2 text-[12.5px] font-extrabold"
+            style={{ background: CORAL, color: INK, borderColor: INK }}>
             {initials || '·'}
           </span>
         </label>
       </div>
+    </div>
+    <div className="checker-ribbon h-[12px]" aria-hidden />
     </header>
   )
 }

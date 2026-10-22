@@ -7,12 +7,12 @@ export const CARD_TITLE = 'font-mono text-[11px] font-semibold uppercase trackin
 
 export function Card({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
   return (
-    <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
-      <div className="mb-2 flex items-center justify-between gap-2">
+    <section className="mb-3 overflow-hidden rounded-xl border bg-raised shadow-sm">
+      <div className="checker-band flex items-center justify-between gap-2 px-4 pb-3 pt-2">
         <h4 className={CARD_TITLE}>{title}</h4>
         {right}
       </div>
-      {children}
+      <div className="px-4 py-3">{children}</div>
     </section>
   )
 }
@@ -32,16 +32,16 @@ export function Section({ id, title, right, children, defaultOpen = true }: {
     })
   }
   return (
-    <section className="mb-2.5 rounded-xl border border-line bg-raised/97 shadow-sm">
-      <div className="flex items-center justify-between gap-2 px-4 py-3">
+    <section className="mb-3 overflow-hidden rounded-xl border bg-raised shadow-sm">
+      <div className={`checker-band flex items-center justify-between gap-2 px-4 pb-3 pt-2 ${open ? '' : '-mb-[2px]'}`}>
         <button type="button" onClick={toggle} aria-expanded={open}
           className="flex min-w-0 flex-1 items-center gap-2 text-left">
-          <span className={`inline-block text-[10px] text-muted transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
+          <span className={`inline-block text-[10px] text-ink transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
           <span className={`truncate ${CARD_TITLE}`}>{title}</span>
         </button>
         {right}
       </div>
-      {open && <div className="px-4 pb-3.5">{children}</div>}
+      {open && <div className="px-4 py-3">{children}</div>}
     </section>
   )
 }
@@ -58,7 +58,7 @@ export function Row({ label, value, sub, strong }: { label: ReactNode; value: Re
 /** A headline number: label, big value, small qualifier. */
 export function Stat({ label, value, unit, sub }: { label: string; value: ReactNode; unit?: string; sub?: ReactNode }) {
   return (
-    <div className="rounded-lg bg-sunken/70 px-3 py-2.5">
+    <div className="rounded-lg border-2 border-line bg-sunken px-3 py-2.5">
       <div className="flex items-baseline gap-1">
         <span className="text-[19px] font-semibold leading-none tracking-tight tabular-nums text-ink">{value}</span>
         {unit && <span className="text-[12px] font-medium text-ink-2">{unit}</span>}
@@ -93,7 +93,7 @@ export function Select({ value, onChange, options, disabled }: {
       value={value}
       disabled={disabled}
       onChange={(e) => onChange(e.target.value)}
-      className="w-full rounded border border-line-strong bg-surface px-2 py-1.5 text-[13px] text-ink outline-none focus:border-ink-2 disabled:opacity-50"
+      className="w-full rounded border-2 border-edge bg-surface px-2 py-1.5 text-[13px] text-ink outline-none focus:border-accent disabled:opacity-50"
     >
       {options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
     </select>
@@ -120,7 +120,7 @@ export function Toggle({ on, onChange, label }: { on: boolean; onChange: (v: boo
       type="button"
       onClick={() => onChange(!on)}
       aria-pressed={on}
-      className={`rounded border px-2 py-0.5 text-[12px] transition-colors ${on ? 'border-ink-2 bg-sunken font-medium text-ink' : 'border-line bg-surface text-ink-2 hover:text-ink'}`}
+      className={`rounded border-2 px-2 py-0.5 text-[12px] transition-colors ${on ? 'border-edge bg-accent font-semibold text-white' : 'border-line-strong bg-surface text-ink-2 hover:text-ink'}`}
     >
       {label}
     </button>
@@ -133,7 +133,7 @@ export function Button({ children, onClick, primary, disabled, title }: {
   return (
     <button
       type="button" onClick={onClick} disabled={disabled} title={title}
-      className={`rounded px-3 py-1.5 text-[12.5px] font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${primary ? 'bg-accent text-white hover:brightness-110' : 'border border-line-strong bg-surface text-ink hover:border-ink-2'}`}
+      className={`rounded-md border-2 border-edge px-3 py-1.5 text-[12.5px] font-semibold transition-transform hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-40 ${primary ? 'bg-accent text-white' : 'bg-surface text-ink'}`}
     >
       {children}
     </button>

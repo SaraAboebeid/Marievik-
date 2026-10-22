@@ -92,9 +92,9 @@ export function ScenarioPanel(p: Props) {
 
   return (
     <>
-      <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
+      <section className="mb-3 overflow-hidden rounded-xl border bg-raised px-4 py-3.5 shadow-sm">
         <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open}
-          className="mb-3 flex w-full items-center justify-between font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">
+          className={`checker-band -mx-4 -mt-3.5 flex w-[calc(100%+2rem)] items-center justify-between px-4 pb-3 pt-2 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink ${open ? 'mb-3' : '-mb-[1rem]'}`}>
           Building setup
           <span className="flex items-center gap-2">
             {loading && <span className="font-normal normal-case tracking-normal text-ink-2">updating…</span>}
@@ -163,7 +163,7 @@ export function ScenarioPanel(p: Props) {
 
             {naming === null ? (
               <button type="button" onClick={() => setNaming('')}
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2.5 text-[13.5px] font-semibold text-white shadow-sm hover:brightness-125">
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-edge bg-accent px-3 py-2.5 text-[13.5px] font-bold text-white shadow-sm transition-transform hover:-translate-y-px">
                 {Icon.save} Save scenario
               </button>
             ) : (
@@ -175,7 +175,7 @@ export function ScenarioPanel(p: Props) {
               </div>
             )}
             <button type="button" onClick={p.timeline.onOpen} title={p.timeline.title}
-              className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-[#fd876e] px-3 py-2.5 text-[13.5px] font-semibold text-[#202020] shadow-sm hover:brightness-105">
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-edge bg-coral px-3 py-2.5 text-[13.5px] font-bold text-[#202020] shadow-sm transition-transform hover:-translate-y-px">
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
                 <path d="M2 10h16" /><circle cx="5" cy="10" r="1.6" fill="currentColor" /><circle cx="10" cy="10" r="1.6" fill="currentColor" /><circle cx="15" cy="10" r="1.6" fill="currentColor" />
               </svg>
@@ -185,11 +185,11 @@ export function ScenarioPanel(p: Props) {
         )}
       </section>
 
-      <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
-        <div className="mb-2.5 flex items-center justify-between">
+      <section className="mb-3 overflow-hidden rounded-xl border bg-raised px-4 py-3.5 shadow-sm">
+        <div className="checker-band -mx-4 -mt-3.5 mb-3 flex items-center justify-between px-4 pb-3 pt-2">
           <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Scenarios</span>
           <button type="button" onClick={() => setNaming((n) => n ?? '')} aria-label="Save a new scenario" title="Save the current setup as a scenario"
-            className="grid h-7 w-7 place-items-center rounded-md border border-line text-[16px] hover:bg-sunken">+</button>
+            className="grid h-7 w-7 place-items-center rounded-md border-2 border-edge bg-surface text-[16px] text-ink hover:bg-sunken">+</button>
         </div>
         <ul className="space-y-1">
           <li>

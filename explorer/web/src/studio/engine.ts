@@ -104,6 +104,19 @@ export interface CompareRow {
   allOk: boolean; failed: string[]; changeSek: number; changeKg: number; months: number
 }
 
+/** One generated floor plan (or a drawn layout as reference), checked and scored (explorer/studio/generator.py).
+ *  The occupancy KPIs are there only when the plan passes every check. */
+export interface VariantRow {
+  id: string; generated: boolean; name: string; valid: boolean; failed: string[]; why: string[]; pareto?: boolean
+  rooms: Record<string, number>
+  kpi: Record<string, number | null>
+}
+export interface Variants {
+  meta: { floor: number; n: number; seeds: [number, number]; days: number; seconds: number; valid: number; front: number
+    rejected: Record<string, number>; objectives: [string, number][]; note: string }
+  rows: VariantRow[]
+}
+
 /** Simulated working days on one floor (explorer/studio/occupancy.py). Hourly arrays run 06..21. */
 export interface Occupancy {
   layout: string; use: string; kind: 'work' | 'guests'; days: number; hours: number[]; curve: number[]

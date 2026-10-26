@@ -97,7 +97,7 @@ export function FloorTenancyCard({ ten, floorLabel }: { ten: FloorTenancy; floor
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-[11px] text-muted">Tenants are fictional until AMF's rent roll replaces them. Choose “Rented / vacant” in the floor panel to see them on the plan.</p>
+      <p className="mt-2 text-[11px] text-muted">Tenants are fictional until AMF's rent roll replaces them. The suites are coloured on the plan while this tab is open.</p>
     </Card>
   )
 }

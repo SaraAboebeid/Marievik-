@@ -48,10 +48,46 @@ function Finding({ ok, warn, children }: { ok: boolean; warn?: boolean; children
   )
 }
 
+/** Who comes in: the share of staff at the peak (work floors) or guest demand (guest floors). Lives in the left
+ *  panel with the other things you change; the simulated day on the right follows it. */
+export function PeopleControls({ occ, attendance, setAttendance, demand, setDemand }: {
+  occ: Occupancy | null; attendance: number | null; setAttendance: (v: number | null) => void; demand: number; setDemand: (v: number) => void
+}) {
+  const o = occ
+  return (
+    <Section id="studio-people" title="Who comes in">
+      {!o ? <p className="text-[12px] text-muted">Simulating working days…</p> : o.kind === 'work' ? (
+        <>
+          <label className="mb-2 block text-[12px] text-ink-2">
+            <span className="mb-0.5 flex justify-between">
+              <span>Share of staff in at the peak{attendance === null ? ' (catalogue)' : ''}</span>
+              <span className="font-mono text-ink">{pc(attendance ?? o.attendance ?? 0.7)}</span>
+            </span>
+            <Slider value={attendance ?? o.attendance ?? 0.7} min={0.3} max={1} step={0.05} onChange={(v) => setAttendance(v)} />
+          </label>
+          <p className="text-[11.5px] leading-snug text-muted">
+            {o.staff} people on the books. Lower it for a hybrid policy (e.g. 45 %): fewer people compete for desks, meeting rooms and the pantry. The result is under “A day” on the right.
+          </p>
+          {attendance !== null && (
+            <button type="button" onClick={() => setAttendance(null)} className="mt-1.5 rounded-md border-2 border-edge bg-surface px-2 py-0.5 text-[12px] font-semibold">Back to the catalogue’s share</button>
+          )}
+        </>
+      ) : (
+        <>
+          <label className="mb-2 block text-[12px] text-ink-2">
+            <span className="mb-0.5 flex justify-between"><span>Guest demand against the catalogue profile</span><span className="font-mono text-ink">{demand.toFixed(2)}×</span></span>
+            <Slider value={demand} min={0.3} max={2} step={0.1} onChange={setDemand} />
+          </label>
+          <p className="text-[11.5px] leading-snug text-muted">More guests than seats are turned away. The result is under “A day” on the right.</p>
+        </>
+      )}
+    </Section>
+  )
+}
+
 /** Simulated working days on the furnished floor: who is in hour by hour, and where the layout pinches. */
-export function DayPanel({ occ, busy, hour, setHour, attendance, setAttendance, demand, setDemand, showUse, onShowUse }: {
+export function DayPanel({ occ, busy, hour, setHour, showUse, onShowUse }: {
   occ: Occupancy | null; busy: boolean; hour: number; setHour: (h: number) => void
-  attendance: number | null; setAttendance: (v: number | null) => void; demand: number; setDemand: (v: number) => void
   showUse: boolean; onShowUse: () => void
 }) {
   const o = occ
@@ -63,21 +99,8 @@ export function DayPanel({ occ, busy, hour, setHour, attendance, setAttendance, 
             {o.days} simulated working days, minute by minute. {o.kind === 'work'
               ? `${o.staff} people on the books, each with their own habit of coming in; desks, meetings, focus rooms, lunch and WCs compete.`
               : 'Guests arrive to fill the catalogue’s hourly profile, take a free seat or are turned away.'}
+            {' '}{o.kind === 'work' ? `${pc(o.attendance ?? 0.7)} of staff in at the peak` : `Guest demand ${o.demand?.toFixed(2) ?? '1.00'}×`}; change it under People on the left.
           </p>
-          {o.kind === 'work' ? (
-            <label className="mb-2 block text-[12px] text-ink-2">
-              <span className="mb-0.5 flex justify-between">
-                <span>Share of staff in at the peak{attendance === null ? ' (catalogue)' : ''}</span>
-                <span className="font-mono text-ink">{pc(attendance ?? o.attendance ?? 0.7)}</span>
-              </span>
-              <Slider value={attendance ?? o.attendance ?? 0.7} min={0.3} max={1} step={0.05} onChange={(v) => setAttendance(v)} />
-            </label>
-          ) : (
-            <label className="mb-2 block text-[12px] text-ink-2">
-              <span className="mb-0.5 flex justify-between"><span>Guest demand against the catalogue profile</span><span className="font-mono text-ink">{demand.toFixed(2)}×</span></span>
-              <Slider value={demand} min={0.3} max={2} step={0.1} onChange={setDemand} />
-            </label>
-          )}
           <DayChart o={o} hour={hour} setHour={setHour} />
           <div className="mb-2 mt-1 flex flex-wrap gap-x-2.5 gap-y-0.5 text-[10.5px] text-muted">
             {BANDS.filter(([k]) => o.activity[k].some((v) => v > 0.05)).map(([k, label, c]) => (

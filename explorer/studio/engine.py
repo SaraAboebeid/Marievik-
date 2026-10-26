@@ -12,8 +12,9 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import dijkstra as _dijkstra
 
-from .layouts import (ATRIUM, CELL, CORES, ESCAPE_LIMIT, EXITS_GF, EXITS_TYP, GFA_GF, GFA_TYP, H, LAYOUTS, LIFTS, NX, NY,
+from .layouts import (ATRIUM, CELL, CORES, ESCAPE_LIMIT, EXITS_GF, EXITS_TYP, GFA_GF, GFA_TYP, H, LIFTS, NX, NY,
                       TYPES, W, WC_BLOCKS)
+from .layouts import get as get_layout
 
 # furniture kind -> (blocks walking, seats)
 ITEM = {
@@ -535,7 +536,7 @@ def route(pred, start):
 
 # ------------------------------------------------------------------ one floor, one layout -> everything we show
 def build(layout_id: str, params: dict | None, floor: int) -> dict:
-    L = LAYOUTS[layout_id]
+    L = get_layout(layout_id)
     p = {**L.defaults, **(params or {})}
     defs = L.rooms(p) + ([] if L.ground else [dict(r) for r in WC_BLOCKS])
     rooms = [{**r, "id": f"R{i}", "area": area(r["r"]), "doorSide": None} for i, r in enumerate(defs)]

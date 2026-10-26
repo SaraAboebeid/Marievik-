@@ -48,7 +48,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, timeline
-from .studio import capacity as studio_capacity, engine as studio, layouts as studio_layouts, money as studio_money, occupancy as studio_occupancy, tenancy as studio_tenancy
+from .studio import capacity as studio_capacity, engine as studio, generator as studio_generator, layouts as studio_layouts, money as studio_money, occupancy as studio_occupancy, tenancy as studio_tenancy
 
 HERE = Path(__file__).resolve().parent
 DIST = HERE / "web" / "dist"
@@ -189,10 +189,14 @@ STUDIO_BUILDINGS = {"B01"}   # the studio's geometry is B01's traced plan; other
 def _studio_check(bid: str, floor: int, layout: str | None = None):
     if bid not in STUDIO_BUILDINGS:
         raise HTTPException(404, f"no floor studio for {bid}: only {', '.join(sorted(STUDIO_BUILDINGS))} has drawn plans")
-    if layout is not None and layout not in studio_layouts.LAYOUTS:
+    if layout is None:
+        return
+    try:
+        L = studio_layouts.get(layout)
+    except KeyError:
         raise HTTPException(400, f"unknown layout {layout}")
-    if layout is not None and studio_layouts.LAYOUTS[layout].ground != (floor == 0):
-        raise HTTPException(400, f"{layout} is a {'ground' if studio_layouts.LAYOUTS[layout].ground else 'upper'}-floor layout")
+    if L.ground != (floor == 0):
+        raise HTTPException(400, f"{layout} is a {'ground' if L.ground else 'upper'}-floor layout")
 
 
 @app.get("/api/studio/layouts")
@@ -269,6 +273,34 @@ def api_studio_compare(bid: str, floor: int, body: StudioBody):
     lid = body.layout or studio_layouts.layout_for(floor)
     _studio_check(bid, floor, lid)
     return {"today": lid, "rows": studio_capacity.compare_layouts(floor, lid, body.params)}
+
+
+class VariantsBody(BaseModel):
+    n: int = 200       # plans to generate
+    start: int = 1     # first seed: the same seeds always give the same plans
+    days: int = 10     # simulated working days per plan
+
+
+_variants: dict[str, dict] = {}
+
+
+@app.post("/api/studio/{bid}/{floor}/variants")
+def api_studio_variants(bid: str, floor: int, body: VariantsBody):
+    """Floor plans generated within the building's fixed envelope (explorer/studio/generator.py), each checked like a
+    drawn layout and, if it passes, run through simulated working days; the trade-off front is marked. The drawn
+    office layouts come along as reference rows. Open one in the studio with its id as the layout."""
+    _studio_check(bid, floor)
+    if floor == 0:
+        raise HTTPException(400, "the generator lays out upper floors; the ground floor is not generated yet")
+    if not 1 <= body.n <= 1000 or not 1 <= body.days <= 60 or body.start < 1:
+        raise HTTPException(400, "n must be 1-1000, days 1-60, start 1 or more")
+    key = f"{floor}|{body.n}|{body.start}|{body.days}"
+    if key not in _variants:
+        res = studio_generator.batch(body.n, floor, body.start, body.days, workers=min(6, os.cpu_count() or 1))
+        for r in res["rows"]:
+            r.pop("genome", None)
+        _variants[key] = res
+    return _variants[key]
 
 
 class OccupancyBody(StudioBody):

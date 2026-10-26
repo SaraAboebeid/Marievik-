@@ -194,6 +194,17 @@ GROUND_LAYOUTS = ["gf_reception", "gf_food", "gf_cowork"]
 DEFAULT_FLOOR_LAYOUT = ["gf_reception", "open", "cellular", "abw", "teams", "cowork", "mixed"]
 
 
+def get(lid: str) -> Layout:
+    """A layout by id: one of the drawn ones above, or a generated variant ("gen-<seed>", explorer/studio/generator.py)."""
+    if lid in LAYOUTS:
+        return LAYOUTS[lid]
+    from .generator import from_id
+    L = from_id(lid)
+    if L is None:
+        raise KeyError(lid)
+    return L
+
+
 def layout_for(floor: int) -> str:
     return DEFAULT_FLOOR_LAYOUT[floor] if 0 <= floor < len(DEFAULT_FLOOR_LAYOUT) else "open"
 

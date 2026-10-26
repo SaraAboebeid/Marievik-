@@ -13,11 +13,12 @@ import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
 import { MethodsDrawer } from './ui/MethodsDrawer'
 import { Viewer, type Pick, type StudioView, type ViewOptions } from './viewer/Viewer'
 import { fromPayload, layoutFor, layoutForUse, setGeometry } from './studio/engine'
-import type { CompareRow, Occupancy, Params, StudioMeta, StudioModel, YearKpi } from './studio/engine'
+import type { CompareRow, Occupancy, Params, StudioMeta, StudioModel, Variants, YearKpi } from './studio/engine'
 import { Crowd, type Scenario } from './studio/crowd'
 import type { FloorTenancy } from './studio/tenancy'
-import { StudioPanel, type CapacityState } from './ui/StudioPanel'
-import { DayPanel } from './ui/DayPanel'
+import { StudioChangePanel, StudioPanel, type CapacityState } from './ui/StudioPanel'
+import { DayPanel, PeopleControls } from './ui/DayPanel'
+import { VariantsPanel } from './ui/VariantsPanel'
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
 import { LayerBar, LAYER_LEGEND } from './ui/LayerBar'
@@ -142,7 +143,7 @@ export default function App() {
   const tlReady = tl && tl.status === 'ready' && tl.building === buildingId && tl.floor === studioFloor ? tl : null
   const floorLayout = studioFloor === null || !studioMeta ? null : studioLayout[studioFloor] ?? layoutFor(studioMeta, studioFloor)
   const mapUse = (use: string) => (studioMeta ? layoutForUse(studioMeta, use, studioFloor === 0) : null)
-  const layoutName = (id: string) => studioMeta?.layouts[id]?.name.toLowerCase() ?? id
+  const layoutName = (id: string) => studioMeta?.layouts[id]?.name.toLowerCase() ?? (id.startsWith('gen-') ? `generated plan ${id.slice(4)}` : id)
   const tlPathSeg = tlReady ? tlReady.segments.find((s) => s.id === tlPath) ?? tlReady.segments.find((s) => s.segment === 2) ?? tlReady.segments[0] : null
   const tlBase = tlReady?.segments.find((s) => s.id === 'unchanged')
   const baseUse = tlReady && tlBase ? tlReady.states[tlBase.years[0].state]?.groups.floor?.use : undefined
@@ -329,6 +330,27 @@ export default function App() {
     api.studioCompare(buildingId, studioFloor, floorLayout, studioParams[studioFloor] ?? {})
       .then((r) => setCapacity((c) => ({ ...c, busy: null, rows: r.rows })))
       .catch((e) => { setError(`Layout comparison: ${(e as Error).message}`); setCapacity((c) => ({ ...c, busy: null })) })
+  }
+  // plans generated within the floor's envelope, scored on the server (explorer/studio/generator.py), kept per floor
+  const [variants, setVariants] = useState<Record<number, Variants>>({})
+  const [variantsBusy, setVariantsBusy] = useState(false)
+  const [variantsErr, setVariantsErr] = useState<string | null>(null)
+  const runVariants = (n: number) => {
+    if (!buildingId || studioFloor === null) return
+    const fl = studioFloor
+    setVariantsBusy(true); setVariantsErr(null)
+    api.studioVariants(buildingId, fl, n)
+      .then((v) => setVariants((s) => ({ ...s, [fl]: v })))
+      .catch((e) => setVariantsErr((e as Error).message))
+      .finally(() => setVariantsBusy(false))
+  }
+  // put a layout (drawn or generated) on this floor, walls as drawn
+  const openLayout = (id: string) => {
+    if (studioFloor === null) return
+    const fl = studioFloor
+    setStudioLayout((s) => ({ ...s, [fl]: id }))
+    setStudioParams((s) => ({ ...s, [fl]: {} }))
+    setCapacity((c) => ({ ...c, result: null }))
   }
   const pickRow = (r: CompareRow) => {
     if (studioFloor === null) return
@@ -915,7 +937,8 @@ export default function App() {
   // building overview: each floor's use and area, and how much of it is rented (B01 from the floor studio)
   const overviewRows: FloorRow[] | null = b ? b.floors.map((f) => {
     const area = ringsArea(f.rings)
-    const studioUse = studioMeta?.buildings.includes(b.id) ? studioMeta.layouts[studioLayout[f.index] ?? layoutFor(studioMeta, f.index)]?.use : undefined
+    const fLayout = studioMeta?.buildings.includes(b.id) ? studioLayout[f.index] ?? layoutFor(studioMeta, f.index) : undefined
+    const studioUse = fLayout?.startsWith('gen-') ? 'office' : fLayout ? studioMeta?.layouts[fLayout]?.use : undefined   // generated plans are offices
     const ten = tenancy[b.id]?.[f.index]
     return ten ? { n: f.index, label: f.index === 0 ? 'GF' : `F${f.index}`, use: studioUse ? USE_FAMILY[studioUse] ?? f.use_label : f.use_label, area, ten } : null
   }).filter((r): r is FloorRow => r !== null) : null
@@ -998,7 +1021,12 @@ export default function App() {
                 onClick={() => go(c.to)}>{c.label}</button>
             </span>
           ))}
-          <button onClick={up} className="ml-1 rounded border border-line px-1.5 text-[11.5px] text-ink-2 hover:text-ink" title="Up one level (Esc)">↑ up</button>
+          <button onClick={up} title="Up one level (Esc)" aria-label="Up one level"
+            className="group ml-1.5 inline-flex items-center gap-1.5 rounded-md border-2 border-edge bg-surface py-0.5 pl-1.5 pr-1 text-[11.5px] font-semibold text-ink shadow-[2px_2px_0_var(--color-edge)] transition-[transform,box-shadow,background-color] hover:bg-coral hover:text-[#202020] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-x-[2px] active:translate-y-[2px] active:shadow-none motion-reduce:transition-none">
+            <svg viewBox="0 0 12 12" className="h-3 w-3" aria-hidden><path d="M6 10V2.5M2.5 6 6 2.5 9.5 6" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" /></svg>
+            Up
+            <kbd className="rounded border border-line bg-sunken px-1 font-mono text-[9.5px] font-normal text-muted group-hover:border-[#202020]/30 group-hover:bg-transparent group-hover:text-[#202020]/70">Esc</kbd>
+          </button>
           <span className="mx-1.5 h-4 w-px bg-line" aria-hidden />
           <span className={`text-[12px] ${sc.changed.length && !sc.name ? 'text-warn' : 'text-ink-2'}`}>{scenarioLabel}</span>
           {project.placeholder && <span className="ml-1 rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
@@ -1026,14 +1054,18 @@ export default function App() {
             <button onClick={() => togglePanel('left')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
           </div>
-          {floorTenancy && studioFloor !== null ? (
-            <FloorTenancyCard ten={floorTenancy} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} />
+          {studioModel && studioMeta && studioFloor !== null && sLayout ? (
+            <StudioChangePanel model={studioModel} meta={studioMeta} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
+              layout={floorLayout ?? sLayout} layouts={studioLayouts} setLayout={openLayout}
+              setParam={(key, v) => setStudioParams((s) => ({ ...s, [studioFloor]: { ...(s[studioFloor] ?? {}), [key]: +v.toFixed(2) } }))}
+              onReset={() => { setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
+              timelineShown={tlOpen} onTimeline={() => (tlOpen ? closeTl() : setTlHidden(false))}
+              capacity={capacity} onMaximise={runMaximise} onCompare={runCompare} onPickRow={pickRow}
+              plans={<VariantsPanel data={variants[studioFloor] ?? null} busy={variantsBusy} error={variantsErr} onGenerate={runVariants}
+                current={floorLayout ?? sLayout} ground={studioFloor === 0} onOpen={openLayout} />}
+              people={<PeopleControls occ={occNow} attendance={attendance} setAttendance={setAttendance} demand={demand} setDemand={setDemand} />} />
           ) : site && (
             <>
-            {level.kind === 'building' && buildingId && overviewRows && (
-              <BuildingOverview name={`${buildingId} ${b?.name.split(' - ')[0] ?? ''}`} floors={overviewRows}
-                onFloor={(n) => go({ kind: 'floor', building: buildingId, floor: n })} />
-            )}
             <ScenarioPanel
               site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
               loading={buildingId ? !!loading[buildingId] : false} status={sc} saved={saved}
@@ -1053,7 +1085,7 @@ export default function App() {
           )}
         </aside>
       ) : (
-        <button onClick={() => togglePanel('left')} title="Show building setup" aria-label="Show building setup"
+        <button onClick={() => togglePanel('left')} title="Show what you can change" aria-label="Show what you can change"
           className={`absolute left-3 ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
           ▸
         </button>
@@ -1081,25 +1113,23 @@ export default function App() {
           {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
           {studioModel && studioMeta && studioFloor !== null && sLayout ? (
-            <StudioPanel model={studioModel} meta={studioMeta} view={studioView} setView={setStudioView}
-              floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} layout={floorLayout ?? sLayout} layouts={studioLayouts}
-              setLayout={(id) => { setStudioLayout((s) => ({ ...s, [studioFloor]: id })); setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
-              setParam={(key, v) => setStudioParams((s) => ({ ...s, [studioFloor]: { ...(s[studioFloor] ?? {}), [key]: +v.toFixed(2) } }))}
-              onReset={() => { setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
-              scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
-              timelineShown={tlOpen} onTimeline={() => (tlOpen ? closeTl() : setTlHidden(false))}
-              capacity={capacity} onMaximise={runMaximise} onCompare={runCompare} onPickRow={pickRow} loading={studioLoading}>
-              <DayPanel occ={occNow} busy={occBusy} hour={occHour} setHour={(h) => { setOccHour(h); setStudioView('use') }}
-                attendance={attendance} setAttendance={setAttendance} demand={demand} setDemand={setDemand}
-                showUse={studioView === 'use'} onShowUse={() => setStudioView(studioView === 'use' ? 'furniture' : 'use')} />
-              {studioView === 'fire' && (
-                <EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
-                  playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
-                  t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />
-              )}
-            </StudioPanel>
+            <StudioPanel model={studioModel} view={studioView} setView={setStudioView}
+              floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
+              scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote} loading={studioLoading}
+              day={<DayPanel occ={occNow} busy={occBusy} hour={occHour} setHour={(h) => { setOccHour(h); setStudioView('use') }}
+                showUse={studioView === 'use'} onShowUse={() => setStudioView(studioView === 'use' ? 'furniture' : 'use')} />}
+              tenancy={floorTenancy ? <FloorTenancyCard ten={floorTenancy} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} /> : null}
+              evac={<EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
+                playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
+                t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />} />
           ) : level.kind === 'building' && buildingId ? (
-            <KeyFigures data={figures && figures.building === buildingId ? figures : null} loading={!!loading[buildingId] || figures?.key !== bdata[buildingId]?.key} />
+            <>
+              {overviewRows && (
+                <BuildingOverview name={`${buildingId} ${b?.name.split(' - ')[0] ?? ''}`} floors={overviewRows}
+                  onFloor={(n) => go({ kind: 'floor', building: buildingId, floor: n })} />
+              )}
+              <KeyFigures data={figures && figures.building === buildingId ? figures : null} loading={!!loading[buildingId] || figures?.key !== bdata[buildingId]?.key} />
+            </>
           ) : site && (
             <InfoPanel
               site={site} level={level} bdata={bdata} totals={totals} floor={floorData}

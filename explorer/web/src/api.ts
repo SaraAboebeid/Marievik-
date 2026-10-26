@@ -2,7 +2,7 @@ import type {
   BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
   ParametricPayload, Project, Settings, SitePayload, UrbanContext, UrbanSummary, SupplierCompare, TimelineResponse,
 } from './types'
-import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, YearKpi, YearOverride } from './studio/engine'
+import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, Variants, YearKpi, YearOverride } from './studio/engine'
 import type { FloorTenancy } from './studio/tenancy'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, LayerData } from './layers'
 
@@ -59,6 +59,7 @@ export const api = {
       `/api/studio/${id}/${floor}/maximise`, { layout, params }),
   studioCompare: (id: string, floor: number, layout: string, params: Params) =>
     call<{ today: string; rows: CompareRow[] }>(`/api/studio/${id}/${floor}/compare`, { layout, params }),
+  studioVariants: (id: string, floor: number, n: number, start = 1) => call<Variants>(`/api/studio/${id}/${floor}/variants`, { n, start }),
   studioOccupancy: (id: string, floor: number, layout: string, params: Params, opts: { days?: number; attendance?: number | null; demand?: number }) =>
     call<Occupancy>(`/api/studio/${id}/${floor}/occupancy`, { layout, params, ...opts }),
   studioEvacuation: (id: string, floor: number, layout: string, params: Params, people?: number | null) =>

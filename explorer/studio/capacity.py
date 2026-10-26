@@ -7,7 +7,7 @@ seats. Every candidate is a full build, so escape routes, WCs, exits and the leg
 from __future__ import annotations
 
 from .engine import build
-from .layouts import GROUND_LAYOUTS, LAYOUTS, TYPICAL_LAYOUTS
+from .layouts import GROUND_LAYOUTS, LAYOUTS, TYPICAL_LAYOUTS, get
 from .money import change_cost
 
 
@@ -17,7 +17,7 @@ def score(m: dict) -> tuple:
 
 
 def maximise(layout_id: str, floor: int, start: dict | None = None, samples: int = 6, sweeps: int = 2) -> dict:
-    L = LAYOUTS[layout_id]
+    L = get(layout_id)
     p = {**L.defaults, **(start or {})}
     best = build(layout_id, p, floor)
     tried = 1

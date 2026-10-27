@@ -129,19 +129,110 @@ body {
 .studio-label.layer { font-size: 11.5px; background: #fffdf6; white-space: nowrap; }
 .studio-label.name { font-family: var(--font-sans); font-size: 11.5px; box-shadow: none; border-width: 1px; background: rgba(255, 253, 246, 0.9); }
 
-/* Urban scale: events and activities as stickers (dashed when temporary), amenities as dots (name on hover) */
-.life-pin {
-  display: flex; align-items: center; gap: 5px;
-  font-family: var(--font-sans); font-size: 11.5px; font-weight: 600; color: #202020; white-space: nowrap;
-  background: #fffdf6; border: 2px solid #202020; border-radius: 5px; padding: 1px 7px 1px 5px;
-  box-shadow: 2px 2px 0 #202020; transform: translateY(-50%); pointer-events: auto; cursor: default;
+/* Urban scale, "Life on Marievik": three kinds of life, three objects on the model.
+   Permanent  → a flag planted on a checker plinth (it stays; it waves a little).
+   Temporary  → a balloon on a string with a dashed ticket (here for one year, it bobs and floats).
+   Amenities  → round board-game tokens with the type's icon (name on hover).
+   The CSS2D renderer owns the transform of .lp itself, so all motion lives on the children. */
+.lp { pointer-events: none; font-family: var(--font-sans); color: #202020; }
+.lp:hover { z-index: 2147483000 !important; }
+.lp-in { position: relative; }
+.lp .lp-ico { display: grid; place-items: center; color: var(--on); }
+.lp-foot { position: absolute; left: 50%; bottom: -3px; width: 10px; height: 4px; margin-left: -5px; border-radius: 50%; background: rgba(32, 32, 32, 0.4); }
+
+/* permanent: the flag */
+.lp-permanent .lp-in { width: 14px; height: 46px; }
+.lp-permanent .lp-foot {
+  width: 20px; height: 8px; margin-left: -10px; bottom: -4px; border: 1.5px solid #202020;
+  background: conic-gradient(#202020 25%, #fffdf6 0 50%, #202020 0 75%, #fffdf6 0) 0 0 / 6px 6px;
 }
-.life-pin.temporary { border-style: dashed; box-shadow: none; }
-.life-pin i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #202020; }
-.life-dot {
-  width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #202020;
-  pointer-events: auto; cursor: default; transform: translateY(-50%);
+.lp-pole { position: absolute; left: 6px; bottom: 0; width: 2.5px; height: 100%; background: #202020; border-radius: 2px; transform-origin: 50% 100%; }
+.lp-knob { position: absolute; left: 3.5px; top: -5px; width: 8px; height: 8px; border-radius: 50%; background: var(--c); border: 1.5px solid #202020; }
+.lp-flag {
+  position: absolute; left: 8px; top: 1px; display: flex; align-items: stretch; white-space: nowrap;
+  background: #fffdf6; border: 2px solid #202020; border-radius: 0 4px 4px 0; box-shadow: 3px 3px 0 #202020;
+  pointer-events: auto; cursor: default; transform-origin: 0 50%;
+  animation: lp-wave 3.4s ease-in-out var(--phase) infinite;
 }
+.lp-flag .lp-ico { width: 21px; background: var(--c); border-right: 2px solid #202020; }
+.lp-flag .lp-name { padding: 2px 6px 2px 6px; font-size: 11.5px; font-weight: 700; line-height: 16px; }
+.lp-check { width: 6px; border-left: 1.5px solid #202020; background: conic-gradient(#202020 25%, var(--c) 0 50%, #202020 0 75%, var(--c) 0) 0 0 / 6px 6px; border-radius: 0 2px 2px 0; }
+.lp-permanent:hover .lp-flag { box-shadow: 5px 5px 0 #202020; }
+/* new this year: a yellow starburst */
+.lp-permanent .lp-badge {
+  position: absolute; right: -15px; top: -15px; display: grid; place-items: center; width: 30px; height: 30px;
+  font: normal 800 8px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: #202020;
+  background: #f5c443;
+  clip-path: polygon(50% 0, 59% 18%, 79% 9%, 76% 30%, 97% 33%, 82% 50%, 97% 67%, 76% 70%, 79% 91%, 59% 82%, 50% 100%, 41% 82%, 21% 91%, 24% 70%, 3% 67%, 18% 50%, 3% 33%, 24% 30%, 21% 9%, 41% 18%);
+  animation: lp-burst 2.2s ease-in-out infinite;
+}
+
+/* temporary: the balloon */
+.lp-temporary .lp-in { width: 28px; height: 66px; }
+.lp-bob { position: absolute; inset: 0; transform-origin: 50% 100%; animation: lp-bob 2.6s ease-in-out var(--phase) infinite alternate; }
+.lp-string { position: absolute; left: 7px; bottom: 0; }
+.lp-balloon {
+  position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 28px; height: 32px;
+  border-radius: 50% 50% 50% 50% / 44% 44% 56% 56%; border: 2px solid #202020; box-shadow: 2px 2px 0 #202020;
+  background: radial-gradient(ellipse 4px 6px at 30% 28%, rgba(255, 255, 255, 0.75) 0 70%, transparent 100%), var(--c);
+  pointer-events: auto; cursor: default;
+}
+.lp-knot { position: absolute; left: 11px; top: 31px; width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent; border-bottom: 5px solid #202020; }
+.lp-ticket {
+  position: absolute; left: 27px; top: 12px; display: flex; flex-direction: column; white-space: nowrap;
+  background: #fffdf6; border: 1.5px dashed #202020; border-radius: 3px; padding: 1px 7px 2px;
+  transform: rotate(var(--tilt)); transform-origin: 0 50%; pointer-events: auto; cursor: default;
+}
+.lp-ticket .lp-name { font-size: 11px; font-weight: 700; line-height: 14px; }
+.lp-temporary .lp-badge { font: normal 600 8.5px/10px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: #ac2e23; }
+.lp-temporary:hover .lp-ticket { border-style: solid; box-shadow: 2px 2px 0 #202020; }
+
+/* amenities: the tokens */
+.lp-amenity .lp-in { width: 18px; height: 18px; }
+.lp-token {
+  display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--c); color: var(--on); border: 1.5px solid #202020; box-shadow: 1.5px 1.5px 0 #202020;
+  pointer-events: auto; cursor: default; transition: transform 0.12s ease-out;
+}
+.lp-amenity:hover .lp-token { transform: scale(1.45); }
+.lp-tag {
+  position: absolute; left: 24px; top: 50%; translate: 0 -50%; opacity: 0; pointer-events: none; white-space: nowrap;
+  font-size: 11px; font-weight: 600; line-height: 16px; background: #fffdf6; border: 1.5px solid #202020; border-radius: 4px;
+  padding: 0 6px; box-shadow: 2px 2px 0 #202020; transition: opacity 0.12s;
+}
+.lp-amenity:hover .lp-tag { opacity: 1; }
+
+/* arriving on the map: flags are planted and unfurl, balloons float up, tokens drop onto the board */
+.lp-permanent.enter .lp-pole { animation: lp-grow 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) var(--d) both; }
+.lp-permanent.enter .lp-knob { animation: lp-pop 0.3s cubic-bezier(0.3, 1.6, 0.5, 1) calc(var(--d) + 0.3s) both; }
+.lp-permanent.enter .lp-flag { animation: lp-unfurl 0.45s cubic-bezier(0.3, 1.5, 0.5, 1) calc(var(--d) + 0.35s) both, lp-wave 3.4s ease-in-out var(--phase) infinite; }
+.lp-permanent.enter .lp-foot { animation: lp-pop 0.3s ease-out var(--d) both; }
+.lp-temporary.enter .lp-in { animation: lp-rise 0.7s cubic-bezier(0.2, 1.5, 0.4, 1) var(--d) both; }
+.lp-amenity.enter .lp-in { animation: lp-drop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) var(--d) both; }
+
+@keyframes lp-wave { 0%, 100% { transform: skewY(0deg) } 50% { transform: skewY(-2.5deg) } }
+@keyframes lp-bob { from { transform: rotate(calc(var(--tilt) * -0.9)) } to { transform: rotate(calc(var(--tilt) * 0.9)) translateY(-2px) } }
+@keyframes lp-burst { 0%, 100% { transform: rotate(-8deg) scale(1) } 50% { transform: rotate(8deg) scale(1.1) } }
+@keyframes lp-grow { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+@keyframes lp-unfurl { from { transform: scaleX(0); opacity: 0 } to { transform: scaleX(1); opacity: 1 } }
+@keyframes lp-pop { from { transform: scale(0) } to { transform: scale(1) } }
+@keyframes lp-rise { from { transform: translateY(26px) scale(0.3); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes lp-drop { from { transform: translateY(-14px) scale(0.4); opacity: 0 } to { transform: none; opacity: 1 } }
+
+/* the panel's little copies of the three objects (legend, toggles, list) */
+.lg-flag { position: relative; display: inline-block; width: 18px; height: 20px; flex: none; }
+.lg-flag::before { content: ""; position: absolute; left: 2px; top: 0; bottom: 0; width: 2px; background: #202020; border-radius: 1px; }
+.lg-flag::after { content: ""; position: absolute; left: 4px; top: 1px; width: 13px; height: 9px; background: var(--c, #fd876e); border: 1.5px solid #202020; border-radius: 0 2px 2px 0; }
+.lg-balloon { position: relative; display: inline-block; width: 16px; height: 22px; flex: none; }
+.lg-balloon::before { content: ""; position: absolute; left: 1px; top: 0; width: 14px; height: 16px; border-radius: 50% 50% 50% 50% / 44% 44% 56% 56%; background: var(--c, #fd876e); border: 1.5px solid #202020; }
+.lg-balloon::after { content: ""; position: absolute; left: 7.5px; top: 16px; width: 1.5px; height: 6px; background: #202020; transform: rotate(10deg); }
+.lg-token { display: inline-grid; place-items: center; width: 16px; height: 16px; flex: none; border-radius: 50%; background: var(--c, #fd876e); color: var(--on, #202020); border: 1.5px solid #202020; box-shadow: 1px 1px 0 #202020; }
+.life-tile[aria-pressed="false"] { opacity: 0.5; box-shadow: none; }
+.life-tile[aria-pressed="false"] .life-tile-name { text-decoration: line-through; text-decoration-thickness: 2px; }
+.life-col { transition: background-color 0.15s; }
+.life-col .cell-p { width: 5px; height: 5px; border: 1px solid #202020; background: var(--c); }
+.life-col .cell-t { width: 5px; height: 5px; border-radius: 50%; border: 1px dashed #202020; background: var(--c); }
+.life-new { font: 800 8.5px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: #202020; background: #f5c443; border: 1.5px solid #202020; border-radius: 3px; padding: 2px 3px; transform: rotate(-4deg); }
 
 .panel-scroll { max-height: calc(100vh - 10.5rem); overflow-y: auto; padding: 0 5px 5px 0; }
 /* with the 10-year timeline open in the bottom bar, the side panels end above it */

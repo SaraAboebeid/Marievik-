@@ -365,6 +365,16 @@ export interface UrbanContext {
   trees?: { p: XY; h: number; leaf?: string; src: string; species?: string }[]
   lamps?: XY[]
   benches?: XY[]
+  // the disc the context covers, and the detail drawn there (parametric/site/make_context.py)
+  circle?: [number, number, number]
+  massing?: { rings: Ring[][]; z0?: number; h: number; c: string; rc: string; kind?: string; est?: number
+    roof?: { shape: 'gabled' | 'hipped'; rect: XY[]; rh: number } }[]
+  barriers?: { kind: string; h: number; lines: XY[][] }[]
+  furniture?: Record<string, [number, number, number][]>
+  crossings?: [number, number, number, number, number][]
+  markings?: { kind: string; z?: number; lines: XY[][] }[]
+  parking?: { rings: Ring[][] }[]
+  platforms?: { rings: Ring[][]; z?: number }[]
 }
 
 // Urban scale (explorer/model.py Site.urban_summary): each study building's ground-floor use and the

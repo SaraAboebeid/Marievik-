@@ -22,6 +22,7 @@ import { GeneratePlans } from './ui/VariantsPanel'
 import { PlanningTable } from './ui/PlanningTable'
 import { LifePanel, type LifeFilter } from './ui/LifePanel'
 import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
+import { lifeIconSvg } from './lifeIcons'
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
 import { LAYER_LEGEND } from './ui/LayerBar'
@@ -777,11 +778,13 @@ export default function App() {
       .filter((t) => t.x !== null && t.y !== null && activeIn(t, f.year) && (t.kind === 'permanent' ? f.permanent : f.temporary))
       .map((t) => {
         const c = life.categories[t.category]
-        return { x: t.x!, y: t.y!, label: t.name, colour: c?.colour ?? '#9a978e', kind: t.kind,
+        return { x: t.x!, y: t.y!, label: t.name, colour: c?.colour ?? '#9a978e', kind: t.kind, id: t.id, icon: lifeIconSvg(t.category, 13),
+          badge: t.kind === 'temporary' ? `${t.year} only` : t.year === f.year ? 'new' : undefined,
           title: `${t.name} · ${c?.label ?? t.category} · ${t.kind === 'permanent' ? `from ${t.year}` : t.year}\n${t.place}${t.note ? `\n${t.note}` : ''}` }
       })
     const amen = !f.amenities ? [] : life.amenities.filter((a) => Math.hypot(a.x, a.y) < 600).map((a) => ({
       x: a.x, y: a.y, label: a.name, colour: AMENITY_TYPES[a.type]?.colour ?? '#9a978e', kind: 'amenity' as const,
+      id: `a:${a.type}:${a.name}:${a.x}:${a.y}`, icon: lifeIconSvg(a.type, 11, 2.6),
       title: `${a.name} · ${AMENITY_TYPES[a.type]?.label ?? a.type}${a.addr ? ` · ${a.addr}` : ''}`,
     }))
     v.setLifePins([...amen, ...events])

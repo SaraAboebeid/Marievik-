@@ -6,10 +6,12 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+import { inkOn } from '../lifeIcons'
 import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit, UrbanContext } from '../types'
 import { UNIT_BOX, detailGeometry, disposeTree, flat, localBox, prism, segmentBox } from './geometry'
+import { buildBarriers, buildFurniture, buildMassing, buildRoadPaint } from './context3d'
 import { dfColor, unitColor } from './colors'
 import { ATRIUM, CELL, CORES, ESCAPE_LIMIT, FRAME, H, NX, NY, TYPES, W, WALL_H, cellXY, subtract } from '../studio/engine'
 import type { Rect, StudioModel } from '../studio/engine'
@@ -96,6 +98,7 @@ export class Viewer {
   private labelGroup = new THREE.Group()
   private rhinoGroup = new THREE.Group()
   private lifeGroup = new THREE.Group()      // Urban scale: events, activities and amenities pinned on the site
+  private lifeSeen = new Set<string>()      // pins shown last time, so only newcomers animate in
   private buildings = new Map<string, BuildingView>()
   private site: SitePayload | null = null
   private center = new THREE.Vector2()
@@ -344,10 +347,18 @@ export class Viewer {
     const M = (color: string, rough = 0.95, extra: THREE.MeshStandardMaterialParameters = {}) =>
       new THREE.MeshStandardMaterial({ color, roughness: rough, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1, ...extra })
     const [x0, y0, x1, y1] = ctx.clip ?? [-400, -500, 450, 400]
-    surf([[[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]]], -0.05, new THREE.MeshStandardMaterial({ color: '#cfccc4', roughness: 1 }))
-    const outer = new THREE.Mesh(new THREE.RingGeometry(Math.hypot(x1 - x0, y1 - y0) * 0.55, 2600, 64, 1),
+    const disc = ctx.circle
+    if (disc) {   // the context covers a disc: ground to its edge, the landscape ring from there on
+      const ground = new THREE.Mesh(new THREE.CircleGeometry(disc[2], 128), new THREE.MeshStandardMaterial({ color: '#cfccc4', roughness: 1 }))
+      ground.position.set(disc[0], disc[1], -0.05)
+      ground.receiveShadow = true
+      g.add(ground)
+    } else {
+      surf([[[[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]]]], -0.05, new THREE.MeshStandardMaterial({ color: '#cfccc4', roughness: 1 }))
+    }
+    const outer = new THREE.Mesh(new THREE.RingGeometry(disc ? disc[2] - 0.5 : Math.hypot(x1 - x0, y1 - y0) * 0.55, 2600, 128, 1),
       new THREE.MeshStandardMaterial({ color: '#b9bcae', roughness: 1 }))
-    outer.position.set((x0 + x1) / 2, (y0 + y1) / 2, -0.08)
+    outer.position.set(disc ? disc[0] : (x0 + x1) / 2, disc ? disc[1] : (y0 + y1) / 2, -0.08)
     outer.receiveShadow = true
     g.add(outer)
     for (const w of ctx.water ?? []) surf(w.rings, -0.02, new THREE.MeshStandardMaterial({ color: '#3f5f73', roughness: 0.08, metalness: 0.35, envMapIntensity: 1.4 }))
@@ -356,12 +367,22 @@ export class Viewer {
     for (const gr of ctx.greens ?? []) byKind.set(gr.kind, [...(byKind.get(gr.kind) ?? []), ...gr.rings])
     for (const [k, rs] of byKind) surf(rs, 0.02, M(GREEN[k] ?? '#8aa86a'))
     for (const p of ctx.plazas ?? []) surf(p.rings, 0.03, M('#d6d0c4'))
+    for (const p of ctx.parking ?? []) surf(p.rings, 0.035, M('#76787b', 0.9))
     for (const r of ctx.roads ?? []) surf(r.rings, 0.04 + (r.z ?? 0), M(r.z ? '#6c6e72' : '#4e5054', 0.9), r.z ? 0.8 : 0)
     const PATH: Record<string, string> = { wood: '#9b7651', gravel: '#d6c7a2', paved: '#c9c3b7' }
     for (const p of ctx.paths ?? []) surf(p.rings, 0.06 + (p.z ?? 0), M(PATH[p.surface] ?? PATH.paved))
     for (const p of ctx.piers ?? []) surf(p.rings, 0.0, M('#8a6a48', 0.85), 0.4)
-    const nb = new THREE.MeshStandardMaterial({ color: '#e4e1da', roughness: 0.9 })
-    for (const b of ctx.buildings ?? []) surf(b.rings, 0, nb, b.h)
+    for (const p of ctx.platforms ?? []) surf(p.rings, p.z ?? 0, M('#bdb8ae', 0.9), 0.8)
+    if (ctx.massing?.length) {
+      // neighbouring buildings in detail: parts, colours, windows, pitched roofs (viewer/context3d.ts)
+      for (const o of buildMassing(ctx.massing)) g.add(o)
+    } else {
+      const nb = new THREE.MeshStandardMaterial({ color: '#e4e1da', roughness: 0.9 })
+      for (const b of ctx.buildings ?? []) surf(b.rings, 0, nb, b.h)
+    }
+    for (const o of buildBarriers(ctx.barriers ?? [])) g.add(o)
+    for (const o of buildRoadPaint(ctx.crossings ?? [], ctx.markings ?? [])) g.add(o)
+    for (const o of buildFurniture(ctx.furniture ?? {})) g.add(o)
     // rail: ballast strips
     for (const r of ctx.rail ?? []) {
       for (const ln of r.lines) {
@@ -419,7 +440,7 @@ export class Viewer {
       if (!needle.length) cones.visible = false
     }
     // street lamps
-    const lamps = ctx.lamps ?? []
+    const lamps = ctx.furniture?.lamp ? [] : ctx.lamps ?? []   // drawn with heads among the furniture when present
     if (lamps.length) {
       const pole = new THREE.CylinderGeometry(0.07, 0.09, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5)
       const inst = new THREE.InstancedMesh(pole, new THREE.MeshStandardMaterial({ color: '#3d4044', roughness: 0.6, metalness: 0.4 }), lamps.length)
@@ -1133,28 +1154,55 @@ export class Viewer {
     this.applyFocus(false)
   }
 
-  /** Urban scale: pins on the site — an event or activity (a labelled sticker; dashed when temporary) or an
-   *  amenity (a small dot, its name on hover). null clears them. */
-  setLifePins(pins: { x: number; y: number; label: string; colour: string; kind: 'permanent' | 'temporary' | 'amenity'; title: string }[] | null) {
+  /** Urban scale: pins on the site, one visual language per kind of life:
+   *  permanent → a flag planted in the ground (it stays), temporary → a balloon tied to the spot (it floats away
+   *  after its year), amenity → a round board-game token with its type's icon (name on hover).
+   *  Pins not on the map the last time pop in with a small animation. null clears them. */
+  setLifePins(pins: {
+    x: number; y: number; label: string; colour: string; kind: 'permanent' | 'temporary' | 'amenity'; title: string
+    id?: string; icon?: string; badge?: string
+  }[] | null) {
     this.invalidate()
     this.lifeGroup.children.forEach((c) => (c as CSS2DObject).element?.remove())
     this.lifeGroup.clear()
+    const seen = new Set<string>()
+    let n = 0
     for (const p of pins ?? []) {
+      const id = p.id ?? `${p.kind}:${p.label}:${p.x}:${p.y}`
+      seen.add(id)
       const el = document.createElement('div')
       el.title = p.title
-      if (p.kind === 'amenity') {
-        el.className = 'life-dot'
-        el.style.background = p.colour
+      el.className = `lp lp-${p.kind}${this.lifeSeen.has(id) ? '' : ' enter'}`
+      // a stable per-pin phase, so balloons and flags don't all bob in step
+      let h = 0
+      for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0
+      el.style.setProperty('--c', p.colour)
+      el.style.setProperty('--on', inkOn(p.colour))
+      el.style.setProperty('--phase', `${-(Math.abs(h) % 2400)}ms`)
+      el.style.setProperty('--d', `${p.kind === 'amenity' ? (n++ % 40) * 12 : 150 + (Math.abs(h) % 350)}ms`)
+      el.style.setProperty('--tilt', `${(Math.abs(h) % 2 ? 1 : -1) * (2 + (Math.abs(h) % 3))}deg`)
+      const icon = p.icon ?? ''
+      const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!))
+      const badge = p.badge ? `<em class="lp-badge">${esc(p.badge)}</em>` : ''
+      if (p.kind === 'permanent') {
+        el.innerHTML = `<div class="lp-in"><span class="lp-foot"></span><span class="lp-pole"></span><span class="lp-knob"></span>`
+          + `<span class="lp-flag"><b class="lp-ico">${icon}</b><span class="lp-name">${esc(p.label)}</span><span class="lp-check"></span>${badge}</span></div>`
+      } else if (p.kind === 'temporary') {
+        el.innerHTML = `<div class="lp-in"><span class="lp-foot"></span>`
+          + `<svg class="lp-string" width="14" height="30" viewBox="0 0 14 30"><path d="M7 0c-5 5 5 9 0 14s5 9 0 16" fill="none" stroke="#202020" stroke-width="1.6" stroke-linecap="round"/></svg>`
+          + `<span class="lp-bob"><span class="lp-balloon"><b class="lp-ico">${icon}</b></span><span class="lp-knot"></span>`
+          + `<span class="lp-ticket"><span class="lp-name">${esc(p.label)}</span>${badge}</span></span></div>`
       } else {
-        el.className = `life-pin ${p.kind}`
-        const dot = document.createElement('i')
-        dot.style.background = p.colour
-        el.append(dot, p.label)
+        el.innerHTML = `<div class="lp-in"><span class="lp-token">${icon}</span><span class="lp-tag">${esc(p.label)}</span></div>`
       }
       const o = new CSS2DObject(el)
-      o.position.set(p.x, p.y, p.kind === 'amenity' ? 1.5 : 8)
+      // flags and balloons stand on their spot (bottom-centre anchor); tokens sit centred on it
+      if (p.kind === 'amenity') o.center.set(0.5, 0.5)
+      else o.center.set(0.5, 1)
+      o.position.set(p.x, p.y, 1.5)
       this.lifeGroup.add(o)
     }
+    this.lifeSeen = seen
   }
 
   recolorUnits(colorFor: (u: Unit) => string | null) {

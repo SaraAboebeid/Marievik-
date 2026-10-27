@@ -1,28 +1,14 @@
 import type { Layer } from '../layers'
 
-const LABEL: Record<Layer, string> = { none: 'None', movement: 'Movement', fire: 'Fire escape', capacity: 'Capacity', vacancy: 'Vacancy' }
-const HINT: Record<Layer, string> = {
+// Labels/hints and the result legend for the explorer's site-wide layers (left panel, ui/LensPanel.tsx, when no
+// floor is open — a floor open shows that floor's own views instead, same picker, see LensPanel.tsx).
+export const LAYER_LABEL: Record<Layer, string> = { none: 'None', movement: 'Movement', fire: 'Fire escape', capacity: 'Capacity', vacancy: 'Vacancy' }
+export const LAYER_HINT: Record<Layer, string> = {
   none: 'No layer',
   movement: 'How busy each floor is at the peak, and trips to Liljeholmen station. On a B01 floor: people walking and the busiest routes.',
   fire: 'Longest escape walk against the 45 m limit (B01, drawn plans). On a B01 floor: escape distances and a JuPedSim evacuation.',
   capacity: 'People planned against the legal maximum, and whether every standards and safety check passes.',
-  vacancy: 'Vacancy per building in the chosen year of the 10-year district model.',
-}
-
-/** The explorer's layers, switchable at every scale. */
-export function LayerBar({ layer, setLayer, vacancy }: { layer: Layer; setLayer: (l: Layer) => void; vacancy: boolean }) {
-  const ids: Layer[] = ['none', 'movement', 'fire', 'capacity', ...(vacancy ? ['vacancy' as Layer] : [])]
-  return (
-    <nav className="flex items-center gap-0.5 rounded-lg border border-line bg-raised/95 p-1 text-[12.5px] shadow-sm" aria-label="Layers">
-      <span className="px-1.5 font-mono text-[10.5px] font-semibold uppercase tracking-wide text-ink-2">Layers</span>
-      {ids.map((id) => (
-        <button key={id} onClick={() => setLayer(id)} title={HINT[id]} aria-pressed={layer === id}
-          className={`rounded-md px-2.5 py-1 font-medium transition-colors ${layer === id ? 'bg-accent text-white' : 'text-ink-2 hover:text-ink'}`}>
-          {LABEL[id]}
-        </button>
-      ))}
-    </nav>
-  )
+  vacancy: "Today's real/placeholder vacancy per building, or the chosen year of the 10-year district model once you've run it.",
 }
 
 export const LAYER_LEGEND: Record<Exclude<Layer, 'none'>, { title: string; bins: { color: string; label: string }[] }> = {

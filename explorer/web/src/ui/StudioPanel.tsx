@@ -1,14 +1,13 @@
 import { useState, type ReactNode } from 'react'
 import { Badge, Card, Row, Section, Select, Slider, Stat, StatGrid } from './kit'
 import type { CompareRow, StudioMeta, StudioModel } from '../studio/engine'
-import type { Scenario } from '../studio/crowd'
 import type { StudioView } from '../viewer/Viewer'
 
-// On a studio floor the left panel holds what you change (layout, walls, generated plans, who comes in) and the
-// right panel what comes out of it (checks, a day on the floor, rooms, evacuation, tenancy), each in tabs.
+// On a studio floor the right panel holds what you change (layout, walls, generated plans, who comes in) above
+// what comes out of it (checks, a day on the floor, rooms, evacuation, tenancy), each in tabs. The lens you view
+// it through (furniture / capacity / rented-vacant / room use / fire escape / movement) lives in the left panel
+// (ui/LensPanel.tsx), alongside the site-wide layers — one picker, not two.
 
-const VIEWS: [StudioView, string][] = [['furniture', 'Furniture'], ['capacity', 'Capacity'], ['tenancy', 'Rented / vacant'], ['use', 'Room use'], ['fire', 'Fire escape'], ['move', 'Movement']]
-const SCENARIOS: [Scenario, string][] = [['day', 'Normal day'], ['arrive', 'Morning arrival'], ['lunch', 'Lunch']]
 const ksek = (n: number) => Math.round(n / 1000).toLocaleString('sv-SE')
 const msek = (n: number) => (n / 1e6).toLocaleString('sv-SE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 // what each server check rests on (explorer/studio/engine.py figures())
@@ -20,12 +19,17 @@ const CHECK_NOTE: Record<string, (m: StudioModel) => string> = {
   load: () => 'Legal maximum: room areas × occupancy density (BBR table; others are examples)',
 }
 
-function Seg<T extends string>({ value, options, onChange }: { value: T; options: [T, string][]; onChange: (v: T) => void }) {
+/** A row of mutually-exclusive buttons, the top bar's lens picker. */
+export function Seg<T extends string>({ value, options, onChange, hint, wrapClass }: {
+  value: T; options: [T, string][]; onChange: (v: T) => void; hint?: Partial<Record<T, string>>; wrapClass?: string
+}) {
   return (
-    <div className="flex flex-wrap gap-0.5 rounded-md border-2 border-edge p-0.5">
+    <div className={wrapClass ?? 'flex flex-wrap gap-0.5 rounded-md border-2 border-edge p-0.5'}>
       {options.map(([id, label]) => (
-        <button key={id} type="button" onClick={() => onChange(id)} aria-pressed={value === id}
-          className={`rounded px-2 py-0.5 text-[12px] font-semibold ${value === id ? 'bg-accent text-white' : 'text-ink-2 hover:text-ink'}`}>{label}</button>
+        <button key={id} type="button" onClick={() => onChange(id)} title={hint?.[id]} aria-pressed={value === id}
+          className={`rounded-md px-3 py-1 text-[12px] font-semibold transition-[transform,box-shadow,background-color] motion-reduce:transition-none ${
+            value === id ? 'bg-coral text-[#202020] shadow-[2px_2px_0_var(--color-edge)] -translate-y-px' : 'text-ink-2 hover:bg-sunken hover:text-ink'
+          }`}>{label}</button>
       ))}
     </div>
   )
@@ -58,18 +62,18 @@ export interface CapacityState {
   rows: CompareRow[] | null
 }
 
-type ChangeTab = 'layout' | 'walls' | 'plans' | 'people'
-const CHANGE_TABS: [ChangeTab, string][] = [['layout', 'Layout'], ['walls', 'Walls'], ['plans', 'Plans'], ['people', 'People']]
+type ChangeTab = 'layout' | 'walls' | 'people'
+const CHANGE_TABS: [ChangeTab, string][] = [['layout', 'Layout'], ['walls', 'Walls'], ['people', 'People']]
 
 /** Left panel on a studio floor: everything you can change. Pick a layout (or compare them all), move its walls
- *  (or let the search fit the most people), pick a generated plan, set who comes in. */
-export function StudioChangePanel({ model, meta, floorLabel, layout, layouts, setLayout, setParam, onReset, timelineShown, onTimeline,
-  capacity, onMaximise, onCompare, onPickRow, plans, people }: {
+ *  (or let the search fit the most people), set who comes in. Generating new plans and the 10-year timeline
+ *  live in the left panel instead (ui/FloorInfoPanel.tsx) - primary actions, not a third tab here. */
+export function StudioChangePanel({ model, meta, floorLabel, layout, layouts, setLayout, setParam, onReset,
+  capacity, onMaximise, onCompare, onPickRow, people }: {
   model: StudioModel; meta: StudioMeta; floorLabel: string
   layout: string; layouts: string[]; setLayout: (id: string) => void; setParam: (key: string, v: number) => void; onReset: () => void
-  timelineShown: boolean; onTimeline: () => void
   capacity: CapacityState; onMaximise: () => void; onCompare: () => void; onPickRow: (r: CompareRow) => void
-  plans: ReactNode; people: ReactNode
+  people: ReactNode
 }) {
   const L = model.layout
   const [tab, setTab] = useTab('mvx-studio-change-tab', CHANGE_TABS)
@@ -86,10 +90,6 @@ export function StudioChangePanel({ model, meta, floorLabel, layout, layouts, se
 
       {tab === 'layout' && (
         <Section id="studio-layout" title="Layouts for this floor">
-          <button type="button" onClick={onTimeline} aria-pressed={timelineShown}
-            className={`mb-2.5 w-full rounded-md border-2 border-edge px-2 py-1 text-[12.5px] font-semibold ${timelineShown ? 'bg-surface' : 'bg-coral text-[#202020]'}`}>
-            {timelineShown ? 'Hide the 10-year timeline' : 'Show the 10-year timeline'}
-          </button>
           <p className="mb-2 text-[12px] leading-snug text-ink-2">
             Every drawn layout this floor can take, each with its walls placed for the most people, and what changing to it would cost. Click one to use it.
           </p>
@@ -157,19 +157,51 @@ export function StudioChangePanel({ model, meta, floorLabel, layout, layouts, se
         </Section>
       )}
 
-      {tab === 'plans' && plans}
       {tab === 'people' && people}
     </>
+  )
+}
+
+/** Left panel on a studio floor, top: this floor's own headline numbers and check status - the same
+ *  "quick status" pattern as the building-scale Key Figures card, scoped to one floor. */
+export function FloorInfo({ model, floorLabel }: { model: StudioModel; floorLabel: string }) {
+  const f = model.fig, L = model.layout, office = L.use === 'office' || L.use === 'cowork'
+  const failed = f.checks.filter((c) => !c.ok)
+  return (
+    <Card title={`${floorLabel} · this floor`} right={<Badge tone={failed.length ? 'serious' : 'good'}>{failed.length ? `${failed.length} check${failed.length > 1 ? 's' : ''}` : 'all checks pass'}</Badge>}>
+      <StatGrid>
+        <Stat label="gross floor area" value={f.gfa.toLocaleString('sv-SE')} unit="m²" />
+        <Stat label="legal maximum (fire)" value={f.designLoad} />
+        {office ? (
+          <>
+            <Stat label="workplaces (desks)" value={f.workDesks} />
+            <Stat label={L.deskRatio ? `people at ${L.deskRatio} desks per person` : 'people'} value={f.staff} />
+          </>
+        ) : (
+          <>
+            <Stat label={L.use === 'ground' ? 'visitor and café seats' : 'guest seats'} value={f.guests} />
+            <Stat label="staff desks" value={f.workDesks} />
+          </>
+        )}
+      </StatGrid>
+      {failed.length > 0 && (
+        <ul className="mt-2.5 space-y-1">
+          {failed.map((c) => <li key={c.id} className="text-[12px] text-serious">✗ {c.text}</li>)}
+        </ul>
+      )}
+    </Card>
   )
 }
 
 type ResultTab = 'checks' | 'day' | 'rooms' | 'evac' | 'tenancy'
 const RESULT_TABS: [ResultTab, string][] = [['checks', 'Checks'], ['day', 'A day'], ['rooms', 'Rooms'], ['evac', 'Evacuation'], ['tenancy', 'Tenancy']]
 
-/** Right panel on a studio floor: what the floor as laid out holds and how it performs. */
-export function StudioPanel({ model, view, setView, floorLabel, scenario, setScenario, heat, setHeat, crowdNote, loading, day, evac, tenancy }: {
-  model: StudioModel; view: StudioView; setView: (v: StudioView) => void; floorLabel: string
-  scenario: Scenario; setScenario: (s: Scenario) => void; heat: boolean; setHeat: (v: boolean) => void; crowdNote: string; loading: boolean
+/** Right panel on a studio floor: what the floor as laid out holds and how it performs. The lens it's shown
+ *  through (furniture / capacity / rented-vacant / room use / fire escape / movement) is picked in the left
+ *  panel; Evacuation and Tenancy below switch the lens to match what they show. */
+export function StudioPanel({ model, setView, floorLabel, loading, day, evac, tenancy }: {
+  model: StudioModel; setView: (v: StudioView) => void; floorLabel: string
+  loading: boolean
   day: ReactNode; evac: ReactNode; tenancy: ReactNode   // the simulated day, evacuation and who rents what, each on its own tab
 }) {
   const f = model.fig, L = model.layout, office = L.use === 'office' || L.use === 'cowork'
@@ -182,16 +214,6 @@ export function StudioPanel({ model, view, setView, floorLabel, scenario, setSce
   return (
     <>
       <Card title={`${floorLabel} · results`} right={<Badge tone="warn">{loading ? 'updating…' : 'mock-up · example data'}</Badge>}>
-        <span className="mb-1 block text-[11px] text-muted">On the plan</span>
-        <div className="mb-2.5"><Seg value={view} options={VIEWS} onChange={setView} /></div>
-        {view === 'move' && (
-          <div className="mb-2.5 flex flex-wrap items-center gap-2">
-            <Seg value={scenario} options={SCENARIOS} onChange={setScenario} />
-            <button type="button" onClick={() => setHeat(!heat)} aria-pressed={heat}
-              className={`rounded-md border-2 border-edge px-2 py-0.5 text-[12px] font-semibold ${heat ? 'bg-coral text-[#202020]' : 'bg-surface'}`}>Busy routes</button>
-            <span className="text-[11.5px] text-muted">{crowdNote}</span>
-          </div>
-        )}
         <Tabs value={tab} options={RESULT_TABS} onChange={setTab} label="Results" />
       </Card>
 

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { fmt, fmt1 } from '../api'
 import type { Distribution, Figure, Figures } from '../types'
 import { STATUS_TAG } from './ProfileKpis'
-import { Badge } from './kit'
+import { Card } from './kit'
 
 /** One colour per space category, the same on every floor and in every scenario — AMF Marievik's own
  *  palette (amffastigheter.se/marievik/): brand blue, coral, terracotta, teal, pink, green. */
@@ -12,8 +12,6 @@ const CAT_COLOR: Record<string, string> = {
   'Hotel rooms': '#943b2e', 'Classrooms': '#4aa3b5', 'Atrium': '#e5f0f5', 'Other': '#ebe8d7',
 }
 
-const title = 'font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink'
-
 function value(f: Figure) {
   if (f.unit === 'SEK') return [fmt1((f.value as number) / 1e6), 'MSEK']
   if (f.unit === 'kg CO₂e') return [fmt((f.value as number) / 1000), 't CO₂e']
@@ -22,7 +20,7 @@ function value(f: Figure) {
   return [fmt(f.value as number), f.unit]
 }
 
-function Tile({ f }: { f: Figure }) {
+export function Tile({ f }: { f: Figure }) {
   const [v, u] = value(f)
   const tag = STATUS_TAG[f.status]
   return (
@@ -77,55 +75,41 @@ function Donut({ d }: { d: Distribution }) {
   )
 }
 
-/** The Design panel's right side: headline figures, space distribution, flexibility. */
-export function KeyFigures({ data, loading }: { data: Figures | null; loading: boolean }) {
+const liveBadge = (loading: boolean) => (
+  <span className="flex items-center gap-1.5 rounded-md bg-good-bg px-2 py-0.5 text-[11.5px] font-medium text-good">
+    <span className={`h-1.5 w-1.5 rounded-full bg-good ${loading ? 'animate-pulse' : ''}`} />{loading ? 'Updating' : 'Live update'}
+  </span>
+)
+
+/** Building level, top of the left panel: the headline numbers — everything else about the building
+ *  (cost, carbon, flexibility) is secondary to these. Vacancy is not repeated here: Building Overview,
+ *  right below this card, already gives it in detail, per floor. */
+export function HeadlineFigures({ data, loading }: { data: Figures | null; loading: boolean }) {
   if (!data) {
-    return <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 text-[12.5px] text-ink-2 shadow-sm">Calculating key figures…</section>
+    return <Card title="Key figures">Calculating…</Card>
   }
   const f = data.figures
-  const adapt = String(f.adaptability.value)
-  const day = f.daylight_access.value as number
   return (
-    <section className="mb-2.5 rounded-xl border border-line bg-raised/97 px-4 py-3.5 shadow-sm">
-      <div className="mb-3 flex items-center justify-between">
-        <span className={title}>Key figures</span>
-        <span className="flex items-center gap-1.5 rounded-md bg-good-bg px-2 py-0.5 text-[11.5px] font-medium text-good">
-          <span className={`h-1.5 w-1.5 rounded-full bg-good ${loading ? 'animate-pulse' : ''}`} />{loading ? 'Updating' : 'Live update'}
-        </span>
-      </div>
+    <Card title="Key figures" right={liveBadge(loading)}>
       <div className="grid grid-cols-2 gap-2">
-        <Tile f={f.gfa_m2} /><Tile f={f.usable_m2} />
-        <Tile f={f.occupancy} /><Tile f={f.capex_sek} />
-        <Tile f={f.upfront_kgco2e} /><Tile f={f.utilization} />
+        <Tile f={f.gfa_m2} /><Tile f={f.usable_m2} /><Tile f={f.occupancy} />
       </div>
+    </Card>
+  )
+}
 
-      {(['ground', 'typical'] as const).map((k) => (
-        <div key={k} className="mt-4 border-t border-line pt-3.5">
-          <div className={`${title} mb-2.5`}>Space distribution – {data.distribution[k].label}</div>
+/** Building level: the ground and typical floor's space distribution, between the rented/vacant bars and
+ *  the rest of the key figures (cost, carbon, flexibility). */
+export function SpaceDistribution({ data }: { data: Figures | null }) {
+  if (!data) return null
+  return (
+    <Card title="Space distribution">
+      {(['ground', 'typical'] as const).map((k, i) => (
+        <div key={k} className={i === 0 ? '' : 'mt-4 border-t border-line pt-3.5'}>
+          <div className="mb-2.5 text-[11.5px] text-ink-2">{data.distribution[k].label}</div>
           <Donut d={data.distribution[k]} />
         </div>
       ))}
-
-      <div className="mt-4 border-t border-line pt-3.5">
-        <div className={`${title} mb-2.5`}>Sustainability & flexibility</div>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="rounded-lg border border-line px-3 py-2.5" title={f.adaptability.note}>
-            <div className="text-[12px] text-ink-2">{f.adaptability.label}</div>
-            <div className="mt-1 flex items-center justify-between">
-              <span className="text-[28px] font-semibold leading-none">{adapt}</span>
-              <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium">{'AB'.includes(adapt) ? 'Flexible' : 'Rigid'}</span>
-            </div>
-            <div className="mt-2 h-1.5 rounded bg-sunken"><div className="h-full rounded bg-[#03b05f]" style={{ width: `${Math.max(10, 100 - 20 * 'ABCDE'.indexOf(adapt))}%` }} /></div>
-            <div className="mt-1.5"><Badge tone="warn">{STATUS_TAG.placeholder.label}</Badge></div>
-          </div>
-          <div className="rounded-lg border border-line px-3 py-2.5" title={f.daylight_access.note}>
-            <div className="flex items-center justify-between text-[12px] text-ink-2">{f.daylight_access.label}<span className="text-[#dfa00c]" aria-hidden>☀</span></div>
-            <div className="mt-1 text-[28px] font-semibold leading-none">{Math.round(day * 100)}%</div>
-            <div className="mt-2 h-1.5 rounded bg-sunken"><div className="h-full rounded bg-[#7fa067]" style={{ width: `${day * 100}%` }} /></div>
-            <div className="mt-1.5 text-[10.5px] leading-tight text-muted">usable area within 6 m of the facade</div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </Card>
   )
 }

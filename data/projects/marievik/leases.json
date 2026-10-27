@@ -46,7 +46,19 @@
     }
   },
   "other_buildings": {
-    "_note": "No suites or leases yet for the other buildings: an example share of each floor is shown as vacant (0, 0, 15, 30, 50 or 100 %), fixed per building and floor, so the overview reads like the real thing.",
-    "lettable_share_of_gfa": 0.85
+    "_note": "No rent roll yet for B04-B13 (they are context buildings, not AMF's own). context_occupancy below gives each of them a made-up but plausible per-floor vacant share instead of a single site-wide guess: offices around Stockholm's current going vacancy rate (4-18%, ground floor more volatile) with per-floor noise; residential near-fully-let (0-3%, Swedish rental housing runs close to zero vacancy) with at most one floor showing a between-tenants gap. Generated once by a seeded script (not re-run at request time) so it is stable to look at; replace a building's row with real figures as they arrive, same shape (one share per floor, 0 = fully let, 1 = fully vacant). B02 and B03 are deliberately missing here now: AMF's real schedule (data/projects/marievik/phasing.json) covers them instead (M19 and M26) — not yet wired into this fallback since its exact dates are unconfirmed; floor_tenancy() currently falls back to the old hashed guess for B02/B03 until that is resolved.",
+    "lettable_share_of_gfa": 0.85,
+    "context_occupancy": {
+      "B04": [0.22, 0.06, 0.12, 0.02, 0.05, 0.09, 0.07, 0.04, 0.01],
+      "B05": [0.11, 0.0, 0.02, 0.08, 0.08, 0.04, 0.01],
+      "B06": [0.0, 0.13, 0.03, 0.06, 0.07, 0.01, 0.05],
+      "B07": [0.19, 0.12, 0.23, 0.15, 0.12, 0.06, 0.13, 0.09, 0.09],
+      "B08": [0.27, 0.17, 0.18, 0.16, 0.12, 0.09, 0.17],
+      "B09": [0.11, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03],
+      "B10": [0.0, 0.0, 0.0, 0.02, 0.08, 0.0, 0.0, 0.0],
+      "B11": [0.01, 0.0, 0.0, 0.06, 0.0, 0.01, 0.01, 0.0],
+      "B12": [0.03, 0.02, 0.03, 0.01, 0.02, 0.03, 0.02, 0.08],
+      "B13": [0.08, 0.01, 0.0, 0.01, 0.0, 0.01, 0.01, 0.01]
+    }
   }
 }

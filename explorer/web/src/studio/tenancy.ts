@@ -6,5 +6,8 @@ export interface Suite {
   id: string; label: string; r: Rect; area: number; shared: boolean; tenant: string | null; sector: string | null
   rent: number | null; leaseStart: number | null; leaseEnd: number | null; colour: string
 }
-export interface FloorTenancy { floor: number; leasable: number; rented: number; vacant: number; shared: number; suites: Suite[]; example: boolean }
+export interface FloorTenancy {
+  floor: number; leasable: number; rented: number; vacant: number; shared: number; suites: Suite[]; example: boolean
+  phase?: 'vacated'; phase_note?: string
+}
 export const VACANT_COLOR = '#9a978e'

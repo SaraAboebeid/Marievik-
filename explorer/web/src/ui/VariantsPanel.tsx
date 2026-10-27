@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Badge, Section, Select } from './kit'
+import { Badge, Card } from './kit'
 import type { VariantRow, Variants } from '../studio/engine'
 
 // the KPIs a plan is scored on: key, label, shown as a share (×100 %), +1 more is better / -1 less is better
@@ -13,11 +13,6 @@ const KPIS: [string, string, boolean, number][] = [
   ['walkPerDay', 'Walking per person per day (m)', false, -1],
 ]
 const DEF = Object.fromEntries(KPIS.map((k) => [k[0], k]))
-const WHY: Record<string, string> = {
-  wc: 'too few WCs', escape: 'escape walk too long', exit: 'a stair overloaded', reach: 'seats cannot be reached',
-  load: 'over the legal maximum', accessible_wc: 'no accessible WC', door: 'a room without a door', desks: 'no desks',
-}
-const SIZES: [string, string][] = [['100', '100 plans'], ['300', '300 plans'], ['500', '500 plans']]
 
 const fmt = (key: string, v: number | null | undefined) => {
   if (v === null || v === undefined) return '–'
@@ -87,102 +82,54 @@ function Scatter({ rows, x, y, current, onOpen }: { rows: VariantRow[]; x: strin
   )
 }
 
-/** Floor plans generated within B01's fixed envelope, each checked and run through simulated working days. */
-export function VariantsPanel({ data, busy, error, onGenerate, current, onOpen, ground }: {
+/** One button: generate plans inside this floor's fixed envelope, check each one and run simulated working days
+ *  on the ones that pass. Then the best few (click to open one here) and, folded away, the trade-off curve. */
+export function GeneratePlans({ data, busy, error, onGenerate, current, onOpen, ground }: {
   data: Variants | null; busy: boolean; error: string | null; onGenerate: (n: number) => void; current: string; onOpen: (id: string) => void
   ground: boolean
 }) {
-  const [n, setN] = useState('300')
-  const [x, setX] = useState('staff')
-  const [y, setY] = useState('meetDenied')
-  const [sortKey, setSortKey] = useState('staff')
-  const ok = data ? data.rows.filter((r) => r.valid) : []
-  const front = ok.filter((r) => r.generated && r.pareto)
-  const dir = DEF[sortKey]?.[3] ?? 1
-  const list = [...front].sort((a, c) => dir * ((c.kpi[sortKey] ?? 0) - (a.kpi[sortKey] ?? 0))).slice(0, 12)
-  const shown = data?.rows.find((r) => r.id === current)
-  const opts = KPIS.map(([k, label]) => [k, label] as [string, string])
+  const [curve, setCurve] = useState(false)
   if (ground) return (
-    <Section id="studio-variants" title="Generated plans">
-      <p className="text-[12px] leading-snug text-ink-2">
-        The plan generator lays out the upper floors so far. Open floor 1 to 6 to generate plans there; the ground floor, with its entrance, loading and service rooms, comes later.
-      </p>
-    </Section>
+    <Card title="Generate plans">
+      <p className="text-[12px] leading-snug text-ink-2">The generator lays out the upper floors so far — open floor 1 to 6 to generate plans there.</p>
+    </Card>
   )
+  const ok = data ? data.rows.filter((r) => r.valid) : []
+  const top = ok.filter((r) => r.generated && r.pareto).sort((a, c) => (c.kpi.staff ?? 0) - (a.kpi.staff ?? 0)).slice(0, 5)
   return (
-    <Section id="studio-variants" title="Generated plans" right={<Badge tone="warn">{busy ? 'generating…' : 'uncalibrated'}</Badge>}>
-      <p className="mb-2 text-[12px] leading-snug text-ink-2">
-        Random plans inside this floor's fixed envelope: cores, atrium, stairs and WC blocks stay; rooms go along the façades and beside the cores, the rest is open plan.
-        Each plan gets the same safety and standards checks as a drawn layout, and the ones that pass get simulated working days. Click a plan to open it here.
-      </p>
-      <div className="mb-2 flex items-center gap-1.5">
-        <div className="w-32"><Select value={n} onChange={setN} options={SIZES} disabled={busy} /></div>
-        <button type="button" onClick={() => onGenerate(+n)} disabled={busy}
-          className="rounded-md border-2 border-edge bg-coral px-2.5 py-1 text-[12.5px] font-semibold text-[#202020] disabled:opacity-50">
-          {busy ? 'Generating…' : data ? 'Generate again' : 'Generate plans'}
-        </button>
-      </div>
-      {error && <p className="mb-2 text-[12px] text-serious">{error}</p>}
+    <Card title="Generate plans" right={<Badge tone="warn">{busy ? 'generating…' : 'uncalibrated'}</Badge>}>
+      <button type="button" onClick={() => onGenerate(300)} disabled={busy}
+        className="w-full rounded-md border-2 border-edge bg-coral px-3 py-1.5 text-[13px] font-semibold text-[#202020] shadow-[3px_3px_0_var(--color-edge)] disabled:opacity-50">
+        {busy ? 'Generating…' : data ? 'Generate again' : 'Generate 300 plans'}
+      </button>
+      {error && <p className="mt-2 text-[12px] text-serious">{error}</p>}
       {data && (
         <>
-          <p className="mb-1.5 text-[12px] text-ink">
-            <b>{data.meta.n}</b> plans in {data.meta.seconds} s: <b>{data.meta.valid}</b> pass every check, <b>{data.meta.front}</b> are on the trade-off front
-            (no other plan is better on people, daylight, meeting rooms, focus rooms and walking all at once).
-          </p>
-          {Object.keys(data.meta.rejected).length > 0 && (
-            <p className="mb-2 text-[11.5px] text-muted">
-              Rejected for: {Object.entries(data.meta.rejected).map(([k, v]) => `${WHY[k] ?? k} (${v})`).join(', ')}. A plan can fail more than one check.
-            </p>
-          )}
-          <div className="mb-1 grid grid-cols-2 gap-1.5 text-[11px] text-ink-2">
-            <label><span className="mb-0.5 block">Across</span><Select value={x} onChange={setX} options={opts} /></label>
-            <label><span className="mb-0.5 block">Up</span><Select value={y} onChange={setY} options={opts} /></label>
-          </div>
-          <Scatter rows={ok} x={x} y={y} current={current} onOpen={onOpen} />
-          <p className="mb-2.5 flex flex-wrap gap-x-3 text-[11px] text-muted">
-            <span><span className="mr-1 inline-block h-2 w-2 rounded-full bg-accent align-middle" />on the front</span>
-            <span><span className="mr-1 inline-block h-2 w-2 rounded-full bg-muted/40 align-middle" />passes</span>
-            <span><span className="mr-1 inline-block h-2 w-2 border border-ink align-middle" />drawn layouts</span>
-          </p>
-          {shown && (
-            <div className="mb-2.5 rounded-md border-2 border-line bg-sunken px-2.5 py-1.5 text-[12px]">
-              <b>On show: {shown.name}</b>{shown.pareto ? ' · on the trade-off front' : ''}
-              <div className="mt-1 grid grid-cols-2 gap-x-3 text-[11.5px] text-ink-2">
-                {['staff', 'daylitDesks', 'meetDenied', 'focusDenied', 'walkPerDay', 'lunchCrowding'].map((k) => (
-                  <span key={k} className="flex justify-between gap-2"><span className="truncate">{DEF[k][1]}</span><span className="tabular-nums text-ink">{fmt(k, shown.kpi[k])}</span></span>
-                ))}
-              </div>
-            </div>
-          )}
-          <label className="mb-1 block text-[11px] text-ink-2">
-            <span className="mb-0.5 block">The front, best first by</span>
-            <Select value={sortKey} onChange={setSortKey} options={opts} />
-          </label>
-          <table className="w-full text-[11.5px]">
+          <p className="mt-2 text-[12px] text-ink"><b>{data.meta.valid}</b> of {data.meta.n} pass every check · <b>{data.meta.front}</b> on the trade-off front</p>
+          <table className="mt-1.5 w-full text-[11.5px]">
             <thead>
               <tr className="text-left font-mono text-[10px] uppercase text-muted">
-                <th className="pb-1">Plan</th><th className="pb-1 text-right">People</th><th className="pb-1 text-right">Daylit</th>
-                <th className="pb-1 text-right">No room</th><th className="pb-1 text-right">{sortKey === 'staff' ? 'Walk m' : 'Sorted by'}</th>
+                <th className="pb-1">Plan</th><th className="pb-1 text-right">People</th><th className="pb-1 text-right">Daylit</th><th className="pb-1 text-right">No room</th>
               </tr>
             </thead>
             <tbody>
-              {list.map((r) => (
+              {top.map((r) => (
                 <tr key={r.id} onClick={() => onOpen(r.id)} title="Open this plan on the floor"
                   className={`cursor-pointer border-t border-line hover:bg-sunken ${r.id === current ? 'font-semibold' : ''}`}>
                   <td className="py-0.5">{short(r)}</td>
                   <td className="text-right tabular-nums">{fmt('staff', r.kpi.staff)}</td>
                   <td className="text-right tabular-nums">{fmt('daylitDesks', r.kpi.daylitDesks)}</td>
                   <td className="text-right tabular-nums">{fmt('meetDenied', r.kpi.meetDenied)}</td>
-                  <td className="text-right tabular-nums">{sortKey === 'staff' ? fmt('walkPerDay', r.kpi.walkPerDay) : fmt(sortKey, r.kpi[sortKey])}</td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className="mt-2 text-[11px] leading-snug text-muted">
-            Daylight counts desks within 6 m of the façade or 4.5 m of the atrium. Occupancy rates are assumptions until there is sensor and booking data, so compare plans with each other rather than reading the numbers as forecasts.
-          </p>
+          <button type="button" onClick={() => setCurve((c) => !c)} className="mt-2 text-[12px] font-medium text-ink underline-offset-2 hover:underline">
+            {curve ? 'Hide the trade-off curve' : 'Show the trade-off curve'}
+          </button>
+          {curve && <Scatter rows={ok} x="staff" y="meetDenied" current={current} onOpen={onOpen} />}
         </>
       )}
-    </Section>
+    </Card>
   )
 }

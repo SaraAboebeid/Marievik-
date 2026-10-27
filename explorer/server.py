@@ -40,6 +40,7 @@ import tempfile
 import threading
 import time
 import uuid
+from datetime import date
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -47,7 +48,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, timeline
+from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, timeline, urban_life
 from .studio import capacity as studio_capacity, engine as studio, generator as studio_generator, layouts as studio_layouts, money as studio_money, occupancy as studio_occupancy, tenancy as studio_tenancy
 
 HERE = Path(__file__).resolve().parent
@@ -103,6 +104,12 @@ def api_context():
 @app.get("/api/urban")
 def api_urban():
     return {"buildings": site().urban_summary(), "radius_m": site().URBAN_RADIUS_M}
+
+
+@app.get("/api/urban/life")
+def api_urban_life(project: str = "marievik"):
+    """AMF's events and activities timeline (2024-2030) and the amenities around the site, in model coordinates."""
+    return urban_life.site_life(site(), project)
 
 
 @app.post("/api/building/{bid}")
@@ -431,8 +438,12 @@ class TenancyBody(BaseModel):
 
 @app.post("/api/tenancy")
 def api_tenancy(body: TenancyBody):
-    """Who rents which suite on each floor (data/projects/<project>/leases.json), or example occupancy."""
-    return {"floors": [studio_tenancy.floor_tenancy(body.project, body.building, int(f["floor"]), float(f.get("gfa", 0))) for f in body.floors]}
+    """Who rents which suite on each floor (data/projects/<project>/leases.json), or example occupancy -
+    overridden by AMF's real phasing schedule (data/projects/<project>/phasing.json) for a building that is,
+    this calendar year, inside its vacate -> move-in window."""
+    year = date.today().year
+    return {"floors": [studio_tenancy.floor_tenancy(body.project, body.building, int(f["floor"]), float(f.get("gfa", 0)), today=year)
+                       for f in body.floors]}
 
 
 class TimelineBody(BaseModel):

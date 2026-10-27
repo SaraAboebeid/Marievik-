@@ -7,12 +7,12 @@ export const CARD_TITLE = 'font-mono text-[11px] font-semibold uppercase trackin
 
 export function Card({ title, right, children }: { title: string; right?: ReactNode; children: ReactNode }) {
   return (
-    <section className="mb-3 overflow-hidden rounded-xl border bg-raised shadow-sm">
-      <div className="checker-band flex items-center justify-between gap-2 px-4 pb-3 pt-2">
-        <h4 className={CARD_TITLE}>{title}</h4>
+    <section className="mb-2.5 overflow-hidden rounded-xl border bg-raised shadow-sm">
+      <div className="checker-band flex items-center justify-between gap-2 px-3.5 pb-2.5 pt-1.5">
+        <h4 className={`min-w-0 truncate ${CARD_TITLE}`} title={title}>{title}</h4>
         {right}
       </div>
-      <div className="px-4 py-3">{children}</div>
+      <div className="px-3.5 py-2.5">{children}</div>
     </section>
   )
 }
@@ -32,8 +32,8 @@ export function Section({ id, title, right, children, defaultOpen = true }: {
     })
   }
   return (
-    <section className="mb-3 overflow-hidden rounded-xl border bg-raised shadow-sm">
-      <div className={`checker-band flex items-center justify-between gap-2 px-4 pb-3 pt-2 ${open ? '' : '-mb-[2px]'}`}>
+    <section className="mb-2.5 overflow-hidden rounded-xl border bg-raised shadow-sm">
+      <div className={`checker-band flex items-center justify-between gap-2 px-3.5 pb-2.5 pt-1.5 ${open ? '' : '-mb-[2px]'}`}>
         <button type="button" onClick={toggle} aria-expanded={open}
           className="flex min-w-0 flex-1 items-center gap-2 text-left">
           <span className={`inline-block text-[10px] text-ink transition-transform ${open ? 'rotate-90' : ''}`} aria-hidden>▶</span>
@@ -41,7 +41,7 @@ export function Section({ id, title, right, children, defaultOpen = true }: {
         </button>
         {right}
       </div>
-      {open && <div className="px-4 py-3">{children}</div>}
+      {open && <div className="px-3.5 py-2.5">{children}</div>}
     </section>
   )
 }

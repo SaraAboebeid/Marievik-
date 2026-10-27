@@ -91,10 +91,7 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
   ]
   return (
     <>
-      <section className="mb-2.5 rounded-xl border-2 border-accent bg-raised/97 px-4 py-3.5 shadow-sm">
-        <div className="mb-0.5 flex items-center justify-between gap-2">
-          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Selected building · {b.id}</span>
-        </div>
+      <Card title={`Selected building · ${b.id}`}>
         <h3 className="text-[16px] font-semibold leading-snug">{b.name}</h3>
         <p className="mb-2.5 text-[12.5px] text-ink-2">{useOf(b, sb)}</p>
         <StatGrid>
@@ -136,7 +133,7 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
             </table>
           )}
         </div>
-      </section>
+      </Card>
 
       {k.blockers.length > 0 && (
         <Card title={`Blockers (${k.blockers.length})`}>
@@ -232,8 +229,7 @@ function FloorInfo(p: Props & { b: BuildingPayload }) {
         </Card>
       ) : (
         <>
-          <section className="mb-2.5 rounded-xl border-2 border-accent bg-raised/97 px-4 py-3.5 shadow-sm">
-            <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Floor {floor.index} · {b.id}</span>
+          <Card title={`Floor ${floor.index} · ${b.id}`}>
             <h3 className="mb-2.5 text-[15px] font-semibold leading-snug">
               {floor.use_label}{floor.added && <span className="ml-1.5 align-middle"><Badge tone="warn">added floor</Badge></span>}
             </h3>
@@ -244,7 +240,7 @@ function FloorInfo(p: Props & { b: BuildingPayload }) {
               <Stat label="Upfront carbon" value={fmt(k.upfront_kgco2e / 1000)} unit="t CO₂e" />
             </StatGrid>
             <p className="mt-2 text-[11.5px] text-ink-2">PageUp / PageDown: floor above / below. Click a unit to open it.</p>
-          </section>
+          </Card>
           <Section id="f-details" title="Floor details" defaultOpen={false}>
             {Object.entries(k.unit_types).map(([n, c]) => <Row key={n} label={n} value={c} sub />)}
             <Row label="Usable (in units)" value={`${fmt(k.usable_m2)} m² · ${pct(k.efficiency)}`} />

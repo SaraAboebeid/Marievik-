@@ -28,8 +28,9 @@ export function BuildingOverview({ name, floors, onFloor }: { name: string; floo
   const maxUse = Math.max(1, ...uses.map((u) => u[1]))
   const rented = floors.reduce((a, f) => a + f.ten.rented, 0), vacant = floors.reduce((a, f) => a + f.ten.vacant, 0)
   const leasable = rented + vacant
+  const vacated = floors.some((f) => f.ten.phase === 'vacated')
   return (
-    <Card title={`${name} · overview`} right={<Badge tone="warn">tenancy: example data</Badge>}>
+    <Card title={`${name} · overview`} right={vacated ? <Badge tone="serious">AMF schedule: vacated</Badge> : undefined}>
       <div className="mb-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.08em] text-ink-2">Floor area by use</div>
       <div className="mb-3 space-y-1.5">
         {uses.map(([u, a]) => (
@@ -75,8 +76,9 @@ export function BuildingOverview({ name, floors, onFloor }: { name: string; floo
 
 /** Floor level: who rents which part of this floor, and what is vacant. */
 export function FloorTenancyCard({ ten, floorLabel }: { ten: FloorTenancy; floorLabel: string }) {
+  const vacated = ten.phase === 'vacated'
   return (
-    <Card title={`${floorLabel} · rented and vacant`} right={<Badge tone="warn">example data</Badge>}>
+    <Card title={`${floorLabel} · rented and vacant`} right={<Badge tone={vacated ? 'serious' : 'warn'}>{vacated ? 'AMF schedule: vacated' : 'example data'}</Badge>}>
       <div className="mb-2 grid grid-cols-3 gap-1.5">
         <div className="rounded-md border-2 border-line bg-sunken px-2 py-1.5"><div className="text-[17px] font-extrabold tabular-nums">{pct(ten.rented, ten.leasable)} %</div><div className="text-[11px] text-ink-2">let</div></div>
         <div className="rounded-md border-2 border-line bg-sunken px-2 py-1.5"><div className="text-[15px] font-bold tabular-nums">{n0(ten.rented)}</div><div className="text-[11px] text-ink-2">m² rented</div></div>
@@ -97,7 +99,7 @@ export function FloorTenancyCard({ ten, floorLabel }: { ten: FloorTenancy; floor
           </li>
         ))}
       </ul>
-      <p className="mt-2 text-[11px] text-muted">Tenants are fictional until AMF's rent roll replaces them. The suites are coloured on the plan while this tab is open.</p>
+      {!vacated && <p className="mt-2 text-[11px] text-muted">Tenants are fictional until AMF's rent roll replaces them. The suites are coloured on the plan while this tab is open.</p>}
     </Card>
   )
 }

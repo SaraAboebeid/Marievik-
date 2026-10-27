@@ -4,6 +4,7 @@ import type {
 } from './types'
 import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, Variants, YearKpi, YearOverride } from './studio/engine'
 import type { FloorTenancy } from './studio/tenancy'
+import type { UrbanLife } from './urbanLife'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, LayerData } from './layers'
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
@@ -24,6 +25,7 @@ export const api = {
   site: () => call<SitePayload>('/api/site'),
   context: () => call<UrbanContext>('/api/context'),
   urban: () => call<UrbanSummary>('/api/urban'),
+  urbanLife: (project: string) => call<UrbanLife>(`/api/urban/life?project=${encodeURIComponent(project)}`),
   building: (id: string, settings: Partial<Settings>) => call<BuildingPayload>(`/api/building/${id}`, { settings }),
   floor: (id: string, index: number, settings: Partial<Settings>) =>
     call<FloorPayload>(`/api/floor/${id}/${index}`, { settings }),

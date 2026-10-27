@@ -70,6 +70,7 @@ interface BuildingView {
   floors: THREE.Group[]
   mats: THREE.Material[]
   payload: BuildingPayload
+  detail: (THREE.Group | null)[] | null   // exploded view: every floor's real plan, one group per floor index
 }
 
 export class Viewer {
@@ -94,6 +95,7 @@ export class Viewer {
   private analysisGroup = new THREE.Group()
   private labelGroup = new THREE.Group()
   private rhinoGroup = new THREE.Group()
+  private lifeGroup = new THREE.Group()      // Urban scale: events, activities and amenities pinned on the site
   private buildings = new Map<string, BuildingView>()
   private site: SitePayload | null = null
   private center = new THREE.Vector2()
@@ -167,7 +169,7 @@ export class Viewer {
     this.scene.add(this.sunLight, this.sunLight.target, this.hemi)
 
     this.world.rotation.x = -Math.PI / 2
-    this.world.add(this.contextGroup, this.buildingsGroup, this.floorGroup, this.analysisGroup, this.labelGroup, this.rhinoGroup)
+    this.world.add(this.contextGroup, this.buildingsGroup, this.floorGroup, this.analysisGroup, this.labelGroup, this.rhinoGroup, this.lifeGroup)
     this.scene.add(this.world)
 
     this.composer = new EffectComposer(this.renderer)
@@ -523,7 +525,7 @@ export class Viewer {
       floors[fi].add(mesh)
     }
     this.buildingsGroup.add(group)
-    this.buildings.set(p.id, { group, floors, mats, payload: p })
+    this.buildings.set(p.id, { group, floors, mats, payload: p, detail: null })
     this.applyFocus(false)
   }
 
@@ -562,12 +564,25 @@ export class Viewer {
         if (!m.userData.shell) m.visible = !ghost
       })
       this.outline(bv, active && f.kind === 'building')
-      const explode = active && f.kind === 'building' ? this.options.explode : 0
+      const explode = active ? this.options.explode : 0
+      const inFloor = active && (f.kind === 'floor' || f.kind === 'unit')
       bv.floors.forEach((fg, i) => {
         fg.position.z = explode * i
-        fg.visible = !(active && (f.kind === 'floor' || f.kind === 'unit')) || i < f.floor
+        // inside one floor, normally only what's below it shows (the open floor itself is drawn in floorGroup,
+        // and nothing blocks the view into it from above) - exploded, every other floor shows as well
+        fg.visible = !inFloor || (i !== f.floor && (explode > 0 || i < f.floor))
+        // a floor with its real plan loaded (setExplodedPlans): the plan replaces its massing box, windows and roof
+        const hasDetail = !!bv.detail?.[i]
+        for (const c of fg.children) {
+          if (c.userData.detail) continue
+          if (hasDetail) c.visible = false
+          else if (c.userData.shell) c.visible = true
+        }
       })
     }
+    // the open floor (and its labels, analysis and studio overlays) moves with its own floor when exploded
+    const off = f.kind === 'floor' || f.kind === 'unit' ? this.options.explode * f.floor : 0
+    this.floorGroup.position.z = this.analysisGroup.position.z = this.labelGroup.position.z = off
     this.floorGroup.visible = f.kind === 'floor' || f.kind === 'unit'
     this.analysisGroup.visible = this.floorGroup.visible
     this.labelGroup.visible = this.floorGroup.visible && this.options.labels
@@ -1005,7 +1020,17 @@ export class Viewer {
     this.invalidate()
     this.clearFloor()
     this.floor = fp
-    const g = this.floorGroup
+    this.buildFloorMeshes(fp, this.floorGroup, colorFor, { labels: true, register: true })
+    this.applyFocus(true)
+  }
+
+  /** One floor's real plan (slab, walls, glazing, openings, unit fills) into group `g` - shared by the single
+   *  open floor (setFloor, labelled and pickable) and every floor at once when exploded (setExplodedPlans,
+   *  plain geometry only: picking and labels stay the single-floor view's job, or the plan gets too busy). */
+  private buildFloorMeshes(fp: FloorPayload, g: THREE.Group, colorFor?: (u: Unit) => string | null,
+    opts: { labels: boolean; register: boolean; cut?: number } = { labels: true, register: true }) {
+    // cut: walls sliced this far above the floor (a section), so the plan can be seen into from any angle
+    const top = opts.cut !== undefined ? fp.base + opts.cut : Infinity
     const facade = this.buildings.get(fp.building)?.payload.floors[fp.index]?.material ?? 'render_light'
     // slab with atrium voids
     const slabRings: Ring[] = [...fp.rings, ...fp.voids.map((v) => v[0])]
@@ -1019,8 +1044,9 @@ export class Viewer {
     const cats = 'ECSKPIA'
     const byCat = new Map<number, number[][]>()
     for (const pc of fp.pieces) {
+      if (pc[6] >= top) continue
       if (!byCat.has(pc[9])) byCat.set(pc[9], [])
-      byCat.get(pc[9])!.push(pc)
+      byCat.get(pc[9])!.push(pc[7] > top ? [...pc.slice(0, 7), top, ...pc.slice(8)] : pc)
     }
     for (const [ci, list] of byCat) {
       const cat = cats[ci]
@@ -1035,13 +1061,14 @@ export class Viewer {
     const glassWalls = fp.walls.filter((w) => /GLASS/.test(w.type))
     if (glassWalls.length) {
       const inst = new THREE.InstancedMesh(UNIT_BOX, new THREE.MeshStandardMaterial({ color: '#9fc3d6', transparent: true, opacity: 0.35, roughness: 0.1 }), glassWalls.length)
-      glassWalls.forEach((w, i) => inst.setMatrixAt(i, segmentBox(w.a[0], w.a[1], w.b[0], w.b[1], fp.base, fp.base + fp.wall_h, 0.03)))
+      glassWalls.forEach((w, i) => inst.setMatrixAt(i, segmentBox(w.a[0], w.a[1], w.b[0], w.b[1], fp.base, Math.min(fp.base + fp.wall_h, top), 0.03)))
       inst.instanceMatrix.needsUpdate = true
       g.add(inst)
     }
     // openings
-    const wins = fp.openings.filter((o) => o.kind === 'window')
-    const doors = fp.openings.filter((o) => o.kind === 'door')
+    const clip = (o: FloorPayload['openings'][number]) => (o.z1 > top ? { ...o, z1: top } : o)
+    const wins = fp.openings.filter((o) => o.kind === 'window' && o.z0 < top).map(clip)
+    const doors = fp.openings.filter((o) => o.kind === 'door').map(clip)
     if (wins.length) {
       const inst = new THREE.InstancedMesh(UNIT_BOX, new THREE.MeshStandardMaterial({ color: '#7fa6bd', transparent: true, opacity: 0.4, roughness: 0.05, metalness: 0.2 }), wins.length)
       wins.forEach((o, i) => inst.setMatrixAt(i, segmentBox(o.a[0], o.a[1], o.b[0], o.b[1], o.z0, o.z1, 0.04)))
@@ -1054,7 +1081,7 @@ export class Viewer {
       inst.instanceMatrix.needsUpdate = true
       g.add(inst)
     }
-    // unit fills (pickable) and labels
+    // unit fills (pickable and labelled in the single-floor view only - see opts above)
     const many = fp.units.filter((u) => u.kind === 'unit').length > 24
     for (const u of fp.units) {
       const geo = flat([u.poly, ...(u.holes ?? [])], fp.base + 0.025)
@@ -1067,8 +1094,8 @@ export class Viewer {
       mesh.receiveShadow = true
       mesh.userData = { pick: 'unit', unit: u.id, kind: u.kind, base: col }
       g.add(mesh)
-      this.unitMeshes.set(u.id, mesh)
-      if (u.kind === 'unit') {
+      if (opts.register) this.unitMeshes.set(u.id, mesh)
+      if (opts.labels && u.kind === 'unit') {
         const el = document.createElement('div')
         el.className = 'unit-label'
         // many small units: area only, so the plan stays readable
@@ -1078,7 +1105,56 @@ export class Viewer {
         this.labelGroup.add(lab)
       }
     }
-    this.applyFocus(true)
+  }
+
+  /** Explode view: every floor's real plan at once (not just the massing box), B01's drawn plans included.
+   *  `floors` null clears it and goes back to plain massing boxes for every floor. */
+  setExplodedPlans(bid: string, floors: FloorPayload[] | null) {
+    this.invalidate()
+    const bv = this.buildings.get(bid)
+    if (!bv) return
+    if (bv.detail) {
+      bv.detail.forEach((g, i) => { if (g) { bv.floors[i]?.remove(g); disposeTree(g) } })
+      bv.detail = null
+    }
+    if (floors) {
+      const detail: (THREE.Group | null)[] = []
+      for (const fp of floors) {
+        const fg = bv.floors[fp.index]
+        if (!fg) continue
+        const g = new THREE.Group()
+        g.userData = { detail: true }
+        this.buildFloorMeshes(fp, g, undefined, { labels: false, register: false, cut: 1.2 })
+        fg.add(g)
+        detail[fp.index] = g
+      }
+      bv.detail = detail
+    }
+    this.applyFocus(false)
+  }
+
+  /** Urban scale: pins on the site — an event or activity (a labelled sticker; dashed when temporary) or an
+   *  amenity (a small dot, its name on hover). null clears them. */
+  setLifePins(pins: { x: number; y: number; label: string; colour: string; kind: 'permanent' | 'temporary' | 'amenity'; title: string }[] | null) {
+    this.invalidate()
+    this.lifeGroup.children.forEach((c) => (c as CSS2DObject).element?.remove())
+    this.lifeGroup.clear()
+    for (const p of pins ?? []) {
+      const el = document.createElement('div')
+      el.title = p.title
+      if (p.kind === 'amenity') {
+        el.className = 'life-dot'
+        el.style.background = p.colour
+      } else {
+        el.className = `life-pin ${p.kind}`
+        const dot = document.createElement('i')
+        dot.style.background = p.colour
+        el.append(dot, p.label)
+      }
+      const o = new CSS2DObject(el)
+      o.position.set(p.x, p.y, p.kind === 'amenity' ? 1.5 : 8)
+      this.lifeGroup.add(o)
+    }
   }
 
   recolorUnits(colorFor: (u: Unit) => string | null) {

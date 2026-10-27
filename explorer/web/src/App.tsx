@@ -6,7 +6,7 @@ import type {
   Settings, SitePayload, TimelineResponse, Unit, UnitComfort, UrbanSummary,
 } from './types'
 import { TimelineDrawer } from './ui/TimelineDrawer'
-import { KeyFigures } from './ui/KeyFigures'
+import { HeadlineFigures, SpaceDistribution } from './ui/KeyFigures'
 import { TopBar, buildingAddress, type Tab } from './ui/TopBar'
 import { DistrictPanel, UrbanPanel } from './ui/ScalePanel'
 import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
@@ -16,19 +16,23 @@ import { fromPayload, layoutFor, layoutForUse, setGeometry } from './studio/engi
 import type { CompareRow, Occupancy, Params, StudioMeta, StudioModel, Variants, YearKpi } from './studio/engine'
 import { Crowd, type Scenario } from './studio/crowd'
 import type { FloorTenancy } from './studio/tenancy'
-import { StudioChangePanel, StudioPanel, type CapacityState } from './ui/StudioPanel'
+import { FloorInfo, StudioChangePanel, StudioPanel, type CapacityState } from './ui/StudioPanel'
 import { DayPanel, PeopleControls } from './ui/DayPanel'
-import { VariantsPanel } from './ui/VariantsPanel'
+import { GeneratePlans } from './ui/VariantsPanel'
+import { PlanningTable } from './ui/PlanningTable'
+import { LifePanel, type LifeFilter } from './ui/LifePanel'
+import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
-import { LayerBar, LAYER_LEGEND } from './ui/LayerBar'
+import { LAYER_LEGEND } from './ui/LayerBar'
+import { LensPanel } from './ui/LensPanel'
 import { busyColour, evacDensity, evacFrames, riskColour } from './layers'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, Layer, LayerData } from './layers'
 import { BuildingOverview, FloorTenancyCard } from './ui/OverviewPanel'
 import type { FloorRow } from './ui/OverviewPanel'
 import { dayOfYear, sunPosition } from './viewer/sun'
 import { COMFORT_BINS, DF_BINS, comfortColor } from './viewer/colors'
-import { Legend } from './ui/kit'
+import { Card, Legend } from './ui/kit'
 import { ScenarioPanel } from './ui/ScenarioPanel'
 import { InfoPanel, USE_DOT, useOf } from './ui/InfoPanel'
 import { SunBar } from './ui/SunBar'
@@ -51,6 +55,7 @@ const STORE_KEY = 'marievik-explorer-saved'
 export default function App() {
   const host = useRef<HTMLDivElement>(null)
   const viewer = useRef<Viewer | null>(null)
+  const explodedKeyRef = useRef<string | null>(null)   // "<building>:<settings key>" currently showing exploded real plans
   const [site, setSite] = useState<SitePayload | null>(null)
   const [scen, setScen] = useState<Record<string, Settings>>({})
   const [bdata, setBdata] = useState<Record<string, BuildingPayload>>({})
@@ -78,6 +83,17 @@ export default function App() {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? '[]') } catch { return [] }
   })
   const [showCompare, setShowCompare] = useState(false)
+  // custom building-picker dropdown (not a native <select>, so it can be styled like the rest of the bar)
+  const [bPickerOpen, setBPickerOpen] = useState(false)
+  const bPickerRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!bPickerOpen) return
+    const onDoc = (e: MouseEvent) => { if (bPickerRef.current && !bPickerRef.current.contains(e.target as Node)) setBPickerOpen(false) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setBPickerOpen(false) }
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => { document.removeEventListener('mousedown', onDoc); document.removeEventListener('keydown', onKey) }
+  }, [bPickerOpen])
   const [showParametric, setShowParametric] = useState(() => new URLSearchParams(window.location.search).get('view') === 'parametric')
   const [showSuppliers, setShowSuppliers] = useState(false)
   const [choice, setChoice] = useState(readChoice)
@@ -262,7 +278,7 @@ export default function App() {
     if (studioRef.current) setStudioView(l === 'movement' ? 'move' : l === 'fire' ? 'fire' : l === 'capacity' ? 'capacity' : 'furniture')
   }
   const b01Layouts = studioMeta ? Object.fromEntries(Array.from({ length: 7 }, (_, f) => [f, studioLayout[f] ?? layoutFor(studioMeta, f)])) : null
-  const layersKey = b01Layouts && (layer === 'movement' || layer === 'fire' || layer === 'capacity') ? JSON.stringify([b01Layouts, studioParams]) : ''
+  const layersKey = b01Layouts && (layer === 'movement' || layer === 'fire' || layer === 'capacity' || layer === 'vacancy') ? JSON.stringify([b01Layouts, studioParams]) : ''
   useEffect(() => {
     if (!layersKey) return
     const [lay, par] = JSON.parse(layersKey) as [Record<number, string>, Record<number, Params>]
@@ -394,8 +410,10 @@ export default function App() {
 
   // ------------------------------------------------------------ 10-year timeline: computed once per building
   // (or once per building+floor), polled until ready
+  // also loaded whenever a building or floor is open, for the 10-year planning table in the left panel
+  const tlWanted = tlOpen || (!!buildingId && level.kind !== 'site')
   useEffect(() => {
-    if (!tlOpen || !buildingId) return
+    if (!tlWanted || !buildingId) return
     let alive = true
     let t = 0
     let misses = 0
@@ -416,7 +434,7 @@ export default function App() {
     })
     poll()
     return () => { alive = false; window.clearTimeout(t) }
-  }, [tlOpen, buildingId, choice.project, timelineFloor])
+  }, [tlWanted, buildingId, choice.project, timelineFloor])
 
   // ------------------------------------------------------------ key figures of the open building's scenario (Design panel)
   const figKey = buildingId ? bdata[buildingId]?.key : undefined
@@ -665,11 +683,19 @@ export default function App() {
     if (layer === 'none' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
     if (layer === 'vacancy') {
       v.setFlows(null)
-      if (!districtRes) { v.setLayerTint(null); return }
-      const yi = Math.max(0, districtRes.strategy.years.indexOf(distYear))
-      v.setLayerTint(Object.fromEntries(districtRes.strategy.buildings.map((bd) => {
-        const vac = bd.vacancy[yi], n = bdata[bd.id]?.floors.length ?? 8
-        return [bd.id, { floors: Array(n).fill(riskColour(vac / 0.15)), label: `${bd.id} ${Math.round(vac * 100)} %` }]
+      if (districtRes) {
+        const yi = Math.max(0, districtRes.strategy.years.indexOf(distYear))
+        v.setLayerTint(Object.fromEntries(districtRes.strategy.buildings.map((bd) => {
+          const vac = bd.vacancy[yi], n = bdata[bd.id]?.floors.length ?? 8
+          return [bd.id, { floors: Array(n).fill(riskColour(vac / 0.15)), label: `${bd.id} ${Math.round(vac * 100)} %` }]
+        })))
+        return
+      }
+      // no district run yet: today's real/placeholder vacancy (explorer/layers.py), not a simulated future year
+      if (!layerData) { v.setLayerTint(null); return }
+      v.setLayerTint(Object.fromEntries(layerData.buildings.map((bd) => {
+        const n = bdata[bd.id]?.floors.length ?? 8
+        return [bd.id, { floors: Array(n).fill(riskColour(bd.vacancyToday / 0.15)), label: `${bd.id} ${Math.round(bd.vacancyToday * 100)} % today` }]
       })))
       return
     }
@@ -732,6 +758,34 @@ export default function App() {
     api.urban().then((r) => { if (alive) setUrban(r) }).catch((e) => { if (alive) setError(String(e)) })
     return () => { alive = false }
   }, [scale, urban])
+
+  // Urban scale: AMF's events and activities timeline and today's amenities, pinned on the site (explorer/urban_life.py)
+  const [life, setLife] = useState<UrbanLife | null>(null)
+  const [lifeFilter, setLifeFilter] = useState<LifeFilter>({ year: new Date().getFullYear(), permanent: true, temporary: true, amenities: true })
+  useEffect(() => {
+    if (scale !== 'urban' || life) return
+    let alive = true
+    api.urbanLife(choice.project).then((r) => { if (alive) setLife(r) }).catch((e) => { if (alive) setError(`Life on site: ${(e as Error).message}`) })
+    return () => { alive = false }
+  }, [scale, life, choice.project])
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    if (scale !== 'urban' || !life) { v.setLifePins(null); return }
+    const f = lifeFilter
+    const events = life.timeline
+      .filter((t) => t.x !== null && t.y !== null && activeIn(t, f.year) && (t.kind === 'permanent' ? f.permanent : f.temporary))
+      .map((t) => {
+        const c = life.categories[t.category]
+        return { x: t.x!, y: t.y!, label: t.name, colour: c?.colour ?? '#9a978e', kind: t.kind,
+          title: `${t.name} · ${c?.label ?? t.category} · ${t.kind === 'permanent' ? `from ${t.year}` : t.year}\n${t.place}${t.note ? `\n${t.note}` : ''}` }
+      })
+    const amen = !f.amenities ? [] : life.amenities.filter((a) => Math.hypot(a.x, a.y) < 600).map((a) => ({
+      x: a.x, y: a.y, label: a.name, colour: AMENITY_TYPES[a.type]?.colour ?? '#9a978e', kind: 'amenity' as const,
+      title: `${a.name} · ${AMENITY_TYPES[a.type]?.label ?? a.type}${a.addr ? ` · ${a.addr}` : ''}`,
+    }))
+    v.setLifePins([...amen, ...events])
+  }, [scale, life, lifeFilter])
 
   // unit level: the unit's own comfort with its hottest week
   useEffect(() => {
@@ -934,6 +988,49 @@ export default function App() {
   // the 10-year timeline in the bottom bar; the side panels stop above it
   const bottomBar = tlOpen && !!buildingId
   const closeTl = () => { if (showTimeline) toggleTimeline(); else setTlHidden(true) }
+  // the bottom drawer, both segments side by side: on a studio floor it is the auto-opened bar, elsewhere a toggle
+  const openTimeline = () => { if (studioFloor !== null) setTlHidden(false); else if (!showTimeline) toggleTimeline() }
+  // a row of the 10-year planning table: open the full timeline on that pathway
+  const openPathway = (id: string, segment: 1 | 2) => {
+    setTlPath(id)
+    setTlSeg(segment)
+    openTimeline()
+  }
+  const tlButton = (
+    <button type="button" onClick={() => (tlOpen ? closeTl() : openTimeline())} aria-pressed={tlOpen}
+      className={`mb-2.5 w-full rounded-md border-2 border-edge px-3 py-1.5 text-[13px] font-semibold shadow-[3px_3px_0_var(--color-edge)] ${tlOpen ? 'bg-surface' : 'bg-coral text-[#202020]'}`}>
+      {tlOpen ? 'Hide the 10-year plan' : 'Generate 10-year plan'}
+    </button>
+  )
+  const floorOpen = !!(studioModel && studioMeta && studioFloor !== null && sLayout)
+  // a single building, no floor open: only None/Vacancy make sense there (Movement/Fire/Capacity move to the
+  // floor's own views once you open one); Urban/District keep the full site-wide set. Defaults to None -
+  // picking a building never auto-switches the lens, only an explicit click on Vacancy does.
+  const buildingOnly = !floorOpen && level.kind === 'building' && !!buildingId
+  // a building is open but not in the floor studio - the whole building, or (for a building with no studio,
+  // e.g. B08) one of its floors too: the 10-year timeline and plan-generator shortcut apply to both.
+  const showBuildingActions = !floorOpen && level.kind !== 'site' && !!buildingId
+  // explode, every floor's real plan at once, not just the massing box - fetched once per building+settings
+  // and kept until something actually changes (switching building, editing settings, turning explode off).
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    // with a floor open (studio or not) that floor is drawn on its own; the rest of the stack shows its plans
+    const want = buildingId && view.explode > 0 && b ? `${buildingId}:${b.key}` : null
+    if (explodedKeyRef.current === want) return
+    const prevBid = explodedKeyRef.current?.split(':')[0]
+    if (prevBid && prevBid !== buildingId) v.setExplodedPlans(prevBid, null)
+    if (!want) {
+      if (buildingId) v.setExplodedPlans(buildingId, null)
+      explodedKeyRef.current = null
+      return
+    }
+    let alive = true
+    Promise.all(b!.floors.map((f) => api.floor(buildingId!, f.index, settingsOf(buildingId!) ?? {})))
+      .then((floors) => { if (alive) { v.setExplodedPlans(buildingId!, floors); explodedKeyRef.current = want } })
+      .catch((e) => { if (alive) setError(`Exploded plans: ${(e as Error).message}`) })
+    return () => { alive = false }
+  }, [view.explode, buildingId, b?.key])
   // building overview: each floor's use and area, and how much of it is rented (B01 from the floor studio)
   const overviewRows: FloorRow[] | null = b ? b.floors.map((f) => {
     const area = ringsArea(f.rings)
@@ -969,7 +1066,6 @@ export default function App() {
   const project = PROJECTS[choice.project]
   const working = busy ?? (Object.values(loading).some(Boolean) ? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…` : null)
   const sc = scenarioStatus
-  const scenarioLabel = sc.name ? sc.name : sc.changed.length ? `${sc.changed.length} building${sc.changed.length > 1 ? 's' : ''} changed · not saved` : 'Today’s site'
   const panelTop = 'top-[8rem]'
   // hover label: above and right of the pointer, flipped to the left near the right edge so it never runs off screen
   const hoverLeft = hover ? (hover.x > window.innerWidth - 360 ? hover.x - 16 : hover.x + 16) : 0
@@ -991,52 +1087,92 @@ export default function App() {
           { label: 'Methods & data', open: explain !== null, onClick: () => setExplain((e) => (e === null ? '' : null)) },
         ]} />
 
-      {/* under the bar: where you are, and the tools */}
-      <div className="pointer-events-none absolute left-3 right-3 top-[78px] z-10 flex items-start justify-between gap-3">
-        <div className="pointer-events-auto flex flex-wrap items-center gap-2">
-        <nav className="flex items-center gap-0.5 rounded-lg border border-line bg-raised/95 p-1 text-[12.5px] shadow-sm" aria-label="Scale">
+      {/* under the bar: where you are, and the tools — a second full-width bar (like the header above it),
+          pill chips inside it in the same ink-outline / hard-shadow / coral-for-active sticker style. */}
+      <div className="absolute inset-x-0 top-[64px] z-10 flex flex-wrap items-center justify-between gap-3 border-b-2 border-edge bg-surface px-4 py-2 shadow-[0_3px_0_var(--color-edge)]">
+        <div className="flex flex-wrap items-center gap-2">
+        <nav className="flex items-center gap-1 rounded-md border-2 border-edge bg-surface p-1 text-[12.5px] shadow-[3px_3px_0_var(--color-edge)]" aria-label="Scale">
           {SCALE_TABS.map(([id, label, hint]) => (
             <button key={id} onClick={() => setScale(id)} title={hint} aria-pressed={scale === id}
-              className={`rounded-md px-2.5 py-1 font-medium transition-colors ${scale === id ? 'bg-accent text-white' : 'text-ink-2 hover:text-ink'}`}>
+              className={`rounded-md px-3.5 py-1 font-semibold transition-[transform,box-shadow,background-color] motion-reduce:transition-none ${
+                scale === id
+                  ? 'bg-coral text-[#202020] shadow-[2px_2px_0_var(--color-edge)] -translate-y-px'
+                  : 'text-ink-2 hover:bg-sunken hover:text-ink'
+              }`}>
               {label}
             </button>
           ))}
         </nav>
-        <LayerBar layer={layer} setLayer={setLayer} vacancy={!!districtRes} />
         {scale === 'building' && site && (
-          <select value={buildingId ?? ''}
-            onChange={(e) => go(e.target.value ? { kind: 'building', building: e.target.value } : { kind: 'site' })}
-            aria-label="Pick a building" title="Pick a building by address — or click one directly in the model"
-            className="rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 text-[12.5px] shadow-sm">
-            <option value="">Pick a building…</option>
-            {site.buildings.map((bd) => <option key={bd.id} value={bd.id}>{bd.id} · {buildingAddress(bd)}</option>)}
-          </select>
+          <div ref={bPickerRef} className="relative">
+            <button type="button" onClick={() => setBPickerOpen((o) => !o)} aria-haspopup="listbox" aria-expanded={bPickerOpen}
+              title="Pick a building by address — or click one directly in the model"
+              className="flex w-96 items-center gap-1.5 rounded-md border-2 border-edge bg-surface px-3 py-1.5 text-[12.5px] font-medium shadow-[3px_3px_0_var(--color-edge)]">
+              <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 shrink-0 text-ink-2" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+                <path d="M5.5 2.5h6l3 3v12h-9z" strokeLinejoin="round" /><path d="M11.5 2.5v3h3" strokeLinejoin="round" />
+              </svg>
+              <span className="min-w-0 flex-1 truncate text-left">
+                {buildingId ? `${buildingId} · ${buildingAddress(site.buildings.find((bd) => bd.id === buildingId)!)}` : 'Pick a building…'}
+              </span>
+              <svg viewBox="0 0 12 12" className={`h-2.5 w-2.5 shrink-0 text-ink-2 transition-transform ${bPickerOpen ? 'rotate-180' : ''}`} aria-hidden>
+                <path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {bPickerOpen && (
+              <ul role="listbox" aria-label="Pick a building"
+                className="absolute left-0 top-full z-20 mt-1.5 max-h-[70vh] w-96 overflow-y-auto rounded-md border-2 border-edge bg-surface shadow-[3px_3px_0_var(--color-edge)]">
+                <li>
+                  <button type="button" role="option" aria-selected={!buildingId} onClick={() => { go({ kind: 'site' }); setBPickerOpen(false) }}
+                    className={`block w-full truncate px-3 py-1.5 text-left text-[12.5px] ${!buildingId ? 'bg-accent-soft font-semibold text-accent' : 'hover:bg-sunken'}`}>
+                    Pick a building…
+                  </button>
+                </li>
+                {site.buildings.map((bd) => (
+                  <li key={bd.id}>
+                    <button type="button" role="option" aria-selected={buildingId === bd.id} title={`${bd.id} · ${buildingAddress(bd)}`}
+                      onClick={() => { go({ kind: 'building', building: bd.id }); setBPickerOpen(false) }}
+                      className={`block w-full truncate border-t-2 border-edge px-3 py-1.5 text-left text-[12.5px] ${buildingId === bd.id ? 'bg-accent-soft font-semibold text-accent' : 'hover:bg-sunken'}`}>
+                      {bd.id} · {buildingAddress(bd)}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
-        {level.kind !== 'site' && (
-        <nav className="flex flex-wrap items-center gap-1 rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 text-[12.5px] shadow-sm" aria-label="Level">
-          {crumbs.map((c, i) => (
+        {(level.kind === 'floor' || level.kind === 'unit') && (
+        <nav className="flex flex-wrap items-center gap-1.5 rounded-md border-2 border-edge bg-surface px-3 py-1.5 text-[12.5px] shadow-[3px_3px_0_var(--color-edge)]" aria-label="Level">
+          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5 shrink-0 text-ink-2" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+            <path d="M4 17V8.5L10 4l6 4.5V17z" strokeLinejoin="round" /><path d="M8 17v-5h4v5" strokeLinejoin="round" />
+          </svg>
+          {/* the site and building are already shown by the Scale tabs and the building picker - only floor/unit add anything here */}
+          {crumbs.slice(2).map((c, i, arr) => (
             <span key={i} className="flex items-center gap-1">
               {i > 0 && <span className="text-muted">›</span>}
-              <button className={`rounded px-1 ${i === crumbs.length - 1 ? 'font-medium text-ink' : 'text-ink-2 underline-offset-2 hover:text-ink hover:underline'}`}
+              <button className={`rounded px-1 ${i === arr.length - 1 ? 'font-medium text-ink' : 'text-ink-2 underline-offset-2 hover:text-ink hover:underline'}`}
                 onClick={() => go(c.to)}>{c.label}</button>
             </span>
           ))}
+        </nav>
+        )}
+        {level.kind !== 'site' && (
           <button onClick={up} title="Up one level (Esc)" aria-label="Up one level"
-            className="group ml-1.5 inline-flex items-center gap-1.5 rounded-md border-2 border-edge bg-surface py-0.5 pl-1.5 pr-1 text-[11.5px] font-semibold text-ink shadow-[2px_2px_0_var(--color-edge)] transition-[transform,box-shadow,background-color] hover:bg-coral hover:text-[#202020] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-x-[2px] active:translate-y-[2px] active:shadow-none motion-reduce:transition-none">
+            className="group inline-flex items-center gap-1.5 rounded-md border-2 border-edge bg-surface py-1.5 pl-2.5 pr-1.5 text-[12px] font-semibold text-ink shadow-[3px_3px_0_var(--color-edge)] transition-[transform,box-shadow,background-color] hover:bg-coral hover:text-[#202020] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-x-[2px] active:translate-y-[2px] active:shadow-none motion-reduce:transition-none">
             <svg viewBox="0 0 12 12" className="h-3 w-3" aria-hidden><path d="M6 10V2.5M2.5 6 6 2.5 9.5 6" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" /></svg>
             Up
             <kbd className="rounded border border-line bg-sunken px-1 font-mono text-[9.5px] font-normal text-muted group-hover:border-[#202020]/30 group-hover:bg-transparent group-hover:text-[#202020]/70">Esc</kbd>
           </button>
-          <span className="mx-1.5 h-4 w-px bg-line" aria-hidden />
-          <span className={`text-[12px] ${sc.changed.length && !sc.name ? 'text-warn' : 'text-ink-2'}`}>{scenarioLabel}</span>
-          {project.placeholder && <span className="ml-1 rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
-        </nav>
         )}
         </div>
-        <div className="pointer-events-auto flex flex-wrap items-center justify-end gap-1.5">
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
+          {project.placeholder && <span className="rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
           {working && (
-            <span className="rounded-lg border border-line bg-raised/95 px-2.5 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-sm">{working}</span>
+            <span className="rounded-md border-2 border-edge bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-[3px_3px_0_var(--color-edge)]">{working}</span>
           )}
+          <LensPanel floorOpen={floorOpen} onlyVacancy={buildingOnly} layer={layer} setLayer={setLayer}
+            view={studioView} setView={setStudioView}
+            scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
+            explode={view.explode} setExplode={(v) => setView({ ...view, explode: v })} />
         </div>
       </div>
 
@@ -1047,30 +1183,75 @@ export default function App() {
         </div>
       )}
 
-      {/* left: building setup and scenarios (nothing to set up on the whole site) */}
-      {level.kind !== 'site' && (panels.left ? (
+      {/* left: a floor open — that floor's own status, the 10-year timeline and the plan generator. A whole
+          building, no floor open — the (building-wide) 10-year timeline and a way into the plan generator.
+          The lens picker lives in the top bar now (every scale); the building's figures are on the right. */}
+      {(floorOpen || (showBuildingActions && !!studioMeta?.buildings.includes(buildingId!))) && (panels.left ? (
         <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute left-3 ${panelTop} z-10 w-[19rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('left')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
           </div>
-          {studioModel && studioMeta && studioFloor !== null && sLayout ? (
-            <StudioChangePanel model={studioModel} meta={studioMeta} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
-              layout={floorLayout ?? sLayout} layouts={studioLayouts} setLayout={openLayout}
-              setParam={(key, v) => setStudioParams((s) => ({ ...s, [studioFloor]: { ...(s[studioFloor] ?? {}), [key]: +v.toFixed(2) } }))}
-              onReset={() => { setStudioParams((s) => ({ ...s, [studioFloor]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
-              timelineShown={tlOpen} onTimeline={() => (tlOpen ? closeTl() : setTlHidden(false))}
-              capacity={capacity} onMaximise={runMaximise} onCompare={runCompare} onPickRow={pickRow}
-              plans={<VariantsPanel data={variants[studioFloor] ?? null} busy={variantsBusy} error={variantsErr} onGenerate={runVariants}
-                current={floorLayout ?? sLayout} ground={studioFloor === 0} onOpen={openLayout} />}
-              people={<PeopleControls occ={occNow} attendance={attendance} setAttendance={setAttendance} demand={demand} setDemand={setDemand} />} />
-          ) : site && (
+          {floorOpen ? (() => {
+            const floorLabel = studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`
+            return (
+              <>
+                <FloorInfo model={studioModel!} floorLabel={floorLabel} />
+                <GeneratePlans data={variants[studioFloor!] ?? null} busy={variantsBusy} error={variantsErr} onGenerate={runVariants}
+                  current={floorLayout ?? sLayout!} ground={studioFloor === 0} onOpen={openLayout} />
+              </>
+            )
+          })() : (
             <>
+              {studioMeta?.buildings.includes(buildingId!) && (
+                <Card title="Generate floor plans">
+                  <p className="mb-2 text-[12px] leading-snug text-ink-2">
+                    Random plans inside a floor's fixed envelope, checked and simulated, compared on a trade-off curve. Generated per floor - open one to try it.
+                  </p>
+                  <button type="button" onClick={() => go({ kind: 'floor', building: buildingId!, floor: 1 })}
+                    className="w-full rounded-md border-2 border-edge bg-coral px-3 py-1.5 text-[13px] font-semibold text-[#202020] shadow-[3px_3px_0_var(--color-edge)]">
+                    Open a floor to generate plans
+                  </button>
+                </Card>
+              )}
+            </>
+          )}
+        </aside>
+      ) : (
+        <button onClick={() => togglePanel('left')} title={floorOpen ? 'Show this floor' : 'Show the 10-year timeline'} aria-label={floorOpen ? 'Show this floor' : 'Show the 10-year timeline'}
+          className={`absolute left-3 ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
+          ▸
+        </button>
+      ))}
+
+      {/* right: a whole building, no floor open — its key figures, overview and space distribution. A floor
+          open — what you change (layout/walls/people, building settings) above what comes out of it (results).
+          Nothing to set up on the whole site. */}
+      {panels.right ? (
+        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+          <div className="mb-1 flex justify-end">
+            <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
+              className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
+          </div>
+          {buildingId && level.kind !== 'site' && tlButton}
+          {buildingId && level.kind !== 'site' && (
+            <PlanningTable tl={tl}
+              title={`${level.kind === 'building' ? buildingId : studioFloor === 0 ? 'Ground floor' : `Floor ${level.floor}`} · 10-year planning`}
+              onOpen={openPathway} />
+          )}
+          {floorOpen && (
+            <>
+            <StudioChangePanel model={studioModel!} meta={studioMeta!} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
+              layout={floorLayout ?? sLayout!} layouts={studioLayouts} setLayout={openLayout}
+              setParam={(key, v) => setStudioParams((s) => ({ ...s, [studioFloor!]: { ...(s[studioFloor!] ?? {}), [key]: +v.toFixed(2) } }))}
+              onReset={() => { setStudioParams((s) => ({ ...s, [studioFloor!]: {} })); setCapacity((c) => ({ ...c, result: null })) }}
+              capacity={capacity} onMaximise={runMaximise} onCompare={runCompare} onPickRow={pickRow}
+              people={<PeopleControls occ={occNow} attendance={attendance} setAttendance={setAttendance} demand={demand} setDemand={setDemand} />} />
+            {site && (
             <ScenarioPanel
               site={site} level={level} building={b} settings={buildingId ? settingsOf(buildingId) ?? site.defaults : null}
               loading={buildingId ? !!loading[buildingId] : false} status={sc} saved={saved}
               onChange={(patch) => buildingId && updateScenario(buildingId, patch)}
-              onGo={go} view={view} setView={setView}
               onSave={saveScenario} onRestore={restoreSaved} onCompare={() => setShowCompare(true)} onSuppliers={() => setShowSuppliers(true)}
               onResetBuilding={() => buildingId && updateScenario(buildingId, { ...site.defaults })}
               timeline={{
@@ -1081,23 +1262,9 @@ export default function App() {
                 onOpen: toggleTimeline,
               }}
             />
+            )}
             </>
           )}
-        </aside>
-      ) : (
-        <button onClick={() => togglePanel('left')} title="Show what you can change" aria-label="Show what you can change"
-          className={`absolute left-3 ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
-          ▸
-        </button>
-      ))}
-
-      {/* right: the building's key figures, or the site / floor / unit figures and analysis */}
-      {panels.right ? (
-        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
-          <div className="mb-1 flex justify-end">
-            <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
-              className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
-          </div>
           {site && scale === 'district' && (
             <DistrictPanel site={site} hidden={districtHidden}
               onToggle={(id) => setDistrictHidden((h) => { const n = new Set(h); n.has(id) ? n.delete(id) : n.add(id); return n })}
@@ -1110,27 +1277,33 @@ export default function App() {
               onRun={() => runDistrict()} year={distYear} setYear={(y) => { setDistYear(y); if (layer === 'none') setLayerState('vacancy') }}
               compare={cardRows} compareBusy={cardBusy} onCompare={runCardCompare} onPickCompare={pickCardRow} />
           )}
+          {scale === 'urban' && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
           {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
-          {studioModel && studioMeta && studioFloor !== null && sLayout ? (
-            <StudioPanel model={studioModel} view={studioView} setView={setStudioView}
+          {floorOpen ? (
+            <StudioPanel model={studioModel!} setView={setStudioView}
               floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
-              scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote} loading={studioLoading}
+              loading={studioLoading}
               day={<DayPanel occ={occNow} busy={occBusy} hour={occHour} setHour={(h) => { setOccHour(h); setStudioView('use') }}
                 showUse={studioView === 'use'} onShowUse={() => setStudioView(studioView === 'use' ? 'furniture' : 'use')} />}
               tenancy={floorTenancy ? <FloorTenancyCard ten={floorTenancy} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} /> : null}
               evac={<EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
                 playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
                 t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />} />
-          ) : level.kind === 'building' && buildingId ? (
-            <>
-              {overviewRows && (
-                <BuildingOverview name={`${buildingId} ${b?.name.split(' - ')[0] ?? ''}`} floors={overviewRows}
-                  onFloor={(n) => go({ kind: 'floor', building: buildingId, floor: n })} />
-              )}
-              <KeyFigures data={figures && figures.building === buildingId ? figures : null} loading={!!loading[buildingId] || figures?.key !== bdata[buildingId]?.key} />
-            </>
-          ) : site && (
+          ) : level.kind === 'building' && buildingId ? (() => {
+            const figData = figures && figures.building === buildingId ? figures : null
+            const figLoading = !!loading[buildingId] || figures?.key !== bdata[buildingId]?.key
+            return (
+              <>
+                <HeadlineFigures data={figData} loading={figLoading} />
+                {overviewRows && (
+                  <BuildingOverview name={buildingId} floors={overviewRows}
+                    onFloor={(n) => go({ kind: 'floor', building: buildingId, floor: n })} />
+                )}
+                <SpaceDistribution data={figData} />
+              </>
+            )
+          })() : site && (
             <InfoPanel
               site={site} level={level} bdata={bdata} totals={totals} floor={floorData}
               dl={dl} cf={cf} unitComfort={unitComfort} overlay={overlay} setOverlay={setOverlay}
@@ -1150,7 +1323,7 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
-        {layer !== 'none' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (layer !== 'vacancy' || districtRes) && (
+        {layer !== 'none' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
           <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
         )}
       </div>

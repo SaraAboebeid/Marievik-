@@ -1,8 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { SYSTEM_LABEL, USE_LABEL, WINDOW_LABEL } from '../api'
 import type { BuildingPayload, Level, SavedScenario, Settings, SitePayload } from '../types'
-import type { ViewOptions } from '../viewer/Viewer'
-import { Badge, Button, Card, Field, Section, Select, Slider, Toggle } from './kit'
+import { Badge, Button, Card, Field, Select, Slider, Toggle } from './kit'
 
 export interface ScenarioStatus {
   changed: string[]          // building ids that differ from today's site
@@ -19,9 +18,6 @@ interface Props {
   status: ScenarioStatus
   saved: SavedScenario[]
   onChange: (patch: Partial<Settings>) => void
-  onGo: (l: Level) => void
-  view: ViewOptions
-  setView: (v: ViewOptions) => void
   onSave: (name: string) => void
   onRestore: (s: SavedScenario) => void
   onCompare: () => void
@@ -51,9 +47,10 @@ const Icon = {
 }
 
 export function ScenarioPanel(p: Props) {
-  const { site, level, building, settings, loading, status, onChange, onGo, view, setView, onResetBuilding } = p
+  const { site, level, building, settings, loading, status, onChange, onResetBuilding } = p
   const [added, setAdded] = useState(settings?.added_floors ?? 0)
-  const [open, setOpen] = useState(true)
+  // closed by default: at building scale this now sits above the overview/key figures, which should show first
+  const [open, setOpen] = useState(false)
   const [naming, setNaming] = useState<string | null>(null)     // the name being typed for a new scenario
   useEffect(() => setAdded(settings?.added_floors ?? 0), [settings?.added_floors, building?.id])
 
@@ -215,28 +212,6 @@ export function ScenarioPanel(p: Props) {
           Compare scenarios
         </button>
       </section>
-
-      {level.kind === 'building' && (
-        <Section id="floors" title={`Floors (${building.floors.length})`} right={<span className="text-[11px] text-muted">click to open</span>}>
-          <Field label="Explode floors" hint={`${view.explode.toFixed(1)} m`}>
-            <Slider value={view.explode} min={0} max={8} step={0.5} onChange={(v) => setView({ ...view, explode: v })} />
-          </Field>
-          <ul className="max-h-64 overflow-y-auto">
-            {[...building.floors].reverse().map((f) => (
-              <li key={f.index}>
-                <button onClick={() => onGo({ kind: 'floor', building: building.id, floor: f.index })}
-                  className="flex w-full items-baseline justify-between gap-2 rounded px-1.5 py-1 text-left text-[13px] hover:bg-sunken">
-                  <span>
-                    <span className="font-mono text-ink-2">F{String(f.index).padStart(2, '0')}</span>{' '}
-                    {f.use_label}{f.added && <span className="ml-1 rounded bg-warn-bg px-1 text-[11px] text-warn">added</span>}
-                  </span>
-                  <span className="font-mono text-[12px] text-ink-2">{f.units} units</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      )}
     </>
   )
 }

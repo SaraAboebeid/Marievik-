@@ -27,6 +27,12 @@ export function EvacPanel({ res, busy, error, onRun, playing, onPlay, t, setT, d
             <div className="flex-1"><Slider value={Math.min(t, end)} min={0} max={end} step={0.5} onChange={setT} /></div>
             <span className="w-11 text-right font-mono text-[12px]">{mmss(t)}</span>
           </div>
+          {t < 30 && (
+            <p className="mb-2 flex items-center justify-between gap-2 rounded-md border-2 border-line bg-sunken px-2 py-1 text-[11.5px] text-ink-2">
+              <span>Still waiting for the alarm — nobody moves before 0:30.</span>
+              <button type="button" onClick={() => setT(30)} className="shrink-0 rounded border-2 border-edge bg-surface px-1.5 py-0.5 font-semibold">Skip to 0:30 →</button>
+            </p>
+          )}
           <button type="button" onClick={() => setDensity(!density)} aria-pressed={density}
             className={`mb-2.5 rounded-md border-2 border-edge px-2 py-0.5 text-[12px] font-semibold ${density ? 'bg-coral text-[#202020]' : 'bg-surface'}`}>Crowding on the floor</button>
           <StatGrid>

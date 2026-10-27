@@ -9,7 +9,7 @@ export interface LayerFloor {
   peak: number; personHours: number | null
   escape_m: number | null; escapeLimit: number; evac_s: number | null
 }
-export interface LayerBuilding { id: string; name: string; kind: string; c: [number, number]; floors: LayerFloor[]; peak: number; stationTrips: number }
+export interface LayerBuilding { id: string; name: string; kind: string; c: [number, number]; floors: LayerFloor[]; peak: number; stationTrips: number; vacancyToday: number }
 export interface LayerData { buildings: LayerBuilding[]; station: { name: string; xy: [number, number] }; note: string }
 
 export interface EvacResult {

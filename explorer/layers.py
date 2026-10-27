@@ -1,16 +1,24 @@
-"""The explorer's layers - movement, fire escape, capacity - for every building and floor of the site.
+"""The explorer's layers - movement, fire escape, capacity, vacancy - for every building and floor of the site.
 
 B01 has drawn plans, so its floors come from the floor studio: planned people and the legal maximum, the
 longest escape walk and a hand-calculated evacuation time, and the simulated peak from the occupancy model.
 The other buildings have no plans yet: capacity and movement are estimated from floor area with the
 district model's densities, and fire escape is left out (shown as "needs plans") rather than guessed.
+
+Each building also gets vacancyToday: today's real vacant share (data/projects/marievik/leases.json and
+phasing.json via explorer/studio/tenancy.py) - the "today" picture, independent of the district model's own
+simulated vacancy for a chosen future year (explorer/district.py), which the explorer falls back to showing
+only once that 10-year model has actually been run.
 """
 from __future__ import annotations
+
+from datetime import date
 
 from parametric.mvk import site as S
 
 from . import district
 from .studio import engine, evacuation, layouts, occupancy
+from .studio import tenancy as studio_tenancy
 
 # legal maximum (persons per m2 of floor) by kind where there is no plan: the floor studio's own densities
 LEGAL_DENSITY = {"office": 0.1, "ground": 0.5, "school": 0.5, "residential": 0.04, "hotel": 0.05}
@@ -53,8 +61,15 @@ def site_layers(site, studio_layouts: dict[int, str] | None = None, studio_param
                            "peak": round(planned * PEAK_SHARE.get(fk, 0.7)), "personHours": None,
                            "escape_m": None, "escapeLimit": layouts.ESCAPE_LIMIT, "evac_s": None})
         peak = sum(x["peak"] for x in floors)
+        rented = vacant = 0.0
+        for f in range(int(b["levels"])):
+            ft = studio_tenancy.floor_tenancy("marievik", b["id"], f, fp.area, today=date.today().year)
+            rented += ft["rented"]
+            vacant += ft["vacant"]
+        vacancy_today = round(vacant / (rented + vacant), 3) if (rented + vacant) else 0.0
         out.append({"id": b["id"], "name": b["name"], "kind": kind, "c": [round(fp.centroid.x, 1), round(fp.centroid.y, 1)],
-                    "floors": floors, "peak": peak, "stationTrips": round(peak * 2 * TRANSIT_SHARE)})
+                    "floors": floors, "peak": peak, "stationTrips": round(peak * 2 * TRANSIT_SHARE),
+                    "vacancyToday": vacancy_today})
     res = {"buildings": out, "station": {"name": mk["station"]["name"], "xy": mk["station"]["xy"]},
            "note": "B01 from its drawn (mock-up) plans and the floor studio; other buildings estimated from floor area - fire escape needs their plans. "
                    f"Station trips: 2 a day per person at the peak, {round(TRANSIT_SHARE * 100)} % by public transport (assumed)."}

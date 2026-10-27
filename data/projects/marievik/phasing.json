@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "purpose": "AMF's real redevelopment phasing for Marievik, replacing guesswork with AMF Fastigheter's own schedule for the buildings it covers.",
+    "source": "AMF Fastigheter, \"Tidplan övergripande, Marievik\" (Original 20-25-10-24, Rev 2026-09-11 av PK) — photographed by Sara and read by eye, 2026-10-27. Not a digital export.",
+    "building_mapping": "AMF's own property codes vs. this model's building ids, confirmed by Sara 2026-10-27: M27 = B01, M19 = B02, M26 = B03. Flänshjulet 1 = M23 (not yet in marievik_site.json). M24 = Buteljgatan 29A, M25 = Årstaängsvägen 25, M28 = Marieviksgatan 19 — real AMF parcels, not yet matched to any B0x (B05/B06/B08 are on the same streets but identity unconfirmed). M14, M22, M23, M30 and the M15:Kv1-4 cluster are visible on AMF's 2019-04-26 site plan (M. Carlén) but also not yet in marievik_site.json.",
+    "confidence": "Which building and which phase (vacate / construction / move-in) happens is reliable, read off clearly labelled rows. The exact quarter within a year is NOT reliable — the chart is a photographed, rotated, small-print Gantt with many overlapping bars; each event below is flagged with how sure the read is. Treat every date here as needing a second look against the original schedule, not as confirmed fact.",
+    "updated": "2026-10-27"
+  },
+
+  "buildings": {
+    "B01": {
+      "amf_code": "M27",
+      "note": "This model's B01 currently shows full occupancy (data/projects/marievik/leases.json, fictional example tenants through 2027-2032). This real schedule shows M27 being vacated for redevelopment — the two are NOT yet reconciled; which one is right for 'today' depends on the exact vacate date, which is not confirmed here.",
+      "events": [
+        { "event": "vacate", "label": "Tomställt M27", "year": 2026, "confidence": "year only, unconfirmed" },
+        { "event": "construction", "label": "Produktion", "year_from": 2026, "year_to": 2027, "confidence": "approximate" },
+        { "event": "move_in", "label": "Inflytt HG", "year": 2027, "confidence": "year only, unconfirmed" }
+      ]
+    },
+    "B02": {
+      "amf_code": "M19",
+      "note": "Two sub-phases on the schedule, read as the H&M wing and the 'Kuber' wing. Which part of B02's floor plate each covers is not established.",
+      "events": [
+        { "event": "construction", "label": "Produktion H&M", "year_from": 2026, "year_to": 2027, "confidence": "approximate" },
+        { "event": "construction", "label": "Produktion Kuber", "year_from": 2026, "year_to": 2028, "confidence": "approximate" },
+        { "event": "move_in", "label": "Inflytt HG H&M", "year": 2027, "confidence": "year only, unconfirmed" },
+        { "event": "move_in", "label": "Inflytt HG Kuber", "year": 2028, "confidence": "year only, unconfirmed" }
+      ]
+    },
+    "B03": {
+      "amf_code": "M26",
+      "preliminary": true,
+      "note": "Row is explicitly marked '(preliminär)' on the source schedule — AMF itself flags this as not settled. A related 'Garagerenovering M26' (garage renovation) row exists but was not transcribed.",
+      "events": [
+        { "event": "construction", "label": "Produktion (preliminär)", "year_from": 2026, "year_to": 2028, "confidence": "approximate, and preliminary in the source" },
+        { "event": "move_in", "label": "Inflytt HG", "year": 2028, "confidence": "year only, preliminary and unconfirmed" }
+      ]
+    }
+  },
+
+  "not_yet_modelled": {
+    "_note": "Real AMF parcels seen on the schedule and/or the 2019 site plan that have no building entry in parametric/site/marievik_site.json yet.",
+    "codes": ["M14", "M22", "M23 (Flänshjulet 1)", "M24 (Buteljgatan 29A)", "M25 (Årstaängsvägen 25)", "M28 (Marieviksgatan 19)", "M30", "M15:Kv1", "M15:Kv2", "M15:Kv3", "M15:Kv4"]
+  }
+}

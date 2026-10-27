@@ -1,0 +1,1234 @@
+{
+ "_meta": {
+  "purpose": "Life on Marievik for the explorer's Urban scale: AMF's events and activities timeline 2024-2030 and the amenities around the site.",
+  "timeline_source": "AMF Fastigheter, 'Marievik' activity timeline (permanent / tillfälligt, 2024-2030), photographed by Sara 2026-10-27. Years read off the photo by column; items with '?' are AMF's own question marks.",
+  "categories_note": "Category per item (Kultur, Mat, Hållbarhet, Hälsa, Community, Fysiska tillägg) is inferred from the name - the photo's colour coding was not read reliably.",
+  "location_sources": "AMF event pages (amffastigheter.se/marievik/marievik-upplev-marievik/), OpenStreetMap / Nominatim (ODbL), thatsup.co.uk, Time Out Stockholm, Hospitality Net. confidence: address = street address geocoded; osm = a mapped OSM feature; approx = placed by description; unknown = not published (not drawn on the map).",
+  "amenities_source": "OpenStreetMap via Nominatim, bounded search around Marievik, fetched 2026-10-27 (ODbL). Gyms and saunas inside buildings (e.g. SATS in Marievik 26) are not mapped there.",
+  "updated": "2026-10-27"
+ },
+ "categories": {
+  "kultur": {
+   "label": "Kultur",
+   "colour": "#c46ba4"
+  },
+  "mat": {
+   "label": "Mat",
+   "colour": "#fd876e"
+  },
+  "hallbarhet": {
+   "label": "Hållbarhet",
+   "colour": "#128f6e"
+  },
+  "halsa": {
+   "label": "Hälsa",
+   "colour": "#3d8fd1"
+  },
+  "community": {
+   "label": "Community",
+   "colour": "#dfa00c"
+  },
+  "fysiska": {
+   "label": "Fysiska tillägg",
+   "colour": "#d8342b"
+  }
+ },
+ "timeline": [
+  {
+   "id": "kajen",
+   "name": "Kajen",
+   "kind": "permanent",
+   "year": 2024,
+   "category": "fysiska",
+   "lat": 59.30938,
+   "lon": 18.03111,
+   "building": null,
+   "place": "Marieviksstranden, the quay along Årstaviken",
+   "confidence": "osm",
+   "note": "",
+   "url": null
+  },
+  {
+   "id": "marieviksbadet",
+   "name": "Marieviksbadet",
+   "kind": "permanent",
+   "year": 2025,
+   "category": "halsa",
+   "lat": 59.31,
+   "lon": 18.0325,
+   "building": null,
+   "place": "On the quay, mid-Marievik (\"Kajen, Marievik\")",
+   "confidence": "approx",
+   "note": "Stockholm's first quay bath: 25 m pool, diving pool, children's pool. Run by Stockholms stad.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/marievik-stockholms-forsta-kajbad/"
+  },
+  {
+   "id": "mackverket",
+   "name": "Mackverket",
+   "kind": "permanent",
+   "year": 2026,
+   "category": "mat",
+   "lat": 59.31033,
+   "lon": 18.03114,
+   "building": null,
+   "place": "Marieviksstranden",
+   "confidence": "osm",
+   "note": "From food truck to a permanent waterfront place, 2026.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/mackverket-food-truck/"
+  },
+  {
+   "id": "selam_restaurang",
+   "name": "Selam restaurang",
+   "kind": "permanent",
+   "year": 2027,
+   "category": "mat",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Location not published.",
+   "url": null
+  },
+  {
+   "id": "selam_park",
+   "name": "Selam park",
+   "kind": "permanent",
+   "year": 2027,
+   "category": "fysiska",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Location not published.",
+   "url": null
+  },
+  {
+   "id": "gaffla",
+   "name": "Gaffla",
+   "kind": "permanent",
+   "year": 2027,
+   "category": "mat",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Location not published.",
+   "url": null
+  },
+  {
+   "id": "selam_livescen",
+   "name": "Selam livescen",
+   "kind": "permanent",
+   "year": 2027,
+   "category": "kultur",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Location not published.",
+   "url": null
+  },
+  {
+   "id": "aurora",
+   "name": "Aurora",
+   "kind": "permanent",
+   "year": 2027,
+   "category": "kultur",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Location and use not published.",
+   "url": null
+  },
+  {
+   "id": "restaurang_m28",
+   "name": "Restaurang M28",
+   "kind": "permanent",
+   "year": 2028,
+   "category": "mat",
+   "lat": 59.30937,
+   "lon": 18.02927,
+   "building": null,
+   "place": "M28, Marieviksgatan 19 (street-level geocode)",
+   "confidence": "approx",
+   "note": "M28 is a real AMF parcel not yet modelled as its own building.",
+   "url": null
+  },
+  {
+   "id": "koppling_liljeholmen",
+   "name": "Koppling Liljeholmen (alt. S?)",
+   "kind": "permanent",
+   "year": 2028,
+   "category": "fysiska",
+   "lat": 59.3105,
+   "lon": 18.0255,
+   "building": null,
+   "place": "Between Marievik and Liljeholmen station",
+   "confidence": "approx",
+   "note": "A new connection towards Liljeholmen; route not published - question mark on AMF's own plan.",
+   "url": null
+  },
+  {
+   "id": "bcd_hubb",
+   "name": "BCD-hubb?",
+   "kind": "permanent",
+   "year": 2028,
+   "category": "hallbarhet",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Question mark on AMF's plan; location not published.",
+   "url": null
+  },
+  {
+   "id": "dotank_perm",
+   "name": "DoTank permanent?",
+   "kind": "permanent",
+   "year": 2028,
+   "category": "hallbarhet",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Question mark on AMF's plan; DoTank ran as a temporary lab store in 2025.",
+   "url": null
+  },
+  {
+   "id": "liljeholmsbadet",
+   "name": "Liljeholmsbadet",
+   "kind": "permanent",
+   "year": 2028,
+   "category": "halsa",
+   "lat": 59.3108,
+   "lon": 18.033,
+   "building": null,
+   "place": "On the water at Marievik, by the new hotel",
+   "confidence": "approx",
+   "note": "The 1930s floating bathhouse, towed away Oct 2025, renovated and moved to Marievik; saunas and cold dips, public. Reopening summer 2028. Exact pier not published.",
+   "url": "https://www.hospitalitynet.org/announcement/41015229/a-new-city-resort-to-open-in-marievik-stockholm-in-2029bringing-back-liljeholmsbadet"
+  },
+  {
+   "id": "hotellet",
+   "name": "Hotellet",
+   "kind": "permanent",
+   "year": 2029,
+   "category": "fysiska",
+   "lat": null,
+   "lon": null,
+   "building": "B01",
+   "place": "Next to Varuhuset (B01, Marievik 27)",
+   "confidence": "approx",
+   "note": "16 storeys, 191 rooms, rooftop spa (~850 m2), restaurants, gym. Strawberry / Nordic Hotels. Construction 2026-2029. Its own plot is not in the model yet, so shown at B01.",
+   "url": "https://www.amffastigheter.se/hotellet/"
+  },
+  {
+   "id": "gronska",
+   "name": "Ny grönska gatumiljö",
+   "kind": "permanent",
+   "year": 2029,
+   "category": "fysiska",
+   "lat": 59.3099,
+   "lon": 18.0285,
+   "building": null,
+   "place": "Marievik's streets",
+   "confidence": "approx",
+   "note": "New green street environment across Marievik.",
+   "url": null
+  },
+  {
+   "id": "gangfart",
+   "name": "Gångfartsgator",
+   "kind": "permanent",
+   "year": 2029,
+   "category": "fysiska",
+   "lat": 59.3099,
+   "lon": 18.0285,
+   "building": null,
+   "place": "Marievik's streets",
+   "confidence": "approx",
+   "note": "Pedestrian-priority streets.",
+   "url": null
+  },
+  {
+   "id": "parken",
+   "name": "Parken",
+   "kind": "permanent",
+   "year": 2030,
+   "category": "fysiska",
+   "lat": 59.3118,
+   "lon": 18.0325,
+   "building": null,
+   "place": "By the water next to Liljeholmsbron",
+   "confidence": "approx",
+   "note": "The former Plåtparken site was to become a municipal park.",
+   "url": null
+  },
+  {
+   "id": "millenniestraket",
+   "name": "Millenniestråket",
+   "kind": "permanent",
+   "year": 2030,
+   "category": "fysiska",
+   "lat": 59.31169,
+   "lon": 18.03289,
+   "building": null,
+   "place": "Waterfront promenade (Marieviksstranden)",
+   "confidence": "osm",
+   "note": "",
+   "url": null
+  },
+  {
+   "id": "platparken",
+   "name": "Plåtparken",
+   "kind": "temporary",
+   "year": 2024,
+   "category": "community",
+   "lat": 59.3118,
+   "lon": 18.0325,
+   "building": null,
+   "place": "By the water next to Liljeholmsbron",
+   "confidence": "approx",
+   "note": "Container park with food, music, markets; moved here from Skanstull.",
+   "url": null
+  },
+  {
+   "id": "marieviksmobler",
+   "name": "Marieviksmöbler",
+   "kind": "temporary",
+   "year": 2024,
+   "category": "fysiska",
+   "lat": 59.3099,
+   "lon": 18.0285,
+   "building": null,
+   "place": "Marievik's streets",
+   "confidence": "approx",
+   "note": "Temporary street furniture.",
+   "url": null
+  },
+  {
+   "id": "craft_week",
+   "name": "Craft Week",
+   "kind": "temporary",
+   "year": 2024,
+   "category": "kultur",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Stockholm Craft Week in Marievik, 4-20 Oct 2024; venue not stated.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/marievik-stockholm-craft-week-tar-plats-i-marievik/"
+  },
+  {
+   "id": "bastu",
+   "name": "Bastu i parken",
+   "kind": "temporary",
+   "year": 2025,
+   "category": "halsa",
+   "lat": 59.3119,
+   "lon": 18.0322,
+   "building": null,
+   "place": "In the park by Liljeholmsbron",
+   "confidence": "approx",
+   "note": "",
+   "url": null
+  },
+  {
+   "id": "postkontoret",
+   "name": "Postkontoret",
+   "kind": "temporary",
+   "year": 2025,
+   "category": "community",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Creative hub Feb-Dec 2025; Klubbhuset replaced it in a new space in 2026.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/marievik-en-hubb-for-kreativa-entreprenorer/"
+  },
+  {
+   "id": "dotank",
+   "name": "DoTank",
+   "kind": "temporary",
+   "year": 2025,
+   "category": "hallbarhet",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "DoTank Stockholm Lab Store, Mar-Dec 2025; venue not stated.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/marievik-dar-framtidens-ideer-blir-verklighet/"
+  },
+  {
+   "id": "klubbhuset",
+   "name": "Klubbhuset",
+   "kind": "temporary",
+   "year": 2026,
+   "category": "kultur",
+   "lat": 59.3094,
+   "lon": 18.02882,
+   "building": "B03",
+   "place": "Årstaängsvägen 21C (Marievik 26, B03)",
+   "confidence": "address",
+   "note": "Meeting place for culture and creativity, Apr-Dec 2026.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/klubbhuset-ny-mtesplats-fr-kultur-och-kreativitet/"
+  },
+  {
+   "id": "under_bron",
+   "name": "Under Liljeholmsbron",
+   "kind": "temporary",
+   "year": 2026,
+   "category": "halsa",
+   "lat": 59.31248,
+   "lon": 18.0306,
+   "building": null,
+   "place": "Under Liljeholmsbron",
+   "confidence": "osm",
+   "note": "Yoga under the bridge, Sept 2026.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/yoga-under-liljeholmsbron/"
+  },
+  {
+   "id": "way_gallery",
+   "name": "Way Gallery",
+   "kind": "temporary",
+   "year": 2026,
+   "category": "kultur",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Summer exhibition June-Sept 2026; venue not stated.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/way-gallery-sommarutstllning-i-marievik/"
+  },
+  {
+   "id": "varfestivalen",
+   "name": "Vårfestivalen",
+   "kind": "temporary",
+   "year": 2026,
+   "category": "kultur",
+   "lat": 59.30938,
+   "lon": 18.03111,
+   "building": null,
+   "place": "Kajen",
+   "confidence": "osm",
+   "note": "8-9 May 2026.",
+   "url": "https://www.amffastigheter.se/marievik/marievik-upplev-marievik/vrfestivalen-tar-plats-p-kajen/"
+  },
+  {
+   "id": "sessions",
+   "name": "Marievik sessions?",
+   "kind": "temporary",
+   "year": 2027,
+   "category": "kultur",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "",
+   "confidence": "unknown",
+   "note": "Question mark on AMF's plan.",
+   "url": null
+  },
+  {
+   "id": "paradgata",
+   "name": "Millenniestråket tillfällig paradgata?",
+   "kind": "temporary",
+   "year": 2027,
+   "category": "community",
+   "lat": 59.31169,
+   "lon": 18.03289,
+   "building": null,
+   "place": "Millenniestråket",
+   "confidence": "osm",
+   "note": "Temporary parade street; question mark on AMF's plan.",
+   "url": null
+  }
+ ],
+ "amenities": [
+  {
+   "name": "German Beer Hall Liljeholmen",
+   "type": "restaurant",
+   "lat": 59.3083331,
+   "lon": 18.0296139,
+   "addr": "Buteljgatan",
+   "osm": "node/2038190081",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Via loreto",
+   "type": "restaurant",
+   "lat": 59.3095015,
+   "lon": 18.0283179,
+   "addr": "Årstaängsvägen",
+   "osm": "node/5248382078",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Ponte & Simone",
+   "type": "restaurant",
+   "lat": 59.3060783,
+   "lon": 18.0356973,
+   "addr": "Sjövikskajen",
+   "osm": "node/11076492030",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Ho's",
+   "type": "restaurant",
+   "lat": 59.3149885,
+   "lon": 18.0324776,
+   "addr": "Hornsgatan",
+   "osm": "node/1743113082",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Barbro",
+   "type": "restaurant",
+   "lat": 59.3143847,
+   "lon": 18.0332336,
+   "addr": "Hornstulls Strand",
+   "osm": "node/1645783029",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Haandi",
+   "type": "restaurant",
+   "lat": 59.3064883,
+   "lon": 18.0322898,
+   "addr": "Sjöviksvägen",
+   "osm": "node/5310281393",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "DIN-DIN Club",
+   "type": "restaurant",
+   "lat": 59.3081563,
+   "lon": 18.0291693,
+   "addr": "Sjövikstorget",
+   "osm": "node/2021350054",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Chong Qing",
+   "type": "restaurant",
+   "lat": 59.3128576,
+   "lon": 18.028359,
+   "addr": "Liljeholmsvägen",
+   "osm": "node/2549214111",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Indian Garden",
+   "type": "restaurant",
+   "lat": 59.3079045,
+   "lon": 18.0286974,
+   "addr": "Sjövikstorget",
+   "osm": "node/2498488711",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Loopen",
+   "type": "restaurant",
+   "lat": 59.3133811,
+   "lon": 18.0331356,
+   "addr": "Liljeholmsbron",
+   "osm": "node/2298625908",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Kebab-ish",
+   "type": "restaurant",
+   "lat": 59.3097263,
+   "lon": 18.022769,
+   "addr": "Liljeholmstorget",
+   "osm": "node/12455908105",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Sushi Yama",
+   "type": "restaurant",
+   "lat": 59.3095845,
+   "lon": 18.0218108,
+   "addr": "Liljeholmstorget",
+   "osm": "node/9447314553",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Bastard Burgers",
+   "type": "restaurant",
+   "lat": 59.3096194,
+   "lon": 18.0224624,
+   "addr": "Liljeholmstorget 5",
+   "osm": "node/9049036527",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Pepe Nero",
+   "type": "restaurant",
+   "lat": 59.3060136,
+   "lon": 18.032393,
+   "addr": "Sjöviksvägen",
+   "osm": "node/1507234011",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Blubnan",
+   "type": "restaurant",
+   "lat": 59.3061551,
+   "lon": 18.0354633,
+   "addr": "Sjövikskajen",
+   "osm": "node/8914758916",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Sushi Bay",
+   "type": "restaurant",
+   "lat": 59.3058102,
+   "lon": 18.0367235,
+   "addr": "Sjövikskajen",
+   "osm": "node/10726003943",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Wong Kee",
+   "type": "restaurant",
+   "lat": 59.3069965,
+   "lon": 18.0290177,
+   "addr": "Grönbrinksgatan",
+   "osm": "node/991746405",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Mama Ye's",
+   "type": "restaurant",
+   "lat": 59.3075449,
+   "lon": 18.0301795,
+   "addr": "Sjövikstorget",
+   "osm": "node/1277537526",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Hanami Hawaiian Poké & Sushi",
+   "type": "restaurant",
+   "lat": 59.3060444,
+   "lon": 18.0325963,
+   "addr": "Sjöviksvägen",
+   "osm": "node/5334913928",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Brödernas",
+   "type": "restaurant",
+   "lat": 59.3066191,
+   "lon": 18.0334682,
+   "addr": "Sjövikskajen",
+   "osm": "node/5775168578",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "MGL Sushi",
+   "type": "restaurant",
+   "lat": 59.3072681,
+   "lon": 18.0268205,
+   "addr": "Fredsborgstorget",
+   "osm": "node/5258213921",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Bitza",
+   "type": "restaurant",
+   "lat": 59.3144559,
+   "lon": 18.0330386,
+   "addr": "Hornstulls Strand",
+   "osm": "node/6830672557",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Mackverket",
+   "type": "restaurant",
+   "lat": 59.3103302,
+   "lon": 18.0311401,
+   "addr": "Marieviksstranden",
+   "osm": "node/13875738138",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Roots & Soil",
+   "type": "restaurant",
+   "lat": 59.3097676,
+   "lon": 18.028177,
+   "addr": "Årstaängsvägen",
+   "osm": "node/1616041454",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Kim Ban Ban",
+   "type": "restaurant",
+   "lat": 59.3095202,
+   "lon": 18.021603,
+   "addr": "Nybohovsbacken",
+   "osm": "node/12087511125",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Bankomat",
+   "type": "restaurant",
+   "lat": 59.3076959,
+   "lon": 18.0305063,
+   "addr": "Sjövikskajen",
+   "osm": "node/858575535",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "3Sixty",
+   "type": "restaurant",
+   "lat": 59.3061695,
+   "lon": 18.0351583,
+   "addr": "Sjövikskajen",
+   "osm": "node/11523628108",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Calexico's",
+   "type": "restaurant",
+   "lat": 59.3147147,
+   "lon": 18.0316951,
+   "addr": "Strand",
+   "osm": "node/4327057003",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Il Forno",
+   "type": "restaurant",
+   "lat": 59.309555,
+   "lon": 18.0220841,
+   "addr": "Liljeholmstorget",
+   "osm": "node/12455861583",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Thai Rung",
+   "type": "restaurant",
+   "lat": 59.3104328,
+   "lon": 18.0223051,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1036315069",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "NIDa Catering och festvåning",
+   "type": "restaurant",
+   "lat": 59.3100886,
+   "lon": 18.03051,
+   "addr": "Årstaängsvägen",
+   "osm": "node/7896856729",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Marrakech Resturang",
+   "type": "restaurant",
+   "lat": 59.3096235,
+   "lon": 18.030495,
+   "addr": "Årstaängsvägen",
+   "osm": "node/5245925642",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Let's Eat Sushi",
+   "type": "restaurant",
+   "lat": 59.3082152,
+   "lon": 18.0270286,
+   "addr": "Sjöviksvägen",
+   "osm": "node/5249082477",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Boulebar Tanto",
+   "type": "restaurant",
+   "lat": 59.3108962,
+   "lon": 18.0417421,
+   "addr": "Tantogatan",
+   "osm": "node/9899911097",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Caffè Nero",
+   "type": "cafe",
+   "lat": 59.3097814,
+   "lon": 18.022905,
+   "addr": "Liljeholmstorget",
+   "osm": "node/12455835880",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Tant Maja och Fröken Emilia",
+   "type": "cafe",
+   "lat": 59.3081333,
+   "lon": 18.0272421,
+   "addr": "Marieviksgatan",
+   "osm": "node/5262025993",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Café Momo",
+   "type": "cafe",
+   "lat": 59.3098599,
+   "lon": 18.0217484,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1986820706",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Bravo",
+   "type": "cafe",
+   "lat": 59.3101203,
+   "lon": 18.0232131,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1161921220",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Giffi",
+   "type": "cafe",
+   "lat": 59.3146852,
+   "lon": 18.0348809,
+   "addr": "Liljeholmsbron",
+   "osm": "node/1258633794",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Rosteriet",
+   "type": "cafe",
+   "lat": 59.3119336,
+   "lon": 18.0239912,
+   "addr": "Rosterigränd",
+   "osm": "node/5059869893",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Prepp",
+   "type": "cafe",
+   "lat": 59.310603,
+   "lon": 18.0297263,
+   "addr": "Årstaängsvägen",
+   "osm": "node/7257809236",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Boule Bar",
+   "type": "bar",
+   "lat": 59.3127394,
+   "lon": 18.0274367,
+   "addr": "Liljeholmsvägen",
+   "osm": "node/2549214110",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Bar Brooklyn",
+   "type": "bar",
+   "lat": 59.314336,
+   "lon": 18.0327892,
+   "addr": "Strand",
+   "osm": "node/4092281748",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Debaser Pontonen",
+   "type": "bar",
+   "lat": 59.3144071,
+   "lon": 18.0323763,
+   "addr": "Strand",
+   "osm": "node/9846285868",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Älgen",
+   "type": "bar",
+   "lat": 59.3148774,
+   "lon": 18.0338891,
+   "addr": "Långholmsgatan",
+   "osm": "node/1668741594",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "McDonald's",
+   "type": "fast_food",
+   "lat": 59.3104032,
+   "lon": 18.0229847,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1036339167",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "YUC TANTO",
+   "type": "fast_food",
+   "lat": 59.3139475,
+   "lon": 18.0345157,
+   "addr": "Hornstulls Strand 17",
+   "osm": "node/11114923605",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Smash N Grab",
+   "type": "fast_food",
+   "lat": 59.3059707,
+   "lon": 18.0303074,
+   "addr": "Fredsborgsgatan",
+   "osm": "node/13446330847",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Solgrillen",
+   "type": "fast_food",
+   "lat": 59.3148923,
+   "lon": 18.0312569,
+   "addr": "Strand",
+   "osm": "node/804687578",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Liljeholmens Grill",
+   "type": "fast_food",
+   "lat": 59.3100673,
+   "lon": 18.0218658,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1075411411",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Di Metro",
+   "type": "fast_food",
+   "lat": 59.3101026,
+   "lon": 18.0220192,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1036338461",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Sjöviks pizza & kebab",
+   "type": "fast_food",
+   "lat": 59.3070687,
+   "lon": 18.0292022,
+   "addr": "Grönbrinksgatan",
+   "osm": "node/5272588840",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "KFC",
+   "type": "fast_food",
+   "lat": 59.3097444,
+   "lon": 18.0221382,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1161921167",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Chamsin Grill",
+   "type": "fast_food",
+   "lat": 59.3128175,
+   "lon": 18.0281034,
+   "addr": "Liljeholmsvägen",
+   "osm": "node/2549214112",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Del Mare",
+   "type": "fast_food",
+   "lat": 59.3090971,
+   "lon": 18.0155531,
+   "addr": "Nybohovsbacken",
+   "osm": "node/5812763851",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Liljeholmens Stadshotell",
+   "type": "hotel",
+   "lat": 59.3092346,
+   "lon": 18.0160709,
+   "addr": "Nybohovsbacken",
+   "osm": "node/885657620",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Harmoney beauty & Spa",
+   "type": "spa",
+   "lat": 59.3095552,
+   "lon": 18.0242852,
+   "addr": "Liljeholmstorget",
+   "osm": "node/13049779629",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Liljeholmshuset",
+   "type": "community",
+   "lat": 59.3118694,
+   "lon": 18.025112,
+   "addr": "Katrinebergsbacken",
+   "osm": "way/540076557",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Svenska kyrkan",
+   "type": "community",
+   "lat": 59.3063475,
+   "lon": 18.0344906,
+   "addr": "Sjövikskajen",
+   "osm": "node/5775168579",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Trekantsparken",
+   "type": "park",
+   "lat": 59.3123068,
+   "lon": 18.0206199,
+   "addr": "",
+   "osm": "way/48565113",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fredsborgsparken",
+   "type": "park",
+   "lat": 59.3064132,
+   "lon": 18.0280888,
+   "addr": "",
+   "osm": "relation/19314693",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Drakenbergsparken",
+   "type": "park",
+   "lat": 59.3137525,
+   "lon": 18.0364202,
+   "addr": "",
+   "osm": "way/4490351",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Park",
+   "type": "park",
+   "lat": 59.3081249,
+   "lon": 18.0166133,
+   "addr": "",
+   "osm": "way/130147929",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Park",
+   "type": "park",
+   "lat": 59.3113584,
+   "lon": 18.026284,
+   "addr": "",
+   "osm": "way/540076556",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Blomsterdalen",
+   "type": "park",
+   "lat": 59.3076775,
+   "lon": 18.0257364,
+   "addr": "",
+   "osm": "relation/19318969",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Parkleken Draken",
+   "type": "playground",
+   "lat": 59.3145918,
+   "lon": 18.0403417,
+   "addr": "Hornsviksstigen",
+   "osm": "relation/19324233",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3072128,
+   "lon": 18.0148691,
+   "addr": "Hägerstensvägen",
+   "osm": "way/615260786",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Pandaparken",
+   "type": "playground",
+   "lat": 59.3076917,
+   "lon": 18.0176871,
+   "addr": "Nybohovsgränd",
+   "osm": "way/130147937",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3075935,
+   "lon": 18.0258842,
+   "addr": "Marieviksgatan",
+   "osm": "relation/19318962",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3136884,
+   "lon": 18.0161052,
+   "addr": "Trekantsstranden",
+   "osm": "way/527058203",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fruktparken",
+   "type": "playground",
+   "lat": 59.3110816,
+   "lon": 18.0221893,
+   "addr": "Liljeholmsgränd",
+   "osm": "way/100736306",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3115489,
+   "lon": 18.0263621,
+   "addr": "Katrinebergsbacken",
+   "osm": "way/1312607311",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Blixtparken",
+   "type": "playground",
+   "lat": 59.3090713,
+   "lon": 18.0179679,
+   "addr": "Nybohovsbacken",
+   "osm": "way/1039866973",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3055184,
+   "lon": 18.0373943,
+   "addr": "Sjöviksvägen",
+   "osm": "way/653937952",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3147,
+   "lon": 18.0132589,
+   "addr": "Sannadalsvägen",
+   "osm": "way/779686641",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3110247,
+   "lon": 18.0225364,
+   "addr": "Liljeholmsgränd",
+   "osm": "way/1190596965",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.309424,
+   "lon": 18.0136757,
+   "addr": "Nybohovsbacken",
+   "osm": "way/616267568",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 59.3078541,
+   "lon": 18.0291271,
+   "addr": "Sjövikstorget",
+   "osm": "way/977943612",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "ICA Supermarket",
+   "type": "supermarket",
+   "lat": 59.3073101,
+   "lon": 18.0296528,
+   "addr": "Sjövikstorget",
+   "osm": "node/459776346",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Willys",
+   "type": "supermarket",
+   "lat": 59.3093766,
+   "lon": 18.0211932,
+   "addr": "Nybohovsbacken",
+   "osm": "node/1281441063",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "ICA Kvantum Liljeholmen",
+   "type": "supermarket",
+   "lat": 59.3094423,
+   "lon": 18.0222688,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1281441051",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "ICA Nära Årstadal",
+   "type": "supermarket",
+   "lat": 59.3059912,
+   "lon": 18.0251194,
+   "addr": "Förmansvägen",
+   "osm": "node/5158570559",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Thailaan",
+   "type": "supermarket",
+   "lat": 59.3093456,
+   "lon": 18.0214941,
+   "addr": "Nybohovsbacken",
+   "osm": "node/9057038204",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Lidl",
+   "type": "supermarket",
+   "lat": 59.3100484,
+   "lon": 18.0233359,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1161921239",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Coop Liljeholmen",
+   "type": "supermarket",
+   "lat": 59.310627,
+   "lon": 18.0235836,
+   "addr": "Liljeholmstorget",
+   "osm": "node/1039107250",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Plåtpalatset",
+   "type": "venue",
+   "lat": 59.31049,
+   "lon": 18.02946,
+   "addr": "Årstaängsvägen 13D (Modehuset)",
+   "osm": null,
+   "source": "thatsup.co.uk; address geocoded via OpenStreetMap Nominatim"
+  }
+ ]
+}

@@ -129,6 +129,20 @@ body {
 .studio-label.layer { font-size: 11.5px; background: #fffdf6; white-space: nowrap; }
 .studio-label.name { font-family: var(--font-sans); font-size: 11.5px; box-shadow: none; border-width: 1px; background: rgba(255, 253, 246, 0.9); }
 
+/* Urban scale: events and activities as stickers (dashed when temporary), amenities as dots (name on hover) */
+.life-pin {
+  display: flex; align-items: center; gap: 5px;
+  font-family: var(--font-sans); font-size: 11.5px; font-weight: 600; color: #202020; white-space: nowrap;
+  background: #fffdf6; border: 2px solid #202020; border-radius: 5px; padding: 1px 7px 1px 5px;
+  box-shadow: 2px 2px 0 #202020; transform: translateY(-50%); pointer-events: auto; cursor: default;
+}
+.life-pin.temporary { border-style: dashed; box-shadow: none; }
+.life-pin i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #202020; }
+.life-dot {
+  width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #202020;
+  pointer-events: auto; cursor: default; transform: translateY(-50%);
+}
+
 .panel-scroll { max-height: calc(100vh - 10.5rem); overflow-y: auto; padding: 0 5px 5px 0; }
 /* with the 10-year timeline open in the bottom bar, the side panels end above it */
 .panel-scroll.panel-short { max-height: max(14rem, calc(100vh - 35rem)); }

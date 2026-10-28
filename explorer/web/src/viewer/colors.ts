@@ -34,13 +34,14 @@ export function dfColor(v: number) {
   return (DF_BINS.find((b) => v < b.max) ?? DF_BINS[DF_BINS.length - 1]).color
 }
 
-// Share of occupied hours inside the EN 16798-1 category II band.
+// Share of occupied hours inside the EN 16798-1 category II band. Stockholm floors mostly land above 95 %, so the
+// bins are fine at the top end (one cream ≥ 95 % bin painted whole floors the colour of the plain plan), red → green.
 export const COMFORT_BINS = [
-  { max: 70, color: '#5b1f2c', label: '< 70 %' },
-  { max: 80, color: '#93413a', label: '70–80' },
-  { max: 90, color: '#c47a4c', label: '80–90' },
-  { max: 95, color: '#d9b77a', label: '90–95' },
-  { max: Infinity, color: '#e9e3c9', label: '≥ 95 %' },
+  { max: 85, color: '#d8342b', label: '< 85 %' },
+  { max: 92, color: '#fd876e', label: '85–92' },
+  { max: 96, color: '#f5c443', label: '92–96' },
+  { max: 98, color: '#9fcf4a', label: '96–98' },
+  { max: Infinity, color: '#03b05f', label: '≥ 98 %' },
 ]
 export function comfortColor(v: number) {
   return (COMFORT_BINS.find((b) => v < b.max) ?? COMFORT_BINS[COMFORT_BINS.length - 1]).color

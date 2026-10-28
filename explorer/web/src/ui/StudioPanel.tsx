@@ -173,7 +173,7 @@ export function FloorInfo({ model, floorLabel }: { model: StudioModel; floorLabe
   const f = model.fig, L = model.layout, office = L.use === 'office' || L.use === 'cowork'
   const failed = f.checks.filter((c) => !c.ok)
   return (
-    <Card title={`${floorLabel} · this floor`} right={<Badge tone={failed.length ? 'serious' : 'good'}>{failed.length ? `${failed.length} check${failed.length > 1 ? 's' : ''}` : 'all checks pass'}</Badge>}>
+    <Card title={`${floorLabel} · this floor`} right={failed.length ? <Badge tone="serious">{`${failed.length} check${failed.length > 1 ? 's' : ''}`}</Badge> : undefined}>
       <StatGrid>
         <Stat label="gross floor area" value={f.gfa.toLocaleString('sv-SE')} unit="m²" />
         <Stat label="legal maximum (fire)" value={f.designLoad} />

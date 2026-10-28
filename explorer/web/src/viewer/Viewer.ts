@@ -156,7 +156,7 @@ export class Viewer {
     const w = container.clientWidth
     const h = container.clientHeight
     // logarithmicDepthBuffer: the camera's near:far ratio (0.5 / 20000 = 40 000:1) badly starves a linear depth
-    // buffer at distance, so thinly z-stacked context layers (water -0.02, ground -0.05, roads 0.04, â€¦) z-fight
+    // buffer at distance, so thinly z-stacked context layers (water -0.02, ground -0.05, roads 0.04, …) z-fight
     // and visibly swap which one is "in front" once the camera is more than a couple hundred units out.
     this.renderer = new THREE.WebGLRenderer({
       antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true, logarithmicDepthBuffer: true,
@@ -465,7 +465,7 @@ export class Viewer {
     ground.receiveShadow = true
     ground.userData.placeholder = true
     this.contextGroup.add(ground)
-    // Ã…rstaviken lies south-east of the blocks: a simple water plane to read the site by
+    // Årstaviken lies south-east of the blocks: a simple water plane to read the site by
     const water = new THREE.Mesh(new THREE.PlaneGeometry(1600, 700),
       new THREE.MeshStandardMaterial({ color: '#4b6475', roughness: 0.12, metalness: 0.4 }))
     water.position.set(this.center.x + 330, this.center.y - 470, -0.02)
@@ -738,7 +738,7 @@ export class Viewer {
     this.applyFocus(animate)
   }
 
-  /** Buildings to ghost regardless of focus â€” District's unselected buildings, Urban's receded massing. */
+  /** Buildings to ghost regardless of focus — District's unselected buildings, Urban's receded massing. */
   setDimmed(ids: Iterable<string> | null) {
     this.dimmed = new Set(ids ?? [])
     this.applyFocus(false)
@@ -1039,7 +1039,7 @@ export class Viewer {
         const mesh = new THREE.Mesh(geo, mat)
         mesh.renderOrder = 2
         g.add(mesh)
-        this.studioLabel(s.tenant ? `${s.tenant} Â· ${Math.round(s.area)} mÂ²` : `Vacant Â· ${Math.round(s.area)} mÂ²`,
+        this.studioLabel(s.tenant ? `${s.tenant} · ${Math.round(s.area)} m²` : `Vacant · ${Math.round(s.area)} m²`,
           (s.r[0] + s.r[2]) / 2, (s.r[1] + s.r[3]) / 2, lz, s.tenant ? 'tenant' : 'vacant')
       }
     } else if (view === 'use' && use) {
@@ -1068,7 +1068,7 @@ export class Viewer {
       const exitMat = new THREE.MeshStandardMaterial({ color: '#03b05f', roughness: 0.6 })
       m.exits.forEach((e, i) => {
         boxMesh(exitMat, studioBox(e.x - 0.5, e.y - 0.5, e.x + 0.5, e.y + 0.5, base, base + 2.4))
-        this.studioLabel(`${e.id} Â· ${m.fig.exitLoad[i].people} people`, e.x, e.y, base + 3.2, 'exit')
+        this.studioLabel(`${e.id} · ${m.fig.exitLoad[i].people} people`, e.x, e.y, base + 3.2, 'exit')
       })
       const w0 = m.fig.worst
       if (w0) {
@@ -1129,7 +1129,7 @@ export class Viewer {
     this.invalidate(1)
   }
 
-  /** Crowd density during an evacuation (people per mÂ², the highest each cell saw), on its own coarse grid. */
+  /** Crowd density during an evacuation (people per m², the highest each cell saw), on its own coarse grid. */
   setStudioDensity(d: Float32Array | null, nx: number, ny: number, cell: number) {
     if (!this.studioOn) return
     if (this.studioDensity) { this.floorGroup.remove(this.studioDensity); disposeTree(this.studioDensity) ; this.studioDensity = null }
@@ -1141,7 +1141,7 @@ export class Viewer {
     for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
       const v = d[j * nx + i]
       if (v < 0.5) continue
-      const [r, g, b] = rampColor(Math.min(1, v / 4))   // 4 people per mÂ² and up: red
+      const [r, g, b] = rampColor(Math.min(1, v / 4))   // 4 people per m² and up: red
       const o = ((ny - 1 - j) * nx + i) * 4
       img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b; img.data[o + 3] = 170
     }
@@ -1818,7 +1818,7 @@ export class Viewer {
         const el = document.createElement('div')
         el.className = 'unit-label'
         // many small units: area only, so the plan stays readable
-        el.textContent = many ? `${Math.round(u.area)}` : `${u.name.replace('Apartment ', '')} Â· ${Math.round(u.area)} mÂ²`
+        el.textContent = many ? `${Math.round(u.area)}` : `${u.name.replace('Apartment ', '')} · ${Math.round(u.area)} m²`
         const lab = new CSS2DObject(el)
         lab.position.set(u.label[0], u.label[1], fp.base + 1.2)
         this.labelGroup.add(lab)
@@ -1853,8 +1853,8 @@ export class Viewer {
   }
 
   /** Urban scale: pins on the site, one visual language per kind of life:
-   *  permanent â†’ a flag planted in the ground (it stays), temporary â†’ a balloon tied to the spot (it floats away
-   *  after its year), amenity â†’ a round board-game token with its type's icon (name on hover).
+   *  permanent → a flag planted in the ground (it stays), temporary → a balloon tied to the spot (it floats away
+   *  after its year), amenity → a round board-game token with its type's icon (name on hover).
    *  Pins not on the map the last time pop in with a small animation. null clears them. */
   setLifePins(pins: {
     x: number; y: number; label: string; colour: string; kind: 'permanent' | 'temporary' | 'amenity'; title: string

@@ -97,7 +97,7 @@ export function GeneratePlans({ data, busy, error, onGenerate, current, onOpen, 
   const ok = data ? data.rows.filter((r) => r.valid) : []
   const top = ok.filter((r) => r.generated && r.pareto).sort((a, c) => (c.kpi.staff ?? 0) - (a.kpi.staff ?? 0)).slice(0, 5)
   return (
-    <Card title="Generate plans" right={<Badge tone="warn">{busy ? 'generating…' : 'uncalibrated'}</Badge>}>
+    <Card title="Generate plans" right={busy ? <Badge tone="warn">generating…</Badge> : undefined}>
       <button type="button" onClick={() => onGenerate(300)} disabled={busy}
         className="w-full rounded-md border-2 border-edge bg-coral px-3 py-1.5 text-[13px] font-semibold text-[#202020] shadow-[3px_3px_0_var(--color-edge)] disabled:opacity-50">
         {busy ? 'Generating…' : data ? 'Generate again' : 'Generate 300 plans'}

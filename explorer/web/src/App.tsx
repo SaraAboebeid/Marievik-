@@ -33,7 +33,7 @@ import { WalkPanel, WALK_COLOURS, WALK_MINUTES, bandOf, walkRadii, type WalkStat
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
 import { LAYER_LEGEND } from './ui/LayerBar'
-import { LensPanel } from './ui/LensPanel'
+import { LensOptions, LensPanel, type FireMode } from './ui/LensPanel'
 import { LAYERS_AT, busyColour, evacDensity, evacFrames, riskColour } from './layers'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, Layer, LayerData } from './layers'
 import { BuildingOverview, FloorTenancyCard } from './ui/OverviewPanel'
@@ -128,6 +128,7 @@ export default function App() {
   })
 
   const [tab, setTab] = useState<Tab>('explore')
+  const [showStandards, setShowStandards] = useState(false)
   const [scale, setScale] = useState<Scale>('building')
   const [districtHidden, setDistrictHidden] = useState<Set<string>>(new Set())
   const [urban, setUrban] = useState<UrbanSummary | null>(null)
@@ -159,7 +160,8 @@ export default function App() {
   const [studioHeat, setStudioHeat] = useState(true)
   const [crowdNote, setCrowdNote] = useState('')
   const [capacity, setCapacity] = useState<CapacityState>({ busy: null, result: null, rows: null })
-  const [tlHidden, setTlHidden] = useState(false)   // the bottom timeline on a studio floor, closed with its ✕
+  const [tlHidden, setTlHidden] = useState(true)   // the bottom timeline on a studio floor, closed until asked for
+  const [tlAsked, setTlAsked] = useState<Set<string>>(() => new Set())   // building[:floor] whose 10-year plan was generated
   const studioFloor = studioMeta && buildingId && studioMeta.buildings.includes(buildingId) && (level.kind === 'floor' || level.kind === 'unit') ? level.floor : null
   studioRef.current = studioFloor !== null
   // The 10-year timeline plays one segment on the furnished floor: segment 1 keeps today's layout while its
@@ -245,6 +247,7 @@ export default function App() {
   const [evacT, setEvacT] = useState(0)
   const [evacPlaying, setEvacPlaying] = useState(false)
   const [evacDense, setEvacDense] = useState(true)
+  const [fireMode, setFireMode] = useState<FireMode>('static')   // Fire escape lens: zones & distances, or the evacuation
   const evacKey = studioFloor !== null && sLayout ? `${studioFloor}|${sLayout}|${sParamsKey}` : ''
   const evacNow = evac && evacKey === `${evac.floor}|${evac.layout}|${sParamsKey}` ? evac : null
   const evacFramesRef = useRef<{ key: string; frames: Float32Array[] } | null>(null)
@@ -255,7 +258,7 @@ export default function App() {
       .then(async ({ job }) => {
         for (let i = 0; i < 400; i++) {
           const j = await api.evacJob(job)
-          if (j.status === 'complete' && j.result) { setEvac(j.result); setEvacT(0); setEvacPlaying(true); return }
+          if (j.status === 'complete' && j.result) { setEvac(j.result); setEvacT(0); setEvacPlaying(true); setFireMode('sim'); return }
           if (j.status === 'failed') throw new Error(j.error?.split('\n').filter(Boolean).slice(-1)[0] ?? 'evacuation failed')
           await new Promise((r) => setTimeout(r, 1500))
         }
@@ -265,15 +268,19 @@ export default function App() {
       .finally(() => setEvacBusy(false))
   }
   useEffect(() => { setEvacPlaying(false) }, [evacKey])
-  // play: four times real time
+  // play: four times real time — but the wait for the alarm (pre-movement, 30–90 s) before anyone sets off is
+  // fast-forwarded, so the playback doesn't sit still for its first half-minute
   useEffect(() => {
     if (!evacPlaying || !evacNow) return
     const end = evacNow.frames.n * evacNow.frames.dt
+    const fr = evacFrames(evacNow), f0 = fr[0]
+    const firstF = fr.findIndex((f) => f.some((v, i) => !isFinite(v) || Math.abs(v - f0[i]) > 0.3))
+    const firstMove = Math.max(0, (firstF < 0 ? 0 : firstF) * evacNow.frames.dt - 1)
     let last = performance.now(), raf = 0
     const tick = (now: number) => {
       const dt = (now - last) / 1000 * 4
       last = now
-      setEvacT((t) => { const n = t + dt; if (n >= end) { setEvacPlaying(false); return end } return n })
+      setEvacT((t) => { const n = t < firstMove ? Math.min(firstMove, t + dt * 10) : t + dt; if (n >= end) { setEvacPlaying(false); return end } return n })
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
@@ -397,7 +404,9 @@ export default function App() {
   }, [tenancyFor, choice.project])
   const floorTenancy = studioFloor !== null && buildingId ? tenancy[buildingId]?.[studioFloor] ?? null : null
 
-  // on a studio floor the 10-year timeline sits open in the bottom bar; elsewhere it opens from Building setup
+  // the 10-year plan is only computed on request ("Generate 10-year plan"): on a studio floor it then sits open in
+  // the bottom bar; a new floor or building starts closed again
+  useEffect(() => { setTlHidden(true) }, [studioFloor, buildingId])
   const tlAuto = studioFloor !== null && !tlHidden
   const tlOpen = showTimeline || tlAuto
 
@@ -420,10 +429,14 @@ export default function App() {
 
   // ------------------------------------------------------------ 10-year timeline: computed once per building
   // (or once per building+floor), polled until ready
-  // also loaded whenever a building or floor is open, for the 10-year planning table in the left panel
-  const tlWanted = tlOpen || (!!buildingId && level.kind !== 'site')
+  // kept for the 10-year planning table once generated for this building/floor — never computed unasked
+  const tlKey = `${buildingId}:${timelineFloor ?? ''}`
+  const tlWanted = tlOpen || tlAsked.has(tlKey)
   useEffect(() => {
-    if (!tlWanted || !buildingId) return
+    if (tlOpen && buildingId) setTlAsked((s) => (s.has(tlKey) ? s : new Set(s).add(tlKey)))
+  }, [tlOpen, tlKey]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!tlWanted || !buildingId) { setTl(null); return }
     let alive = true
     let t = 0
     let misses = 0
@@ -697,7 +710,8 @@ export default function App() {
   // the evacuation on the plan: people at time t (out = hidden), and how crowded it got
   useEffect(() => {
     const v = viewer.current
-    if (!v || !studioModel || studioView !== 'fire' || !evacNow) return
+    if (!v || !studioModel || studioView !== 'fire') return
+    if (fireMode !== 'sim' || !evacNow) { v.setStudioAgents([]); return }   // zones & distances: nobody walking
     const key = `${evacNow.floor}|${evacNow.layout}|${evacNow.total}|${evacNow.frames.n}`
     if (evacFramesRef.current?.key !== key) evacFramesRef.current = { key, frames: evacFrames(evacNow) }
     const frames = evacFramesRef.current.frames
@@ -710,12 +724,12 @@ export default function App() {
         moving: !gone && Math.hypot(x - first[2 * i], y - first[2 * i + 1]) > 0.3 }
     })
     v.setStudioAgents(walkers)
-  }, [studioModel, studioView, evacNow, evacT])
+  }, [studioModel, studioView, evacNow, evacT, fireMode])
   useEffect(() => {
     const v = viewer.current
     if (!v || !studioModel) return
-    v.setStudioDensity(studioView === 'fire' && evacNow && evacDense ? evacDensity(evacNow) : null, evacNow?.heat.nx ?? 0, evacNow?.heat.ny ?? 0, evacNow?.heat.cell ?? 1)
-  }, [studioModel, studioView, evacNow, evacDense])
+    v.setStudioDensity(studioView === 'fire' && fireMode === 'sim' && evacNow && evacDense ?evacDensity(evacNow) : null, evacNow?.heat.nx ?? 0, evacNow?.heat.ny ?? 0, evacNow?.heat.cell ?? 1)
+  }, [studioModel, studioView, evacNow, evacDense, fireMode])
 
   // layers on the buildings: each floor tinted by its figure, a label over the roof, flows to the station
   useEffect(() => {
@@ -1136,10 +1150,15 @@ export default function App() {
     setTlSeg(segment)
     openTimeline()
   }
+  const evacEl = (
+    <EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
+      playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
+      t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />
+  )
   const tlButton = (
     <button type="button" onClick={() => (tlOpen ? closeTl() : openTimeline())} aria-pressed={tlOpen}
       className={`mb-2.5 w-full rounded-md border-2 border-edge px-3 py-1.5 text-[13px] font-semibold shadow-[3px_3px_0_var(--color-edge)] ${tlOpen ? 'bg-surface' : 'bg-coral text-[#202020]'}`}>
-      {tlOpen ? 'Hide the 10-year plan' : 'Generate 10-year plan'}
+      {tlOpen ? 'Hide the 10-year plan' : tlAsked.has(tlKey) ? 'Show the 10-year plan' : 'Generate 10-year plan'}
     </button>
   )
   const floorOpen = !!(studioModel && studioMeta && studioFloor !== null && sLayout)
@@ -1224,6 +1243,8 @@ export default function App() {
           ...(site && site.suppliers.length > 0 ? [{ label: 'Suppliers',
             title: 'Supplier products and how they do in the open building', open: showSuppliers, onClick: () => setShowSuppliers((s) => !s) }] : []),
           { label: 'Methods & data', open: explain !== null, onClick: () => setExplain((e) => (e === null ? '' : null)) },
+          { label: 'Standards', title: 'Dimensioned standards sheets: accessibility, escape routes, loads and every use in the catalogue',
+            open: showStandards, onClick: () => setShowStandards((s) => !s) },
         ]} />
 
       {/* under the bar: where you are, and the tools — a second full-width bar (like the header above it),
@@ -1324,7 +1345,6 @@ export default function App() {
           )}
           <LensPanel floorOpen={floorOpen} scale={scale} layer={layer} setLayer={setLayer}
             view={studioView} setView={setStudioView}
-            scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
             explode={view.explode} setExplode={(v) => setView({ ...view, explode: v })} />
         </div>
         <KpiStrip scale={kpiScale} profile={projectProfile} pinned={choice.kpis}
@@ -1340,16 +1360,11 @@ export default function App() {
         </div>
       )}
 
-      {/* left: a floor open — that floor's own status, the 10-year timeline and the plan generator. A whole
-          building, no floor open — the (building-wide) 10-year timeline and a way into the plan generator.
-          The lens picker lives in the top bar now (every scale); the building's figures are on the right. */}
-      {(floorOpen || (showBuildingActions && !!studioMeta?.buildings.includes(buildingId!))) && (panels.left ? (
-        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn ? 'panel-short' : ''} absolute left-3 ${panelTop} z-10 w-[19rem]`}>
-          <div className="mb-1 flex justify-end">
-            <button onClick={() => togglePanel('left')} title="Close panel" aria-label="Close panel"
-              className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
-          </div>
-          {floorOpen ? (() => {
+      {/* (the left panel moved into the right one: a floor open — that floor's own status and the plan generator;
+          a whole building — a way into the plan generator. The left side stays clear for the model.) */}
+      {(() => {
+        const leftCards = (floorOpen || (showBuildingActions && !!studioMeta?.buildings.includes(buildingId!))) && (
+          floorOpen ? (() => {
             const floorLabel = studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`
             return (
               <>
@@ -1372,14 +1387,8 @@ export default function App() {
                 </Card>
               )}
             </>
-          )}
-        </aside>
-      ) : (
-        <button onClick={() => togglePanel('left')} title={floorOpen ? 'Show this floor' : 'Show the 10-year timeline'} aria-label={floorOpen ? 'Show this floor' : 'Show the 10-year timeline'}
-          className={`absolute left-3 ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
-          ▸
-        </button>
-      ))}
+          ))
+        return (<>
 
       {/* right: a whole building, no floor open — its key figures, overview and space distribution. A floor
           open — what you change (layout/walls/people, building settings) above what comes out of it (results).
@@ -1390,8 +1399,13 @@ export default function App() {
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
           </div>
+          {floorOpen && (
+            <LensOptions view={studioView} scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
+              fireMode={fireMode} setFireMode={setFireMode} evac={evacEl} />
+          )}
+          {leftCards}
           {buildingId && level.kind !== 'site' && tlButton}
-          {buildingId && level.kind !== 'site' && (
+          {buildingId && level.kind !== 'site' && tlWanted && (
             <PlanningTable tl={tl}
               title={`${level.kind === 'building' ? buildingId : studioFloor === 0 ? 'Ground floor' : `Floor ${level.floor}`} · 10-year planning`}
               onOpen={openPathway} />
@@ -1445,9 +1459,7 @@ export default function App() {
               day={<DayPanel occ={occNow} busy={occBusy} hour={occHour} setHour={(h) => { setOccHour(h); setStudioView('use') }}
                 showUse={studioView === 'use'} onShowUse={() => setStudioView(studioView === 'use' ? 'furniture' : 'use')} />}
               tenancy={floorTenancy ? <FloorTenancyCard ten={floorTenancy} floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`} /> : null}
-              evac={<EvacPanel res={evacNow} busy={evacBusy} error={evacErr} onRun={runEvac}
-                playing={evacPlaying} onPlay={() => { if (!evacPlaying && evacNow && evacT >= evacNow.frames.n * evacNow.frames.dt - 0.01) setEvacT(0); setEvacPlaying(!evacPlaying) }}
-                t={evacT} setT={(t) => { setEvacPlaying(false); setEvacT(t) }} density={evacDense} setDensity={setEvacDense} />} />
+              evac={evacEl} />
           ) : level.kind === 'building' && buildingId ? (() => {
             const figData = figures && figures.building === buildingId ? figures : null
             const figLoading = !!loading[buildingId] || figures?.key !== bdata[buildingId]?.key
@@ -1476,6 +1488,8 @@ export default function App() {
           ◂
         </button>
       )}
+        </>)
+      })()}
 
       {/* analysis legends */}
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
@@ -1557,6 +1571,14 @@ export default function App() {
           onClose={() => setShowSuppliers(false)} />
       )}
 
+      {/* the standards sheets (docs/standards_sheets, served at /standards/), in the tool under the header */}
+      {showStandards && (
+        <div className="absolute inset-x-0 bottom-0 top-[64px] z-30 flex flex-col border-t-2 border-edge bg-surface">
+          <iframe src="/standards/" title="Standards sheets" className="min-h-0 flex-1 border-0" />
+          <button type="button" onClick={() => setShowStandards(false)} aria-label="Close the standards sheets"
+            className="absolute right-4 top-3 grid h-8 w-8 place-items-center rounded-full border-2 border-edge bg-surface text-[16px] leading-none shadow-[2px_2px_0_var(--color-edge)] hover:bg-coral">×</button>
+        </div>
+      )}
       {explain !== null && methods && (
         <MethodsDrawer methods={methods} profile={cavfProfile} focus={explain}
           result={kpiResult && kpiResult.building === buildingId ? kpiResult : null} onClose={() => setExplain(null)} />

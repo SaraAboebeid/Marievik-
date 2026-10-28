@@ -27,13 +27,14 @@ SHELL_PATH = ROOT / "data" / "building" / "marievik_shell.json"
 OUTPUT = ROOT / "docs" / "standards_sheets"
 DRAWN = "2026-10-20"
 
-INK = "#1d1d1b"
-GREY = "#7d7d7a"
-LIGHT = "#c9c9c4"
-WALL = "#e6e6e1"
-ACCENT = "#cc2f2a"
-PAPER = "#ffffff"
-FONT = "'Montserrat','Helvetica Neue',Arial,sans-serif"
+# the explorer's palette and type (explorer/web/src/index.css): ink, cream paper, Marievik+ blue for dimensions
+INK = "#202020"
+GREY = "#6e6a5e"
+LIGHT = "#d8d3bf"
+WALL = "#f2efe2"
+ACCENT = "#0528ca"
+PAPER = "#fffdf6"
+FONT = "'Bricolage Grotesque','Segoe UI','Helvetica Neue',Arial,sans-serif"
 
 W = 1200
 FRAME_X, FRAME_Y, FRAME_W = 40, 175, 1120

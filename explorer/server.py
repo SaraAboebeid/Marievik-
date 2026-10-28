@@ -642,6 +642,10 @@ for _sub in ("assets", "rhino3dm"):               # the built app and the rhino3
     if (DIST / _sub).is_dir():
         app.mount("/" + _sub, StaticFiles(directory=DIST / _sub), name=_sub)
 
+STANDARDS = HERE.parent / "docs" / "standards_sheets"   # the dimensioned standards sheets (docs/draw_standards_sheets.py)
+if STANDARDS.is_dir():
+    app.mount("/standards", StaticFiles(directory=STANDARDS, html=True), name="standards")
+
 
 @app.get("/", response_class=HTMLResponse)
 def landing():

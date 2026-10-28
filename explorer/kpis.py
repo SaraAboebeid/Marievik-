@@ -179,6 +179,20 @@ KPIS: dict[str, dict] = {
                            explorer="Placeholder: shiftable_load_w_per_m2 × GFA."),
     "hazard_adaptation": dict(name="Hazard adaptation performance", group="Environment", scale="Meso",
                               explorer="Placeholder: hazard_adaptation_score."),
+    # in the Marievik stakeholder KPI table (data/projects/marievik.json) but not in the cheat sheet's formulas yet;
+    # defined by name only, no value until a method and data exist
+    "use_diversity": dict(name="Use diversity", group="Use", scale="Meso",
+                          explorer="Computed per year on the 10-year timeline: distinct uses in the building at once."),
+    "access_affordability": dict(name="Access and affordability", group="Social", scale="Meso → Macro",
+                                 explorer="Not computed yet: needs rent levels and public access hours per use."),
+    "energy_use_intensity": dict(name="Energy use intensity", group="Environment", scale="Meso",
+                                 explorer="Not computed yet: needs metered or simulated operational energy (kWh/m²·yr)."),
+    "poe_performance": dict(name="POE performance", group="Social", scale="Micro → Meso",
+                            explorer="Not computed yet: needs post-occupancy evaluation (survey) results."),
+    "decision_influence": dict(name="Decision influence", group="Governance", scale="Macro",
+                               explorer="Not computed yet: qualitative, how far the results changed a decision."),
+    "institutionalization": dict(name="Institutionalization", group="Governance", scale="Macro",
+                                 explorer="Not computed yet: qualitative, whether the approach becomes routine practice."),
     "data_quality": dict(
         name="Decision-critical data quality", group="Data", scale="All",
         meaning="Share of the cost and carbon figures that rest on verified data, with a CAVF A–D grade.",
@@ -290,8 +304,9 @@ def _t(v: float) -> str:
     return f"{_sp(v / 1000)} t CO₂e"
 
 
-def building_kpis(site, bid: str, raw: dict | None) -> dict:
-    """Every CAVF KPI for one building scenario: {id: {value, display, status, note}}."""
+def building_kpis(site, bid: str, raw: dict | None, alternatives: bool = True) -> dict:
+    """Every CAVF KPI for one building scenario: {id: {value, display, status, note}}. alternatives=False skips
+    the carbon premium, which lays the building out twice more (slow when summing a whole district)."""
     sc = site.scenario(bid, raw)
     k = sc["kpi"]
     gfa = k["gfa_m2"] or 1
@@ -315,7 +330,12 @@ def building_kpis(site, bid: str, raw: dict | None) -> dict:
     grade = "A" if verified >= .9 else "B" if verified >= .7 else "C" if verified >= .4 else "D"
     put("data_quality", verified, f"Grade {grade} · {verified * 100:.0f} % verified", "computed",
         f"{k['placeholder_share'] * 100:.0f} % of priced items rest on PLACEHOLDER or estimated catalogue data")
+    uses = sorted(set(sc["uses"]))
+    put("use_diversity", len(uses), f"{len(uses)} use{'s' if len(uses) != 1 else ''}", "computed",
+        "distinct uses over the floors: " + ", ".join(u.replace("_", " ") for u in uses))
     try:   # same building and uses, demountable vs conventional partitions
+        if not alternatives:
+            raise LookupError("skipped when summing a district")
         base = dict(raw or {})
         dem = site.scenario(bid, dict(base, partition_system="demountable"))["kpi"]["upfront_kgco2e"]
         con = site.scenario(bid, dict(base, partition_system="conventional"))["kpi"]["upfront_kgco2e"]

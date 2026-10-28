@@ -1,8 +1,9 @@
 {
   "_meta": {
     "purpose": "One project: its owner, its stakeholder profiles and the 10-year timeline settings. Profiles belong to a project: each pilot brings the roles that were interviewed there. Projects without a file fall back to the generic CAVF profiles (explorer/kpis.py PROFILES).",
-    "updated": "2026-10-20",
-    "source": "Profiles from the AMF workshop board (sticky notes, 2026). Titles and mandates as written there; focus and risks summarised. Colour-to-role mapping not yet confirmed with the workshop owner."
+    "updated": "2026-10-28",
+    "source": "Profiles from the AMF workshop board (sticky notes, 2026). Titles and mandates as written there; focus and risks summarised. Colour-to-role mapping not yet confirmed with the workshop owner. Primary and secondary KPIs per role from Sara's stakeholder KPI table (2026-10-28).",
+    "kpi_fields": "primary_kpis and secondary_kpis are the role's KPIs (ids in explorer/kpis.py KPIS). timeline_kpis is the subset the 10-year pathway engine can compute per year (explorer/timeline.py KPI_META), primary first; the landing page pre-ticks these. scale_kpis is which KPIs the role looks at on each scale of the explorer (urban, district, building, floor), from Sara's stakeholder-by-scale table (2026-10-28)."
   },
   "id": "marievik",
   "name": "Marievik",
@@ -18,7 +19,10 @@
       "mandate": "Get companies to come to the place, from a B2B perspective: business. The place's self-image: relevant and interesting over time.",
       "focus": "Attract companies, flexible leases, multi-use premises, reuse that pays",
       "risk": "Losing profitability",
-      "timeline_kpis": ["feasible_uses", "transformation_cost", "use_diversity", "data_quality"],
+      "primary_kpis": ["delivered_services", "utilization", "use_diversity", "feasible_uses", "adaptability_profile", "incremental_npv"],
+      "secondary_kpis": ["value_retention", "option_value", "lcc", "replication"],
+      "timeline_kpis": ["utilization", "use_diversity", "feasible_uses", "incremental_npv"],
+      "scale_kpis": { "urban": ["replication", "avoided_gwp", "delivered_services"], "district": ["use_diversity", "utilization", "feasible_uses", "incremental_npv"], "building": ["adaptability_profile", "incremental_npv", "option_value", "value_retention", "feasible_uses"], "floor": ["utilization", "use_diversity", "feasible_uses", "transformation_cost"] },
       "needs_data": ["Lease terms and tenant turnover, to show whether flexible leases keep tenants longer"],
       "cavf_profile": "developer"
     },
@@ -29,7 +33,10 @@
       "mandate": "Mandate 2.5 billion SEK; result responsibility for 4 projects (4–5 under way): profitability first in design and concept, then construction cost.",
       "focus": "Cost and time, build less and right faster, value of reuse in the calculation",
       "risk": "Marievik becoming an island, quickly irrelevant",
-      "timeline_kpis": ["transformation_cost", "transformation_time", "upfront_gwp", "data_quality"],
+      "primary_kpis": ["transformation_time", "transformation_cost", "disruptions", "recoverable_mass", "lcc"],
+      "secondary_kpis": ["upfront_gwp", "data_quality", "adaptability_profile"],
+      "timeline_kpis": ["transformation_time", "transformation_cost", "recoverable_mass", "upfront_gwp", "data_quality"],
+      "scale_kpis": { "urban": ["replication", "institutionalization"], "district": ["disruptions", "transformation_time", "transformation_cost"], "building": ["transformation_time", "transformation_cost", "lcc", "upfront_gwp", "recoverable_mass"], "floor": ["transformation_time", "transformation_cost", "disruptions", "recoverable_mass", "data_quality"] },
       "needs_data": ["Project budget and schedule, to compare against the investment line"],
       "cavf_profile": "developer"
     },
@@ -40,7 +47,10 @@
       "mandate": "Responsible for the operational management of Marievik: sitting tenants, contracts, negotiation.",
       "focus": "Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants",
       "risk": "Not being relevant; competition from vacancies in new buildings",
-      "timeline_kpis": ["utilization", "use_diversity", "recoverable_mass", "data_quality"],
+      "primary_kpis": ["utilization", "use_diversity", "delivered_services", "access_affordability", "energy_use_intensity"],
+      "secondary_kpis": ["shiftable_load", "poe_performance", "feasible_uses", "value_retention"],
+      "timeline_kpis": ["utilization", "use_diversity", "feasible_uses"],
+      "scale_kpis": { "urban": ["access_affordability", "delivered_services"], "district": ["utilization", "use_diversity", "delivered_services", "energy_use_intensity", "access_affordability"], "building": ["utilization", "energy_use_intensity", "lcc", "poe_performance"], "floor": ["utilization", "use_diversity", "shiftable_load", "poe_performance"] },
       "needs_data": ["Rent and operating cost per use (överskottsgrad — her first stated KPI; closest handbook match is incremental_npv or life-cycle cost, needs real rent data to compute per state)", "Current vacancy and lease expiries"],
       "cavf_profile": "investor"
     },
@@ -51,7 +61,10 @@
       "mandate": "Get people to want to be at the place. Sets direction, steers how Marievik appears and how the place is experienced.",
       "focus": "A destination for food, culture and recreation; life on site; connection to the surroundings",
       "risk": "Vacancies and falling value",
+      "primary_kpis": ["use_diversity", "delivered_services", "access_affordability", "poe_performance", "hazard_adaptation"],
+      "secondary_kpis": ["utilization", "disruptions", "feasible_uses", "decision_influence"],
       "timeline_kpis": ["use_diversity", "utilization", "feasible_uses"],
+      "scale_kpis": { "urban": ["access_affordability", "hazard_adaptation", "delivered_services"], "district": ["use_diversity", "delivered_services", "access_affordability", "hazard_adaptation", "poe_performance"], "building": ["use_diversity", "delivered_services", "adaptability_profile", "poe_performance"], "floor": ["use_diversity", "access_affordability", "poe_performance", "disruptions"] },
       "needs_data": ["Visitor counts today, to calibrate people-hours — 'people-hours' and 'evening share' were dropped from the KPI picker since they are not in the project handbook's KPI list; tell us if they should be added to the handbook as a new Social KPI"],
       "cavf_profile": "developer"
     },
@@ -62,7 +75,10 @@
       "mandate": "Result responsibility, mandate within board decisions. Steers, coordinates, follows up.",
       "focus": "Rent and income, project result, sustainability; long-lived buildings",
       "risk": "Customers choosing other areas; missing growing companies",
-      "timeline_kpis": ["incremental_npv", "transformation_cost", "upfront_gwp", "data_quality"],
+      "primary_kpis": ["incremental_npv", "lcc", "whole_life_gwp", "value_retention", "downside_loss", "crrem_year"],
+      "secondary_kpis": ["break_even_premium", "option_value", "carbon_payback", "replication", "institutionalization"],
+      "timeline_kpis": ["incremental_npv"],
+      "scale_kpis": { "urban": ["whole_life_gwp", "avoided_gwp", "crrem_year", "replication"], "district": ["incremental_npv", "downside_loss", "whole_life_gwp", "value_retention"], "building": ["incremental_npv", "lcc", "whole_life_gwp", "downside_loss", "option_value", "carbon_payback"], "floor": ["transformation_cost", "upfront_gwp", "utilization", "adaptability_profile"] },
       "needs_data": ["Rent per use, to turn the timeline into a real project result — her stated chain is 'Hyra/intäkt → projektresultat → Hållbarhet'; incremental_npv is a flat building-wide placeholder until real rent data lets it be computed per state"],
       "cavf_profile": "finance"
     }

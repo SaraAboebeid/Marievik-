@@ -98,7 +98,7 @@ function windowTexture() {
   t.wrapS = t.wrapT = THREE.RepeatWrapping
   t.repeat.set(1 / 2.8, 1 / 3.1)
   t.colorSpace = THREE.SRGBColorSpace
-  t.anisotropy = 4
+  t.anisotropy = 16   // clamped to the GPU's max; keeps the window grid from shimmering on facades seen at an angle
   return t
 }
 const PLAIN = new Set(['shed', 'garage', 'garages', 'allotment_house', 'roof', 'parking', 'storage_tank', 'service', 'toilets', 'kiosk', 'bridge'])

@@ -21,6 +21,7 @@ API (all JSON)
   GET  /api/capabilities                 which simulation engines are installed
   GET  /api/methods                      CAVF KPI definitions, profiles, scenarios S0-S4, databases, constants
   POST /api/kpis/{id}                    {settings}            -> every CAVF KPI for one building scenario
+  POST /api/kpis-scale/{district|urban}  {project, settings}   -> the KPIs summed or re-defined above the building
   POST /api/figures/{id}                 {settings}            -> key figures and space distribution (Design panel)
   GET  /api/project/{pid}               project, its stakeholder profiles and timeline settings
   POST /api/timeline/{id}                {project, floor?}     -> 10 years: unchanged use + pathways of change
@@ -48,7 +49,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, timeline, urban_life
+from . import climate, comfort, daylight, district, figures, kpis, layers, model as M, scale_kpis, timeline, urban_life
 from .studio import capacity as studio_capacity, engine as studio, generator as studio_generator, layouts as studio_layouts, money as studio_money, occupancy as studio_occupancy, tenancy as studio_tenancy
 
 HERE = Path(__file__).resolve().parent
@@ -163,6 +164,18 @@ def api_methods():
 def api_kpis(bid: str, body: ScenarioBody):
     _check(bid)
     return kpis.building_kpis(site(), bid, body.settings)
+
+
+class ScaleKpiBody(BaseModel):
+    project: str = "marievik"
+    settings: dict[str, dict] = {}       # building id -> its scenario settings (others keep their defaults)
+
+
+@app.post("/api/kpis-scale/{scale}")
+def api_kpis_scale(scale: str, body: ScaleKpiBody):
+    if scale not in ("district", "urban"):
+        raise HTTPException(404, "scale is district or urban (building and floor use /api/kpis/{id})")
+    return scale_kpis.scale_kpis(site(), scale, body.settings, body.project)
 
 
 @app.post("/api/figures/{bid}")
@@ -639,7 +652,8 @@ def landing():
 def index():
     f = DIST / "index.html"
     if f.is_file():
-        return f.read_text(encoding="utf-8")
+        # never cached: it names the hashed bundle, so a stale copy keeps loading an old build after a rebuild
+        return HTMLResponse(f.read_text(encoding="utf-8"), headers={"Cache-Control": "no-cache"})
     return ("<h3>Marievik+ Explorer</h3><p>The web app is not built yet. Run <code>npm install</code> and "
             "<code>npm run build</code> in <code>explorer/web</code>, or <code>npm run dev</code> there for "
             "development (http://localhost:5174).</p>")
@@ -655,6 +669,10 @@ def _warm():
                 S.scenario(bid, {})
             except Exception as e:           # a footprint the engine cannot lay out must not stop the rest
                 print("warm-up %s failed: %s" % (bid, e), file=sys.stderr)
+        try:                                 # the KPI strip's district totals, from those same scenarios
+            scale_kpis.district_kpis(S, {})
+        except Exception as e:
+            print("warm-up district KPIs failed: %s" % e, file=sys.stderr)
         for p in sorted(PROJECTS.glob("*.json")):   # pilot buildings' timelines, ready before they are asked for
             proj = json.loads(p.read_text(encoding="utf-8"))
             for bid in proj.get("pilot_buildings", []):

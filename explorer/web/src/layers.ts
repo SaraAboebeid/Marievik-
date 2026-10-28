@@ -1,7 +1,7 @@
 // Types for the explorer's layers (movement, fire escape, capacity), the JuPedSim evacuation and the
 // 10-year district model. Server side: explorer/layers.py, explorer/studio/evacuation.py, explorer/district.py.
 
-export type Layer = 'none' | 'movement' | 'fire' | 'capacity' | 'vacancy'
+export type Layer = 'none' | 'movement' | 'fire' | 'capacity' | 'vacancy' | 'tenancy'
 
 export interface LayerFloor {
   floor: number; source: 'plan' | 'estimate'; layout: string | null

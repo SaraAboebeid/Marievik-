@@ -1,5 +1,5 @@
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Methods, ParametricCell,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, KpiValue, Methods, ParametricCell,
   ParametricPayload, Project, Settings, SitePayload, UrbanContext, UrbanSummary, SupplierCompare, TimelineResponse,
 } from './types'
 import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, Variants, YearKpi, YearOverride } from './studio/engine'
@@ -40,6 +40,8 @@ export const api = {
   models: () => call<{ models: { name: string; url: string; bytes: number }[] }>('/api/models'),
   methods: () => call<Methods>('/api/methods'),
   kpis: (id: string, settings: Partial<Settings>) => call<KpiResult>(`/api/kpis/${id}`, { settings }),
+  kpisScale: (scale: 'district' | 'urban', project: string, settings: Record<string, Partial<Settings>>) =>
+    call<{ scale: string; kpis: Record<string, KpiValue> }>(`/api/kpis-scale/${scale}`, { project, settings }),
   parametric: (id: string, settings: Partial<Settings>, floor: number) =>
     call<ParametricPayload>(`/api/parametric/${id}`, { settings, floor }),
   cell: (id: string, settings: Partial<Settings>) => call<ParametricCell>(`/api/parametric/${id}/cell`, { settings }),

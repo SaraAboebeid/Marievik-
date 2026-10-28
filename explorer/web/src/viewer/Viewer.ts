@@ -5,12 +5,16 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { GTAOPass } from 'three/examples/jsm/postprocessing/GTAOPass.js'
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
+import { DofShader, OutlineShader, fixGtaoLogDepth, gradientSky, setToon } from './toon'
+import { waterMaterial, waterTime } from './water'
 import { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
 import { inkOn } from '../lifeIcons'
 import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit, UrbanContext } from '../types'
-import { UNIT_BOX, detailGeometry, disposeTree, flat, localBox, prism, segmentBox } from './geometry'
+import { UNIT_BOX, detailGeometry, disposeTree, flat, inflate, localBox, prism, segmentBox } from './geometry'
 import { buildBarriers, buildFurniture, buildMassing, buildRoadPaint } from './context3d'
 import { dfColor, unitColor } from './colors'
 import { ATRIUM, CELL, CORES, ESCAPE_LIMIT, FRAME, H, NX, NY, TYPES, W, WALL_H, cellXY, subtract } from '../studio/engine'
@@ -53,7 +57,18 @@ export interface ViewOptions {
   explode: number
   labels: boolean
   context?: boolean
+  toon?: boolean       // banded light and ink outlines (viewer/toon.ts)
+  bloom?: boolean
+  dof?: boolean        // far buildings slightly out of focus
+  skyStyle?: boolean   // stylised gradient sky instead of the physical one (toon.ts gradientSky)
+  waterMotion?: boolean  // animated ripples (redraws ~30 times a second while water is in the context)
 }
+
+const EXPOSURE = 1.2  // on top of the sun-driven exposure in setSun
+const DUSK_MS = 4000  // the rented/vacant tour's evening falling (and the morning coming back)
+// rented / vacant tour: a warm lit window (bright enough to bloom) and an unlit one
+const TOUR_LIT = new THREE.Color(1.9, 1.3, 0.62)
+const TOUR_DARK = new THREE.Color('#1f2836')
 
 type Focus =
   | { kind: 'site' }
@@ -83,9 +98,14 @@ export class Viewer {
   private labelRenderer: CSS2DRenderer
   private composer: EffectComposer
   private aoPass: GTAOPass
+  private outlinePass = new ShaderPass(OutlineShader)
+  private dofPass = new ShaderPass(DofShader)
+  private bloomPass: UnrealBloomPass
   private sky = new Sky()
   private skyScene = new THREE.Scene()
   private skyEnvSky = new Sky()
+  private gradSky = gradientSky()
+  private gradEnvSky = new THREE.Mesh(this.gradSky.geometry, this.gradSky.material)
   private pmrem: THREE.PMREMGenerator
   private envRT: THREE.WebGLRenderTarget | null = null
   private sunLight = new THREE.DirectionalLight(0xffffff, 3)
@@ -107,6 +127,8 @@ export class Viewer {
   private unitMeshes = new Map<string, THREE.Mesh>()
   private options: ViewOptions = { sky: true, shadows: true, ao: true, explode: 0, labels: true }
   private raf = 0
+  private hasWater = false
+  private waterAt = 0
   private dirty = 2                           // frames left to draw; the view renders on demand
   private needsEnv = true
   private anim: { t0: number; dur: number; p0: THREE.Vector3; p1: THREE.Vector3; c0: THREE.Vector3; c1: THREE.Vector3 } | null = null
@@ -120,7 +142,7 @@ export class Viewer {
     const w = container.clientWidth
     const h = container.clientHeight
     // logarithmicDepthBuffer: the camera's near:far ratio (0.5 / 20000 = 40 000:1) badly starves a linear depth
-    // buffer at distance, so thinly z-stacked context layers (water -0.02, ground -0.05, roads 0.04, …) z-fight
+    // buffer at distance, so thinly z-stacked context layers (water -0.02, ground -0.05, roads 0.04, â€¦) z-fight
     // and visibly swap which one is "in front" once the camera is more than a couple hundred units out.
     this.renderer = new THREE.WebGLRenderer({
       antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true, logarithmicDepthBuffer: true,
@@ -148,6 +170,8 @@ export class Viewer {
     this.controls.maxDistance = 3000
     this.controls.screenSpacePanning = true
     this.controls.addEventListener('change', () => this.invalidate())
+    this.controls.addEventListener('start', () => { if (this.tour) { this.tour.hold = true; this.tour.resumeAt = 0 } })
+    this.controls.addEventListener('end', () => { if (this.tour) this.tour.resumeAt = performance.now() + 3500 })
 
     // sky, sun and image-based light from the same sky
     this.sky.scale.setScalar(15000)
@@ -159,8 +183,10 @@ export class Viewer {
       u.mieCoefficient.value = 0.004
       u.mieDirectionalG.value = 0.82
     }
-    this.scene.add(this.sky)
-    this.skyScene.add(this.skyEnvSky)
+    this.gradSky.scale.setScalar(15000)
+    this.gradEnvSky.scale.setScalar(15000)
+    this.scene.add(this.sky, this.gradSky)
+    this.skyScene.add(this.skyEnvSky, this.gradEnvSky)
     this.pmrem = new THREE.PMREMGenerator(this.renderer)
 
     this.sunLight.castShadow = true
@@ -175,20 +201,60 @@ export class Viewer {
     this.world.add(this.contextGroup, this.buildingsGroup, this.floorGroup, this.analysisGroup, this.labelGroup, this.rhinoGroup, this.lifeGroup)
     this.scene.add(this.world)
 
-    this.composer = new EffectComposer(this.renderer)
+    // multisampled, or thin mullions and frames shimmer once the post effects are on (the canvas's own
+    // antialias only applies when the scene renders straight to it)
+    const pr = this.renderer.getPixelRatio()
+    this.composer = new EffectComposer(this.renderer,
+      new THREE.WebGLRenderTarget(w * pr, h * pr, { type: THREE.HalfFloatType, samples: 4 }))
     this.composer.addPass(new RenderPass(this.scene, this.camera))
     this.aoPass = new GTAOPass(this.scene, this.camera, w, h)
     this.aoPass.blendIntensity = 0.85
     this.aoPass.updateGtaoMaterial({ radius: 2.5, distanceExponent: 1.4, thickness: 2.0, scale: 1.0 })
+    fixGtaoLogDepth([this.aoPass.gtaoMaterial, this.aoPass.pdMaterial], this.camera.near, this.camera.far)
+    // ghosted (faded) buildings stay out of the normal/depth pass: no soft shading or ink outlines drawn through them
+    const hideLines = this.aoPass.overrideVisibility.bind(this.aoPass)
+    this.aoPass.overrideVisibility = () => {
+      hideLines()
+      this.scene.traverse((o) => {
+        const m = (o as THREE.Mesh).material as THREE.Material | undefined
+        if (m && !Array.isArray(m) && m.transparent && m.opacity < 0.6) o.visible = false
+      })
+    }
     this.composer.addPass(this.aoPass)
+    // the outline pass reads the normals and depth GTAOPass renders anyway
+    this.outlinePass.uniforms.tNormal.value = this.aoPass.normalTexture
+    this.outlinePass.uniforms.tDepth.value = this.aoPass.depthTexture
+    this.outlinePass.enabled = false
+    this.composer.addPass(this.outlinePass)
+    this.dofPass.uniforms.tDepth.value = this.aoPass.depthTexture
+    this.dofPass.uniforms.far.value = this.camera.far
+    this.dofPass.enabled = false
+    this.composer.addPass(this.dofPass)
+    this.bloomPass = new UnrealBloomPass(new THREE.Vector2(w, h), 0.3, 0.5, 2.6)
+    this.bloomPass.enabled = false
+    this.composer.addPass(this.bloomPass)
     this.composer.addPass(new OutputPass())
+    this.setTexel(w, h)
 
     const el = this.renderer.domElement
     el.addEventListener('pointerdown', (e) => { this.downAt = { x: e.clientX, y: e.clientY } })
     el.addEventListener('pointerup', (e) => {
-      if (Math.hypot(e.clientX - this.downAt.x, e.clientY - this.downAt.y) < 5 && e.button === 0) this.onPick(this.pick(e))
+      if (Math.hypot(e.clientX - this.downAt.x, e.clientY - this.downAt.y) < 5 && e.button === 0) {
+        const p = this.pick(e)
+        const band = !p && this.walk ? this.walkBand(e) : -1
+        if (band >= 0) this.onWalkRing(band)
+        else this.onPick(p)
+      }
     })
-    el.addEventListener('pointermove', (e) => this.onHover(this.pick(e), e.clientX, e.clientY))
+    el.addEventListener('pointermove', (e) => {
+      const p = this.pick(e)
+      this.onHover(p, e.clientX, e.clientY)
+      if (this.walk) {
+        const b = p ? -1 : this.walkBand(e)
+        el.style.cursor = b >= 0 ? 'pointer' : ''
+        if (b !== this.walk.hover) { this.walk.hover = b; this.walkPaint() }
+      }
+    })
     el.addEventListener('pointerleave', () => this.onHover(null, 0, 0))
     window.addEventListener('resize', this.resize)
     this.setSun(30, 200)
@@ -210,7 +276,15 @@ export class Viewer {
     this.renderer.setSize(w, h)
     this.labelRenderer.setSize(w, h)
     this.composer.setSize(w, h)
+    this.setTexel(w, h)
     this.invalidate()
+  }
+
+  private setTexel(w: number, h: number) {
+    const pr = this.renderer.getPixelRatio()
+    this.outlinePass.uniforms.texel.value.set(1 / (w * pr), 1 / (h * pr))
+    this.dofPass.uniforms.texel.value.set(1 / (w * pr), 1 / (h * pr))
+    this.dofPass.uniforms.maxBlur.value = 3 * pr
   }
 
   private loop = () => {
@@ -222,12 +296,29 @@ export class Viewer {
       this.controls.target.lerpVectors(this.anim.c0, this.anim.c1, e)
       if (k >= 1) this.anim = null
     }
+    if (this.tour) this.tourStep()
+    if (this.walk) this.walkStep()
     if (this.controls.update()) this.dirty = Math.max(this.dirty, 2)
     if (this.anim) this.dirty = Math.max(this.dirty, 1)
+    this.stepDusk(performance.now())
     if (this.needsEnv) this.updateEnv()
+    if (this.hasWater && this.options.waterMotion && this.ctxGroup.visible && !document.hidden) {
+      const now = performance.now()
+      if (now - this.waterAt > 33) {   // ~30 fps is plenty for slow ripples, and halves the cost of the effects
+        this.waterAt = now
+        waterTime.value = now / 1000
+        this.dirty = Math.max(this.dirty, 1)
+      }
+    }
     if (this.dirty <= 0) return
     this.dirty--
-    if (this.options.ao) this.composer.render()
+    const o = this.options
+    if (o.dof) {
+      const focus = this.camera.position.distanceTo(this.controls.target)
+      this.dofPass.uniforms.focus.value = focus * 1.1
+      this.dofPass.uniforms.range.value = focus * 1.8
+    }
+    if (o.ao || o.toon || o.bloom || o.dof) this.composer.render()
     else this.renderer.render(this.scene, this.camera)
     this.labelRenderer.render(this.scene, this.camera)
   }
@@ -239,20 +330,69 @@ export class Viewer {
 
   // ------------------------------------------------------------------ sun, sky, options
   setSun(altitude: number, azimuth: number) {
+    this.sunReq = [altitude, azimuth]
+    this.applySky(true)
+  }
+
+  // The rented/vacant tour's dusk is not a switch but an evening falling: duskK runs 0 (the clock's daylight) →
+  // 1 (dusk) over DUSK_MS, the sun sinking through a warm sunset into a cool, dim evening, and back again after.
+  private duskK = 0
+  private duskT = 0          // linear progress; duskK is it eased
+  private duskTarget = 0
+  private duskAt = 0
+  private envAt = 0
+  private readonly bloomDay: [number, number] = [0.3, 2.6]   // strength, threshold outside the tour
+
+  private stepDusk(now: number) {
+    if (this.duskT === this.duskTarget) { this.duskAt = now; return }
+    const dt = Math.min(1, (now - (this.duskAt || now)) / 1000)   // wall clock: ~4 s however slowly frames come
+    this.duskAt = now
+    const d = dt * 1000 / DUSK_MS
+    this.duskT = this.duskTarget > this.duskT ? Math.min(this.duskTarget, this.duskT + d) : Math.max(this.duskTarget, this.duskT - d)
+    this.duskK = this.duskT * this.duskT * (3 - 2 * this.duskT)
+    this.applySky(this.duskT === this.duskTarget)
+    this.dirty = Math.max(this.dirty, 1)
+  }
+
+  /** Sun, light, exposure, sky colours and glow for the clock's sun blended toward dusk by duskK.
+   *  The image-based light is re-baked at most every 150 ms while the evening falls (it's the slow part). */
+  private applySky(final: boolean) {
+    const [altitude0, azimuth] = this.sunReq
+    const k = this.duskK
+    const altitude = THREE.MathUtils.lerp(altitude0, -2.5, k)   // the sun goes down
     const alt = THREE.MathUtils.degToRad(Math.max(altitude, -4))
     const az = THREE.MathUtils.degToRad(azimuth)
     // plan: x east, y north; three: (x, z, -y)
     const dir = new THREE.Vector3(Math.cos(alt) * Math.sin(az), Math.sin(alt), -Math.cos(alt) * Math.cos(az))
     this.sky.material.uniforms.sunPosition.value.copy(dir)
     this.skyEnvSky.material.uniforms.sunPosition.value.copy(dir)
+    ;(this.gradSky.material as THREE.ShaderMaterial).uniforms.sunDir.value.copy(dir)
     const up = Math.max(0, Math.sin(alt))
-    this.sunLight.position.copy(dir).multiplyScalar(800)
+    const dayI = altitude > 0 ? 0.6 + 3.2 * Math.min(1, up * 2.2) : 0
+    const dayCol = new THREE.Color().setHSL(0.09, 0.55 * (1 - Math.min(1, up * 2)), 0.5 + 0.45 * Math.min(1, up * 2.5))
+    const dayHemi = 0.35 + 0.5 * Math.min(1, up * 3)
+    const dayExp = altitude > 0 ? 0.42 + 0.18 * (1 - up) : 0.6
+    // dusk: a cool moonlight from high up so the massing still reads, a dimmer sky, lit windows glow
+    const moon = new THREE.Vector3(Math.sin(az) * 300, 700, -Math.cos(az) * 300).normalize()
+    this.sunLight.position.copy(dir.clone().lerp(moon, k).normalize()).multiplyScalar(800)
     this.sunLight.target.position.set(0, 0, 0)
-    this.sunLight.intensity = altitude > 0 ? 0.6 + 3.2 * Math.min(1, up * 2.2) : 0
-    this.sunLight.color.setHSL(0.09, 0.55 * (1 - Math.min(1, up * 2)), 0.5 + 0.45 * Math.min(1, up * 2.5))
-    this.hemi.intensity = 0.35 + 0.5 * Math.min(1, up * 3)
-    this.renderer.toneMappingExposure = altitude > 0 ? 0.42 + 0.18 * (1 - up) : 0.6
-    this.needsEnv = true
+    this.sunLight.intensity = THREE.MathUtils.lerp(dayI, 0.55, k)
+    this.sunLight.color.copy(dayCol).lerp(new THREE.Color('#9fb4e0'), k)
+    this.hemi.intensity = THREE.MathUtils.lerp(dayHemi, 0.32, k)
+    this.renderer.toneMappingExposure = EXPOSURE * THREE.MathUtils.lerp(dayExp, 0.5, k)
+    // the stylised sky: day → a warm sunset half-way → the dim evening
+    const gu = (this.gradSky.material as THREE.ShaderMaterial).uniforms
+    const pal = (day: string, set: string, eve: string) => k < 0.5
+      ? new THREE.Color(day).lerp(new THREE.Color(set), k * 2) : new THREE.Color(set).lerp(new THREE.Color(eve), k * 2 - 1)
+    gu.zenith.value.copy(pal('#4f93dc', '#3d5f9c', '#1d2a4d'))
+    gu.horizon.value.copy(pal('#e9eee8', '#f0b58a', '#7c7896'))
+    gu.ground.value.copy(pal('#dcdcd2', '#b9a99a', '#4a4b55'))
+    gu.sunCol.value.copy(pal('#fff1cf', '#ffb36b', '#f2b98a'))
+    gu.intensity.value = THREE.MathUtils.lerp(1.15, 0.95, k)
+    this.bloomPass.strength = THREE.MathUtils.lerp(this.bloomDay[0], 0.5, k)
+    this.bloomPass.threshold = THREE.MathUtils.lerp(this.bloomDay[1], 1.25, k)
+    const now = performance.now()
+    if (final || now - this.envAt > 150) { this.envAt = now; this.needsEnv = true }
   }
 
   private updateEnv() {
@@ -268,10 +408,20 @@ export class Viewer {
     this.invalidate()
     const prevExplode = this.options.explode
     this.options = { ...this.options, ...o }
-    this.sky.visible = this.options.sky
+    const stylised = !!this.options.skyStyle
+    if (this.gradEnvSky.visible !== stylised) this.needsEnv = true   // relight from whichever sky is shown
+    this.sky.visible = this.options.sky && !stylised
+    this.gradSky.visible = this.options.sky && stylised
+    this.skyEnvSky.visible = !stylised
+    this.gradEnvSky.visible = stylised
     this.scene.background = this.options.sky ? null : new THREE.Color('#d7dfda')
     this.renderer.shadowMap.enabled = this.options.shadows
     this.sunLight.castShadow = this.options.shadows
+    setToon(!!this.options.toon)
+    this.outlinePass.enabled = !!this.options.toon
+    this.dofPass.enabled = !!this.options.dof
+    this.bloomPass.enabled = !!this.options.bloom
+    this.aoPass.blendIntensity = this.options.ao ? 0.85 : 0   // toon without soft shading still needs the pass's normals
     this.scene.traverse((c) => {
       const m = (c as THREE.Mesh).material as THREE.Material | undefined
       if (m) m.needsUpdate = true
@@ -299,7 +449,7 @@ export class Viewer {
     ground.receiveShadow = true
     ground.userData.placeholder = true
     this.contextGroup.add(ground)
-    // Årstaviken lies south-east of the blocks: a simple water plane to read the site by
+    // Ã…rstaviken lies south-east of the blocks: a simple water plane to read the site by
     const water = new THREE.Mesh(new THREE.PlaneGeometry(1600, 700),
       new THREE.MeshStandardMaterial({ color: '#4b6475', roughness: 0.12, metalness: 0.4 }))
     water.position.set(this.center.x + 330, this.center.y - 470, -0.02)
@@ -361,7 +511,22 @@ export class Viewer {
     outer.position.set(disc ? disc[0] : (x0 + x1) / 2, disc ? disc[1] : (y0 + y1) / 2, -0.08)
     outer.receiveShadow = true
     g.add(outer)
-    for (const w of ctx.water ?? []) surf(w.rings, -0.02, new THREE.MeshStandardMaterial({ color: '#3f5f73', roughness: 0.08, metalness: 0.35, envMapIntensity: 1.4 }))
+    // water in three bands from the shore out: a foam line, shallow water, then the deep with ripples and glints
+    // (viewer/water.ts). Points on the context's clip circle aren't shore, so the bands don't follow that edge.
+    // Seams where two water polygons meet aren't shore either: points used by more than one polygon stay put.
+    const waterRings = (ctx.water ?? []).flatMap((w) => w.rings)
+    const key = (x: number, y: number) => `${Math.round(x * 2)},${Math.round(y * 2)}`
+    const owners = new Map<string, Set<number>>()
+    waterRings.forEach((rs, i) => rs.forEach((r) => r.forEach(([x, y]) => {
+      const k = key(x, y)
+      owners.set(k, (owners.get(k) ?? new Set()).add(i))
+    })))
+    const onClip = (x: number, y: number) =>
+      (owners.get(key(x, y))?.size ?? 0) > 1 || (!!disc && Math.abs(Math.hypot(x - disc[0], y - disc[1]) - disc[2]) < 1.5)
+    surf(waterRings, -0.03, M('#e9f1ef', 0.6))
+    surf(waterRings.map((r) => inflate(r, -2.2, onClip)), -0.02, waterMaterial('#5b8a90', 0.6))
+    surf(waterRings.map((r) => inflate(r, -9, onClip)), -0.01, waterMaterial('#2f5868'))
+    this.hasWater = waterRings.length > 0
     const GREEN: Record<string, string> = { grass: '#86a862', park: '#7fa35a', wood: '#5f8648', scrub: '#7b9a5a', playground: '#c8b88e', pitch: '#6f9e58', flowerbed: '#b98a9a', rock: '#a9a59c', sand: '#d9cba3' }
     const byKind = new Map<string, Ring[][]>()
     for (const gr of ctx.greens ?? []) byKind.set(gr.kind, [...(byKind.get(gr.kind) ?? []), ...gr.rings])
@@ -502,7 +667,7 @@ export class Viewer {
         fg.add(mesh)
       }
       // a slightly darker floor edge band, as the slab reads on a real facade
-      const band = prism(f.rings, f.z + f.height - 0.22, f.z + f.height + 0.02)
+      const band = prism(inflate(f.rings, 0.03), f.z + f.height - 0.22, f.z + f.height + 0.02)
       if (band) {
         const bm = new THREE.Mesh(band, this.mat(f.added ? 'timber' : f.material, this.site, { color: new THREE.Color('#bdb8ae') }))
         mats.push(bm.material as THREE.Material)
@@ -557,7 +722,7 @@ export class Viewer {
     this.applyFocus(animate)
   }
 
-  /** Buildings to ghost regardless of focus — District's unselected buildings, Urban's receded massing. */
+  /** Buildings to ghost regardless of focus â€” District's unselected buildings, Urban's receded massing. */
   setDimmed(ids: Iterable<string> | null) {
     this.dimmed = new Set(ids ?? [])
     this.applyFocus(false)
@@ -836,7 +1001,7 @@ export class Viewer {
         const mesh = new THREE.Mesh(geo, mat)
         mesh.renderOrder = 2
         g.add(mesh)
-        this.studioLabel(s.tenant ? `${s.tenant} · ${Math.round(s.area)} m²` : `Vacant · ${Math.round(s.area)} m²`,
+        this.studioLabel(s.tenant ? `${s.tenant} Â· ${Math.round(s.area)} mÂ²` : `Vacant Â· ${Math.round(s.area)} mÂ²`,
           (s.r[0] + s.r[2]) / 2, (s.r[1] + s.r[3]) / 2, lz, s.tenant ? 'tenant' : 'vacant')
       }
     } else if (view === 'use' && use) {
@@ -865,7 +1030,7 @@ export class Viewer {
       const exitMat = new THREE.MeshStandardMaterial({ color: '#03b05f', roughness: 0.6 })
       m.exits.forEach((e, i) => {
         boxMesh(exitMat, studioBox(e.x - 0.5, e.y - 0.5, e.x + 0.5, e.y + 0.5, base, base + 2.4))
-        this.studioLabel(`${e.id} · ${m.fig.exitLoad[i].people} people`, e.x, e.y, base + 3.2, 'exit')
+        this.studioLabel(`${e.id} Â· ${m.fig.exitLoad[i].people} people`, e.x, e.y, base + 3.2, 'exit')
       })
       const w0 = m.fig.worst
       if (w0) {
@@ -926,7 +1091,7 @@ export class Viewer {
     this.invalidate(1)
   }
 
-  /** Crowd density during an evacuation (people per m², the highest each cell saw), on its own coarse grid. */
+  /** Crowd density during an evacuation (people per mÂ², the highest each cell saw), on its own coarse grid. */
   setStudioDensity(d: Float32Array | null, nx: number, ny: number, cell: number) {
     if (!this.studioOn) return
     if (this.studioDensity) { this.floorGroup.remove(this.studioDensity); disposeTree(this.studioDensity) ; this.studioDensity = null }
@@ -938,7 +1103,7 @@ export class Viewer {
     for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
       const v = d[j * nx + i]
       if (v < 0.5) continue
-      const [r, g, b] = rampColor(Math.min(1, v / 4))   // 4 people per m² and up: red
+      const [r, g, b] = rampColor(Math.min(1, v / 4))   // 4 people per mÂ² and up: red
       const o = ((ny - 1 - j) * nx + i) * 4
       img.data[o] = r; img.data[o + 1] = g; img.data[o + 2] = b; img.data[o + 3] = 170
     }
@@ -1003,6 +1168,293 @@ export class Viewer {
         this.layerGroup.add(lab)
       }
     }
+  }
+
+  // ------------------------------------------------------------------ walking rings (Urban scale)
+  onWalkRing: (band: number) => void = () => {}
+  private walk: {
+    group: THREE.Group; c: [number, number]; radii: number[]; colours: string[]
+    bands: THREE.Mesh[]; edges: THREE.Mesh[]; pulse: THREE.Mesh; labels: HTMLElement[]
+    selected: number; hover: number; t0: number; at: number
+  } | null = null
+
+  /** The site's centre in plan coordinates (the middle of the study buildings' extent). */
+  siteCenter(): [number, number] { return [this.center.x, this.center.y] }
+
+  /** Rings of walking distance around the site centre: a tinted band per ring (clickable, onWalkRing), a bold edge,
+   *  a label button on each edge, and a slow pulse travelling outwards. `selected` lifts one band. null removes them. */
+  setWalkRings(w: { center: [number, number]; rings: { r: number; label: string; colour: string }[]; selected: number | null } | null) {
+    this.invalidate()
+    if (this.walk && (!w || w.rings.map((r) => r.r).join() !== this.walk.radii.join() || w.rings.map((r) => r.label).join() !== this.walk.labels.map((l) => l.textContent).join())) {
+      this.walk.labels.forEach((l) => l.remove())
+      this.walk.group.parent?.remove(this.walk.group)
+      disposeTree(this.walk.group)
+      this.walk = null
+    }
+    if (!w) return
+    if (this.walk) { this.walk.selected = w.selected ?? -1; this.walkPaint(); return }
+    const group = new THREE.Group()
+    group.renderOrder = 2
+    const [cx, cy] = w.center
+    const bands: THREE.Mesh[] = []
+    const edges: THREE.Mesh[] = []
+    const labels: HTMLElement[] = []
+    w.rings.forEach((ring, i) => {
+      const r0 = i ? w.rings[i - 1].r : 0
+      const band = new THREE.Mesh(new THREE.RingGeometry(Math.max(0.01, r0), ring.r, 160, 1),
+        new THREE.MeshBasicMaterial({ color: ring.colour, transparent: true, opacity: 0.1, depthWrite: false, toneMapped: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }))
+      band.position.set(cx, cy, 0.4)
+      group.add(band)
+      bands.push(band)
+      const ew = 1.6 + ring.r * 0.004
+      const edge = new THREE.Mesh(new THREE.RingGeometry(ring.r - ew, ring.r + ew, 200, 1),
+        new THREE.MeshBasicMaterial({ color: ring.colour, transparent: true, opacity: 0.95, depthWrite: false, toneMapped: false }))
+      edge.position.set(cx, cy, 0.6)
+      group.add(edge)
+      edges.push(edge)
+      // a dashed inner halo, for the hand-drawn feel of the rest of the explorer
+      const dash = new THREE.Mesh(new THREE.RingGeometry(ring.r - 7, ring.r - 5.5, 160, 1, 0, Math.PI * 2),
+        new THREE.MeshBasicMaterial({ color: '#202020', transparent: true, opacity: 0.35, depthWrite: false }))
+      dash.position.set(cx, cy, 0.55)
+      group.add(dash)
+      // the label button sits on the edge, towards the south-east, staggered so they don't stack
+      const el = document.createElement('button')
+      el.type = 'button'
+      el.className = 'walk-label'
+      el.style.setProperty('--c', ring.colour)
+      el.style.setProperty('--t', inkOn(ring.colour))
+      el.textContent = ring.label
+      el.addEventListener('pointerdown', (e) => e.stopPropagation())
+      el.addEventListener('click', (e) => { e.stopPropagation(); this.onWalkRing(i) })
+      const a = -Math.PI / 4 - i * 0.22
+      const o = new CSS2DObject(el)
+      o.position.set(cx + Math.cos(a) * ring.r, cy + Math.sin(a) * ring.r, 2)
+      group.add(o)
+      labels.push(el)
+    })
+    const outer = w.rings[w.rings.length - 1].r
+    const pulse = new THREE.Mesh(new THREE.RingGeometry(0.985, 1, 160, 1),
+      new THREE.MeshBasicMaterial({ color: '#fffdf6', transparent: true, opacity: 0.5, depthWrite: false, toneMapped: false }))
+    pulse.position.set(cx, cy, 0.5)
+    pulse.userData.outer = outer
+    group.add(pulse)
+    this.world.add(group)
+    const now = performance.now()
+    this.walk = { group, c: [cx, cy], radii: w.rings.map((r) => r.r), colours: w.rings.map((r) => r.colour), bands, edges, pulse, labels,
+      selected: w.selected ?? -1, hover: -1, t0: now, at: 0 }
+    this.walkPaint()
+  }
+
+  private walkPaint() {
+    const W = this.walk
+    if (!W) return
+    W.bands.forEach((b, i) => { (b.material as THREE.MeshBasicMaterial).opacity = i === W.selected ? 0.32 : i === W.hover ? 0.2 : 0.09 })
+    W.edges.forEach((e, i) => { e.scale.setScalar(1); (e.material as THREE.MeshBasicMaterial).opacity = W.selected < 0 || i === W.selected ? 0.95 : 0.45 })
+    W.labels.forEach((l, i) => l.classList.toggle('on', i === W.selected))
+    this.invalidate()
+  }
+
+  /** Which band a pointer is over (ground plane), or -1. */
+  private walkBand(e: PointerEvent): number {
+    const W = this.walk
+    if (!W) return -1
+    const r = this.renderer.domElement.getBoundingClientRect()
+    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1)
+    this.ray.setFromCamera(this.pointer, this.camera)
+    const hit = this.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), new THREE.Vector3())
+    if (!hit) return -1
+    // three (x, y, z) → plan: x + cx, cy − z
+    const px = hit.x + this.center.x, py = this.center.y - hit.z
+    const d = Math.hypot(px - W.c[0], py - W.c[1])
+    return W.radii.findIndex((rr) => d <= rr)
+  }
+
+  private walkStep() {
+    const W = this.walk!
+    const now = performance.now()
+    if (now - W.at < 33) return   // ~30 fps is plenty for the pulse
+    W.at = now
+    const outer = W.pulse.userData.outer as number
+    const k = ((now - W.t0) / 4200) % 1           // one sweep every 4.2 s
+    const r = Math.max(1, outer * k)
+    W.pulse.scale.setScalar(r)
+    ;(W.pulse.material as THREE.MeshBasicMaterial).opacity = 0.55 * (1 - k) * Math.min(1, k * 8)
+    this.dirty = Math.max(this.dirty, 1)
+  }
+
+  // ------------------------------------------------------------------ rented / vacant: a dusk tour around the buildings
+  private sunReq: [number, number] = [30, 200]
+  private tour: {
+    group: THREE.Group; meshes: THREE.InstancedMesh[]
+    spaces: { mesh: THREE.InstancedMesh; idx: number[]; on: number; level: number; delay: number; building: string; lease: string | null }[]
+    labels: Map<string, HTMLElement>
+    t0: number; at: number; hold: boolean; resumeAt: number; speed: number
+  } | null = null
+
+  /** Rented / vacant at district or building scale: every building's windows grouped into example spaces (a run
+   *  of neighbouring windows on one floor and facade), each dealt to one of the building's lettable spaces from the
+   *  lease book by its share of the area; the sky drops to dusk, and the camera circles slowly — the site, or the one
+   *  building in focus. Dragging pauses the circling; it picks up again a few seconds after. Which spaces are lit
+   *  (rented) or dark (vacant) comes from setTenancyOccupancy, so playing the years only fades windows, never rebuilds.
+   *  null ends the tour and puts the daylight back. */
+  setTenancyTour(t: { lettable: Record<string, { id: string; share: number }[]>; focus?: string | null } | null) {
+    this.invalidate()
+    if (this.tour) {
+      for (const m of this.tour.meshes) { m.parent?.remove(m); m.geometry.dispose() }
+      this.tour.group.children.forEach((c) => (c as CSS2DObject).element?.remove())
+      this.tour.group.parent?.remove(this.tour.group)
+      this.tour = null
+      if (!t) { this.duskTarget = 0; this.invalidate(); return }   // the morning comes back, gradually
+    }
+    if (!t) return
+    let seed = 20261028
+    const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
+    const labels = new Map<string, HTMLElement>()
+    const group = new THREE.Group()
+    this.world.add(group)
+    const plane = new THREE.PlaneGeometry(1, 1)
+    const mat = new THREE.MeshBasicMaterial({ color: '#ffffff', toneMapped: false, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 })
+    const meshes: THREE.InstancedMesh[] = []
+    const spaces: NonNullable<Viewer['tour']>['spaces'] = []
+    const ids = t.focus ? [t.focus] : Object.keys(t.lettable)
+    const m4 = new THREE.Matrix4()
+    const box = new THREE.Box3()
+    for (const id of ids) {
+      const bv = this.buildings.get(id)
+      if (!bv) continue
+      box.expandByObject(bv.group)
+      // windows → floors → facades → runs of neighbours (one example space each)
+      const byFloor = new Map<number, number[][]>()
+      for (const w of bv.payload.windows) {
+        if (w[6]) continue                                  // doors stay as they are
+        const zc = (w[4] + w[5]) / 2
+        const fi = bv.payload.floors.findIndex((f) => zc >= f.z && zc < f.z + f.height)
+        if (fi < 0 || !bv.floors[fi]) continue
+        byFloor.set(fi, [...(byFloor.get(fi) ?? []), w])
+      }
+      for (const [fi, ws] of byFloor) {
+        const f = bv.payload.floors[fi]
+        const ring = f.rings[0]
+        const inside = (x: number, y: number) => {
+          let c = false
+          for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+            const [xi, yi] = ring[i], [xj, yj] = ring[j]
+            if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c
+          }
+          return c
+        }
+        const facades = new Map<string, { s: number; w: number[]; u: [number, number]; n: [number, number] }[]>()
+        for (const w of ws) {
+          const [ax, ay, bx, by] = w
+          const len = Math.hypot(bx - ax, by - ay)
+          if (len < 0.2) continue
+          const u: [number, number] = [(bx - ax) / len, (by - ay) / len]
+          let n: [number, number] = [-u[1], u[0]]
+          const mx = (ax + bx) / 2, my = (ay + by) / 2
+          if (inside(mx + n[0] * 0.6, my + n[1] * 0.6)) n = [-n[0], -n[1]]   // outward
+          const ang = Math.round(((Math.atan2(n[1], n[0]) * 180) / Math.PI) / 10)
+          const off = Math.round((mx * n[0] + my * n[1]) / 1.5)
+          const key = `${ang}:${off}`
+          facades.set(key, [...(facades.get(key) ?? []), { s: mx * -n[1] + my * n[0], w, u, n }])
+        }
+        const idxOf: number[][] = []
+        const all: { w: number[]; u: [number, number]; n: [number, number] }[] = []
+        for (const list of facades.values()) {
+          list.sort((a, b) => a.s - b.s)
+          let run: number[] = [], start = -1e9, last = -1e9
+          const span = 7 + rng() * 6                         // spaces 7–13 m along the facade
+          for (const it of list) {
+            if (run.length && (it.s - last > 2.6 || it.s - start > span)) { idxOf.push(run); run = [] }
+            if (!run.length) start = it.s
+            run.push(all.length)
+            all.push(it)
+            last = it.s
+          }
+          if (run.length) idxOf.push(run)
+        }
+        if (!all.length) continue
+        const im = new THREE.InstancedMesh(plane, mat, all.length)
+        all.forEach(({ w, u, n }, i) => {
+          const [ax, ay, bx, by, z0, z1] = w
+          const len = Math.hypot(bx - ax, by - ay) * 0.86, h = (z1 - z0) * 0.86
+          m4.makeBasis(new THREE.Vector3(u[0] * len, u[1] * len, 0), new THREE.Vector3(0, 0, h), new THREE.Vector3(n[0], n[1], 0))
+          m4.setPosition((ax + bx) / 2 + n[0] * 0.07, (ay + by) / 2 + n[1] * 0.07, (z0 + z1) / 2)
+          im.setMatrixAt(i, m4)
+          im.setColorAt(i, TOUR_DARK)
+        })
+        im.instanceMatrix.needsUpdate = true
+        im.userData = { tour: true }
+        bv.floors[fi].add(im)
+        meshes.push(im)
+        // which of this floor's spaces are rented: the building's share, at random
+        for (const idx of idxOf) spaces.push({ mesh: im, idx, on: 0, level: 0, delay: 0, building: id, lease: null })
+      }
+      // deal the example spaces, in random order, to the building's lettable spaces by their share of the area
+      const mine = spaces.filter((sp) => sp.building === id)
+      const order = mine.map((sp) => ({ sp, r: rng() })).sort((a, b) => a.r - b.r).map((x) => x.sp)
+      const lets = t.lettable[id] ?? []
+      const total = lets.reduce((a, l) => a + l.share, 0) || 1
+      order.forEach((sp, k) => {
+        let acc = 0
+        const pos = ((k + 0.5) / order.length) * total
+        sp.lease = lets.find((l) => (acc += l.share) >= pos)?.id ?? lets[lets.length - 1]?.id ?? null
+        sp.delay = DUSK_MS * 0.55 + rng() * 2600   // lights come on one by one, as the evening falls
+      })
+      {
+        const bb = new THREE.Box3().setFromObject(bv.group)
+        const el = document.createElement('div')
+        el.className = 'studio-label layer tour'
+        labels.set(id, el)
+        const o = new CSS2DObject(el)
+        // world group is rotated: back to plan coordinates for the label's position
+        const c = bb.getCenter(new THREE.Vector3())
+        o.position.set(c.x + this.center.x, -c.z + this.center.y, bb.max.y + 4)
+        group.add(o)
+      }
+    }
+    const now = performance.now()
+    this.tour = { group, meshes, spaces, labels, t0: now, at: now, hold: false, resumeAt: 0, speed: t.focus ? 0.16 : 0.08 }
+    this.duskTarget = 1   // evening falls (stepDusk, in the render loop)
+    this.invalidate()
+    if (!box.isEmpty()) this.flyToBox(box, t.focus ? 1.4 : 0.95, 0.38)
+  }
+
+  /** Which lettable spaces are rented now (lease space id → rented), and each building's label. Windows fade. */
+  setTenancyOccupancy(rented: Record<string, boolean>, labels?: Record<string, string>) {
+    const T = this.tour
+    if (!T) return
+    for (const s of T.spaces) s.on = s.lease && rented[s.lease] ? 1 : 0
+    for (const [id, el] of T.labels) { el.textContent = labels?.[id] ?? ''; el.style.display = labels?.[id] ? '' : 'none' }
+    this.invalidate()
+  }
+
+  private tourStep() {
+    const T = this.tour!
+    const now = performance.now()
+    const dt = Math.min(0.05, (now - T.at) / 1000)
+    T.at = now
+    if (T.hold && T.resumeAt && now > T.resumeAt) { T.hold = false; T.resumeAt = 0 }
+    if (!T.hold && !this.anim) {
+      // circle the orbit target, keeping the distance and height the view has
+      const tgt = this.controls.target
+      const off = this.camera.position.clone().sub(tgt)
+      off.applyAxisAngle(new THREE.Vector3(0, 1, 0), T.speed * dt)
+      this.camera.position.copy(tgt).add(off)
+      this.dirty = Math.max(this.dirty, 1)
+    }
+    let changed = false
+    const since = now - T.t0
+    const col = new THREE.Color()
+    for (const s of T.spaces) {
+      const target = since > s.delay ? s.on : 0
+      if (Math.abs(s.level - target) < 0.004) continue
+      s.level += Math.sign(target - s.level) * Math.min(Math.abs(target - s.level), dt * 2.2)
+      col.copy(TOUR_DARK).lerp(TOUR_LIT, s.level)
+      for (const i of s.idx) s.mesh.setColorAt(i, col)
+      s.mesh.instanceColor!.needsUpdate = true
+      changed = true
+    }
+    if (changed) this.dirty = Math.max(this.dirty, 1)
   }
 
   /** Ribbons on the ground from each building to a point (people heading for the station), width by trips. */
@@ -1120,7 +1572,7 @@ export class Viewer {
         const el = document.createElement('div')
         el.className = 'unit-label'
         // many small units: area only, so the plan stays readable
-        el.textContent = many ? `${Math.round(u.area)}` : `${u.name.replace('Apartment ', '')} · ${Math.round(u.area)} m²`
+        el.textContent = many ? `${Math.round(u.area)}` : `${u.name.replace('Apartment ', '')} Â· ${Math.round(u.area)} mÂ²`
         const lab = new CSS2DObject(el)
         lab.position.set(u.label[0], u.label[1], fp.base + 1.2)
         this.labelGroup.add(lab)
@@ -1155,12 +1607,12 @@ export class Viewer {
   }
 
   /** Urban scale: pins on the site, one visual language per kind of life:
-   *  permanent → a flag planted in the ground (it stays), temporary → a balloon tied to the spot (it floats away
-   *  after its year), amenity → a round board-game token with its type's icon (name on hover).
+   *  permanent â†’ a flag planted in the ground (it stays), temporary â†’ a balloon tied to the spot (it floats away
+   *  after its year), amenity â†’ a round board-game token with its type's icon (name on hover).
    *  Pins not on the map the last time pop in with a small animation. null clears them. */
   setLifePins(pins: {
     x: number; y: number; label: string; colour: string; kind: 'permanent' | 'temporary' | 'amenity'; title: string
-    id?: string; icon?: string; badge?: string
+    id?: string; icon?: string; badge?: string; dim?: boolean
   }[] | null) {
     this.invalidate()
     this.lifeGroup.children.forEach((c) => (c as CSS2DObject).element?.remove())
@@ -1172,7 +1624,7 @@ export class Viewer {
       seen.add(id)
       const el = document.createElement('div')
       el.title = p.title
-      el.className = `lp lp-${p.kind}${this.lifeSeen.has(id) ? '' : ' enter'}`
+      el.className = `lp lp-${p.kind}${this.lifeSeen.has(id) ? '' : ' enter'}${p.dim ? ' lp-dim' : ''}`
       // a stable per-pin phase, so balloons and flags don't all bob in step
       let h = 0
       for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0

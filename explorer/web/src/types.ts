@@ -55,6 +55,8 @@ export interface SitePayload {
 export interface ProjectProfile {
   id: string; title: string; title_en: string; mandate: string; focus: string; risk: string
   timeline_kpis: string[]; needs_data: string[]; cavf_profile: string
+  primary_kpis?: string[]; secondary_kpis?: string[]   // the role's KPIs (explorer/kpis.py ids); timeline_kpis is the computable subset
+  scale_kpis?: Partial<Record<'urban' | 'district' | 'building' | 'floor', string[]>>   // what the role looks at on each scale
 }
 export interface Project {
   id: string; name: string; city: string; owner: string; pilot_buildings: string[]

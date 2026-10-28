@@ -34,7 +34,11 @@ export function SunBar({ sun, setSun, view, setView }: Props) {
     )
   }
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-line bg-raised/95 px-3.5 py-2 shadow-sm">
+    <div className="relative flex flex-wrap items-center gap-3 rounded-lg border border-line bg-raised/95 py-2 pl-3.5 pr-10 shadow-sm">
+      <button type="button" onClick={() => setOpen(false)} aria-label="Close sun & view" title="Close"
+        className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full border-2 border-edge bg-surface text-[14px] font-bold leading-none text-ink shadow-[2px_2px_0_var(--color-edge)] hover:bg-coral">
+        ×
+      </button>
       <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Sun</span>
       <select value={sun.month} onChange={(e) => setSun({ ...sun, month: Number(e.target.value), day: Math.min(sun.day, 28) })}
         className="rounded border border-line-strong bg-surface px-1.5 py-0.5 text-[12.5px]" aria-label="Month">
@@ -56,11 +60,14 @@ export function SunBar({ sun, setSun, view, setView }: Props) {
       <span className="text-line-strong">|</span>
       <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">View</span>
       <Toggle on={view.sky} onChange={(v) => setView({ ...view, sky: v })} label="Sky" />
+      <Toggle on={!!view.skyStyle} onChange={(v) => setView({ ...view, skyStyle: v })} label="Stylised sky" />
+      <Toggle on={!!view.waterMotion} onChange={(v) => setView({ ...view, waterMotion: v })} label="Water motion" />
       <Toggle on={view.shadows} onChange={(v) => setView({ ...view, shadows: v })} label="Shadows" />
       <Toggle on={view.ao} onChange={(v) => setView({ ...view, ao: v })} label="Soft shading" />
+      <Toggle on={!!view.toon} onChange={(v) => setView({ ...view, toon: v })} label="Toon" />
+      <Toggle on={!!view.bloom} onChange={(v) => setView({ ...view, bloom: v })} label="Bloom" />
+      <Toggle on={!!view.dof} onChange={(v) => setView({ ...view, dof: v })} label="Depth of field" />
       <Toggle on={view.labels} onChange={(v) => setView({ ...view, labels: v })} label="Labels" />
-      <Toggle on={view.context !== false} onChange={(v) => setView({ ...view, context: v })} label="Context" />
-      <button type="button" onClick={() => setOpen(false)} className="ml-1 text-[12px] text-ink-2 hover:text-ink" aria-label="Collapse">▾ hide</button>
-    </div>
+      <Toggle on={view.context !== false} onChange={(v) => setView({ ...view, context: v })} label="Context" />    </div>
   )
 }

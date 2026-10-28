@@ -205,6 +205,7 @@ a{color:inherit; text-decoration:none}
 .card .kpis li.more:hover, .card .kpis li.more:focus-visible{color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink-2); outline:none}
 .card .kpis li.extra{background:none; box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 45%, var(--line)); font-weight:400}
 .p-finance .kpis li.extra{background:none}
+.card .kpis.pri{margin-bottom:12px}   /* primary chips sit just above the secondary label */
 .kpi-lab{font-family:var(--mono); font-size:10px; letter-spacing:.09em; text-transform:uppercase; color:var(--muted); margin-top:4px}
 .card .q{color:var(--ink-2); line-height:1.5; font-size:14.5px; margin:0 0 16px}
 .card ul{margin:0 0 20px; padding:0; list-style:none; font-size:13px; color:var(--ink-2)}
@@ -261,6 +262,20 @@ a{color:inherit; text-decoration:none}
 .kpi-picker .note{display:block; font-weight:400; color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.4}
 .kpi-picker .default-tag{display:inline-block; margin-left:6px; font-family:var(--mono); font-size:9px; letter-spacing:.06em; text-transform:uppercase;
   color:var(--blue); vertical-align:1px}
+.kpi-picker li.kpi-group{grid-column:1 / -1; background:none; border:0; padding:10px 0 0; display:flex; align-items:baseline; gap:10px}
+.kpi-picker li.kpi-group:first-child{padding-top:0}
+.kpi-group b{font-family:var(--display); font-size:17px; font-weight:800; letter-spacing:-.01em}
+.kpi-group span{font-size:12.5px; color:var(--muted)}
+.kpi-more button{font:inherit; font-family:var(--mono); font-size:12px; padding:6px 12px; border:2px solid var(--edge); border-radius:6px;
+  background:var(--card); box-shadow:3px 3px 0 var(--edge); cursor:pointer}
+.kpi-more button:hover{background:var(--chalk)}
+/* how far the tool can show a KPI today */
+.kpi-status{display:inline-block; margin-left:6px; padding:0 5px; border-radius:3px; font-family:var(--mono); font-size:9px; letter-spacing:.05em;
+  text-transform:uppercase; font-weight:500; vertical-align:1px; border:1px solid currentColor}
+.kpi-status.s-year{color:#0a7a4a}
+.kpi-status.s-building{color:var(--blue)}
+.kpi-status.s-placeholder{color:#a8650f}
+.kpi-status.s-none{color:var(--muted)}
 .step3-actions{display:flex; align-items:center; gap:16px; flex-wrap:wrap}
 .step3-note{margin:0; font-size:13px; color:var(--muted)}
 
@@ -558,52 +573,67 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
     <div class="grid" id="project-profiles" data-project="marievik">
 
       <button type="button" class="card p-developer" data-profile="projektutvecklare"
-        data-kpis="feasible_uses,transformation_cost,use_diversity,data_quality">
+        data-kpis="utilization,use_diversity,feasible_uses,incremental_npv"
+        data-primary="delivered_services,utilization,use_diversity,feasible_uses,adaptability_profile,incremental_npv" data-secondary="value_retention,option_value,lcc,replication">
         <h3>Project developer</h3>
         <p class="role-sv">Projektutvecklare</p>
         <p class="q">Attract companies, flexible leases, multi-use premises, reuse that pays</p>
-        <div class="kpi-lab">Over 10 years</div>
-        <ul class="kpis"><li>Feasible alternative uses</li><li>Transformation cost</li><li>Use diversity</li><li>Decision-critical data quality</li></ul>
+        <div class="kpi-lab">Primary KPIs</div>
+        <ul class="kpis pri"><li>Delivered service</li><li>Utilization</li><li>Use diversity</li><li>Feasible alternative uses</li><li>Adaptability profile</li><li>Incremental NPV</li></ul>
+        <div class="kpi-lab">Secondary KPIs</div>
+        <ul class="kpis"><li class="extra">Value retention</li><li class="extra">Option value</li><li class="extra">Life-cycle cost</li><li class="extra">Replication</li></ul>
         <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
       </button>
 
       <button type="button" class="card p-investor" data-profile="projektledare"
-        data-kpis="transformation_cost,transformation_time,upfront_gwp,data_quality">
+        data-kpis="transformation_time,transformation_cost,recoverable_mass,upfront_gwp,data_quality"
+        data-primary="transformation_time,transformation_cost,disruptions,recoverable_mass,lcc" data-secondary="upfront_gwp,data_quality,adaptability_profile">
         <h3>Project manager</h3>
         <p class="role-sv">Projektledare</p>
         <p class="q">Cost and time, build less and right faster, value of reuse in the calculation</p>
-        <div class="kpi-lab">Over 10 years</div>
-        <ul class="kpis"><li>Transformation cost</li><li>Transformation time</li><li>Upfront GWP</li><li>Decision-critical data quality</li></ul>
+        <div class="kpi-lab">Primary KPIs</div>
+        <ul class="kpis pri"><li>Transformation time</li><li>Transformation cost</li><li>Disruption</li><li>Recoverable component mass</li><li>Life-cycle cost</li></ul>
+        <div class="kpi-lab">Secondary KPIs</div>
+        <ul class="kpis"><li class="extra">Upfront GWP</li><li class="extra">Decision-critical data quality</li><li class="extra">Adaptability profile</li></ul>
         <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
       </button>
 
       <button type="button" class="card p-supplier" data-profile="marknadsomradeschef"
-        data-kpis="utilization,use_diversity,recoverable_mass,data_quality">
+        data-kpis="utilization,use_diversity,feasible_uses"
+        data-primary="utilization,use_diversity,delivered_services,access_affordability,energy_use_intensity" data-secondary="shiftable_load,poe_performance,feasible_uses,value_retention">
         <h3>Market area manager</h3>
         <p class="role-sv">Marknadsområdeschef</p>
         <p class="q">Surplus ratio, top-class offices, Circular Marievik, new kinds of tenants</p>
-        <div class="kpi-lab">Over 10 years</div>
-        <ul class="kpis"><li>Utilization</li><li>Use diversity</li><li>Recoverable component mass</li><li>Decision-critical data quality</li></ul>
+        <div class="kpi-lab">Primary KPIs</div>
+        <ul class="kpis pri"><li>Utilization</li><li>Use diversity</li><li>Delivered service</li><li>Access and affordability</li><li>Energy use intensity</li></ul>
+        <div class="kpi-lab">Secondary KPIs</div>
+        <ul class="kpis"><li class="extra">Shiftable load</li><li class="extra">POE performance</li><li class="extra">Feasible alternative uses</li><li class="extra">Value retention</li></ul>
         <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
       </button>
 
       <button type="button" class="card p-finance" data-profile="platsutvecklare"
-        data-kpis="use_diversity,utilization,feasible_uses">
+        data-kpis="use_diversity,utilization,feasible_uses"
+        data-primary="use_diversity,delivered_services,access_affordability,poe_performance,hazard_adaptation" data-secondary="utilization,disruptions,feasible_uses,decision_influence">
         <h3>Place developer</h3>
         <p class="role-sv">Platsutvecklare</p>
         <p class="q">A destination for food, culture and recreation; life on site; connection to the surroundings</p>
-        <div class="kpi-lab">Over 10 years</div>
-        <ul class="kpis"><li>Use diversity</li><li>Utilization</li><li>Feasible alternative uses</li></ul>
+        <div class="kpi-lab">Primary KPIs</div>
+        <ul class="kpis pri"><li>Use diversity</li><li>Delivered service</li><li>Access and affordability</li><li>POE performance</li><li>Hazard-adaptation performance</li></ul>
+        <div class="kpi-lab">Secondary KPIs</div>
+        <ul class="kpis"><li class="extra">Utilization</li><li class="extra">Disruption</li><li class="extra">Feasible alternative uses</li><li class="extra">Decision influence</li></ul>
         <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
       </button>
 
       <button type="button" class="card p-environ" data-profile="projektchef"
-        data-kpis="incremental_npv,transformation_cost,upfront_gwp,data_quality">
+        data-kpis="incremental_npv"
+        data-primary="incremental_npv,lcc,whole_life_gwp,value_retention,downside_loss,crrem_year" data-secondary="break_even_premium,option_value,carbon_payback,replication,institutionalization">
         <h3>Project director</h3>
         <p class="role-sv">Projektchef</p>
         <p class="q">Rent and income, project result, sustainability; long-lived buildings</p>
-        <div class="kpi-lab">Over 10 years</div>
-        <ul class="kpis"><li>Incremental NPV</li><li>Transformation cost</li><li>Upfront GWP</li><li>Decision-critical data quality</li></ul>
+        <div class="kpi-lab">Primary KPIs</div>
+        <ul class="kpis pri"><li>Incremental NPV</li><li>Life-cycle cost</li><li>Whole-life GWP</li><li>Value retention</li><li>Downside loss</li><li>CRREM misalignment year</li></ul>
+        <div class="kpi-lab">Secondary KPIs</div>
+        <ul class="kpis"><li class="extra">Break-even premium</li><li class="extra">Option value</li><li class="extra">Carbon payback</li><li class="extra">Replication</li><li class="extra">Institutionalization</li></ul>
         <span class="go">Choose <span class="arrow" aria-hidden="true">→</span></span>
       </button>
 
@@ -673,7 +703,7 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
     <button type="button" class="back-link" data-back="step2-section">‹ Change profile</button>
     <div class="start-head">
       <h2 id="kpi-h"><span class="step">3</span>Check your KPIs</h2>
-      <p>Tracked for <b class="chosen-profile">—</b> over 10 years. Tick any others you'd like to see too.</p>
+      <p>The KPIs for <b class="chosen-profile">—</b>. Untick any you don't need, or add others.</p>
     </div>
     <ul class="kpi-picker" id="kpi-picker"></ul>
     <div class="step3-actions">
@@ -704,11 +734,12 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
   var kpiPicker = document.getElementById('kpi-picker')
   var goExplore = document.getElementById('go-explore')
 
-  // The project handbook's own KPIs (CAVF KPI cheat sheet; explorer/kpis.py has the full 29 with formulas).
-  // These 7 are the ones the 10-year pathway engine can actually compute per year (explorer/timeline.py
-  // KPI_META) — the rest of the handbook (Delivered service, Disruption, Adaptability profile, Energy use
-  // intensity, Access and affordability, POE performance, Decision influence, Institutionalization, CRREM
-  // misalignment year, …) needs data this engine doesn't model yet, so it isn't offered here.
+  // Step 3 lists the chosen profile's own KPIs (primary, then secondary: the card's data-primary/data-secondary,
+  // or a generic profile's CAVF list from /api/methods), then every other KPI in explorer/kpis.py, folded away.
+  // Each says how far the tool can show it: these 9 the 10-year pathway engine computes per year
+  // (explorer/timeline.py KPI_META), with their own notes; the rest take their note from /api/methods.
+  var methods = null
+  var methodsReady = fetch('/api/methods').then(function (r) { return r.json() }).then(function (m) { methods = m }).catch(function () {})
   var KPI_CATALOGUE = [
     { id: 'transformation_cost', label: 'Transformation cost', note: 'Change. New walls and finishes at catalogue prices, cumulative over the pathway.' },
     { id: 'transformation_time', label: 'Transformation time', note: 'Change. Estimated months of works, cumulative over the pathway (placeholder figure).' },
@@ -781,8 +812,12 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
       grid.querySelectorAll('.card').forEach(function (c) { c.setAttribute('aria-pressed', c === card ? 'true' : 'false') })
       state.profile = card.dataset.profile
       state.profileLabel = card.querySelector('h3').textContent
-      state.defaultKpis = (card.dataset.kpis || '').split(',').filter(Boolean)
+      var ids = function (s) { return (s || '').split(',').filter(Boolean) }
+      state.primary = ids(card.dataset.primary)
+      state.secondary = ids(card.dataset.secondary)
+      state.generic = !card.dataset.primary   // a generic profile: its KPIs come from /api/methods
       buildKpiPicker()
+      if (state.generic) methodsReady.then(buildKpiPicker)
       document.querySelectorAll('.chosen-profile').forEach(function (el) { el.textContent = state.profileLabel })
       reveal(step3)
       scrollTo(step3)
@@ -790,32 +825,80 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
   })
 
   // ---------------- step 3: KPIs ----------------
+  // what the tool can show for a KPI today: over 10 years, a placeholder figure, or nothing until data exists
+  function kpiInfo(id) {
+    var t = KPI_CATALOGUE.filter(function (k) { return k.id === id })[0]
+    var d = methods && methods.kpis[id]
+    var how = t ? '' : (d && d.explorer) || ''
+    var status = t ? 'year' : /^Not computed/.test(how) ? 'none' : /^Placeholder/.test(how) ? 'placeholder' : how ? 'building' : 'none'
+    return { id: id, label: (t && t.label) || (d && d.name) || id.replace(/_/g, ' '), note: t ? t.note : (how || 'Not computed yet.'), status: status }
+  }
+  var STATUS = { year: 'over 10 years', building: 'per building', placeholder: 'placeholder', none: 'needs data' }
+
+  function kpiItem(id, checked, role) {
+    var k = kpiInfo(id)
+    var li = document.createElement('li')
+    var label = document.createElement('label')
+    var input = document.createElement('input')
+    input.type = 'checkbox'; input.value = k.id; input.checked = checked
+    input.addEventListener('change', updateGoExplore)
+    var span = document.createElement('span')
+    span.textContent = k.label
+    if (role) {
+      var tag = document.createElement('span')
+      tag.className = 'default-tag'; tag.textContent = role
+      span.appendChild(tag)
+    }
+    var st = document.createElement('span')
+    st.className = 'kpi-status s-' + k.status; st.textContent = STATUS[k.status]
+    span.appendChild(st)
+    var note = document.createElement('span')
+    note.className = 'note'; note.textContent = k.note
+    span.appendChild(note)
+    label.appendChild(input); label.appendChild(span)
+    li.appendChild(label)
+    return li
+  }
+  function kpiGroup(title, sub) {
+    var h = document.createElement('li')
+    h.className = 'kpi-group'
+    h.innerHTML = '<b></b><span></span>'
+    h.firstChild.textContent = title; h.lastChild.textContent = sub
+    return h
+  }
+
   function buildKpiPicker() {
     kpiPicker.replaceChildren()
-    var defaults = state.defaultKpis || []
-    KPI_CATALOGUE.forEach(function (k) {
-      var li = document.createElement('li')
-      var isDefault = defaults.indexOf(k.id) > -1
-      var label = document.createElement('label')
-      var input = document.createElement('input')
-      input.type = 'checkbox'; input.value = k.id; input.checked = isDefault
-      input.addEventListener('change', updateGoExplore)
-      var span = document.createElement('span')
-      span.textContent = k.label
-      if (isDefault) {
-        var tag = document.createElement('span')
-        tag.className = 'default-tag'; tag.textContent = 'default'
-        span.appendChild(tag)
-      }
-      var note = document.createElement('span')
-      note.className = 'note'; note.textContent = k.note
-      span.appendChild(note)
-      label.appendChild(input); label.appendChild(span)
-      li.appendChild(label)
-      kpiPicker.appendChild(li)
-    })
+    var primary = state.primary, secondary = state.secondary
+    if (state.generic) {
+      primary = methods && methods.profiles[state.profile] ? methods.profiles[state.profile].kpis : KPI_CATALOGUE.map(function (k) { return k.id })
+      secondary = []
+    }
+    var mine = primary.concat(secondary)
+    kpiPicker.appendChild(kpiGroup('Primary KPIs', 'what this role is judged on'))
+    primary.forEach(function (id) { kpiPicker.appendChild(kpiItem(id, true, 'primary')) })
+    if (secondary.length) {
+      kpiPicker.appendChild(kpiGroup('Secondary KPIs', 'worth keeping an eye on'))
+      secondary.forEach(function (id) { kpiPicker.appendChild(kpiItem(id, true, 'secondary')) })
+    }
+    // everything else in the catalogue, folded away until asked for
+    var others = (methods ? Object.keys(methods.kpis) : KPI_CATALOGUE.map(function (k) { return k.id }))
+      .filter(function (id) { return mine.indexOf(id) < 0 })
+    if (others.length) {
+      var more = document.createElement('li')
+      more.className = 'kpi-group kpi-more'
+      var btn = document.createElement('button')
+      btn.type = 'button'; btn.textContent = '+ ' + others.length + ' other KPIs'
+      btn.addEventListener('click', function () {
+        more.replaceWith.apply(more, [kpiGroup('Other KPIs', 'not part of this role, tick any you want')].concat(
+          others.map(function (id) { return kpiItem(id, false, '') })))
+      })
+      more.appendChild(btn)
+      kpiPicker.appendChild(more)
+    }
     updateGoExplore()
   }
+  methodsReady.then(function () { if (state.profile && !step3.hidden) buildKpiPicker() })   // notes for the non-timeline KPIs
   function updateGoExplore() {
     var chosen = Array.prototype.filter.call(kpiPicker.querySelectorAll('input'), function (i) { return i.checked })
       .map(function (i) { return i.value })

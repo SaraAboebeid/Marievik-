@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { api, fmt, fmt1 } from './api'
 import type { FullResult } from './api'
 import type {
-  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, Level, Methods, Project, SavedScenario,
+  BuildingPayload, Capabilities, ComfortResult, DaylightResult, Figures, FloorPayload, KpiResult, KpiValue, Level, Methods, Project, SavedScenario,
   Settings, SitePayload, TimelineResponse, Unit, UnitComfort, UrbanSummary,
 } from './types'
 import { TimelineDrawer } from './ui/TimelineDrawer'
@@ -21,8 +21,13 @@ import { DayPanel, PeopleControls } from './ui/DayPanel'
 import { GeneratePlans } from './ui/VariantsPanel'
 import { PlanningTable } from './ui/PlanningTable'
 import { LifePanel, type LifeFilter } from './ui/LifePanel'
+import { LifeDecade } from './ui/LifeDecade'
+import { KpiStrip, type KpiScale } from './ui/KpiStrip'
 import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
 import { lifeIconSvg } from './lifeIcons'
+import { leaseAt, mockLeaseBook, rentedShare, stepTime } from './leases'
+import { LeaseTimeline } from './ui/LeaseTimeline'
+import { WalkPanel, WALK_COLOURS, WALK_MINUTES, bandOf, walkRadii, type WalkState } from './ui/WalkPanel'
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
 import { LAYER_LEGEND } from './ui/LayerBar'
@@ -78,7 +83,7 @@ export default function App() {
   const [sun, setSun] = useState({ month: 6, day: 21, hour: 15 })
   // ?lite=1 starts without shadows and ambient occlusion (slow GPUs, remote desktops)
   const lite = new URLSearchParams(window.location.search).has('lite')
-  const [view, setView] = useState<ViewOptions>({ sky: true, shadows: !lite, ao: !lite, explode: 0, labels: true, context: true })
+  const [view, setView] = useState<ViewOptions>({ sky: true, shadows: !lite, ao: !lite, explode: 0, labels: true, context: true, toon: true, bloom: !lite, dof: !lite, skyStyle: true, waterMotion: !lite })
   const [hover, setHover] = useState<{ p: Pick; x: number; y: number } | null>(null)
   const [saved, setSaved] = useState<SavedScenario[]>(() => {
     try { return JSON.parse(localStorage.getItem(STORE_KEY) ?? '[]') } catch { return [] }
@@ -279,7 +284,7 @@ export default function App() {
     if (studioRef.current) setStudioView(l === 'movement' ? 'move' : l === 'fire' ? 'fire' : l === 'capacity' ? 'capacity' : 'furniture')
   }
   const b01Layouts = studioMeta ? Object.fromEntries(Array.from({ length: 7 }, (_, f) => [f, studioLayout[f] ?? layoutFor(studioMeta, f)])) : null
-  const layersKey = b01Layouts && (layer === 'movement' || layer === 'fire' || layer === 'capacity' || layer === 'vacancy') ? JSON.stringify([b01Layouts, studioParams]) : ''
+  const layersKey = b01Layouts && (layer === 'movement' || layer === 'fire' || layer === 'capacity' || layer === 'vacancy' || layer === 'tenancy') ? JSON.stringify([b01Layouts, studioParams]) : ''
   useEffect(() => {
     if (!layersKey) return
     const [lay, par] = JSON.parse(layersKey) as [Record<number, string>, Record<number, Params>]
@@ -460,6 +465,38 @@ export default function App() {
       .catch((e) => { if (alive) setError(String(e)) })
     return () => { alive = false }
   }, [buildingId, bkey]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // the side panels start under the top bar, which wraps to two rows on narrow screens and grows with the KPI strip
+  const topBarRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const el = topBarRef.current
+    if (!el) return
+    const ro = new ResizeObserver(() => {
+      const r = el.getBoundingClientRect()
+      document.documentElement.style.setProperty('--panel-top', `${Math.round(r.bottom + 12)}px`)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  // the KPI strip: which scale it speaks for, and the district/urban totals (explorer/scale_kpis.py)
+  const kpiScale: KpiScale = level.kind === 'floor' || level.kind === 'unit' ? 'floor' : scale
+  const [scaleKpis, setScaleKpis] = useState<{ scale: string; key: string; kpis: Record<string, KpiValue> } | null>(null)
+  const scenKey = JSON.stringify(scen)
+  useEffect(() => {
+    if (kpiScale !== 'district' && kpiScale !== 'urban') return
+    let alive = true
+    api.kpisScale(kpiScale, choice.project, scen)
+      .then((r) => { if (alive) setScaleKpis({ scale: kpiScale, key: scenKey, kpis: r.kpis }) })
+      .catch((e) => { if (alive) setError(`KPIs: ${String(e)}`) })
+    return () => { alive = false }
+  }, [kpiScale, choice.project, scenKey]) // eslint-disable-line react-hooks/exhaustive-deps
+  const stripValues = kpiScale === 'district' || kpiScale === 'urban'
+    ? (scaleKpis?.scale === kpiScale ? scaleKpis.kpis : null)
+    : (kpiResult && kpiResult.building === buildingId ? kpiResult.kpis : null)
+  const stripWaiting = stripValues ? null
+    : (kpiScale === 'building' && !buildingId) ? 'pick a building'
+    : 'calculating…'
 
   // ------------------------------------------------------------ viewer
   useEffect(() => {
@@ -681,7 +718,7 @@ export default function App() {
     const v = viewer.current
     if (!v) return
     const onFloor = studioFloor !== null || level.kind === 'floor' || level.kind === 'unit'
-    if (layer === 'none' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
+    if (layer === 'none' || layer === 'tenancy' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
     if (layer === 'vacancy') {
       v.setFlows(null)
       if (districtRes) {
@@ -730,6 +767,37 @@ export default function App() {
     } else v.setFlows(null)
   }, [layer, layerData, districtRes, distYear, bdata, studioFloor, level.kind, buildingId])
 
+  // rented / vacant: a dusk tour around the buildings, example spaces lit when rented, dark when vacant
+  // (District: the whole site; Building: the one building in focus), played quarter by quarter over ten years
+  // from the lease book (leases.ts: mock leases until real lease data is added).
+  const tourFocus = scale === 'building' && level.kind === 'building' ? buildingId ?? null : null
+  const tourOn = layer === 'tenancy' && scale !== 'urban' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit'
+  const tourIds = Object.keys(bdata).sort()
+  const leaseBook = useMemo(() => mockLeaseBook(tourIds), [tourIds.join(',')])
+  const [leaseStep, setLeaseStep] = useState(0)
+  const [leasePlaying, setLeasePlaying] = useState(false)
+  const tourKey = tourOn ? JSON.stringify([tourFocus, tourIds]) : ''
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    if (!tourKey) { v.setTenancyTour(null); setLeasePlaying(false); return }
+    const lettable: Record<string, { id: string; share: number }[]> = {}
+    for (const sp of leaseBook.spaces) (lettable[sp.building] ??= []).push({ id: sp.id, share: sp.share })
+    v.setTenancyTour({ lettable, focus: tourFocus })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourKey])
+  useEffect(() => {
+    const v = viewer.current
+    if (!v || !tourKey) return
+    const t = stepTime(leaseStep)
+    const rented = Object.fromEntries(leaseBook.spaces.map((sp) => [sp.id, !!leaseAt(leaseBook, sp.id, t)]))
+    const share = rentedShare(leaseBook, t)
+    v.setTenancyOccupancy(rented, Object.fromEntries(tourIds.map((id) => [id, `${id} · ${Math.round((share[id] ?? 0) * 100)} % rented`])))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourKey, leaseStep, leaseBook])
+  useEffect(() => { if (layer === 'tenancy' && scale === 'urban') setLayerState('none') }, [layer, scale])
+  useEffect(() => () => viewer.current?.setTenancyTour(null), [])
+
   // ------------------------------------------------------------ scale: urban / district / building
   // Urban and District both look at the whole site at once; only Building drills into one building/floor/unit.
   useEffect(() => {
@@ -762,6 +830,7 @@ export default function App() {
 
   // Urban scale: AMF's events and activities timeline and today's amenities, pinned on the site (explorer/urban_life.py)
   const [life, setLife] = useState<UrbanLife | null>(null)
+  const [decadeClosed, setDecadeClosed] = useState(false)   // the bottom decade window, closed with its ×
   const [lifeFilter, setLifeFilter] = useState<LifeFilter>({ year: new Date().getFullYear(), permanent: true, temporary: true, amenities: true })
   useEffect(() => {
     if (scale !== 'urban' || life) return
@@ -769,6 +838,27 @@ export default function App() {
     api.urbanLife(choice.project).then((r) => { if (alive) setLife(r) }).catch((e) => { if (alive) setError(`Life on site: ${(e as Error).message}`) })
     return () => { alive = false }
   }, [scale, life, choice.project])
+  // walking-distance rings around the site (Urban scale): 5 and 10 minutes at a chosen pace, clickable
+  const [walk, setWalk] = useState<WalkState>({ on: true, pace: 'normal', selected: null })
+  const siteC = useMemo<[number, number]>(() => {
+    const pts = site?.buildings.flatMap((b) => b.footprint) ?? []
+    if (!pts.length) return [0, 0]
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1])
+    return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]
+  }, [site])
+  const walkOn = scale === 'urban' && walk.on && !!site
+  useEffect(() => {
+    const v = viewer.current
+    if (!v) return
+    v.onWalkRing = (i) => setWalk((w) => ({ ...w, on: true, selected: w.selected === i ? null : i }))
+    if (!walkOn) { v.setWalkRings(null); return }
+    const radii = walkRadii(walk.pace)
+    const counts = radii.map((_, i) => (life?.amenities ?? []).filter((a) => bandOf(Math.hypot(a.x - siteC[0], a.y - siteC[1]), radii) === i).length)
+    v.setWalkRings({ center: siteC, selected: walk.selected,
+      rings: radii.map((r, i) => ({ r, colour: WALK_COLOURS[i], label: `${WALK_MINUTES[i]} min · ${Math.round(r)} m · ${counts[i]} places` })) })
+  }, [walkOn, walk, siteC, life])
+  useEffect(() => () => viewer.current?.setWalkRings(null), [])
+
   useEffect(() => {
     const v = viewer.current
     if (!v) return
@@ -782,13 +872,17 @@ export default function App() {
           badge: t.kind === 'temporary' ? `${t.year} only` : t.year === f.year ? 'new' : undefined,
           title: `${t.name} · ${c?.label ?? t.category} · ${t.kind === 'permanent' ? `from ${t.year}` : t.year}\n${t.place}${t.note ? `\n${t.note}` : ''}` }
       })
-    const amen = !f.amenities ? [] : life.amenities.filter((a) => Math.hypot(a.x, a.y) < 600).map((a) => ({
+    // with the rings on, every amenity out to the outer ring shows, and those outside the chosen ring fade
+    const radii = walkRadii(walk.pace)
+    const dOf = (a: { x: number; y: number }) => Math.hypot(a.x - siteC[0], a.y - siteC[1])
+    const amen = !f.amenities ? [] : life.amenities.filter((a) => (walkOn ? dOf(a) <= radii[radii.length - 1] : Math.hypot(a.x, a.y) < 600)).map((a) => ({
+      dim: walkOn && walk.selected !== null && bandOf(dOf(a), radii) !== walk.selected,
       x: a.x, y: a.y, label: a.name, colour: AMENITY_TYPES[a.type]?.colour ?? '#9a978e', kind: 'amenity' as const,
       id: `a:${a.type}:${a.name}:${a.x}:${a.y}`, icon: lifeIconSvg(a.type, 11, 2.6),
       title: `${a.name} · ${AMENITY_TYPES[a.type]?.label ?? a.type}${a.addr ? ` · ${a.addr}` : ''}`,
     }))
     v.setLifePins([...amen, ...events])
-  }, [scale, life, lifeFilter])
+  }, [scale, life, lifeFilter, walkOn, walk, siteC])
 
   // unit level: the unit's own comfort with its hottest week
   useEffect(() => {
@@ -990,6 +1084,7 @@ export default function App() {
   const b = buildingId ? bdata[buildingId] : null
   // the 10-year timeline in the bottom bar; the side panels stop above it
   const bottomBar = tlOpen && !!buildingId
+  const lifeBar = scale === 'urban' && !!life && !decadeClosed   // the decade of life on site, along the bottom at urban scale
   const closeTl = () => { if (showTimeline) toggleTimeline(); else setTlHidden(true) }
   // the bottom drawer, both segments side by side: on a studio floor it is the auto-opened bar, elsewhere a toggle
   const openTimeline = () => { if (studioFloor !== null) setTlHidden(false); else if (!showTimeline) toggleTimeline() }
@@ -1069,7 +1164,7 @@ export default function App() {
   const project = PROJECTS[choice.project]
   const working = busy ?? (Object.values(loading).some(Boolean) ? `Laying out ${Object.values(loading).filter(Boolean).length} building(s)…` : null)
   const sc = scenarioStatus
-  const panelTop = 'top-[8rem]'
+  const panelTop = 'top-[var(--panel-top,12rem)]'   // under the top bar and its KPI strip, however tall they wrap
   // hover label: above and right of the pointer, flipped to the left near the right edge so it never runs off screen
   const hoverLeft = hover ? (hover.x > window.innerWidth - 360 ? hover.x - 16 : hover.x + 16) : 0
   const hoverFlip = hover ? hover.x > window.innerWidth - 360 : false
@@ -1092,7 +1187,7 @@ export default function App() {
 
       {/* under the bar: where you are, and the tools — a second full-width bar (like the header above it),
           pill chips inside it in the same ink-outline / hard-shadow / coral-for-active sticker style. */}
-      <div className="absolute inset-x-0 top-[64px] z-10 flex flex-wrap items-center justify-between gap-3 border-b-2 border-edge bg-surface px-4 py-2 shadow-[0_3px_0_var(--color-edge)]">
+      <div ref={topBarRef} className="absolute inset-x-0 top-[64px] z-10 flex flex-wrap items-center justify-between gap-3 border-b-2 border-edge bg-surface px-4 py-2 shadow-[0_3px_0_var(--color-edge)]">
         <div className="flex flex-wrap items-center gap-2">
         <nav className="flex items-center gap-1 rounded-md border-2 border-edge bg-surface p-1 text-[12.5px] shadow-[3px_3px_0_var(--color-edge)]" aria-label="Scale">
           {SCALE_TABS.map(([id, label, hint]) => (
@@ -1172,11 +1267,15 @@ export default function App() {
           {working && (
             <span className="rounded-md border-2 border-edge bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-[3px_3px_0_var(--color-edge)]">{working}</span>
           )}
-          <LensPanel floorOpen={floorOpen} onlyVacancy={buildingOnly} layer={layer} setLayer={setLayer}
+          <LensPanel floorOpen={floorOpen} onlyVacancy={buildingOnly} tour={scale !== 'urban'} layer={layer} setLayer={setLayer}
             view={studioView} setView={setStudioView}
             scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
             explode={view.explode} setExplode={(v) => setView({ ...view, explode: v })} />
         </div>
+        <KpiStrip scale={kpiScale} profile={projectProfile} pinned={choice.kpis}
+          cavfKpis={!projectProfile && cavfProfile ? methods?.profiles[cavfProfile]?.kpis ?? null : null}
+          methods={methods} values={stripValues} valuesFrom={stripValues ? (kpiScale === 'floor' ? 'building' : 'here') : null}
+          waiting={stripWaiting} onExplain={(k) => setExplain(k)} />
       </div>
 
       {error && (
@@ -1190,7 +1289,7 @@ export default function App() {
           building, no floor open — the (building-wide) 10-year timeline and a way into the plan generator.
           The lens picker lives in the top bar now (every scale); the building's figures are on the right. */}
       {(floorOpen || (showBuildingActions && !!studioMeta?.buildings.includes(buildingId!))) && (panels.left ? (
-        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute left-3 ${panelTop} z-10 w-[19rem]`}>
+        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn ? 'panel-short' : ''} absolute left-3 ${panelTop} z-10 w-[19rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('left')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -1231,7 +1330,7 @@ export default function App() {
           open — what you change (layout/walls/people, building settings) above what comes out of it (results).
           Nothing to set up on the whole site. */}
       {panels.right ? (
-        <aside className={`panel-scroll ${bottomBar ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -1281,6 +1380,7 @@ export default function App() {
               compare={cardRows} compareBusy={cardBusy} onCompare={runCardCompare} onPickCompare={pickCardRow} />
           )}
           {scale === 'urban' && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
+          {scale === 'urban' && life && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
           {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
           {floorOpen ? (
@@ -1326,20 +1426,32 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
-        {layer !== 'none' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
+        {layer !== 'none' && layer !== 'tenancy' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
           <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
         )}
       </div>
 
       {/* bottom: map legend + sun/view controls, both foldable */}
-      <div className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2 items-end gap-2">
-        {bottomBar ? (
+      <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${
+        tourOn || lifeBar ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
+        {lifeBar ? (
+          <LifeDecade life={life!} filter={lifeFilter} setFilter={setLifeFilter} onClose={() => setDecadeClosed(true)} />
+        ) : tourOn ? (
+          <LeaseTimeline book={leaseBook} buildings={tourIds} focus={tourFocus} step={leaseStep} setStep={setLeaseStep}
+            playing={leasePlaying} setPlaying={setLeasePlaying} />
+        ) : bottomBar ? (
           <TimelineDrawer tl={tl && (tl.status !== 'ready' || tl.building === buildingId) ? tl : null} profile={projectProfile}
             year={tlYear} setYear={setTlYear} pathway={tlPath} setPathway={setTlPath} onClose={closeTl}
             segment={tlSeg} setSegment={setTlSeg} kpis={studioFloor !== null ? tlKpis : null} note={studioFloor !== null ? tlNote : null} />
         ) : (
           <>
             {site && <div className="pointer-events-auto min-w-0"><MapLegend site={site} level={level} floor={floorData} /></div>}
+            {scale === 'urban' && life && decadeClosed && (
+              <button type="button" onClick={() => setDecadeClosed(false)} title="Open the decade of life on Marievik, 2024–2030"
+                className="pointer-events-auto rounded-lg border-2 border-edge bg-coral px-3 py-1.5 font-mono text-[11.5px] font-bold text-[#202020] shadow-[2px_2px_0_var(--color-edge)]">
+                ▶ The decade
+              </button>
+            )}
             <div className="pointer-events-auto"><SunBar sun={sun} setSun={setSun} view={view} setView={setView} level={level} /></div>
           </>
         )}

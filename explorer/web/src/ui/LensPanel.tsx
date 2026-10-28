@@ -12,15 +12,16 @@ const pill = 'flex flex-wrap items-center gap-1 rounded-md border-2 border-edge 
 /** The explorer's one lens picker, top bar, every scale: site-wide layers (whole building / district, mostly
  *  estimated) when no floor is open, swapping to that floor's own views (real data where B01 has drawn plans)
  *  once you open one — the same names meant two different button rows before; now there's one, one place. */
-export function LensPanel({ floorOpen, onlyVacancy, layer, setLayer, view, setView, scenario, setScenario, heat, setHeat, crowdNote, explode, setExplode }: {
+export function LensPanel({ floorOpen, onlyVacancy, tour = false, layer, setLayer, view, setView, scenario, setScenario, heat, setHeat, crowdNote, explode, setExplode }: {
   floorOpen: boolean
   onlyVacancy: boolean   // a single building, no floor open: Movement/Fire/Capacity move to the floor's own views
+  tour?: boolean         // District and Building scale: the rented / vacant dusk tour is on offer
   layer: Layer; setLayer: (l: Layer) => void
   view: StudioView; setView: (v: StudioView) => void
   scenario: Scenario; setScenario: (s: Scenario) => void; heat: boolean; setHeat: (v: boolean) => void; crowdNote: string
   explode: number; setExplode: (v: number) => void   // pull every floor apart to see them all at once
 }) {
-  const siteIds: Layer[] = onlyVacancy ? ['none', 'vacancy'] : ['none', 'movement', 'fire', 'capacity', 'vacancy']
+  const siteIds: Layer[] = [...(onlyVacancy ? ['none', 'vacancy'] as Layer[] : ['none', 'movement', 'fire', 'capacity', 'vacancy'] as Layer[]), ...(tour ? ['tenancy'] as Layer[] : [])]
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       {floorOpen ? (

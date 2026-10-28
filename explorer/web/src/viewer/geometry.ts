@@ -23,6 +23,25 @@ export function prism(rings: Ring[], z0: number, z1: number): THREE.BufferGeomet
   return g
 }
 
+/** Rings pushed out by d metres (holes shrink), mitred at the corners. For thin trims that must sit just proud of a
+ *  wall: with the logarithmic depth buffer, polygonOffset does nothing, so coplanar faces z-fight. */
+export function inflate(rings: Ring[], d: number, keep?: (x: number, y: number) => boolean): Ring[] {
+  const area = (r: Ring) => r.reduce((s, [x, y], i) => { const [u, v] = r[(i + 1) % r.length]; return s + x * v - u * y }, 0)
+  const sign = rings.length && area(rings[0]) < 0 ? -1 : 1   // outer CCW: the right-hand normal points out
+  return rings.map((r) => r.map(([x, y], i) => {
+    if (keep?.(x, y)) return [x, y] as [number, number]   // e.g. points on a clip edge, which isn't a real shore
+    const [px, py] = r[(i - 1 + r.length) % r.length], [nx, ny] = r[(i + 1) % r.length]
+    const n1 = norm(y - py, px - x), n2 = norm(ny - y, x - nx)
+    const bx = n1[0] + n2[0], by = n1[1] + n2[1]
+    const k = Math.max(0.3, (bx * n1[0] + by * n1[1]))   // miter, capped at sharp corners
+    return [x + sign * d * bx / k, y + sign * d * by / k] as [number, number]
+  }))
+}
+function norm(x: number, y: number): [number, number] {
+  const l = Math.hypot(x, y) || 1
+  return [x / l, y / l]
+}
+
 /** A flat face at height z (used for unit fills and slabs seen from above). */
 export function flat(rings: Ring[], z: number): THREE.BufferGeometry | null {
   const s = shapeFromRings(rings)

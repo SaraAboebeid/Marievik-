@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { Card } from './kit'
 import { AMENITY_TYPES, activeIn, type LifeItem, type UrbanLife } from '../urbanLife'
 import { inkOn, lifeIconSvg } from '../lifeIcons'
@@ -8,8 +8,9 @@ export const LIFE_YEARS = [2024, 2030] as const
 const YEARS = Array.from({ length: LIFE_YEARS[1] - LIFE_YEARS[0] + 1 }, (_, i) => LIFE_YEARS[0] + i)
 const AMENITY_RADIUS = 600   // same radius as the pins on the map (App.tsx)
 
-const vars = (c: string) => ({ '--c': c, '--on': inkOn(c) }) as CSSProperties
-function Icon({ k, size = 12, stroke }: { k: string; size?: number; stroke?: number }) {
+export const vars = (c: string) => ({ '--c': c, '--on': inkOn(c) }) as CSSProperties
+export const LIFE_YEAR_LIST = YEARS
+export function Icon({ k, size = 12, stroke }: { k: string; size?: number; stroke?: number }) {
   return <span className="inline-grid place-items-center" dangerouslySetInnerHTML={{ __html: lifeIconSvg(k, size, stroke) }} />
 }
 
@@ -17,19 +18,6 @@ function Icon({ k, size = 12, stroke }: { k: string; size?: number; stroke?: num
  *  Three kinds of life, three objects (on the map and here): permanent → a planted flag, temporary → a balloon that
  *  is there for its one year, amenities → round tokens. */
 export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null; filter: LifeFilter; setFilter: (f: LifeFilter) => void }) {
-  const [playing, setPlaying] = useState(false)
-  const latest = useRef(filter)
-  latest.current = filter
-  useEffect(() => {
-    if (!playing) return
-    const id = window.setInterval(() => {
-      const f = latest.current
-      if (f.year >= LIFE_YEARS[1]) { setPlaying(false); return }
-      setFilter({ ...f, year: f.year + 1 })
-    }, 1300)
-    return () => window.clearInterval(id)
-  }, [playing, setFilter])
-
   if (!life) return <Card title="Life on Marievik">Loading…</Card>
   const cat = (c: string) => life.categories[c] ?? { label: c, colour: '#9a978e' }
   const y = filter.year
@@ -39,11 +27,6 @@ export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null;
   const amenCount: Record<string, number> = {}
   for (const a of near) amenCount[a.type] = (amenCount[a.type] ?? 0) + 1
   const offMap = [...(filter.permanent ? perm : []), ...(filter.temporary ? temp : [])].filter((t) => t.x === null)
-  const play = () => {
-    if (playing) { setPlaying(false); return }
-    if (y >= LIFE_YEARS[1]) setFilter({ ...filter, year: LIFE_YEARS[0] })
-    setPlaying(true)
-  }
 
   const tiles = [
     { key: 'permanent' as const, glyph: <i className="lg-flag" />, name: 'Permanent', sub: 'planted · stays', n: perm.length },
@@ -78,33 +61,6 @@ export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null;
     <Card title="Life on Marievik" right={
       <span className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[12px] font-bold text-ink shadow-[2px_2px_0_var(--color-edge)]">{y}</span>
     }>
-      {/* the decade board: each year a little stack, squares for what's planted, dashed circles for what pops up */}
-      <div className="mb-1 flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted">The decade, {LIFE_YEARS[0]}–{LIFE_YEARS[1]}</span>
-        <button type="button" onClick={play} aria-pressed={playing} title={playing ? 'Pause' : 'Play the years'}
-          className={`flex items-center gap-1 rounded-md border-2 border-edge px-1.5 py-px font-mono text-[10.5px] font-bold shadow-[2px_2px_0_var(--color-edge)] ${playing ? 'bg-accent text-white' : 'bg-coral text-[#202020]'}`}>
-          {playing ? '❚❚ pause' : '▶ play'}
-        </button>
-      </div>
-      <div className="mb-3 grid grid-cols-7 gap-[3px]" role="radiogroup" aria-label="Year">
-        {YEARS.map((yr) => {
-          const p = life.timeline.filter((t) => t.kind === 'permanent' && activeIn(t, yr))
-          const tt = life.timeline.filter((t) => t.kind === 'temporary' && activeIn(t, yr))
-          const on = yr === y
-          return (
-            <button key={yr} type="button" role="radio" aria-checked={on} onClick={() => { setPlaying(false); setFilter({ ...filter, year: yr }) }}
-              title={`${yr}: ${p.length} permanent, ${tt.length} temporary`}
-              className={`life-col flex flex-col items-stretch rounded-[4px] border-2 border-edge ${on ? 'bg-coral shadow-[2px_2px_0_var(--color-edge)]' : 'bg-sunken hover:bg-surface'}`}>
-              <span className="flex h-[58px] flex-wrap-reverse content-start justify-center gap-[1.5px] overflow-hidden p-[2px]">
-                {p.map((t) => <i key={t.id} className={`cell-p ${filter.permanent ? '' : 'opacity-25'}`} style={vars(cat(t.category).colour)} />)}
-                {tt.map((t) => <i key={t.id} className={`cell-t ${filter.temporary ? '' : 'opacity-25'}`} style={vars(cat(t.category).colour)} />)}
-              </span>
-              <span className={`border-t-2 border-edge py-px text-center font-mono text-[9.5px] font-bold ${on ? 'text-[#202020]' : 'text-ink-2'}`}>’{String(yr).slice(2)}</span>
-            </button>
-          )
-        })}
-      </div>
-
       {/* the three layers, each drawn as its own map object */}
       <div className="mb-3 grid grid-cols-3 gap-1.5">
         {tiles.map((t) => (

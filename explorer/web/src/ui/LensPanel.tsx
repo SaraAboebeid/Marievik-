@@ -1,7 +1,7 @@
 import { Slider } from './kit'
 import { Seg } from './StudioPanel'
 import { LAYER_HINT, LAYER_LABEL } from './LayerBar'
-import type { Layer } from '../layers'
+import { LAYERS_AT, LAYER_ORDER, type Layer } from '../layers'
 import type { StudioView } from '../viewer/Viewer'
 import type { Scenario } from '../studio/crowd'
 
@@ -12,16 +12,18 @@ const pill = 'flex flex-wrap items-center gap-1 rounded-md border-2 border-edge 
 /** The explorer's one lens picker, top bar, every scale: site-wide layers (whole building / district, mostly
  *  estimated) when no floor is open, swapping to that floor's own views (real data where B01 has drawn plans)
  *  once you open one — the same names meant two different button rows before; now there's one, one place. */
-export function LensPanel({ floorOpen, onlyVacancy, tour = false, layer, setLayer, view, setView, scenario, setScenario, heat, setHeat, crowdNote, explode, setExplode }: {
+export function LensPanel({ floorOpen, scale, layer, setLayer, view, setView, scenario, setScenario, heat, setHeat, crowdNote, explode, setExplode }: {
   floorOpen: boolean
-  onlyVacancy: boolean   // a single building, no floor open: Movement/Fire/Capacity move to the floor's own views
-  tour?: boolean         // District and Building scale: the rented / vacant dusk tour is on offer
+  scale: 'urban' | 'district' | 'building'   // decides which lenses can be picked (layers.ts LAYERS_AT); the rest grey out
   layer: Layer; setLayer: (l: Layer) => void
   view: StudioView; setView: (v: StudioView) => void
   scenario: Scenario; setScenario: (s: Scenario) => void; heat: boolean; setHeat: (v: boolean) => void; crowdNote: string
   explode: number; setExplode: (v: number) => void   // pull every floor apart to see them all at once
 }) {
-  const siteIds: Layer[] = [...(onlyVacancy ? ['none', 'vacancy'] as Layer[] : ['none', 'movement', 'fire', 'capacity', 'vacancy'] as Layer[]), ...(tour ? ['tenancy'] as Layer[] : [])]
+  const allowed = LAYERS_AT[scale]
+  const where = (l: Layer) => (['urban', 'district', 'building'] as const).filter((s) => LAYERS_AT[s].includes(l)).join(' and ')
+  const disabled = Object.fromEntries(LAYER_ORDER.filter((l) => !allowed.includes(l))
+    .map((l) => [l, `${LAYER_LABEL[l]}: not at ${scale} scale — available at ${where(l)} scale`])) as Partial<Record<Layer, string>>
   return (
     <div className="flex flex-wrap items-center gap-1.5">
       {floorOpen ? (
@@ -38,7 +40,8 @@ export function LensPanel({ floorOpen, onlyVacancy, tour = false, layer, setLaye
           )}
         </>
       ) : (
-        <Seg value={layer} options={siteIds.map((id) => [id, LAYER_LABEL[id]] as [Layer, string])} onChange={setLayer} hint={LAYER_HINT} wrapClass={pill} />
+        <Seg value={layer} options={LAYER_ORDER.map((id) => [id, LAYER_LABEL[id]] as [Layer, string])} onChange={setLayer}
+          hint={LAYER_HINT} wrapClass={pill} disabled={disabled} />
       )}
       <label className={`${pill} cursor-pointer gap-2 px-3 py-1.5`} title="Explode floors: pull every floor apart and show each one's real plan - walls, rooms and units, not just the box.">
         <input type="checkbox" className="h-3.5 w-3.5 accent-[color:var(--color-accent)]" checked={explode > 0}

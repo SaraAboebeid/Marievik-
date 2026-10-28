@@ -1,7 +1,15 @@
 // Types for the explorer's layers (movement, fire escape, capacity), the JuPedSim evacuation and the
 // 10-year district model. Server side: explorer/layers.py, explorer/studio/evacuation.py, explorer/district.py.
 
-export type Layer = 'none' | 'movement' | 'fire' | 'capacity' | 'vacancy' | 'tenancy'
+export type Layer = 'none' | 'amenities' | 'movement' | 'fire' | 'capacity' | 'vacancy' | 'tenancy' | 'flexibility'
+
+/** Which lenses make sense at each scale (the rest show greyed out in the lens picker). */
+export const LAYERS_AT: Record<'urban' | 'district' | 'building', Layer[]> = {
+  urban: ['none', 'amenities', 'capacity'],
+  district: ['none', 'capacity', 'vacancy', 'tenancy'],
+  building: ['none', 'movement', 'fire', 'capacity', 'vacancy', 'tenancy', 'flexibility'],
+}
+export const LAYER_ORDER: Layer[] = ['none', 'amenities', 'movement', 'fire', 'capacity', 'vacancy', 'tenancy', 'flexibility']
 
 export interface LayerFloor {
   floor: number; source: 'plan' | 'estimate'; layout: string | null

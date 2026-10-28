@@ -20,17 +20,22 @@ const CHECK_NOTE: Record<string, (m: StudioModel) => string> = {
 }
 
 /** A row of mutually-exclusive buttons, the top bar's lens picker. */
-export function Seg<T extends string>({ value, options, onChange, hint, wrapClass }: {
+export function Seg<T extends string>({ value, options, onChange, hint, wrapClass, disabled }: {
   value: T; options: [T, string][]; onChange: (v: T) => void; hint?: Partial<Record<T, string>>; wrapClass?: string
+  disabled?: Partial<Record<T, string>>   // options shown but not clickable, with the reason as their tooltip
 }) {
   return (
     <div className={wrapClass ?? 'flex flex-wrap gap-0.5 rounded-md border-2 border-edge p-0.5'}>
-      {options.map(([id, label]) => (
-        <button key={id} type="button" onClick={() => onChange(id)} title={hint?.[id]} aria-pressed={value === id}
-          className={`rounded-md px-3 py-1 text-[12px] font-semibold transition-[transform,box-shadow,background-color] motion-reduce:transition-none ${
-            value === id ? 'bg-coral text-[#202020] shadow-[2px_2px_0_var(--color-edge)] -translate-y-px' : 'text-ink-2 hover:bg-sunken hover:text-ink'
-          }`}>{label}</button>
-      ))}
+      {options.map(([id, label]) => {
+        const off = disabled?.[id]
+        return (
+          <button key={id} type="button" onClick={() => onChange(id)} title={off ?? hint?.[id]} aria-pressed={value === id} disabled={!!off}
+            className={`rounded-md px-3 py-1 text-[12px] font-semibold transition-[transform,box-shadow,background-color] motion-reduce:transition-none ${
+              off ? 'cursor-not-allowed text-ink-2 opacity-35'
+                : value === id ? 'bg-coral text-[#202020] shadow-[2px_2px_0_var(--color-edge)] -translate-y-px' : 'text-ink-2 hover:bg-sunken hover:text-ink'
+            }`}>{label}</button>
+        )
+      })}
     </div>
   )
 }

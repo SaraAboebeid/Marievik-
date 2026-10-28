@@ -27,12 +27,14 @@ import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
 import { lifeIconSvg } from './lifeIcons'
 import { leaseAt, mockLeaseBook, rentedShare, stepTime } from './leases'
 import { LeaseTimeline } from './ui/LeaseTimeline'
+import { FlexDrawer } from './ui/FlexDrawer'
+import { BuildingFlex } from './ui/BuildingFlex'
 import { WalkPanel, WALK_COLOURS, WALK_MINUTES, bandOf, walkRadii, type WalkState } from './ui/WalkPanel'
 import { EvacPanel } from './ui/EvacPanel'
 import { DistrictModel, UrbanModel } from './ui/DistrictModel'
 import { LAYER_LEGEND } from './ui/LayerBar'
 import { LensPanel } from './ui/LensPanel'
-import { busyColour, evacDensity, evacFrames, riskColour } from './layers'
+import { LAYERS_AT, busyColour, evacDensity, evacFrames, riskColour } from './layers'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, Layer, LayerData } from './layers'
 import { BuildingOverview, FloorTenancyCard } from './ui/OverviewPanel'
 import type { FloorRow } from './ui/OverviewPanel'
@@ -50,10 +52,12 @@ import { SupplierDrawer } from './ui/SupplierDrawer'
 export type Overlay = 'type' | 'daylight' | 'comfort'
 export type Method = 'quick' | 'ladybug'
 export type Scale = 'urban' | 'district' | 'building'
-const SCALE_TABS: [Scale, string, string][] = [
+// Floor isn't a Scale of its own: it's Building scale with a floor (or unit) open — the tab just makes that visible.
+const SCALE_TABS: [Scale | 'floor', string, string][] = [
   ['urban', 'Urban', 'Outdoor spaces and how the ground floors meet them'],
   ['district', 'District', 'Several buildings together — pick which ones'],
-  ['building', 'Building', 'One building, one floor, one unit'],
+  ['building', 'Building', 'One building as a whole'],
+  ['floor', 'Floor', 'One floor of a building: its plan, rooms and units'],
 ]
 
 const STORE_KEY = 'marievik-explorer-saved'
@@ -718,7 +722,7 @@ export default function App() {
     const v = viewer.current
     if (!v) return
     const onFloor = studioFloor !== null || level.kind === 'floor' || level.kind === 'unit'
-    if (layer === 'none' || layer === 'tenancy' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
+    if (layer === 'none' || layer === 'tenancy' || layer === 'amenities' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
     if (layer === 'vacancy') {
       v.setFlows(null)
       if (districtRes) {
@@ -772,6 +776,40 @@ export default function App() {
   // from the lease book (leases.ts: mock leases until real lease data is added).
   const tourFocus = scale === 'building' && level.kind === 'building' ? buildingId ?? null : null
   const tourOn = layer === 'tenancy' && scale !== 'urban' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit'
+  // flexibility (Building scale): one B01 floor through a year, Smartax walls against fixed gypsum walls (ui/FlexDrawer.tsx);
+  // the quarters start from segment 2 of the 10-year plan when it has been generated for B01
+  const flexOn = layer === 'flexibility' && scale === 'building' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && !!studioMeta
+  const [flexFloor, setFlexFloor] = useState(2)
+  const [flexFloorOpen, setFlexFloorOpen] = useState(false)   // a floor picked from the whole-building view
+  // the whole-building view lives in the 3D model: side panels step aside while it's on, and come back after
+  const flexBuildingView = flexOn && buildingId === 'B01' && !flexFloorOpen
+  const flexPanels = useRef<{ left: boolean; right: boolean } | null>(null)
+  useEffect(() => {
+    if (flexBuildingView) { flexPanels.current = panels; setPanels({ left: false, right: false }) }
+    else if (flexPanels.current) { setPanels(flexPanels.current); flexPanels.current = null }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flexBuildingView])
+  const flexPrefill = useMemo(() => {
+    const def = ['open', 'cellular', 'cowork', 'teams'].filter((l) => studioMeta?.typical.includes(l))
+    while (def.length < 4) def.push(def[def.length - 1] ?? 'open')
+    const t = tl && tl.status === 'ready' && tl.building === 'B01' ? tl : null
+    const seg = t ? t.segments.find((s) => s.id === tlPath && s.segment === 2) ?? t.segments.find((s) => s.segment === 2) : null
+    if (t && seg && studioMeta) {
+      const seq: string[] = []
+      for (const y of seg.years) {
+        const st = t.states[y.state]
+        const g = st?.groups.floor ?? st?.groups.upper
+        const l = g ? studioMeta.useToLayout.typical[g.use] : null
+        if (l && seq[seq.length - 1] !== l) seq.push(l)
+      }
+      if (seq.length >= 2) {
+        const plan = seq.slice(0, 4)
+        while (plan.length < 4) plan.push(plan[plan.length - 1])
+        return { plan, note: `Prefilled from segment 2 of the 10-year plan (${seg.label}): its uses in order, one per quarter. Change any quarter.` }
+      }
+    }
+    return { plan: def, note: "A starting sequence: pick each quarter's use. Generate B01's 10-year plan to prefill it from segment 2 instead." }
+  }, [studioMeta, tl, tlPath])
   const tourIds = Object.keys(bdata).sort()
   const leaseBook = useMemo(() => mockLeaseBook(tourIds), [tourIds.join(',')])
   const [leaseStep, setLeaseStep] = useState(0)
@@ -795,7 +833,8 @@ export default function App() {
     v.setTenancyOccupancy(rented, Object.fromEntries(tourIds.map((id) => [id, `${id} · ${Math.round((share[id] ?? 0) * 100)} % rented`])))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tourKey, leaseStep, leaseBook])
-  useEffect(() => { if (layer === 'tenancy' && scale === 'urban') setLayerState('none') }, [layer, scale])
+  // a lens the new scale doesn't offer (layers.ts LAYERS_AT) goes back to None - at urban scale, to Amenities
+  useEffect(() => { if (!LAYERS_AT[scale].includes(layer)) setLayerState(scale === 'urban' ? 'amenities' : 'none') }, [layer, scale])
   useEffect(() => () => viewer.current?.setTenancyTour(null), [])
 
   // ------------------------------------------------------------ scale: urban / district / building
@@ -832,6 +871,9 @@ export default function App() {
   const [life, setLife] = useState<UrbanLife | null>(null)
   const [decadeClosed, setDecadeClosed] = useState(false)   // the bottom decade window, closed with its ×
   const [lifeFilter, setLifeFilter] = useState<LifeFilter>({ year: new Date().getFullYear(), permanent: true, temporary: true, amenities: true })
+  // Urban scale: life on site (the Life panel, the decade along the bottom, flags, balloons and amenity tokens)
+  // is the Amenities lens; None leaves the map clean. The panel's own tiles still pick which kinds show.
+  const lifeOn = scale === 'urban' && layer === 'amenities'
   useEffect(() => {
     if (scale !== 'urban' || life) return
     let alive = true
@@ -846,7 +888,7 @@ export default function App() {
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1])
     return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]
   }, [site])
-  const walkOn = scale === 'urban' && walk.on && !!site
+  const walkOn = lifeOn && walk.on && !!site   // only with the Amenities lens, like the rest of life on site
   useEffect(() => {
     const v = viewer.current
     if (!v) return
@@ -862,7 +904,7 @@ export default function App() {
   useEffect(() => {
     const v = viewer.current
     if (!v) return
-    if (scale !== 'urban' || !life) { v.setLifePins(null); return }
+    if (!lifeOn || !life) { v.setLifePins(null); return }
     const f = lifeFilter
     const events = life.timeline
       .filter((t) => t.x !== null && t.y !== null && activeIn(t, f.year) && (t.kind === 'permanent' ? f.permanent : f.temporary))
@@ -882,7 +924,7 @@ export default function App() {
       title: `${a.name} · ${AMENITY_TYPES[a.type]?.label ?? a.type}${a.addr ? ` · ${a.addr}` : ''}`,
     }))
     v.setLifePins([...amen, ...events])
-  }, [scale, life, lifeFilter, walkOn, walk, siteC])
+  }, [scale, life, lifeFilter, layer, walkOn, walk, siteC]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // unit level: the unit's own comfort with its hottest week
   useEffect(() => {
@@ -1084,7 +1126,7 @@ export default function App() {
   const b = buildingId ? bdata[buildingId] : null
   // the 10-year timeline in the bottom bar; the side panels stop above it
   const bottomBar = tlOpen && !!buildingId
-  const lifeBar = scale === 'urban' && !!life && !decadeClosed   // the decade of life on site, along the bottom at urban scale
+  const lifeBar = lifeOn && !!life && !decadeClosed   // the decade of life on site, along the bottom at urban scale
   const closeTl = () => { if (showTimeline) toggleTimeline(); else setTlHidden(true) }
   // the bottom drawer, both segments side by side: on a studio floor it is the auto-opened bar, elsewhere a toggle
   const openTimeline = () => { if (studioFloor !== null) setTlHidden(false); else if (!showTimeline) toggleTimeline() }
@@ -1104,7 +1146,6 @@ export default function App() {
   // a single building, no floor open: only None/Vacancy make sense there (Movement/Fire/Capacity move to the
   // floor's own views once you open one); Urban/District keep the full site-wide set. Defaults to None -
   // picking a building never auto-switches the lens, only an explicit click on Vacancy does.
-  const buildingOnly = !floorOpen && level.kind === 'building' && !!buildingId
   // a building is open but not in the floor studio - the whole building, or (for a building with no studio,
   // e.g. B08) one of its floors too: the 10-year timeline and plan-generator shortcut apply to both.
   const showBuildingActions = !floorOpen && level.kind !== 'site' && !!buildingId
@@ -1190,16 +1231,30 @@ export default function App() {
       <div ref={topBarRef} className="absolute inset-x-0 top-[64px] z-10 flex flex-wrap items-center justify-between gap-3 border-b-2 border-edge bg-surface px-4 py-2 shadow-[0_3px_0_var(--color-edge)]">
         <div className="flex flex-wrap items-center gap-2">
         <nav className="flex items-center gap-1 rounded-md border-2 border-edge bg-surface p-1 text-[12.5px] shadow-[3px_3px_0_var(--color-edge)]" aria-label="Scale">
-          {SCALE_TABS.map(([id, label, hint]) => (
-            <button key={id} onClick={() => setScale(id)} title={hint} aria-pressed={scale === id}
+          {SCALE_TABS.map(([id, label, hint]) => {
+            const onFloor = scale === 'building' && (level.kind === 'floor' || level.kind === 'unit')
+            const active = id === 'floor' ? onFloor : id === 'building' ? scale === 'building' && !onFloor : scale === id
+            const pick = () => {
+              if (id !== 'floor') {
+                setScale(id)
+                if (id === 'building' && onFloor) go({ kind: 'building', building: level.building })
+                return
+              }
+              if (onFloor) return
+              setScale('building')
+              go({ kind: 'floor', building: buildingId ?? 'B01', floor: 1 })   // B01 has the drawn plans
+            }
+            return (
+            <button key={id} onClick={pick} title={hint} aria-pressed={active}
               className={`rounded-md px-3.5 py-1 font-semibold transition-[transform,box-shadow,background-color] motion-reduce:transition-none ${
-                scale === id
+                active
                   ? 'bg-coral text-[#202020] shadow-[2px_2px_0_var(--color-edge)] -translate-y-px'
                   : 'text-ink-2 hover:bg-sunken hover:text-ink'
               }`}>
               {label}
             </button>
-          ))}
+            )
+          })}
         </nav>
         {scale === 'building' && site && (
           <div ref={bPickerRef} className="relative">
@@ -1267,7 +1322,7 @@ export default function App() {
           {working && (
             <span className="rounded-md border-2 border-edge bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-[3px_3px_0_var(--color-edge)]">{working}</span>
           )}
-          <LensPanel floorOpen={floorOpen} onlyVacancy={buildingOnly} tour={scale !== 'urban'} layer={layer} setLayer={setLayer}
+          <LensPanel floorOpen={floorOpen} scale={scale} layer={layer} setLayer={setLayer}
             view={studioView} setView={setStudioView}
             scenario={scenario} setScenario={setScenario} heat={studioHeat} setHeat={setStudioHeat} crowdNote={crowdNote}
             explode={view.explode} setExplode={(v) => setView({ ...view, explode: v })} />
@@ -1379,8 +1434,8 @@ export default function App() {
               onRun={() => runDistrict()} year={distYear} setYear={(y) => { setDistYear(y); if (layer === 'none') setLayerState('vacancy') }}
               compare={cardRows} compareBusy={cardBusy} onCompare={runCardCompare} onPickCompare={pickCardRow} />
           )}
-          {scale === 'urban' && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
-          {scale === 'urban' && life && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
+          {lifeOn && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
+          {lifeOn && life && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
           {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
           {floorOpen ? (
@@ -1426,15 +1481,43 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
-        {layer !== 'none' && layer !== 'tenancy' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
+        {layer !== 'none' && layer !== 'tenancy' && layer !== 'amenities' && layer !== 'flexibility' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
           <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
         )}
       </div>
 
       {/* bottom: map legend + sun/view controls, both foldable */}
       <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${
-        tourOn || lifeBar ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
-        {lifeBar ? (
+        tourOn || lifeBar || flexOn ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
+        {flexOn ? (
+          flexFloorOpen || buildingId !== 'B01' ? (
+            <div className="flex w-full flex-col gap-1.5">
+              {buildingId !== 'B01' && (
+                <div className="pointer-events-auto flex items-center gap-2 self-start rounded-lg border-2 border-edge bg-surface px-3 py-1.5 text-[12px] shadow-[2px_2px_0_var(--color-edge)]">
+                  {buildingId ? `${buildingId} has no drawn floor plans yet: flexibility is shown for B01.` : 'Pick a building for the whole-building view: B01 has drawn floor plans.'}
+                  <button type="button" onClick={() => go({ kind: 'building', building: 'B01' })} className="rounded-md border-2 border-edge bg-coral px-2 py-px font-bold">Open B01</button>
+                </div>
+              )}
+              {flexFloorOpen && buildingId === 'B01' && (
+                <button type="button" onClick={() => setFlexFloorOpen(false)} className="pointer-events-auto self-start rounded-md border-2 border-edge bg-surface px-2.5 py-1 font-mono text-[11.5px] font-bold shadow-[2px_2px_0_var(--color-edge)] hover:bg-coral">
+                  ← the whole building
+                </button>
+              )}
+              {buildingId === 'B01' && (
+                <FlexDrawer meta={studioMeta!} project={choice.project} floor={flexFloor} setFloor={setFlexFloor} prefill={flexPrefill.plan} prefillNote={flexPrefill.note}
+                  onClose={() => setLayerState('none')} />
+              )}
+            </div>
+          ) : (
+            <BuildingFlex meta={studioMeta!} onOpenFloor={(f) => { setFlexFloor(Math.max(1, f)); setFlexFloorOpen(true) }} onClose={() => setLayerState('none')}
+              onFrame={(f) => {
+                const v = viewer.current
+                if (!v) return
+                v.onFlexFloor = (fl) => { setFlexFloor(Math.max(1, fl)); setFlexFloorOpen(true) }
+                v.setFlexFrame(f)
+              }} />
+          )
+        ) : lifeBar ? (
           <LifeDecade life={life!} filter={lifeFilter} setFilter={setLifeFilter} onClose={() => setDecadeClosed(true)} />
         ) : tourOn ? (
           <LeaseTimeline book={leaseBook} buildings={tourIds} focus={tourFocus} step={leaseStep} setStep={setLeaseStep}
@@ -1446,7 +1529,7 @@ export default function App() {
         ) : (
           <>
             {site && <div className="pointer-events-auto min-w-0"><MapLegend site={site} level={level} floor={floorData} /></div>}
-            {scale === 'urban' && life && decadeClosed && (
+            {lifeOn && life && decadeClosed && (
               <button type="button" onClick={() => setDecadeClosed(false)} title="Open the decade of life on Marievik, 2024–2030"
                 className="pointer-events-auto rounded-lg border-2 border-edge bg-coral px-3 py-1.5 font-mono text-[11.5px] font-bold text-[#202020] shadow-[2px_2px_0_var(--color-edge)]">
                 ▶ The decade

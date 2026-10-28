@@ -21,6 +21,7 @@ import { ATRIUM, CELL, CORES, ESCAPE_LIMIT, FRAME, H, NX, NY, TYPES, W, WALL_H, 
 import type { Rect, StudioModel } from '../studio/engine'
 import type { Walker } from '../studio/crowd'
 import type { Suite } from '../studio/tenancy'
+import type { WallSeg } from '../flex'
 
 export type StudioView = 'furniture' | 'capacity' | 'tenancy' | 'use' | 'fire' | 'move'
 // furniture in the floor studio: colour and height (m) per kind
@@ -44,6 +45,19 @@ function rampColor(t: number): [number, number, number] {
 const P = (x: number, y: number): [number, number] => [FRAME.origin[0] + x * FRAME.x[0] - y * FRAME.x[1], FRAME.origin[1] + x * FRAME.x[1] + y * FRAME.x[0]]
 const rectRing = (r: Rect): Ring => [P(r[0], r[1]), P(r[2], r[1]), P(r[2], r[3]), P(r[0], r[3])]
 const studioBox = (x0: number, y0: number, x1: number, y1: number, z0: number, z1: number) => localBox(FRAME.origin, FRAME.x, x0, x1, y0, y1, z0, z1)
+
+/** One floor of one side of the flexibility stacks at one moment (BuildingFlex computes it, the viewer draws it). */
+export interface FlexFloorFrame {
+  key: string; ground: boolean; closed: boolean; t: number
+  rooms: { t: string; r: Rect; open: boolean }[]
+  steady: WallSeg[] | null; kept: WallSeg[]; removed: WallSeg[]; added: WallSeg[]
+}
+export interface FlexFrame {
+  building: string; gap: number
+  /** changes when the panels around the view change size, so the camera fits the pair again */
+  fit?: string
+  sides: { id: 'smartax' | 'gypsum'; title: string; tone: string; dx: number; reusable: boolean; recover: number; floors: FlexFloorFrame[] }[]
+}
 
 export type Pick =
   | { type: 'building'; building: string; floor: number }
@@ -241,6 +255,8 @@ export class Viewer {
     el.addEventListener('pointerup', (e) => {
       if (Math.hypot(e.clientX - this.downAt.x, e.clientY - this.downAt.y) < 5 && e.button === 0) {
         const p = this.pick(e)
+        const ff = this.flex ? this.flexPick(e) : -1
+        if (ff >= 0) { this.onFlexFloor(ff); return }
         const band = !p && this.walk ? this.walkBand(e) : -1
         if (band >= 0) this.onWalkRing(band)
         else this.onPick(p)
@@ -840,7 +856,29 @@ export class Viewer {
     }
   }
 
+  /** The tallest band of the canvas (in px from its top) not covered by the explorer's panels. */
+  private openBand(): [number, number] {
+    const rc = this.container.getBoundingClientRect()
+    const H = rc.height, step = 8
+    const free: boolean[] = []
+    for (let y = 0; y < H; y += step) {
+      free.push([0.3, 0.5, 0.7].every((fx) => {
+        const el = document.elementFromPoint(rc.left + rc.width * fx, rc.top + y)
+        return !el || this.container.contains(el)
+      }))
+    }
+    let best: [number, number] = [0, H], len = 0, start = -1
+    free.push(false)
+    free.forEach((f, i) => {
+      if (f && start < 0) start = i
+      if (!f && start >= 0) { if (i - start > len) { len = i - start; best = [start * step, Math.min(H, i * step)] } start = -1 }
+    })
+    return len * step < 120 ? [0, H] : best
+  }
+
   private flyToBox(box: THREE.Box3, dist = 1.2, elev = 0.6) {
+    // while the twin exploded building is up, any focus the explorer asks for (the building loading, say) goes to it
+    if (this.flex && this.flexGo) return this.flexGo()
     const c = box.getCenter(new THREE.Vector3())
     const r = Math.max(8, box.getSize(new THREE.Vector3()).length() * 0.5)
     const d = (r / Math.sin(THREE.MathUtils.degToRad(this.camera.fov / 2))) * dist * 0.6
@@ -1168,6 +1206,214 @@ export class Viewer {
         this.layerGroup.add(lab)
       }
     }
+  }
+
+  // ------------------------------------------------------------------ flexibility: B01 exploded, twice (Building scale)
+  onFlexFloor: (floor: number) => void = () => {}
+  private flex: {
+    group: THREE.Group; sides: { group: THREE.Group; floors: (THREE.Group | null)[]; keys: string[]; label: CSS2DObject; el: HTMLElement }[]
+    saved: Map<THREE.Material, [boolean, number, boolean]>; hidden: string
+  } | null = null
+  private flexGo: (() => void) | null = null
+  private flexFit = ''
+
+  /** Building-scale flexibility: B01 taken out of the model, exploded floor by floor and built twice side by side
+   *  — Smartax on the left, fixed gypsum on the right — while everything around it turns see-through. Each call
+   *  draws one moment: every floor's rooms and walls (kept, coming down, panels in flight, going up), closed floors
+   *  hatched. Floors are only rebuilt when their state has changed, so playing the years stays light. null ends it. */
+  setFlexFrame(frame: FlexFrame | null) {
+    this.invalidate()
+    if (!frame) {
+      if (!this.flex) return
+      const F = this.flex
+      F.sides.forEach((sd) => sd.el.remove())
+      F.group.parent?.remove(F.group)
+      disposeTree(F.group)
+      for (const [m, [tr, op, dw]] of F.saved) { const mm = m as THREE.MeshStandardMaterial; mm.transparent = tr; mm.opacity = op; mm.depthWrite = dw; mm.needsUpdate = true }
+      const bv = this.buildings.get(F.hidden)
+      if (bv) bv.group.visible = true
+      this.flex = null
+      this.flexGo = null
+      this.setDimmed([])
+      return
+    }
+    const bv = this.buildings.get(frame.building)
+    if (!bv) return
+    if (!this.flex) {
+      // the surroundings go see-through: other buildings ghosted, the urban context faded
+      const saved = new Map<THREE.Material, [boolean, number, boolean]>()
+      for (const root of [this.ctxGroup, this.contextGroup]) root.traverse((c) => {
+        const mesh = c as THREE.Mesh
+        if (!mesh.isMesh) return
+        for (const m of (Array.isArray(mesh.material) ? mesh.material : [mesh.material]) as THREE.MeshStandardMaterial[]) {
+          if (!m || saved.has(m)) continue
+          saved.set(m, [m.transparent, m.opacity, m.depthWrite])
+          m.transparent = true; m.opacity = Math.min(m.opacity, 0.14); m.depthWrite = false; m.needsUpdate = true
+        }
+      })
+      this.setDimmed([...this.buildings.keys()].filter((id) => id !== frame.building))
+      bv.group.visible = false
+      const group = new THREE.Group()
+      this.world.add(group)
+      const sides = frame.sides.map(() => {
+        const g = new THREE.Group()
+        group.add(g)
+        const el = document.createElement('div')
+        el.className = 'studio-label layer flex-side'
+        const label = new CSS2DObject(el)
+        group.add(label)
+        return { group: g, floors: frame.sides[0].floors.map(() => null), keys: frame.sides[0].floors.map(() => ''), label, el }
+      })
+      this.flex = { group, sides, saved, hidden: frame.building }
+      // fly to both stacks
+      const top = bv.payload.floors.length * (frame.gap + 3.6)
+      const a = P(frame.sides[0].dx, 0), b = P(frame.sides[frame.sides.length - 1].dx + W, H)
+      const box = new THREE.Box3(new THREE.Vector3(Math.min(a[0], b[0]) - this.center.x, 0, -(Math.max(a[1], b[1])) + this.center.y),
+        new THREE.Vector3(Math.max(a[0], b[0]) - this.center.x, top, -(Math.min(a[1], b[1])) + this.center.y))
+      // look at the pair from the front (the studio's -y side), so Smartax stands on the left and gypsum on the
+      // right; after any fly the explorer itself is doing (picking the building) has landed
+      const go = () => {
+        // the explorer's panels cover much of the canvas: find the band of it that is still open and fit both
+        // stacks snugly into that band, by projecting the corners of their box from a trial camera
+        const [b0, b1] = this.openBand()
+        const Hc = this.container.clientHeight || 1
+        const yAxis = new THREE.Vector3(-FRAME.x[1], 0, -FRAME.x[0])   // studio +y in three coordinates (plan (x, y) -> (x, ., -y))
+        const dir = yAxis.clone().multiplyScalar(-1).normalize()
+        const elev = 0.3
+        const off = dir.clone().multiplyScalar(Math.cos(elev)).add(new THREE.Vector3(0, Math.sin(elev), 0))
+        const cam = this.camera.clone()
+        const corners = [0, 1, 2, 3, 4, 5, 6, 7].map((i) => new THREE.Vector3(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z))
+        let target = box.getCenter(new THREE.Vector3())
+        let d = Math.max(30, box.getSize(new THREE.Vector3()).length()) * 1.5
+        // wanted NDC window: full width less a margin, the open band less a margin (NDC y is up)
+        const yTop = 1 - (2 * (b0 + 34)) / Hc, yBot = 1 - (2 * (b1 - 10)) / Hc, xHalf = 0.9
+        for (let it = 0; it < 6; it++) {
+          cam.position.copy(target).add(off.clone().multiplyScalar(d))
+          cam.lookAt(target)
+          cam.updateMatrixWorld(true)
+          const ps = corners.map((v) => v.clone().project(cam))
+          const x0 = Math.min(...ps.map((q) => q.x)), x1 = Math.max(...ps.map((q) => q.x))
+          const y0 = Math.min(...ps.map((q) => q.y)), y1 = Math.max(...ps.map((q) => q.y))
+          const k = Math.max((x1 - x0) / (2 * xHalf), (y1 - y0) / (yTop - yBot))
+          // move the aim so the projected box centre lands on the window centre, then scale the distance
+          const tanV = Math.tan(THREE.MathUtils.degToRad(cam.fov / 2))
+          const right = new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld, 0)
+          const up = new THREE.Vector3().setFromMatrixColumn(cam.matrixWorld, 1)
+          const dx = ((x0 + x1) / 2) * tanV * cam.aspect * d, dy = ((y0 + y1) / 2 - (yTop + yBot) / 2) * tanV * d
+          target = target.clone().add(right.multiplyScalar(dx)).add(up.multiplyScalar(dy))
+          d *= k
+        }
+        const p1 = target.clone().add(off.multiplyScalar(d))
+        this.anim = { t0: performance.now(), dur: 1200, p0: this.camera.position.clone(), p1, c0: this.controls.target.clone(), c1: target }
+        this.invalidate()
+      }
+      this.flexGo = go
+      this.flexFit = frame.fit ?? ''
+      go()
+    }
+    const F = this.flex
+    if ((frame.fit ?? '') !== this.flexFit) { this.flexFit = frame.fit ?? ''; requestAnimationFrame(() => this.flexGo?.()) }
+    frame.sides.forEach((sd, si) => {
+      const side = F.sides[si]
+      const [head, ...rest] = sd.title.split(' · ')
+      side.el.innerHTML = `<b>${head}</b>${rest.length ? `<br><span>${rest.join(' · ')}</span>` : ''}`
+      side.label.center.set(0.5, 1)
+      side.el.style.background = sd.tone
+      side.el.style.color = inkOn(sd.tone)
+      const pTop = P(sd.dx + W / 2, H / 2)
+      side.label.position.set(pTop[0], pTop[1], bv.payload.floors.length * frame.gap + (bv.payload.floors.at(-1)?.z ?? 20) + 8)
+      sd.floors.forEach((fl, i) => {
+        if (side.keys[i] === fl.key) return
+        side.keys[i] = fl.key
+        const old = side.floors[i]
+        if (old) { side.group.remove(old); disposeTree(old) }
+        const z = (bv.payload.floors[i]?.z ?? i * 3.6) + i * frame.gap
+        const g = this.flexFloor(fl, sd, z)
+        g.userData.flexFloor = i
+        g.traverse((c) => { c.userData.flexFloor = i })
+        side.group.add(g)
+        side.floors[i] = g
+      })
+    })
+  }
+
+  private flexFloor(fl: FlexFloorFrame, sd: FlexFrame['sides'][number], z: number) {
+    const g = new THREE.Group()
+    const Q = (x: number, y: number) => P(x + sd.dx, y)
+    const ring = (r: Rect): Ring => [Q(r[0], r[1]), Q(r[2], r[1]), Q(r[2], r[3]), Q(r[0], r[3])]
+    const add = (geo: THREE.BufferGeometry | null, mat: THREE.Material) => { if (geo) { const m = new THREE.Mesh(geo, mat); m.receiveShadow = true; g.add(m) } }
+    add(prism([ring([0, 0, W, H]), ...(fl.ground ? [] : [ring(ATRIUM)])], z - 0.3, z), new THREE.MeshStandardMaterial({ color: fl.closed ? '#e8d9a4' : '#d4d0c6', roughness: 0.95 }))
+    for (const r of fl.rooms) add(flat([ring(r.r)], z + 0.02), new THREE.MeshStandardMaterial({ color: TYPES[r.t]?.fill ?? '#ece9e0', roughness: 0.9, polygonOffset: true, polygonOffsetFactor: -1, transparent: r.open, opacity: r.open ? 0.6 : 1 }))
+    const core = new THREE.MeshStandardMaterial({ color: '#7d7a72', roughness: 0.9 })
+    for (const c of CORES) {
+      const m = new THREE.Mesh(UNIT_BOX, core)
+      m.matrixAutoUpdate = false
+      m.matrix.copy(localBox(Q(0, 0), FRAME.x, c.r[0], c.r[2], c.r[1], c.r[3], z, z + 3.2))
+      g.add(m)
+    }
+    // walls, by state: kept white; coming down red (or lifted off green when the system reuses panels);
+    // in flight green; going up wood-coloured (Smartax) or wet grey (gypsum, until filled and painted)
+    const HW = WALL_H, t = fl.t
+    const boxes: { a: [number, number]; b: [number, number]; z0: number; z1: number; c: string; glass: boolean }[] = []
+    const ends = (s: WallSeg): [[number, number], [number, number]] => (s.o === 'h' ? [[s.a, s.c], [s.b, s.c]] : [[s.c, s.a], [s.c, s.b]])
+    const put = (s: WallSeg, z0: number, z1: number, c: string) => { if (z1 - z0 > 0.02) { const [a, b] = ends(s); boxes.push({ a, b, z0, z1, c, glass: s.glass }) } }
+    if (fl.steady) fl.steady.forEach((s) => put(s, z, z + HW, '#efece4'))
+    else {
+      fl.kept.forEach((s) => put(s, z, z + HW, '#efece4'))
+      const k1 = Math.min(1, t / 0.35)
+      fl.removed.forEach((s, i) => {
+        const whole = sd.reusable && (i % 10) < sd.recover * 10
+        if (t >= 0.35) return
+        if (whole) put(s, z + k1 * 1.6, z + HW + k1 * 1.6, '#5fbf82')
+        else put(s, z, z + HW * (1 - k1), k1 > 0.05 ? '#e0473f' : '#efece4')
+      })
+      if (sd.reusable && t >= 0.35 && t < 0.85) {
+        const src = fl.removed.filter((s, i) => (i % 10) < sd.recover * 10 && !s.glass)
+        const k2 = Math.min(1, (t - 0.35) / 0.35)
+        fl.added.filter((s) => !s.glass).forEach((s, i) => {
+          if (!src.length || i >= src.length * 1.2) return
+          const [a0, b0] = ends(src[i % src.length]), [a1, b1] = ends(s)
+          const L = (p: number, q: number) => p + (q - p) * k2
+          const lift = 1.6 * (1 - k2)
+          boxes.push({ a: [L(a0[0], a1[0]), L(a0[1], a1[1])], b: [L(b0[0], b1[0]), L(b0[1], b1[1])], z0: z + lift, z1: z + HW + lift, c: '#5fbf82', glass: false })
+        })
+      }
+      if (t >= 0.35) {
+        const k3 = Math.min(1, (t - 0.35) / 0.5)
+        const c = sd.id === 'gypsum' ? (t < 0.85 ? '#a9a59b' : '#b9c7d2') : sd.reusable && t < 0.9 ? '#a8dcb9' : t < 0.9 ? '#e3c99a' : '#efece4'
+        fl.added.forEach((s) => put(s, z, z + HW * k3, c))
+      }
+    }
+    for (const glass of [false, true]) {
+      const list = boxes.filter((b) => b.glass === glass)
+      if (!list.length) continue
+      const mat = glass ? new THREE.MeshStandardMaterial({ color: '#7fb0d8', transparent: true, opacity: 0.4, roughness: 0.1, depthWrite: false })
+        : new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.85 })
+      const inst = new THREE.InstancedMesh(UNIT_BOX, mat, list.length)
+      const col = new THREE.Color()
+      list.forEach((bx, i) => {
+        const a = Q(bx.a[0], bx.a[1]), b = Q(bx.b[0], bx.b[1])
+        inst.setMatrixAt(i, segmentBox(a[0], a[1], b[0], b[1], bx.z0, bx.z1, 0.14))
+        if (!glass) inst.setColorAt(i, col.set(bx.c))
+      })
+      inst.instanceMatrix.needsUpdate = true
+      if (inst.instanceColor) inst.instanceColor.needsUpdate = true
+      inst.castShadow = inst.receiveShadow = !glass
+      g.add(inst)
+    }
+    // a closed floor: a yellow veil over it
+    if (fl.closed) add(flat([ring([0, 0, W, H])], z + HW + 0.05), new THREE.MeshBasicMaterial({ color: '#f5c443', transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }))
+    return g
+  }
+
+  /** The floor (index) of the flexibility stacks under the pointer, or -1. */
+  private flexPick(e: PointerEvent): number {
+    if (!this.flex) return -1
+    const r = this.renderer.domElement.getBoundingClientRect()
+    this.pointer.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1)
+    this.ray.setFromCamera(this.pointer, this.camera)
+    const hit = this.ray.intersectObject(this.flex.group, true).find((h) => typeof h.object.userData.flexFloor === 'number')
+    return hit ? hit.object.userData.flexFloor : -1
   }
 
   // ------------------------------------------------------------------ walking rings (Urban scale)

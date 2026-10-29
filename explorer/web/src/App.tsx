@@ -27,6 +27,7 @@ import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
 import { lifeIconSvg } from './lifeIcons'
 import { leaseAt, mockLeaseBook, rentedShare, stepTime } from './leases'
 import { LeaseTimeline } from './ui/LeaseTimeline'
+import { SeasonPanel } from './ui/SeasonPanel'
 import { FlexDrawer } from './ui/FlexDrawer'
 import { BuildingFlex } from './ui/BuildingFlex'
 import { WalkPanel, WALK_COLOURS, WALK_MINUTES, bandOf, walkRadii, type WalkState } from './ui/WalkPanel'
@@ -737,7 +738,7 @@ export default function App() {
     if (!v) return
     const onFloor = studioFloor !== null || level.kind === 'floor' || level.kind === 'unit'
     // flexibility draws its own two B01s (and fades the rest), so no building tint under it
-    if (layer === 'none' || layer === 'tenancy' || layer === 'amenities' || layer === 'flexibility' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
+    if (layer === 'none' || layer === 'tenancy' || layer === 'amenities' || layer === 'flexibility' || layer === 'seasons' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
     if (layer === 'vacancy') {
       v.setFlows(null)
       if (districtRes) {
@@ -795,6 +796,28 @@ export default function App() {
   const tourOn = layer === 'tenancy' && scale !== 'urban' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit'
   // flexibility (Building scale): one B01 floor through a year, Smartax walls against fixed gypsum walls (ui/FlexDrawer.tsx);
   // the quarters start from segment 2 of the 10-year plan when it has been generated for B01
+  // Seasons & hours (Urban / District): the ground floors of every study building and the amenities round about,
+  // handed to the viewer's seasons show (viewer/seasonShow.ts); the clock lives in ui/SeasonPanel.tsx
+  const seasonsOn = layer === 'seasons' && (scale === 'urban' || scale === 'district') && studioFloor === null && level.kind === 'site'
+  const [seasonFloors, setSeasonFloors] = useState<FloorPayload[] | null>(null)
+  useEffect(() => {
+    const v = viewer.current
+    if (!seasonsOn || !site) { v?.setSeasonShow(null); return }
+    let alive = true
+    const ids = site.buildings.map((b) => b.id)
+    Promise.all([
+      Promise.all(ids.map((id) => api.floor(id, 0, settingsOf(id) ?? {}).catch(() => null))),
+      life ? Promise.resolve(life) : api.urbanLife(choice.project).catch(() => null),
+    ]).then(([fl, lf]) => {
+      if (!alive) return
+      const floors = fl.filter((x): x is FloorPayload => !!x)
+      if (lf && !life) setLife(lf)
+      setSeasonFloors(floors)
+      viewer.current?.setSeasonShow({ floors, amenities: lf?.amenities ?? [] })
+    })
+    return () => { alive = false; viewer.current?.setSeasonShow(null) }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seasonsOn, site])
   const flexOn = layer === 'flexibility' && scale === 'building' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && !!studioMeta
   const [flexFloor, setFlexFloor] = useState(2)
   const [flexFloorOpen, setFlexFloorOpen] = useState(false)   // a floor picked from the whole-building view
@@ -1397,7 +1420,7 @@ export default function App() {
           open — what you change (layout/walls/people, building settings) above what comes out of it (results).
           Nothing to set up on the whole site. */}
       {panels.right ? (
-        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn || seasonsOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -1498,15 +1521,18 @@ export default function App() {
       <div className="pointer-events-none absolute bottom-16 left-1/2 z-10 -translate-x-1/2">
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
-        {layer !== 'none' && layer !== 'tenancy' && layer !== 'amenities' && layer !== 'flexibility' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
+        {layer !== 'none' && layer !== 'tenancy' && layer !== 'amenities' && layer !== 'flexibility' && layer !== 'seasons' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
           <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
         )}
       </div>
 
       {/* bottom: map legend + sun/view controls, both foldable */}
       <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${
-        tourOn || lifeBar || flexOn ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
-        {flexOn ? (
+        tourOn || lifeBar || flexOn || seasonsOn ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
+        {seasonsOn ? (
+          seasonFloors ? <SeasonPanel floors={seasonFloors} onClock={(se, h, l) => viewer.current?.setSeasonClock(se, h, l)} onOrbit={(w) => viewer.current?.setSeasonOrbit(w)} onClose={() => setLayerState(scale === 'urban' ? 'amenities' : 'none')} />
+            : <div className="pointer-events-auto rounded-lg border-2 border-edge bg-raised px-3 py-2 font-mono text-[11.5px]">Opening the ground floors and setting up the seasons…</div>
+        ) : flexOn ? (
           flexFloorOpen || buildingId !== 'B01' ? (
             <div className="flex w-full flex-col gap-1.5">
               {buildingId !== 'B01' && (

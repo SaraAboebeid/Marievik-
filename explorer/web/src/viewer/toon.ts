@@ -100,6 +100,8 @@ export const DofShader = {
     float coc(vec2 uv) { return clamp((dist(uv) - focus) / range, 0.0, 1.0) * maxBlur; }
     void main() {
       vec4 c = texture2D(tDiffuse, vUv);
+      if (c.r != c.r || c.g != c.g || c.b != c.b) c = vec4(0.0, 0.0, 0.0, 1.0);   // a stray NaN would bloom into black blocks
+      c.rgb = min(c.rgb, vec3(64.0));
       float r = coc(vUv);
       if (r < 0.35) { gl_FragColor = c; return; }
       vec4 acc = c; float wsum = 1.0;
@@ -139,6 +141,8 @@ export const OutlineShader = {
     varying vec2 vUv;
     void main() {
       vec4 c = texture2D(tDiffuse, vUv);
+      if (c.r != c.r || c.g != c.g || c.b != c.b) c = vec4(0.0, 0.0, 0.0, 1.0);   // a stray NaN would bloom into black blocks
+      c.rgb = min(c.rgb, vec3(64.0));
       vec3 n = texture2D(tNormal, vUv).xyz;
       float d = texture2D(tDepth, vUv).x;
       float e = 0.0;

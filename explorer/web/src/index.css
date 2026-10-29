@@ -276,3 +276,9 @@ body {
 .walk-label:hover { background: #fff3d6; }
 .walk-label.on { background: var(--c); color: var(--t, #202020); box-shadow: 3px 3px 0 #202020; }
 .lp-dim .lp-in { opacity: 0.22; filter: grayscale(0.8); }
+
+/* Seasons & hours (viewer/seasonShow.ts): what's on in each building and each outdoor place */
+.studio-label.layer.season-b, .studio-label.layer.season-z { font-size: 10.5px; padding: 1px 6px; box-shadow: 1.5px 1.5px 0 #202020; display: flex; align-items: center; gap: 5px; }
+.studio-label.layer.season-z { font-family: var(--font-sans); font-weight: 700; font-size: 11px; background: #202020; color: #fffdf6; border-color: #fffdf6; }
+.studio-label.layer.season-b i, .studio-label.layer.season-z i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; border: 1.5px solid #202020; flex: none; }
+.studio-label.layer.season-b b { margin-right: 3px; }

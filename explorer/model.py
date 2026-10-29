@@ -100,6 +100,10 @@ class Site:
         self._cache: dict[str, dict] = {}
         self._lock = threading.Lock()
         self._context: dict | None = None
+        # what is on each ground floor (restaurants, gyms, event spaces ...): laid out as mock-up plans
+        gf = ROOT / "data" / "projects" / "marievik" / "ground_floors.json"
+        self.ground = {k: v for k, v in json.loads(gf.read_text(encoding="utf-8"))["buildings"].items()
+                       if v.get("spaces")} if gf.is_file() else {}
 
     # ------------------------------------------------------------------ public
     def site_payload(self) -> dict:
@@ -157,6 +161,9 @@ class Site:
                 g_use = (PL.floor_for(plan, 0) or {}).get("use", g_use)
             if s["use"] == "site":
                 u_use = (PL.floor_for(plan, 1) or {}).get("use", u_use)
+        ground = self.ground.get(bid) if s["ground_use"] == "site" else None
+        if ground:
+            g_use = ground["use"]
         a_use = u_use if s["added_use"] in ("same", "site") else s["added_use"]
         uses = [g_use] + [u_use] * (levels - 1) + [a_use] * add
         hs = S.floor_heights(b, levels) + [ADDED_FLOOR_H] * add
@@ -166,7 +173,7 @@ class Site:
         facade = b.get("facade") if s["facade"] else None
         res = L.build(fp, uses, floor_heights=hs, overrides=ov, n_floors=levels + add, mode="conversion",
                       partition_system=None if s["partition_system"] == "as_profile" else s["partition_system"],
-                      catalogue=self.catalogue, facade=facade, plan=plan)
+                      catalogue=self.catalogue, facade=facade, plan=plan, ground=ground)
         if add:
             self._reprice_added(res, levels)
         units = {F.index: units_of(F) for F in res["floors"]}
@@ -306,6 +313,9 @@ class Site:
         if plan:
             g_use = (PL.floor_for(plan, 0) or {}).get("use", g_use)
             u_use = (PL.floor_for(plan, 1) or {}).get("use", u_use)
+        ground = self.ground.get(bid)
+        if ground:
+            g_use = ground["use"]
         uses = [g_use] + [u_use] * (levels - 1)
         if use is not None:
             uses[floor_index] = use
@@ -316,7 +326,7 @@ class Site:
             return hit
         hs = S.floor_heights(b, levels)
         res = L.build(fp, uses, floor_heights=hs, n_floors=levels, mode="conversion",
-                      partition_system=None, catalogue=self.catalogue, facade=b.get("facade"), plan=plan)
+                      partition_system=None, catalogue=self.catalogue, facade=b.get("facade"), plan=plan, ground=ground)
         units = {F.index: units_of(F) for F in res["floors"]}
         out = {"building": bid, "key": key, "res": res, "levels": levels, "units": units, "uses": uses}
         with self._lock:

@@ -2,9 +2,10 @@ import type { Layer } from '../layers'
 
 // Labels/hints and the result legend for the explorer's site-wide layers (left panel, ui/LensPanel.tsx, when no
 // floor is open — a floor open shows that floor's own views instead, same picker, see LensPanel.tsx).
-export const LAYER_LABEL: Record<Layer, string> = { none: 'None', amenities: 'Amenities', movement: 'Movement', fire: 'Fire escape', capacity: 'Capacity', vacancy: 'Vacancy', tenancy: 'Rented / vacant', flexibility: 'Flexibility' }
+export const LAYER_LABEL: Record<Layer, string> = { none: 'None', amenities: 'Amenities', movement: 'Movement', fire: 'Fire escape', capacity: 'Capacity', vacancy: 'Vacancy', tenancy: 'Rented / vacant', flexibility: 'Flexibility', seasons: 'Seasons & hours' }
 export const LAYER_HINT: Record<Layer, string> = {
   none: 'No layer',
+  seasons: 'One day in each season, morning to night: the ground floors cut open and lit by what they host at that hour (offices by day, yoga, pottery, quiz and bars after), the parks, quay and bathing pier set up for markets, concerts, saunas and an ice rink, with weather, crowds and lights.',
   amenities: 'Restaurants, cafés, shops and the rest within a walk of Marievik (OpenStreetMap), as tokens on the map.',
   movement: 'How busy each floor is at the peak, and trips to Liljeholmen station. On a B01 floor: people walking and the busiest routes.',
   fire: 'Longest escape walk against the 45 m limit (B01, drawn plans). On a B01 floor: escape distances and a JuPedSim evacuation.',
@@ -14,7 +15,7 @@ export const LAYER_HINT: Record<Layer, string> = {
   tenancy: 'A dusk tour around the buildings: example spaces lit when rented, dark when vacant, in each building\'s share (today, or the chosen year of the district model). Drag to look around; the tour carries on after.',
 }
 
-export const LAYER_LEGEND: Record<Exclude<Layer, 'none' | 'amenities' | 'flexibility'>, { title: string; bins: { color: string; label: string }[] }> = {
+export const LAYER_LEGEND: Record<Exclude<Layer, 'none' | 'amenities' | 'flexibility' | 'seasons'>, { title: string; bins: { color: string; label: string }[] }> = {
   capacity: { title: 'People planned ÷ legal maximum (B01 from plans, others mock-up)', bins: [
     { color: '#03b05f', label: '< 60 %' }, { color: '#9fcf4a', label: '60–85 %' }, { color: '#f5c443', label: '85–100 %' },
     { color: '#d8342b', label: 'over / check fails' }] },

@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "purpose": "What is on each building's ground floor, as a programme the explorer turns into a MOCK-UP ground-floor plan (parametric/mvk/ground.py): every space below becomes a tenancy with its own street door, sized by its share of the floor, around the building's core and back of house.",
+    "status": "MOCK-UP plans. WHICH activity is in which building is read from the sources below; WHERE in the building it sits, its size and its layout are invented for discussion. Replace with surveyed plans or the rent roll when they arrive; keep the same shape.",
+    "sources": "OpenStreetMap via Nominatim (data/projects/marievik/urban_life.json, amenities - each point tested against the OSM footprints of parametric/site/marievik_site.json), AMF's events timeline (same file), the building names in the site file (SATS, Nordic Wellness, H&M ...), and 'mock-up' where nothing is known.",
+    "supermarkets": "No supermarket stands in any of the 13 modelled buildings. The nearest are ICA Supermarket at Sjövikstorget (about 80 m from B13) and Lidl, ICA Kvantum, Coop and Willys at Liljeholmstorget (about 240-320 m from B08). None is added here.",
+    "kinds": "supermarket | restaurant | cafe | gym | event | shop | lobby | bike. 'share' = share of the floor left once the core and back of house are taken out; the spaces are laid out in this order along the building's long axis.",
+    "updated": "2026-10-29"
+  },
+  "buildings": {
+    "B01": {
+      "note": "B01 already has a drawn ground floor (data/plans/marievik/B01.json: café, lobby, reception, services) - it keeps that plan."
+    },
+    "B02": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "event", "name": "Plåtpalatset", "share": 0.32, "source": "Venue at Årstaängsvägen 13D (Modehuset), thatsup.co.uk + Nominatim; inside the B02 footprint" },
+        { "kind": "cafe", "name": "Prepp", "share": 0.12, "source": "OSM node/7257809236, Årstaängsvägen; inside the B02 footprint" },
+        { "kind": "lobby", "name": "H&M office entrance", "share": 0.24, "source": "Building name (Marievik 19 - H&M office)" },
+        { "kind": "event", "name": "NIDa festvåning", "share": 0.32, "source": "NIDa Catering och festvåning, OSM node/7896856729; inside the B02 footprint" }
+      ]
+    },
+    "B03": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Roots & Soil", "share": 0.15, "source": "OSM node/1616041454, Årstaängsvägen; inside the B03 footprint" },
+        { "kind": "restaurant", "name": "Via Loreto", "share": 0.13, "source": "OSM node/5248382078, Årstaängsvägen; inside the B03 footprint" },
+        { "kind": "lobby", "name": "Cisco office entrance", "share": 0.18, "source": "Building name (Roots & Soil / Cisco / SATS block)" },
+        { "kind": "event", "name": "Klubbhuset", "share": 0.2, "source": "AMF timeline: meeting place for culture and creativity, Apr-Dec 2026, Årstaängsvägen 21C (Marievik 26)" },
+        { "kind": "gym", "name": "SATS", "share": 0.34, "source": "Building name; SATS Marievik (gyms are not mapped in OSM here)" }
+      ]
+    },
+    "B04": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Marrakech", "share": 0.22, "source": "Marrakech Resturang, OSM node/5245925642, Årstaängsvägen; inside the B04 footprint" },
+        { "kind": "lobby", "name": "The Absolut Group entrance", "share": 0.3, "source": "Building name" },
+        { "kind": "event", "name": "Atrium hall (Kajen events)", "share": 0.48, "source": "Mock-up: the glazed waterfront atrium as an indoor venue next to Kajen, where Vårfestivalen (8-9 May 2026) is held (AMF timeline)" }
+      ]
+    },
+    "B05": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "cafe", "name": "Café", "share": 0.25, "source": "mock-up" },
+        { "kind": "lobby", "name": "Heidelberg Materials entrance", "share": 0.35, "source": "Building name" },
+        { "kind": "event", "name": "Conference rooms", "share": 0.4, "source": "mock-up" }
+      ]
+    },
+    "B06": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "shop", "name": "Shop", "share": 0.32, "source": "mock-up" },
+        { "kind": "lobby", "name": "Office entrance", "share": 0.38, "source": "mock-up" },
+        { "kind": "bike", "name": "Bike room & storage", "share": 0.3, "source": "mock-up" }
+      ]
+    },
+    "B07": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Mackverket", "share": 0.3, "source": "OSM node/13875738138, Marieviksstranden; AMF timeline: from food truck to a permanent waterfront place, 2026" },
+        { "kind": "lobby", "name": "Office entrance", "share": 0.42, "source": "mock-up" },
+        { "kind": "shop", "name": "Shop", "share": 0.28, "source": "mock-up" }
+      ]
+    },
+    "B08": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Staff restaurant", "share": 0.36, "source": "mock-up" },
+        { "kind": "lobby", "name": "Alstom entrance", "share": 0.38, "source": "Building name" },
+        { "kind": "bike", "name": "Bike room & storage", "share": 0.26, "source": "mock-up" }
+      ]
+    },
+    "B09": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "gym", "name": "Nordic Wellness", "share": 0.62, "source": "Building name (Nordic Wellness + apartments)" },
+        { "kind": "lobby", "name": "Residents' entrance", "share": 0.2, "source": "mock-up" },
+        { "kind": "bike", "name": "Bike & waste room", "share": 0.18, "source": "mock-up" }
+      ]
+    },
+    "B10": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "shop", "name": "Shop", "share": 0.4, "source": "mock-up" },
+        { "kind": "lobby", "name": "Residents' entrance", "share": 0.3, "source": "mock-up" },
+        { "kind": "bike", "name": "Bike & waste room", "share": 0.3, "source": "mock-up" }
+      ]
+    },
+    "B11": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "German Beer Hall", "share": 0.36, "source": "German Beer Hall Liljeholmen, OSM node/2038190081, Buteljgatan; inside the B11 footprint" },
+        { "kind": "lobby", "name": "Residents' entrance", "share": 0.18, "source": "mock-up" },
+        { "kind": "bike", "name": "Bike & waste room", "share": 0.14, "source": "mock-up" },
+        { "kind": "restaurant", "name": "DIN-DIN Club", "share": 0.32, "source": "OSM node/2021350054, Sjövikstorget; inside the B11 footprint" }
+      ]
+    },
+    "B12": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Let's Eat Sushi", "share": 0.36, "source": "OSM node/5249082477, Sjöviksvägen; inside the B12 footprint" },
+        { "kind": "lobby", "name": "Residents' entrance", "share": 0.28, "source": "mock-up" },
+        { "kind": "cafe", "name": "Tant Maja och Fröken Emilia", "share": 0.36, "source": "OSM node/5262025993, Marieviksgatan; inside the B12 footprint" }
+      ]
+    },
+    "B13": {
+      "use": "retail",
+      "spaces": [
+        { "kind": "restaurant", "name": "Indian Garden", "share": 0.34, "source": "OSM node/2498488711, Sjövikstorget; inside the B13 footprint" },
+        { "kind": "lobby", "name": "Residents' entrance", "share": 0.24, "source": "mock-up" },
+        { "kind": "bike", "name": "Bike & waste room", "share": 0.16, "source": "mock-up" },
+        { "kind": "shop", "name": "Shop", "share": 0.26, "source": "mock-up" }
+      ]
+    }
+  }
+}

@@ -706,10 +706,12 @@ def quantities(F, catalogue=None, mode="conversion"):
 # --------------------------------------------------------------------------- building
 def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
           profiles=None, db=None, n_floors=None, mode="conversion", partition_system=None,
-          catalogue=None, mvplus=None, facade=None, plan=None):
+          catalogue=None, mvplus=None, facade=None, plan=None, ground=None):
     """footprint: shapely Polygon or list of (x,y); uses: str or list (one per floor, last repeats).
     plan: a drawn plan (mvk/plan.py). A floor whose use is the use drawn for it is built from the plan;
             any other use is generated here.
+    ground: a ground-floor programme (mvk/ground.py): floor 0, at the programme's use and with no drawn
+            plan for it, is laid out as those tenancies (restaurant, gym, lobby ...) instead.
     mode: "conversion" (existing shell retained, fit-out priced) or "new_build" (everything priced).
     partition_system: None (as in the use profile) | "conventional" | "demountable" | "glass", or a
             requirement-based family ("smartax"): the cheapest build that meets each wall's requirement.
@@ -765,6 +767,12 @@ def build(footprint, uses, floor_heights=3.5, overrides=None, added_lines=None,
         try:
             if drawn and drawn["use"] == use:
                 F = PLAN.floor_from_plan(plan, drawn, footprint, use, profiles, db, index=i, z=z, height=h)
+            elif i == 0 and ground and ground.get("use") == use:
+                try:
+                    from . import ground as GROUND
+                except ImportError:
+                    import ground as GROUND
+                F = GROUND.floor_from_programme(ground, footprint, use, profiles, db, index=i, z=z, height=h)
             else:
                 F = layout_floor(fp_i, use, profiles, db, index=i, z=z, height=h, ground=(i == 0))
         except Exception:

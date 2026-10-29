@@ -10,6 +10,14 @@ export const UNIT_COLORS: Record<string, string> = {
   Classroom: '#128f6e',
   Retail: '#dfa00c',
   Shop: '#dfa00c',
+  // ground-floor tenancies (data/projects/marievik/ground_floors.json, parametric/mvk/ground.py)
+  Supermarket: '#03b05f',
+  Restaurant: '#fd876e',
+  'Café': '#f5c443',
+  Gym: '#4aa3b5',
+  'Event space': '#c46ba4',
+  Lobby: '#b9b4a3',
+  'Bike & waste': '#7d8580',
   other: '#8a72d8',
 }
 export const COMMON_COLOR = '#9aa19d'

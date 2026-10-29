@@ -1,7 +1,9 @@
 import * as THREE from 'three'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { Ring, UrbanContext, XY } from '../types'
-import { UNIT_BOX, prism, segmentBox } from './geometry'
+import { UNIT_BOX, inflate, prism, segmentBox } from './geometry'
+import { SHOP_H, facadeTiles, shopTiles } from './textures'
+import { glowFacade } from './glow'
 
 // The detailed urban context around Marievik (parametric/site/make_context.py → massing, barriers, furniture,
 // crossings, markings): neighbouring buildings with colour, windows and pitched roofs, fences and hedges,
@@ -83,38 +85,29 @@ function pitchedRoof(r: NonNullable<Massing['roof']>, z: number, roofHex: string
   return clean(g)
 }
 
-/** A facade texture: white wall with a soft grid of windows, one per ~2.8 m bay and ~3.1 m storey (world UVs). */
-function windowTexture() {
-  const c = document.createElement('canvas')
-  c.width = c.height = 64
-  const x = c.getContext('2d')!
-  x.fillStyle = '#ffffff'
-  x.fillRect(0, 0, 64, 64)
-  x.fillStyle = '#a9b1b5'
-  x.fillRect(20, 18, 24, 28)
-  x.fillStyle = '#ccd1d3'
-  x.fillRect(20, 18, 24, 3)
-  const t = new THREE.CanvasTexture(c)
-  t.wrapS = t.wrapT = THREE.RepeatWrapping
-  t.repeat.set(1 / 2.8, 1 / 3.1)
-  t.colorSpace = THREE.SRGBColorSpace
-  t.anisotropy = 16   // clamped to the GPU's max; keeps the window grid from shimmering on facades seen at an angle
-  return t
-}
+const SHOPS = new Set(['apartments', 'retail', 'commercial', 'office', 'yes', 'residential', 'hotel'])
 const PLAIN = new Set(['shed', 'garage', 'garages', 'allotment_house', 'roof', 'parking', 'storage_tank', 'service', 'toilets', 'kiosk', 'bridge'])
 
 export function buildMassing(list: Massing[]): THREE.Object3D[] {
   const caps: THREE.BufferGeometry[] = []
   const walls: THREE.BufferGeometry[] = []
   const blank: THREE.BufferGeometry[] = []
+  const shops: THREE.BufferGeometry[] = []
   for (const b of list) {
     const top = b.h
+    const z0 = b.z0 ?? 0
+    // a glazed shopfront along the street floor of blocks that would have one (a band just proud of the wall)
+    const shopfront = z0 < 0.5 && top - z0 >= 9 && SHOPS.has(b.kind ?? '')
     for (const rings of b.rings) {
-      const g = prism(rings as Ring[], b.z0 ?? 0, top)
+      const g = prism(rings as Ring[], z0, top)
       if (!g) continue
       const [cap, wall] = capsAndWalls(g)
       g.dispose()
       caps.push(clean(paint(cap, b.rc)))
+      if (shopfront) {
+        const sg = prism(inflate(rings as Ring[], 0.06), z0, z0 + SHOP_H)
+        if (sg) { const [sc, sw] = capsAndWalls(sg); sg.dispose(); sc.dispose(); shops.push(clean(paint(sw, '#ffffff'))) }
+      }
       ;(PLAIN.has(b.kind ?? '') || top - (b.z0 ?? 0) < 4 ? blank : walls).push(clean(paint(wall, b.c)))
     }
     if (b.roof) caps.push(pitchedRoof(b.roof, top, b.rc, b.c))
@@ -131,7 +124,11 @@ export function buildMassing(list: Massing[]): THREE.Object3D[] {
     out.push(o)
   }
   mesh(caps, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, flatShading: true }))
-  mesh(walls, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.88, map: windowTexture() }))
+  if (out[0]) out[0].userData.roofs = true   // the seasons show dusts these with snow
+  const fac = facadeTiles()
+  mesh(walls, glowFacade({ vertexColors: true, roughness: 0.88, map: fac.map, emissiveMap: fac.emissive }, 0.8))
+  const shop = shopTiles()
+  mesh(shops, glowFacade({ vertexColors: true, roughness: 0.5, metalness: 0.1, map: shop.map, emissiveMap: shop.emissive }, 1.0))
   mesh(blank, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 }))
   return out
 }

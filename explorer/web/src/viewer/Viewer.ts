@@ -14,6 +14,13 @@ import { inkOn } from '../lifeIcons'
 import { Rhino3dmLoader } from 'three/examples/jsm/loaders/3DMLoader.js'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import type { BuildingPayload, FloorPayload, Ring, SitePayload, Unit, UrbanContext } from '../types'
+import { glowGlass, roomLight, setGlow } from './glow'
+import { flock, planks, pvCells, sedum, speckle, shoreBands } from './textures'
+import { buildSculptures } from './sculptures'
+import { SeasonShow } from './seasonShow'
+import { nightOf, sunAt } from '../seasons'
+import type { Amenity } from '../urbanLife'
+import { buildBoats, buildDressing, buildPeople, buildPierRails, buildTrees, ground, peopleSpots, type Ground } from './dress'
 import { UNIT_BOX, detailGeometry, disposeTree, flat, inflate, localBox, prism, segmentBox } from './geometry'
 import { buildBarriers, buildFurniture, buildMassing, buildRoadPaint } from './context3d'
 import { dfColor, unitColor } from './colors'
@@ -184,8 +191,8 @@ export class Viewer {
     this.controls.maxDistance = 3000
     this.controls.screenSpacePanning = true
     this.controls.addEventListener('change', () => this.invalidate())
-    this.controls.addEventListener('start', () => { if (this.tour) { this.tour.hold = true; this.tour.resumeAt = 0 } })
-    this.controls.addEventListener('end', () => { if (this.tour) this.tour.resumeAt = performance.now() + 3500 })
+    this.controls.addEventListener('start', () => { if (this.tour) { this.tour.hold = true; this.tour.resumeAt = 0 } this.orbitHoldUntil = Infinity })
+    this.controls.addEventListener('end', () => { if (this.tour) this.tour.resumeAt = performance.now() + 3500; this.orbitHoldUntil = performance.now() + 3500 })
 
     // sky, sun and image-based light from the same sky
     this.sky.scale.setScalar(15000)
@@ -222,6 +229,19 @@ export class Viewer {
       new THREE.WebGLRenderTarget(w * pr, h * pr, { type: THREE.HalfFloatType, samples: 4 }))
     this.composer.addPass(new RenderPass(this.scene, this.camera))
     this.aoPass = new GTAOPass(this.scene, this.camera, w, h)
+    {
+      // light that doesn't write depth (beams, glows, haloes) stays out of the normal/depth pass, or the outlines
+      // and AO would draw it as a solid
+      const ao = this.aoPass as unknown as { overrideVisibility: () => void; scene: THREE.Scene }
+      const base = ao.overrideVisibility.bind(ao)
+      ao.overrideVisibility = () => {
+        base()
+        ao.scene.traverse((o) => {
+          const m = (o as THREE.Mesh).material as THREE.Material | undefined
+          if (m && !Array.isArray(m) && m.transparent && !m.depthWrite) o.visible = false
+        })
+      }
+    }
     this.aoPass.blendIntensity = 0.85
     this.aoPass.updateGtaoMaterial({ radius: 2.5, distanceExponent: 1.4, thickness: 2.0, scale: 1.0 })
     fixGtaoLogDepth([this.aoPass.gtaoMaterial, this.aoPass.pdMaterial], this.camera.near, this.camera.far)
@@ -314,6 +334,22 @@ export class Viewer {
     }
     if (this.tour) this.tourStep()
     if (this.walk) this.walkStep()
+    if (this.season && !document.hidden) {
+      const now = performance.now()
+      if (now - this.seasonAt > 33) {
+        const dt = Math.min(0.1, (now - (this.seasonAt || now)) / 1000)
+        // the 360: circle the orbit target while the year plays, as the rented/vacant tour does; dragging pauses it
+        if (this.seasonOrbit && !this.anim && now > this.orbitHoldUntil) {
+          const tgt = this.controls.target
+          const off = this.camera.position.clone().sub(tgt)
+          off.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.seasonOrbit * dt)
+          this.camera.position.copy(tgt).add(off)
+        }
+        this.season.step(dt)
+        this.seasonAt = now
+        this.dirty = Math.max(this.dirty, 1)
+      }
+    }
     if (this.controls.update()) this.dirty = Math.max(this.dirty, 2)
     if (this.anim) this.dirty = Math.max(this.dirty, 1)
     this.stepDusk(performance.now())
@@ -374,7 +410,7 @@ export class Viewer {
    *  The image-based light is re-baked at most every 150 ms while the evening falls (it's the slow part). */
   private applySky(final: boolean) {
     const [altitude0, azimuth] = this.sunReq
-    const k = this.duskK
+    const k = Math.max(this.duskK, this.nightK)   // the tour's falling evening, or the seasons show's night
     const altitude = THREE.MathUtils.lerp(altitude0, -2.5, k)   // the sun goes down
     const alt = THREE.MathUtils.degToRad(Math.max(altitude, -4))
     const az = THREE.MathUtils.degToRad(azimuth)
@@ -405,6 +441,10 @@ export class Viewer {
     gu.ground.value.copy(pal('#dcdcd2', '#b9a99a', '#4a4b55'))
     gu.sunCol.value.copy(pal('#fff1cf', '#ffb36b', '#f2b98a'))
     gu.intensity.value = THREE.MathUtils.lerp(1.15, 0.95, k)
+    // lit rooms (viewer/glow.ts): a soft glow by day, more as the sun gets low, full at night; while the
+    // rented/vacant tour runs its own lit and dark windows take over, so these go out with the evening
+    const g = altitude0 > 0 ? 0.32 + 0.75 * (1 - Math.min(1, up * 2.5)) : 1.35
+    setGlow(this.tour ? g * (1 - k) : g)
     this.bloomPass.strength = THREE.MathUtils.lerp(this.bloomDay[0], 0.5, k)
     this.bloomPass.threshold = THREE.MathUtils.lerp(this.bloomDay[1], 1.25, k)
     const now = performance.now()
@@ -515,7 +555,10 @@ export class Viewer {
     const [x0, y0, x1, y1] = ctx.clip ?? [-400, -500, 450, 400]
     const disc = ctx.circle
     if (disc) {   // the context covers a disc: ground to its edge, the landscape ring from there on
-      const ground = new THREE.Mesh(new THREE.CircleGeometry(disc[2], 128), new THREE.MeshStandardMaterial({ color: '#cfccc4', roughness: 1 }))
+      const gt = speckle(6, 0.08).clone()
+      gt.repeat.set((disc[2] * 2) / 6, (disc[2] * 2) / 6)
+      gt.needsUpdate = true
+      const ground = new THREE.Mesh(new THREE.CircleGeometry(disc[2], 128), new THREE.MeshStandardMaterial({ color: '#d3d0c8', roughness: 1, map: gt, userData: { season: 'ground' } }))
       ground.position.set(disc[0], disc[1], -0.05)
       ground.receiveShadow = true
       g.add(ground)
@@ -539,20 +582,31 @@ export class Viewer {
     })))
     const onClip = (x: number, y: number) =>
       (owners.get(key(x, y))?.size ?? 0) > 1 || (!!disc && Math.abs(Math.hypot(x - disc[0], y - disc[1]) - disc[2]) < 1.5)
-    surf(waterRings, -0.03, M('#e9f1ef', 0.6))
-    surf(waterRings.map((r) => inflate(r, -2.2, onClip)), -0.02, waterMaterial('#5b8a90', 0.6))
-    surf(waterRings.map((r) => inflate(r, -9, onClip)), -0.01, waterMaterial('#2f5868'))
+    // one surface; its colour map carries the bands, drawn on a canvas clipped to the water so they can never
+    // spill onto the land (offsetting the outlines instead tangled in the bays and left wedges of water ashore)
+    if (waterRings.length) {
+      const wmat = waterMaterial('#ffffff')
+      wmat.map = shoreBands(waterRings, onClip)
+      surf(waterRings, -0.02, wmat)
+    }
     this.hasWater = waterRings.length > 0
     const GREEN: Record<string, string> = { grass: '#86a862', park: '#7fa35a', wood: '#5f8648', scrub: '#7b9a5a', playground: '#c8b88e', pitch: '#6f9e58', flowerbed: '#b98a9a', rock: '#a9a59c', sand: '#d9cba3' }
     const byKind = new Map<string, Ring[][]>()
     for (const gr of ctx.greens ?? []) byKind.set(gr.kind, [...(byKind.get(gr.kind) ?? []), ...gr.rings])
-    for (const [k, rs] of byKind) surf(rs, 0.02, M(GREEN[k] ?? '#8aa86a'))
-    for (const p of ctx.plazas ?? []) surf(p.rings, 0.03, M('#d6d0c4'))
-    for (const p of ctx.parking ?? []) surf(p.rings, 0.035, M('#76787b', 0.9))
-    for (const r of ctx.roads ?? []) surf(r.rings, 0.04 + (r.z ?? 0), M(r.z ? '#6c6e72' : '#4e5054', 0.9), r.z ? 0.8 : 0)
-    const PATH: Record<string, string> = { wood: '#9b7651', gravel: '#d6c7a2', paved: '#c9c3b7' }
-    for (const p of ctx.paths ?? []) surf(p.rings, 0.06 + (p.z ?? 0), M(PATH[p.surface] ?? PATH.paved))
-    for (const p of ctx.piers ?? []) surf(p.rings, 0.0, M('#8a6a48', 0.85), 0.4)
+    // model-maker's finishes (viewer/textures.ts): flocked lawns, speckled paving, timber decks
+    const SANDY = new Set(['playground', 'sand', 'rock'])
+    for (const [k, rs] of byKind) {
+      const gm = M(GREEN[k] ?? '#8aa86a', 0.95, { map: SANDY.has(k) ? speckle(3, 0.16) : flock(k === 'wood' ? 7 : 5) })
+      gm.userData.season = SANDY.has(k) ? 'ground' : 'green'   // tinted by the seasons show (viewer/seasonShow.ts)
+      surf(rs, 0.02, gm)
+    }
+    for (const p of ctx.plazas ?? []) surf(p.rings, 0.03, M('#ddd8cd', 0.95, { map: speckle(4.8, 0.1, 6) }))
+    for (const p of ctx.parking ?? []) surf(p.rings, 0.035, M('#76787b', 0.9, { map: speckle(4, 0.08) }))
+    for (const r of ctx.roads ?? []) surf(r.rings, 0.04 + (r.z ?? 0), M(r.z ? '#6c6e72' : '#4e5054', 0.9, { map: speckle(4, 0.07) }), r.z ? 0.8 : 0)
+    const PATH: Record<string, string> = { wood: '#c9a77a', gravel: '#d6c7a2', paved: '#d2ccc0' }
+    const PATH_TEX: Record<string, () => THREE.Texture> = { wood: () => planks(3), gravel: () => speckle(2, 0.22), asphalt: () => speckle(4, 0.07) }
+    for (const p of ctx.paths ?? []) surf(p.rings, 0.06 + (p.z ?? 0), M(PATH[p.surface] ?? PATH.paved, 0.95, { map: (PATH_TEX[p.surface] ?? (() => speckle(3, 0.1, 4)))() }))
+    for (const p of ctx.piers ?? []) surf(p.rings, 0.0, M('#c9a77a', 0.85, { map: planks(3) }), 0.4)
     for (const p of ctx.platforms ?? []) surf(p.rings, p.z ?? 0, M('#bdb8ae', 0.9), 0.8)
     if (ctx.massing?.length) {
       // neighbouring buildings in detail: parts, colours, windows, pitched roofs (viewer/context3d.ts)
@@ -563,7 +617,12 @@ export class Viewer {
     }
     for (const o of buildBarriers(ctx.barriers ?? [])) g.add(o)
     for (const o of buildRoadPaint(ctx.crossings ?? [], ctx.markings ?? [])) g.add(o)
-    for (const o of buildFurniture(ctx.furniture ?? {})) g.add(o)
+    // public art modelled from photos (viewer/sculptures.ts); the generic artwork markers stay for the rest
+    const art = buildSculptures()
+    g.add(art.group)
+    const furn = { ...(ctx.furniture ?? {}) }
+    if (furn.artwork) furn.artwork = furn.artwork.filter(([x, y]) => !art.spots.some(([u, v]) => Math.hypot(u - x, v - y) < 3))
+    for (const o of buildFurniture(furn)) g.add(o)
     // rail: ballast strips
     for (const r of ctx.rail ?? []) {
       for (const ln of r.lines) {
@@ -576,49 +635,23 @@ export class Viewer {
         }
       }
     }
-    // trees: instanced trunks and crowns, size from the mapped or estimated height
-    const trees = ctx.trees ?? []
-    if (trees.length) {
-      const trunkGeo = new THREE.CylinderGeometry(0.6, 1, 1, 7).rotateX(Math.PI / 2).translate(0, 0, 0.5)
-      const crownGeo = new THREE.IcosahedronGeometry(1, 1)
-      const coneGeo = new THREE.ConeGeometry(1, 1, 8).rotateX(Math.PI / 2).translate(0, 0, 0.5)
-      const trunk = new THREE.InstancedMesh(trunkGeo, new THREE.MeshStandardMaterial({ color: '#5a4636', roughness: 1 }), trees.length)
-      const broad = trees.filter((t) => t.leaf !== 'needleleaved')
-      const needle = trees.filter((t) => t.leaf === 'needleleaved')
-      const crowns = new THREE.InstancedMesh(crownGeo, new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9, flatShading: true }), broad.length)
-      const cones = new THREE.InstancedMesh(coneGeo, new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9, flatShading: true }), Math.max(1, needle.length))
-      const m4 = new THREE.Matrix4()
-      const q = new THREE.Quaternion()
-      const col = new THREE.Color()
-      let rnd = 7
-      const rand = () => { rnd = (rnd * 16807) % 2147483647; return rnd / 2147483647 }
-      trees.forEach((t, i) => {
-        const r = Math.max(0.12, t.h * 0.02)
-        m4.compose(new THREE.Vector3(t.p[0], t.p[1], 0), q, new THREE.Vector3(r, r, t.h * 0.42))
-        trunk.setMatrixAt(i, m4)
+    // trees: clustered, flocked crowns like the model's (viewer/dress.ts), size from the mapped or estimated height
+    for (const o of buildTrees(ctx.trees ?? [])) g.add(o)
+    // the model-maker's dressing: people, planters, café parasols, pier railings, boats (viewer/dress.ts)
+    {
+      const fps = (this.site?.buildings ?? []).map((b) => {
+        const r = b.footprint.map(([x, y]) => [x, y] as [number, number])
+        if (r.length && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1])) r.push([r[0][0], r[0][1]])
+        return { ring: r, shops: ['retail', 'restaurant', 'cafe', 'food'].includes(b.ground_use ?? '') }
       })
-      broad.forEach((t, i) => {
-        const cr = t.h * (0.27 + rand() * 0.08)
-        q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), rand() * Math.PI)
-        m4.compose(new THREE.Vector3(t.p[0], t.p[1], t.h - cr * 0.95), q, new THREE.Vector3(cr, cr * (0.9 + rand() * 0.2), cr * 0.85))
-        crowns.setMatrixAt(i, m4)
-        crowns.setColorAt(i, col.setHSL(0.24 + rand() * 0.06, 0.34 + rand() * 0.12, 0.27 + rand() * 0.08))
-      })
-      needle.forEach((t, i) => {
-        q.identity()
-        m4.compose(new THREE.Vector3(t.p[0], t.p[1], t.h * 0.3), q, new THREE.Vector3(t.h * 0.2, t.h * 0.2, t.h * 0.72))
-        cones.setMatrixAt(i, m4)
-        cones.setColorAt(i, col.setHSL(0.3 + rand() * 0.04, 0.3, 0.2 + rand() * 0.05))
-      })
-      for (const im of [trunk, crowns, cones]) {
-        im.instanceMatrix.needsUpdate = true
-        if (im.instanceColor) im.instanceColor.needsUpdate = true
-        im.castShadow = true
-        im.receiveShadow = true
-        im.userData.trees = true
-        g.add(im)
-      }
-      if (!needle.length) cones.visible = false
+      const gr = ground(ctx, fps.map((f) => f.ring))
+      this.ctxData = ctx
+      this.ctxGround = gr
+      this.ctxCentre = fps.length ? [fps.reduce((a, f) => a + f.ring[0][0], 0) / fps.length, fps.reduce((a, f) => a + f.ring[0][1], 0) / fps.length] : [0, 0]
+      for (const o of buildPeople(peopleSpots(ctx, fps.map((f) => f.ring), gr).filter((sp) => !art.spots.some(([u, v]) => Math.hypot(u - sp.p[0], v - sp.p[1]) < 5.5)))) g.add(o)
+      for (const o of buildDressing(ctx, fps, gr)) g.add(o)
+      for (const o of buildPierRails(ctx.piers ?? [])) g.add(o)
+      if (waterRings.length) for (const o of buildBoats(waterRings, onClip, ctx.piers ?? [], gr, disc ? [disc[0], disc[1]] : [(x0 + x1) / 2, (y0 + y1) / 2])) g.add(o)
     }
     // street lamps
     const lamps = ctx.furniture?.lamp ? [] : ctx.lamps ?? []   // drawn with heads among the furniture when present
@@ -645,7 +678,10 @@ export class Viewer {
       return new THREE.MeshStandardMaterial({ color: '#41596a', roughness: 0.12, metalness: 0.55, envMapIntensity: 1.6, ...opts })
     }
     const metal = key.startsWith('metal') || key === 'pv'
-    return new THREE.MeshStandardMaterial({ color, roughness: metal ? 0.45 : 0.88, metalness: metal ? 0.35 : 0.0, ...opts })
+    // the model's roofs: sedum, timber decks, PV modules with their cells (world-scaled maps, viewer/textures.ts)
+    const map = key === 'green' ? sedum() : key === 'timber' ? planks(3) : key === 'pv' ? pvCells() : key.startsWith('membrane') ? speckle(5, 0.06) : undefined
+    if (key === 'green') color.set('#c9c08a')
+    return new THREE.MeshStandardMaterial({ color, roughness: metal ? 0.45 : 0.88, metalness: metal ? 0.35 : 0.0, map, ...opts })
   }
 
   // ------------------------------------------------------------------ buildings
@@ -669,7 +705,6 @@ export class Viewer {
       return cache.get(key)!
     }
     const floors: THREE.Group[] = []
-    const glass = m('glass')
     const door = new THREE.MeshStandardMaterial({ color: '#4a3a2c', roughness: 0.6 })
     mats.push(door)
     for (const f of p.floors) {
@@ -695,7 +730,9 @@ export class Viewer {
       floors.push(fg)
       group.add(fg)
     }
-    // windows and doors on the outside face, one instanced mesh per floor
+    // windows and doors on the outside face, one set of instanced meshes per floor (viewer/glow.ts for the lit rooms):
+    // glass set just proud of the wall, a frame of four bars standing in front of it, a mullion in wide windows, a
+    // transom in tall ones, and a sill — the crisp, lit facades of the physical model
     const byFloor = new Map<number, number[][]>()
     for (const w of p.windows) {
       const f = p.floors.findIndex((fl) => w[4] >= fl.z - 0.01 && w[4] < fl.z + fl.height)
@@ -703,16 +740,72 @@ export class Viewer {
       if (!byFloor.has(f)) byFloor.set(f, [])
       byFloor.get(f)!.push(w)
     }
+    let seed = [...p.id].reduce((a, ch) => a * 31 + ch.charCodeAt(0), 7) % 2147483647 || 7
+    const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647 }
+    const glowing = glowGlass()
+    mats.push(glowing)
+    const trimMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.6, metalness: 0.15 })
+    mats.push(trimMat)
+    const lightc = new THREE.Color()
     for (const [fi, ws] of byFloor) {
-      for (const isDoor of [0, 1]) {
-        const list = ws.filter((w) => w[6] === isDoor)
-        if (!list.length) continue
-        const inst = new THREE.InstancedMesh(UNIT_BOX, isDoor ? door : glass, list.length)
-        list.forEach((w, i) => inst.setMatrixAt(i, segmentBox(w[0], w[1], w[2], w[3], w[4], w[5], 0.12)))
-        inst.instanceMatrix.needsUpdate = true
-        inst.castShadow = false
-        inst.receiveShadow = true
-        floors[fi].add(inst)
+      const fl = p.floors[fi]
+      const ring = fl.rings[0]
+      const inside = (x: number, y: number) => {
+        let c = false
+        for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+          const [xi, yi] = ring[i], [xj, yj] = ring[j]
+          if ((yi > y) !== (yj > y) && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) c = !c
+        }
+        return c
+      }
+      const brick = fl.material.startsWith('brick') || fl.material.includes('dark')
+      const frames: THREE.Matrix4[] = [], sills: THREE.Matrix4[] = [], panes: THREE.Matrix4[] = [], doors: THREE.Matrix4[] = []
+      const lights: THREE.Color[] = []
+      for (const w of ws) {
+        const [ax, ay, bx, by, z0, z1, isDoor] = w
+        const len = Math.hypot(bx - ax, by - ay)
+        if (len < 0.15) continue
+        const u: [number, number] = [(bx - ax) / len, (by - ay) / len]
+        // t runs along the left normal of a→b; flip so +t is outward
+        const lx = -u[1], ly = u[0]
+        const out = inside((ax + bx) / 2 + lx * 0.5, (ay + by) / 2 + ly * 0.5) ? -1 : 1
+        const T = (t0: number, t1: number): [number, number] => (out > 0 ? [t0, t1] : [-t1, -t0])
+        const box = (s0: number, s1: number, t: [number, number], zz0: number, zz1: number) =>
+          localBox([ax, ay], u, s0, s1, t[0], t[1], zz0, zz1, new THREE.Matrix4())
+        const h = z1 - z0, fw = 0.07
+        if (isDoor) doors.push(box(0, len, T(-0.06, 0.05), z0, z1))
+        else {
+          panes.push(box(0, len, T(-0.06, 0.04), z0, z1))
+          lights.push(roomLight(rng, lightc).clone())
+          sills.push(box(-0.08, len + 0.08, T(-0.02, 0.15), z0 - 0.06, z0))
+        }
+        // the frame: head, jambs (and a sill bar under doors), a mullion in wide windows, a transom in tall ones
+        frames.push(box(-fw, len + fw, T(-0.02, 0.11), z1, z1 + fw))
+        frames.push(box(-fw, 0, T(-0.02, 0.11), z0, z1))
+        frames.push(box(len, len + fw, T(-0.02, 0.11), z0, z1))
+        if (!isDoor) frames.push(box(-fw, len + fw, T(-0.02, 0.11), z0 - fw * 0.5, z0 + 0.02))
+        if (!isDoor && len > 1.45) frames.push(box(len / 2 - 0.03, len / 2 + 0.03, T(-0.02, 0.09), z0, z1))
+        if (!isDoor && h > 1.9) frames.push(box(0, len, T(-0.02, 0.09), z0 + h * 0.78, z0 + h * 0.78 + 0.05))
+      }
+      const inst = (list: THREE.Matrix4[], mat: THREE.Material, shadow = false) => {
+        if (!list.length) return null
+        const im = new THREE.InstancedMesh(UNIT_BOX, mat, list.length)
+        list.forEach((mm, i) => im.setMatrixAt(i, mm))
+        im.instanceMatrix.needsUpdate = true
+        im.castShadow = shadow
+        im.receiveShadow = true
+        floors[fi].add(im)
+        return im
+      }
+      const glassIm = inst(panes, glowing)
+      if (glassIm) { lights.forEach((c, i) => glassIm.setColorAt(i, c)); glassIm.instanceColor!.needsUpdate = true; glassIm.userData.windows = true }
+      inst(doors, door)
+      // frames and sills share one mesh (instance colours), to keep the draw calls per floor down
+      const trim = inst([...frames, ...sills], trimMat)
+      if (trim) {
+        const fc = new THREE.Color(brick ? '#efe9dd' : '#50565c'), sc = new THREE.Color('#e6e2d8')
+        for (let i = 0; i < frames.length + sills.length; i++) trim.setColorAt(i, i < frames.length ? fc : sc)
+        trim.instanceColor!.needsUpdate = true
       }
     }
     // roof, parapets, balconies, plant
@@ -1530,6 +1623,53 @@ export class Viewer {
 
   // ------------------------------------------------------------------ rented / vacant: a dusk tour around the buildings
   private sunReq: [number, number] = [30, 200]
+  // ------------------------------------------------------------------ seasons & hours (viewer/seasonShow.ts)
+  private season: SeasonShow | null = null
+  private seasonAt = 0
+  private seasonOrbit = 0          // rad/s; 0 = still
+  private orbitHoldUntil = 0
+  /** Circle the view round the site while the seasons show runs (speed in rad/s, 0 to stop). */
+  setSeasonOrbit(speed: number) { this.seasonOrbit = speed; this.orbitHoldUntil = 0; this.invalidate() }
+  private nightK = 0
+  private seasonSun: [number, number] | null = null
+  private ctxData: UrbanContext | null = null
+  private ctxGround: Ground | null = null
+  private ctxCentre: [number, number] = [0, 0]
+
+  /** Start (or end, with null) the seasons show: the study buildings open to their ground-floor plans, the outdoor
+   *  places set up for each season, weather, crowds and lights. Drive it with setSeasonClock. */
+  setSeasonShow(d: { floors: FloorPayload[]; amenities: Amenity[] } | null) {
+    this.invalidate()
+    if (this.season) {
+      this.season.dispose()
+      this.season = null
+      this.nightK = 0
+      this.buildingsGroup.visible = true
+      if (this.seasonSun) { this.sunReq = this.seasonSun; this.seasonSun = null }
+      this.applySky(true)
+    }
+    if (!d || !this.ctxData || !this.ctxGround) return
+    this.seasonSun = [...this.sunReq] as [number, number]
+    const show = new SeasonShow({ ...d, ctx: this.ctxData, ground: this.ctxGround, centre: this.ctxCentre, labels: true }, this.ctxGroup)
+    const heights: Record<string, number> = {}
+    for (const [id, bv] of this.buildings) heights[id] = (bv.payload.floors.at(-1)?.z ?? 0) + (bv.payload.floors.at(-1)?.height ?? 0)
+    show.setEnvelopes(heights)
+    this.world.add(show.group)
+    this.season = show
+    this.buildingsGroup.visible = false
+    this.frameSite(true)
+  }
+  /** The show's clock: season 0–3 (spring … winter), hour 0–30 (past 24 is the next morning). */
+  setSeasonClock(season: number, hour: number, labels = true) {
+    if (!this.season) return
+    const sp = sunAt(season, hour % 24)
+    this.nightK = nightOf(season, hour % 24)
+    this.sunReq = [sp.altitude, sp.azimuth]
+    this.applySky(false)
+    this.season.setClock(season, hour, labels)
+    this.invalidate()
+  }
+
   private tour: {
     group: THREE.Group; meshes: THREE.InstancedMesh[]
     spaces: { mesh: THREE.InstancedMesh; idx: number[]; on: number; level: number; delay: number; building: string; lease: string | null }[]
@@ -1624,7 +1764,7 @@ export class Viewer {
           const [ax, ay, bx, by, z0, z1] = w
           const len = Math.hypot(bx - ax, by - ay) * 0.86, h = (z1 - z0) * 0.86
           m4.makeBasis(new THREE.Vector3(u[0] * len, u[1] * len, 0), new THREE.Vector3(0, 0, h), new THREE.Vector3(n[0], n[1], 0))
-          m4.setPosition((ax + bx) / 2 + n[0] * 0.07, (ay + by) / 2 + n[1] * 0.07, (z0 + z1) / 2)
+          m4.setPosition((ax + bx) / 2 + n[0] * 0.065, (ay + by) / 2 + n[1] * 0.065, (z0 + z1) / 2)
           im.setMatrixAt(i, m4)
           im.setColorAt(i, TOUR_DARK)
         })

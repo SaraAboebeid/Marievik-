@@ -736,7 +736,8 @@ export default function App() {
     const v = viewer.current
     if (!v) return
     const onFloor = studioFloor !== null || level.kind === 'floor' || level.kind === 'unit'
-    if (layer === 'none' || layer === 'tenancy' || layer === 'amenities' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
+    // flexibility draws its own two B01s (and fades the rest), so no building tint under it
+    if (layer === 'none' || layer === 'tenancy' || layer === 'amenities' || layer === 'flexibility' || onFloor) { v.setLayerTint(null); v.setFlows(null); return }
     if (layer === 'vacancy') {
       v.setFlows(null)
       if (districtRes) {
@@ -764,7 +765,9 @@ export default function App() {
         const fails = bd.floors.filter((f) => f.checksOk === false).length
         tints[bd.id] = {
           floors: bd.floors.map((f) => (f.checksOk === false ? '#d8342b' : f.source === 'estimate' ? '#b9b6ac' : riskColour(f.planned / Math.max(1, f.legalMax)))),
-          label: bd.id === 'B01' || bd.id === buildingId ? `${bd.id} ${planned} / ${legal} people${fails ? ` · ${fails} floor${fails > 1 ? 's' : ''} fail a check` : ''}` : undefined,
+          // District: every building labelled; Building: the one in focus (and B01)
+          label: scale === 'district' || bd.id === 'B01' || bd.id === buildingId
+            ? `${bd.id} ${planned} / ${legal} people${fails ? ` · ${fails} floor${fails > 1 ? 's' : ''} fail a check` : ''}${bd.floors.some((f) => f.source === 'mock') ? ' · mock-up' : ''}` : undefined,
         }
       } else if (layer === 'fire') {
         const plan = bd.floors.filter((f) => f.escape_m !== null)
@@ -783,7 +786,7 @@ export default function App() {
       v.setFlows(layerData.buildings.map((bd) => ({ from: bd.c, to: layerData.station.xy, trips: bd.stationTrips })),
         { at: layerData.station.xy, text: `Liljeholmen station · ${trips.toLocaleString('sv-SE')} trips a day` })
     } else v.setFlows(null)
-  }, [layer, layerData, districtRes, distYear, bdata, studioFloor, level.kind, buildingId])
+  }, [layer, layerData, districtRes, distYear, bdata, studioFloor, level.kind, buildingId, scale])
 
   // rented / vacant: a dusk tour around the buildings, example spaces lit when rented, dark when vacant
   // (District: the whole site; Building: the one building in focus), played quarter by quarter over ten years

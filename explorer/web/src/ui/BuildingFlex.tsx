@@ -180,7 +180,7 @@ export function BuildingFlex({ meta, onOpenFloor, onClose, onFrame }: {
 
   const totNow = (cs: ChangeCost[], sch: Sched[]) => sumCosts(cs.filter((_, i) => sch[i].start <= week + 1e-6))
   return (
-    <div className="pointer-events-auto flex max-h-[min(24rem,42vh)] w-full flex-col overflow-hidden rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
+    <div className="pointer-events-auto flex max-h-[min(30rem,50vh)] w-full flex-col overflow-hidden rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex flex-wrap items-center justify-between gap-2 px-3.5 pb-2 pt-1">
         <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Flexibility · B01 · Smartax left, gypsum right</h4>
         <span className="flex items-center gap-1.5">
@@ -220,33 +220,48 @@ export function BuildingFlex({ meta, onOpenFloor, onClose, onFrame }: {
         {small && ready && (() => {
           // one card per KPI: Smartax against gypsum so far, and Smartax's difference (green when it does better)
           const l = totNow(costL, schL), r = totNow(costR, schR)
-          const cards: [string, number, number, (v: number) => string][] = [
-            ['Wall works SEK', l.sek, r.sek, fmtK],
-            ['Carbon t CO₂e', l.kg / 1000, r.kg / 1000, (v) => fmtN(v, 1)],
-            ['Waste t', l.wasteT, r.wasteT, (v) => fmtN(v, 1)],
-            ['Floor-wks shut', l.days / 7, r.days / 7, (v) => fmtN(v, 1)],
-            ['Rent lost SEK', l.lostRentSek, r.lostRentSek, fmtK],
+          const cards: [string, string, number, number, (v: number) => string][] = [
+            ['Wall works', 'SEK', l.sek, r.sek, fmtK],
+            ['Carbon', 't CO₂e', l.kg / 1000, r.kg / 1000, (v) => fmtN(v, 1)],
+            ['Waste', 't', l.wasteT, r.wasteT, (v) => fmtN(v, 1)],
+            ['Floors shut', 'floor-weeks', l.days / 7, r.days / 7, (v) => fmtN(v, 1)],
+            ['Rent lost', 'SEK', l.lostRentSek, r.lostRentSek, fmtK],
           ]
           return (
-            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-5">
-              {cards.map(([k, a, b, f]) => {
+            <>
+            <p className="mb-1.5 font-mono text-[10.5px] text-ink-2">
+              So far, by {YEARS[yi]}: <b style={{ color: '#3c8f5f' }}>Smartax walls</b> against <b style={{ color: '#5f6b79' }}>fixed gypsum walls</b> — the % is Smartax's difference
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
+              {cards.map(([k, unit, a, b, f]) => {
                 const d = b > 1e-9 ? (a - b) / b : null
                 const tag = d === null || Math.abs(d) < 0.005 ? 'bg-sunken text-ink-2' : d < 0 ? 'bg-[#03b05f] text-white' : 'bg-[#d8342b] text-white'
+                const word = d === null || Math.abs(d) < 0.005 ? 'same' : d < 0 ? 'less' : 'more'
+                const max = Math.max(a, b, 1e-9)
                 return (
-                  <div key={k} className="rounded-md border-2 border-edge bg-surface px-2 py-1">
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[9.5px] uppercase tracking-[0.06em] text-muted">{k}</span>
-                      <span className={`rounded px-1 font-mono text-[10.5px] font-bold tabular-nums ${tag}`}
-                        title="Smartax against fixed gypsum walls, so far">{d === null ? '—' : `${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(Math.round(d * 100))} %`}</span>
+                  <div key={k} className="rounded-lg border-2 border-edge bg-surface px-2.5 py-2 shadow-[2px_2px_0_var(--color-edge)]">
+                    <div className="flex items-start justify-between gap-1.5">
+                      <span className="text-[13px] font-semibold leading-tight">{k}<span className="block font-mono text-[9.5px] font-normal uppercase tracking-[0.06em] text-muted">{unit}</span></span>
+                      <span className={`rounded-md px-1.5 py-0.5 text-right font-mono text-[13px] font-bold leading-none tabular-nums ${tag}`}
+                        title="Smartax against fixed gypsum walls, so far">
+                        {d === null ? '—' : `${d > 0 ? '+' : d < 0 ? '−' : '±'}${Math.abs(Math.round(d * 100))} %`}
+                        <span className="block text-[8.5px] font-semibold uppercase tracking-[0.04em] opacity-90">{word} with Smartax</span>
+                      </span>
                     </div>
-                    <div className="flex items-baseline gap-2 font-mono text-[11px] tabular-nums">
-                      <span className="flex items-center gap-1"><i className="inline-block h-2 w-2 rounded-sm" style={{ background: '#3c8f5f' }} /><b>{f(a)}</b></span>
-                      <span className="flex items-center gap-1 text-ink-2"><i className="inline-block h-2 w-2 rounded-sm" style={{ background: '#7a8796' }} />{f(b)}</span>
-                    </div>
+                    {/* the two systems side by side: name, figure and a bar to the larger of the two */}
+                    {([['Smartax', a, '#3c8f5f'], ['Gypsum', b, '#7a8796']] as [string, number, string][]).map(([n, v, c]) => (
+                      <div key={n} className="mt-1.5">
+                        <div className="flex items-baseline justify-between font-mono text-[11px] tabular-nums">
+                          <span className="text-ink-2">{n}</span><b className="text-[13px]">{f(v)}</b>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-sunken"><div className="h-full rounded-full" style={{ width: `${(v / max) * 100}%`, background: c }} /></div>
+                      </div>
+                    ))}
                   </div>
                 )
               })}
             </div>
+            </>
           )
         })()}
         {!small && <>

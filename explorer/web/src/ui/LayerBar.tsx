@@ -15,9 +15,9 @@ export const LAYER_HINT: Record<Layer, string> = {
 }
 
 export const LAYER_LEGEND: Record<Exclude<Layer, 'none' | 'amenities' | 'flexibility'>, { title: string; bins: { color: string; label: string }[] }> = {
-  capacity: { title: 'People planned ÷ legal maximum', bins: [
+  capacity: { title: 'People planned ÷ legal maximum (B01 from plans, others mock-up)', bins: [
     { color: '#03b05f', label: '< 60 %' }, { color: '#9fcf4a', label: '60–85 %' }, { color: '#f5c443', label: '85–100 %' },
-    { color: '#d8342b', label: 'over / check fails' }, { color: '#9a978e', label: 'estimate, no plan' }] },
+    { color: '#d8342b', label: 'over / check fails' }] },
   fire: { title: 'Longest escape walk ÷ 45 m limit', bins: [
     { color: '#03b05f', label: '< 60 %' }, { color: '#9fcf4a', label: '60–85 %' }, { color: '#f5c443', label: '85–100 %' },
     { color: '#d8342b', label: 'over the limit' }, { color: '#9a978e', label: 'needs plans' }] },

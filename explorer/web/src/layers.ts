@@ -12,7 +12,7 @@ export const LAYERS_AT: Record<'urban' | 'district' | 'building', Layer[]> = {
 export const LAYER_ORDER: Layer[] = ['none', 'amenities', 'movement', 'fire', 'capacity', 'vacancy', 'tenancy', 'flexibility']
 
 export interface LayerFloor {
-  floor: number; source: 'plan' | 'estimate'; layout: string | null
+  floor: number; source: 'plan' | 'estimate' | 'mock'; layout: string | null   // mock: capacity invented until the building has plans
   planned: number; legalMax: number; checksOk: boolean | null; failed: string[]
   peak: number; personHours: number | null
   escape_m: number | null; escapeLimit: number; evac_s: number | null

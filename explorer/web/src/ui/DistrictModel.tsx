@@ -1,5 +1,7 @@
 import { Badge, Card, Section, Slider } from './kit'
 import type { Band, CompareCardRow, DistrictMeta, DistrictResult } from '../layers'
+import { SITE_NAME } from '../seasons'
+import { bl } from '../codes'
 
 // B-U-S cards: Built, Use, System
 const CARD_COLOUR: Record<string, string> = { B: '#fd876e', U: '#03b05f', S: '#f4a7dd' }
@@ -69,6 +71,13 @@ export function DistrictModel({ meta, res, busy, cards, toggle, onRun, year, set
   compare: CompareCardRow[] | null; compareBusy: boolean; onCompare: () => void; onPickCompare: (id: string) => void
 }) {
   if (!meta) return null
+  // the 10-year model is an office market (corporate tenants choosing Marievik's buildings): it has no meaning
+  // for a housing estate until a market of its own is added (data/district/<site>_market.json)
+  if (SITE_NAME !== 'Marievik') return (
+    <Card title={`${SITE_NAME} as a district`}>
+      <p className="text-[12px] text-ink-2">The ten-year tenant model is built for Marievik's office market. {SITE_NAME} is housing: its own market model (who moves in and out, rents, vacancy) still needs data.</p>
+    </Card>
+  )
   const s = res?.strategy, b = res?.baseline
   const yi = s ? Math.max(0, s.years.indexOf(year)) : 0
   const sameCards = !!s && s.cards.length === cards.size && s.cards.every((c) => cards.has(c))
@@ -139,7 +148,7 @@ export function DistrictModel({ meta, res, busy, cards, toggle, onRun, year, set
                 const d = bd.vacancy[yi] - b.buildings[i].vacancy[yi]
                 return (
                   <tr key={bd.id} className="border-t border-line" title={`${bd.name}\nAttractiveness to a corporate office: ${signed(bd.attract[yi], 2)} against an average location\nTransit ${bd.transit}, water ${bd.water}`}>
-                    <td className="py-0.5">{bd.id} <span className="text-muted">{bd.kind}</span></td>
+                    <td className="py-0.5">{bl(bd.id)} <span className="text-muted">{bd.kind}</span></td>
                     <td className="text-right tabular-nums">{pc(bd.vacancy[yi])}</td>
                     <td className={`text-right tabular-nums ${d < -0.005 ? 'text-good' : d > 0.005 ? 'text-serious' : 'text-muted'}`}>{signed(d * 100, 1)}</td>
                     <td className="text-right tabular-nums">{nf(bd.noi_msek[yi], 1)}</td>
@@ -180,6 +189,7 @@ export function DistrictModel({ meta, res, busy, cards, toggle, onRun, year, set
 
 /** Urban scale: what Marievik adds to Liljeholmen in the 10-year model. */
 export function UrbanModel({ res, year }: { res: { strategy: DistrictResult; baseline: DistrictResult } | null; year: number }) {
+  if (SITE_NAME !== 'Marievik') return null
   if (!res) return (
     <Card title="Marievik in Liljeholmen">
       <p className="text-[12px] text-ink-2">Play ten years at district scale to see trips to the station, evening life on the street and how much of the market Marievik wins.</p>

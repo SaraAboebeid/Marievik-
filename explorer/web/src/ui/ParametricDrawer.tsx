@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { api, fmt, fmt1, SYSTEM_COLOR, SYSTEM_LABEL, USE_LABEL } from '../api'
 import type { ParametricCell, ParametricPayload, PlanGeometry, Settings, SitePayload, XY } from '../types'
 import { Badge, Button, Toggle } from './kit'
+import { bl } from '../codes'
 
 interface Props {
   site: SitePayload
@@ -106,7 +107,7 @@ export function ParametricDrawer({ site, start, settingsOf, onApply, onClose }: 
             <div>
               <SiteMap site={site} selected={bid} onPick={pick} setTip={setTip} />
               <p className="mt-1.5 text-[12px] leading-snug text-ink-2">
-                <b className="font-medium text-ink">{b.id} · {b.name}</b><br />
+                <b className="font-medium text-ink">{bl(b.id)} · {b.name}</b><br />
                 {b.levels} storeys · today {b.current_use}{data ? ` · ${data.floors.length} floors in this scenario` : ''}
                 {base.added_floors ? ` (+${base.added_floors} added)` : ''}
               </p>
@@ -124,8 +125,8 @@ export function ParametricDrawer({ site, start, settingsOf, onApply, onClose }: 
               </Group>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {inView
-                  ? <Badge tone="good">this is {bid} in the 3D view</Badge>
-                  : <Button primary onClick={() => onApply(bid, { use, partition_system: system })}>Apply to {bid} in 3D</Button>}
+                  ? <Badge tone="good">this is {bl(bid)} in the 3D view</Badge>
+                  : <Button primary onClick={() => onApply(bid, { use, partition_system: system })}>Apply to {bl(bid)} in 3D</Button>}
               </div>
               {err && <p className="mt-2 text-[12px] text-critical">{err}</p>}
             </div>
@@ -157,7 +158,7 @@ export function ParametricDrawer({ site, start, settingsOf, onApply, onClose }: 
           )}
 
           {/* every use x system */}
-          <h4 className="mb-1 mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Upfront carbon per m² gross, every use × wall system, on {bid}</h4>
+          <h4 className="mb-1 mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-ink">Upfront carbon per m² gross, every use × wall system, on {bl(bid)}</h4>
           <Chart site={site} systems={systems} cells={cells} use={use} system={system} sysLabel={sysLabel}
             onPick={(u, s) => { setUse(u); setSystem(s) }} setTip={setTip} />
           <p className="mt-1 text-[11.5px] text-ink-2">
@@ -244,13 +245,13 @@ function SiteMap({ site, selected, onPick, setTip }: { site: SitePayload; select
         const c = b.footprint.reduce((a, p) => [a[0] + p[0] / b.footprint.length, a[1] + p[1] / b.footprint.length], [0, 0])
         return (
           <g key={b.id} className="cursor-pointer" onClick={() => onPick(b.id)}
-            onMouseMove={(e) => setTip({ x: e.clientX, y: e.clientY, body: <><b>{b.id} · {b.name}</b><br />{b.levels} storeys · today {b.current_use}</> })}
+            onMouseMove={(e) => setTip({ x: e.clientX, y: e.clientY, body: <><b>{bl(b.id)} · {b.name}</b><br />{b.levels} storeys · today {b.current_use}</> })}
             onMouseLeave={() => setTip(null)}>
             <polygon points={b.footprint.map(P).join(' ')} strokeWidth={0.8}
               fill={sel ? 'var(--color-accent)' : b.current_use === 'residential' ? 'var(--color-accent-soft)' : 'var(--color-sunken)'}
               stroke={sel ? 'var(--color-ink)' : 'var(--color-line-strong)'} />
             <text x={c[0] - x0 + pad} y={y1 - c[1] + pad + 3} textAnchor="middle" fontSize={9} fontFamily="var(--font-mono)"
-              fill={sel ? 'var(--color-raised)' : 'var(--color-ink-2)'} fontWeight={sel ? 600 : 400} pointerEvents="none">{b.id}</text>
+              fill={sel ? 'var(--color-raised)' : 'var(--color-ink-2)'} fontWeight={sel ? 600 : 400} pointerEvents="none">{bl(b.id)}</text>
           </g>
         )
       })}

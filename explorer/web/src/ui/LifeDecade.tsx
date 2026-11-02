@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { activeIn, type LifeItem, type UrbanLife } from '../urbanLife'
 import { inkOn } from '../lifeIcons'
+import { SITE_NAME } from '../seasons'
 import { Icon, LIFE_YEARS, LIFE_YEAR_LIST, vars, type LifeFilter } from './LifePanel'
 
 /** Urban scale, bottom of the screen: the decade 2024–2030 as a row of years to play through. Each year shows
@@ -34,7 +35,7 @@ export function LifeDecade({ life, filter, setFilter, onClose }: {
   return (
     <div className="pointer-events-auto w-full rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex items-center justify-between gap-2 px-3.5 pb-2.5 pt-1.5">
-        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Life on Marievik · the decade {LIFE_YEARS[0]}–{LIFE_YEARS[1]}</h4>
+        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Life on {SITE_NAME} · the decade {LIFE_YEARS[0]}–{LIFE_YEARS[1]}</h4>
         <span className="flex items-center gap-1.5">
           <span className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[12px] font-bold">{y}</span>
           <button type="button" onClick={() => { setPlaying(false); onClose() }} aria-label="Close the decade" title="Close"

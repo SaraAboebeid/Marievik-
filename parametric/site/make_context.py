@@ -2,10 +2,10 @@
 Build the Marievik urban context (streets, footpaths, quay, water, greens, trees, lamps, rail)
 from OpenStreetMap, in the same local coordinates as the buildings (SWEREF 99 TM minus origin).
 
-    python site/make_context.py            (needs shapely and pyproj)
+    python site/make_context.py [site]     (needs shapely and pyproj; site = marievik (default) | lindangen)
 
-Input : site/osm_context_north.json, site/osm_context_south.json  (site/fetch_osm_context.py)
-Output: site/marievik_context.json
+Input : the site's OpenStreetMap downloads (SITES below; site/fetch_osm_context.py)
+Output: site/<site>_context.json
 
 What comes from where
   OpenStreetMap (ODbL, (c) OpenStreetMap contributors): street centrelines and their class, footways,
@@ -34,17 +34,33 @@ import json
 import math
 import os
 import random
+import sys
 
 from pyproj import Transformer
 from shapely.geometry import LineString, MultiPolygon, Point, Polygon, box
 from shapely.ops import linemerge, polygonize, unary_union
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITE = json.load(open(os.path.join(HERE, "marievik_site.json"), encoding="utf-8"))
+# Which site to build: `python site/make_context.py lindangen` (or MVK_SITE=lindangen); Marievik by default.
+# Each site names its OpenStreetMap downloads (fetch_osm_context.py), the box of neighbouring buildings kept
+# for the analyses, the disc the viewer shows, its water's name and whether to add the Marievik quay trees.
+SITES = {
+    "marievik": {"osm": ["osm_context_north.json", "osm_context_south.json"], "clip": (-360, -480, 420, 360),
+                 "circle": ((30.0, -60.0), 650.0), "water": "Årstaviken", "quay_trees": True,
+                 "date": "2026-10-20"},
+    "lindangen": {"osm": ["osm_lindangen.json"], "clip": (-330, -330, 330, 360),
+                  "circle": ((0.0, 40.0), 440.0), "water": "", "quay_trees": False, "date": "2026-11-02",
+                  "yards": True,
+                  # the neighbouring 1960s housing is Skåne yellow brick too (Street View, Oct 2025)
+                  "wall": {"apartments": "#d3bd8a", "residential": "#d3bd8a"}},
+}
+KEY = (sys.argv[1] if len(sys.argv) > 1 else os.environ.get("MVK_SITE", "marievik")).lower()
+CFG = SITES[KEY]
+SITE = json.load(open(os.path.join(HERE, "%s_site.json" % KEY), encoding="utf-8"))
 OE, ON = SITE["origin_E"], SITE["origin_N"]
 TR = Transformer.from_crs(4326, 3006, always_xy=True)
-CLIP = box(-360, -480, 420, 360)              # the original box: neighbouring buildings for the analyses
-CIRCLE_C, CIRCLE_R = (30.0, -60.0), 650.0      # the disc the viewer shows
+CLIP = box(*CFG["clip"])                      # the original box: neighbouring buildings for the analyses
+CIRCLE_C, CIRCLE_R = CFG["circle"]             # the disc the viewer shows
 CIRCLE = Point(*CIRCLE_C).buffer(CIRCLE_R, 128)
 random.seed(7)
 
@@ -75,8 +91,8 @@ def _height(t):
 
 def load():
     nodes, ways, rels = {}, {}, {}
-    for part in ("north", "south"):
-        d = json.load(open(os.path.join(HERE, "osm_context_%s.json" % part), encoding="utf-8"))
+    for fn in CFG["osm"]:
+        d = json.load(open(os.path.join(HERE, fn), encoding="utf-8"))
         for e in d["elements"]:
             {"node": nodes, "way": ways, "relation": rels}[e["type"]][e["id"]] = e
     xy = {}
@@ -129,7 +145,7 @@ def multipolygon(rel, ways, xy):
 
 def main():
     nodes, ways, rels, xy = load()
-    out = {"source": "OpenStreetMap (ODbL, (c) OpenStreetMap contributors), downloaded 2026-10-20; widths and some trees estimated",
+    out = {"source": "OpenStreetMap (ODbL, (c) OpenStreetMap contributors), downloaded %s; widths and some trees estimated" % CFG["date"],
            "clip": [round(CIRCLE_C[0] - CIRCLE_R), round(CIRCLE_C[1] - CIRCLE_R), round(CIRCLE_C[0] + CIRCLE_R), round(CIRCLE_C[1] + CIRCLE_R)],
            "circle": [CIRCLE_C[0], CIRCLE_C[1], CIRCLE_R], "roads": [], "paths": [], "greens": [], "water": [], "piers": [],
            "rail": [], "trees": [], "lamps": [], "benches": [], "plazas": [], "buildings": [],
@@ -248,7 +264,7 @@ def main():
         pieces = list(polygonize(unary_union([CIRCLE.exterior] + [s.intersection(CIRCLE.buffer(1)) for s in shore])))
         water = [p for p in pieces if p.area > 500 and p.intersection(land_marks).area < 0.02 * p.area]
         if water:
-            out["water"].append({"rings": rings_of(unary_union(water)), "name": "Årstaviken"})
+            out["water"].append({"rings": rings_of(unary_union(water)), "name": CFG["water"]})
     waters = unary_union([Polygon(r[0], r[1:]) for w in out["water"] for r in w["rings"]]) if out["water"] else Polygon()
 
     # roads and paths as clean, non-overlapping surfaces
@@ -306,7 +322,7 @@ def main():
 
     # the quay: a row of large willows/limes along the water's edge (Street View), ~11 m apart,
     # where OpenStreetMap maps none
-    if not waters.is_empty:
+    if CFG["quay_trees"] and not waters.is_empty:
         edge = waters.boundary.intersection(CLIP.buffer(-2))   # the Marievik quay only
         for ln in (edge.geoms if hasattr(edge, "geoms") else [edge]):
             if ln.geom_type != "LineString" or ln.length < 30:
@@ -328,11 +344,67 @@ def main():
                     out["trees"].append({"p": [round(best.x, 2), round(best.y, 2)], "h": round(random.uniform(10, 15), 1),
                                          "leaf": "broadleaved", "src": "estimated (Street View, quay)", "species": "Salix"})
 
+    # Lindängen: the outdoor pools (Lindängsbadet) as water, and the green yards between the lamellas - lawns
+    # with big old trees in Google Street View (Oct 2025) that OpenStreetMap maps only as landuse=residential.
+    # Lawns are what is left of the housing land once buildings, streets, paths and car parks are taken out;
+    # trees ~1 per 300 m2 of yard (estimated), plus street trees ~12 m apart along the residential streets.
+    if CFG.get("yards"):
+        for w in ways.values():
+            t = w.get("tags", {})
+            if t.get("leisure") == "swimming_pool" and t.get("indoor") != "yes" and t.get("location") != "indoor":
+                p = poly_of(way_pts(w, xy))
+                if p is not None and CIRCLE.contains(p.centroid):
+                    out["water"].append({"rings": rings_of(p), "name": t.get("name", "Lindängsbadet"), "kind": "pool"})
+        waters = unary_union([Polygon(r[0], r[1:]) for w in out["water"] for r in w["rings"]]) if out["water"] else Polygon()
+        housing = [poly_of(way_pts(w, xy)) for w in ways.values() if w.get("tags", {}).get("landuse") == "residential"]
+        housing = unary_union([h for h in housing if h is not None] + [buildings.convex_hull.buffer(25)]).intersection(CIRCLE)
+        taken = unary_union([buildings.buffer(1.0), roads, waters] + [b.buffer(0.5) for b in osm_buildings] +
+                            [g for g, _ in path_polys] +
+                            [Polygon(r[0], r[1:]) for k in ("parking", "plazas") for e in out[k] for r in e["rings"]] +
+                            [Polygon(r[0], r[1:]) for g in out["greens"] for r in g["rings"]])
+        yard = housing.difference(taken)
+        yard = unary_union([p for p in (yard.geoms if hasattr(yard, "geoms") else [yard]) if p.geom_type == "Polygon" and p.area > 80])
+        if not yard.is_empty:
+            out["greens"].append({"kind": "grass", "rings": rings_of(yard), "name": "gårdar (estimated)"})
+            occupied2 = unary_union([buildings.buffer(5.0), roads.buffer(1.5)] + [b.buffer(3.0) for b in osm_buildings])
+            for poly in (yard.geoms if hasattr(yard, "geoms") else [yard]):
+                n = int(poly.area / 300)
+                x0, y0, x1, y1 = poly.bounds
+                tries = 0
+                while n > 0 and tries < n * 15:
+                    tries += 1
+                    p = Point(random.uniform(x0, x1), random.uniform(y0, y1))
+                    if poly.contains(p) and not occupied2.contains(p) and all(p.distance(q) > 7 for q in have):
+                        have.append(p)
+                        out["trees"].append({"p": [round(p.x, 2), round(p.y, 2)], "h": round(random.uniform(9, 17), 1),
+                                             "leaf": random.choice(["broadleaved"] * 5 + ["needleleaved"]),
+                                             "src": "estimated (Street View, yards)"})
+                        n -= 1
+        for w in ways.values():
+            t = w.get("tags", {})
+            if t.get("highway") not in ("residential", "tertiary") or len(way_pts(w, xy)) < 2:
+                continue
+            ln = LineString(way_pts(w, xy))
+            if ln.distance(buildings) > 120:
+                continue
+            for side in (-1, 1):
+                off = ln.parallel_offset(ROAD_W[t["highway"]] / 2 + 2.5, "left" if side < 0 else "right")
+                for part in (off.geoms if hasattr(off, "geoms") else [off]):
+                    if part.is_empty or part.length < 12:
+                        continue
+                    for k in range(int(part.length // 12)):
+                        q = part.interpolate(6 + k * 12)
+                        if CIRCLE.contains(q) and not occupied.contains(q) and not waters.contains(q) and \
+                                all(q.distance(o) > 6 for o in have):
+                            have.append(q)
+                            out["trees"].append({"p": [round(q.x, 2), round(q.y, 2)], "h": round(random.uniform(8, 13), 1),
+                                                 "leaf": "broadleaved", "src": "estimated (Street View, street trees)"})
+
     detail(out, nodes, ways, rels, xy, buildings, roads, waters, path_polys, have, free)
 
     for k in ("greens", "water", "piers", "plazas", "buildings", "massing", "parking", "platforms"):
         out[k] = [g for g in out[k] if g["rings"]]
-    path = os.path.join(HERE, "marievik_context.json")
+    path = os.path.join(HERE, "%s_context.json" % KEY)
     with open(path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, separators=(",", ":"))
     print("wrote", path, {k: len(v) for k, v in out.items() if isinstance(v, list)},
@@ -478,7 +550,7 @@ def detail(out, nodes, ways, rels, xy, study, roads, waters, path_polys, have, f
             z0 = max(z0, top - 0.4)
         explicit = (_num(t.get("height")) or _num(t.get("building:height"))) is not None
         wall = _hex(t.get("building:colour"), None)
-        wall = _mix(wall, "#e8e4dc", 0.45) if wall else WALL.get(kind, "#e4e1da")
+        wall = _mix(wall, "#e8e4dc", 0.45) if wall else CFG.get("wall", {}).get(kind) or WALL.get(kind, "#e4e1da")
         roof = None
         clipped = poly.intersection(CIRCLE)
         rr = _roof(t, poly, top, explicit) if clipped.area > 0.98 * poly.area and z0 < 0.5 else None

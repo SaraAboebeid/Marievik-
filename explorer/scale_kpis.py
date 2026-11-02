@@ -96,7 +96,7 @@ def district_kpis(site, settings: dict[str, dict] | None = None) -> dict:
     for b in blds:
         a = S.footprint(b).area
         for f in range(int(b["levels"])):
-            ft = studio_tenancy.floor_tenancy("marievik", b["id"], f, a, today=date.today().year)
+            ft = studio_tenancy.floor_tenancy(getattr(site, "key", "marievik"), b["id"], f, a, today=date.today().year)
             rented += ft["rented"]
             vacant += ft["vacant"]
     let = rented / (rented + vacant) if rented + vacant else 0

@@ -6,6 +6,7 @@ import type {
 import type { Method, Overlay } from '../App'
 import { Badge, Button, Card, Row, Section, Stat, StatGrid, Toggle } from './kit'
 import { DfHistogram, HotWeekChart } from './charts'
+import { bl } from '../codes'
 
 interface Props {
   site: SitePayload
@@ -29,7 +30,7 @@ interface Props {
 
 export function InfoPanel(p: Props) {
   const { level } = p
-  if (level.kind === 'site') return <SiteInfo {...p} />
+  if (level.kind === 'site') return null   // the site's figures are in the KPI strip (App.tsx siteFigures)
   const b = p.bdata[level.building]
   if (!b) return <Card title="Building"><p className="text-[12.5px] text-ink-2">Laying out…</p></Card>
   return (
@@ -50,28 +51,6 @@ export const useOf = (b: BuildingPayload, sb: SiteBuilding | undefined) => {
 /** Today's use of each building, as a colour (the same greens and pinks as the timeline and the donuts). */
 export const USE_DOT: Record<string, string> = { office: '#b9d27a', residential: '#c46ba4', retail: '#c97855', hotel: '#dfa00c', school: '#8a72d8' }
 
-function SiteInfo({ site, totals }: Props) {
-  const done = totals.loaded === site.buildings.length
-  return (
-    <>
-      <Card title="Site · current scenario" right={!done && <span className="font-mono text-[12px] text-ink-2">{totals.loaded}/{site.buildings.length} laid out</span>}>
-        <StatGrid>
-          <Stat label="Gross floor area" value={fmt(totals.gfa_m2)} unit="m²"
-            sub={totals.added_gfa_m2 ? `${fmt(totals.added_gfa_m2)} m² added on top` : 'no floors added'} />
-          <Stat label="Units" value={fmt(totals.units)} sub="apartments, offices, rooms…" />
-          <Stat label="New fit-out cost" value={nf1(totals.capex_sek / 1e6)} unit="MSEK" />
-          <Stat label="Upfront carbon A1–A5" value={fmt(totals.upfront_kgco2e / 1000)} unit="t CO₂e"
-            sub={`${fmt1(totals.gfa_m2 ? totals.upfront_kgco2e / totals.gfa_m2 : 0)} kg/m²`} />
-        </StatGrid>
-        <p className="mt-2.5 text-[12.5px] leading-snug text-ink-2">
-          Existing shells are retained (no new carbon). Prices and carbon come from the Marievik+ catalogue, mostly
-          placeholder values until EPDs and tenders replace them.
-        </p>
-      </Card>
-    </>
-  )
-}
-
 /** The open building: what it is, its headline figures, and a side-by-side with any other building. */
 function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: SitePayload; bdata: Record<string, BuildingPayload>; onGo: (l: Level) => void }) {
   const k = b.kpi
@@ -91,7 +70,7 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
   ]
   return (
     <>
-      <Card title={`Selected building · ${b.id}`}>
+      <Card title={`Selected building · ${bl(b.id)}`}>
         <h3 className="text-[16px] font-semibold leading-snug">{b.name}</h3>
         <p className="mb-2.5 text-[12.5px] text-ink-2">{useOf(b, sb)}</p>
         <StatGrid>
@@ -107,7 +86,7 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
               className="min-w-0 flex-1 rounded border border-line-strong bg-surface px-2 py-1 text-[12.5px] text-ink outline-none focus:border-ink-2">
               <option value="">choose a building…</option>
               {site.buildings.filter((x) => x.id !== b.id).map((x) => (
-                <option key={x.id} value={x.id} disabled={!bdata[x.id]}>{x.id} {x.name.split(' - ')[0]}</option>
+                <option key={x.id} value={x.id} disabled={!bdata[x.id]}>{bl(x.id)} {x.name.split(' - ')[0]}</option>
               ))}
             </select>
           </label>
@@ -115,9 +94,9 @@ function BuildingInfo({ b, site, bdata, onGo }: { b: BuildingPayload; site: Site
             <table className="mt-2 w-full text-[12px]">
               <thead>
                 <tr className="text-left font-mono text-[10.5px] uppercase tracking-wide text-ink-2">
-                  <th className="pb-1 font-medium" /><th className="pb-1 pl-2 text-right font-medium">{b.id}</th>
+                  <th className="pb-1 font-medium" /><th className="pb-1 pl-2 text-right font-medium">{bl(b.id)}</th>
                   <th className="pb-1 pl-2 text-right font-medium">
-                    <button className="uppercase underline-offset-2 hover:underline" onClick={() => onGo({ kind: 'building', building: o.id })} title="Open this building">{o.id}</button>
+                    <button className="uppercase underline-offset-2 hover:underline" onClick={() => onGo({ kind: 'building', building: o.id })} title="Open this building">{bl(o.id)}</button>
                   </th>
                 </tr>
               </thead>
@@ -229,7 +208,7 @@ function FloorInfo(p: Props & { b: BuildingPayload }) {
         </Card>
       ) : (
         <>
-          <Card title={`Floor ${floor.index} · ${b.id}`}>
+          <Card title={`Floor ${floor.index} · ${bl(b.id)}`}>
             <h3 className="mb-2.5 text-[15px] font-semibold leading-snug">
               {floor.use_label}{floor.added && <span className="ml-1.5 align-middle"><Badge tone="warn">added floor</Badge></span>}
             </h3>

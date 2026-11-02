@@ -1,0 +1,401 @@
+{
+ "_meta": {
+  "purpose": "Life around Lindängen for the explorer's Urban scale: the places that exist today and the amenities around the 16 buildings.",
+  "timeline_source": "No development timeline has been supplied for Lindängen yet: the 'timeline' lists places that already exist (as permanent, from 2024) so the panel has something to show. Replace with the owners' plan when it arrives.",
+  "categories_note": "Category per item inferred from its type.",
+  "location_sources": "OpenStreetMap (ODbL), downloaded 2026-11-02. confidence: osm = a mapped OSM feature.",
+  "updated": "2026-11-02"
+ },
+ "categories": {
+  "kultur": {
+   "label": "Kultur",
+   "colour": "#c46ba4"
+  },
+  "mat": {
+   "label": "Mat",
+   "colour": "#fd876e"
+  },
+  "hallbarhet": {
+   "label": "Hållbarhet",
+   "colour": "#128f6e"
+  },
+  "halsa": {
+   "label": "Hälsa",
+   "colour": "#3d8fd1"
+  },
+  "community": {
+   "label": "Community",
+   "colour": "#dfa00c"
+  },
+  "fysiska": {
+   "label": "Fysiska tillägg",
+   "colour": "#d8342b"
+  }
+ },
+ "timeline": [
+  {
+   "id": "badet",
+   "name": "Lindängsbadet",
+   "kind": "permanent",
+   "year": 2024,
+   "category": "halsa",
+   "lat": 55.5631306,
+   "lon": 13.0163203,
+   "building": null,
+   "place": "Outdoor pools north of Koralgatan",
+   "confidence": "osm",
+   "note": "Malmö stad's outdoor pool (summer season).",
+   "url": null
+  },
+  {
+   "id": "biblioteket",
+   "name": "Lindängenbiblioteket",
+   "kind": "permanent",
+   "year": 2024,
+   "category": "kultur",
+   "lat": 55.559353,
+   "lon": 13.014943,
+   "building": null,
+   "place": "Lindängens centrum",
+   "confidence": "osm",
+   "note": "Public library in the centre.",
+   "url": null
+  },
+  {
+   "id": "willys",
+   "name": "Willys Hemma Malmö Lindängen",
+   "kind": "permanent",
+   "year": 2024,
+   "category": "mat",
+   "lat": 55.558912,
+   "lon": 13.014858,
+   "building": null,
+   "place": "Lindängens centrum, Munkhättegatan 176",
+   "confidence": "osm",
+   "note": "Supermarket in the centre.",
+   "url": null
+  },
+  {
+   "id": "apotek",
+   "name": "Apotek Hjärtat",
+   "kind": "permanent",
+   "year": 2024,
+   "category": "halsa",
+   "lat": null,
+   "lon": null,
+   "building": null,
+   "place": "Lindängens centrum",
+   "confidence": "osm",
+   "note": "Pharmacy.",
+   "url": null
+  }
+ ],
+ "amenities": [
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.564967,
+   "lon": 13.016116,
+   "addr": "",
+   "osm": "node/2886616362",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.56517,
+   "lon": 13.017795,
+   "addr": "",
+   "osm": "node/2886616374",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.565318,
+   "lon": 13.019304,
+   "addr": "",
+   "osm": "node/2886616375",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.559168,
+   "lon": 13.019773,
+   "addr": "",
+   "osm": "node/2902815551",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.559197,
+   "lon": 13.018891,
+   "addr": "",
+   "osm": "node/2902815552",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.559416,
+   "lon": 13.018129,
+   "addr": "",
+   "osm": "node/2902815553",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.560181,
+   "lon": 13.016901,
+   "addr": "",
+   "osm": "node/2902815582",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.560212,
+   "lon": 13.019324,
+   "addr": "",
+   "osm": "node/2902815583",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.560844,
+   "lon": 13.012552,
+   "addr": "",
+   "osm": "node/2902816703",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5617,
+   "lon": 13.019944,
+   "addr": "",
+   "osm": "node/2902816717",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.562453,
+   "lon": 13.012944,
+   "addr": "",
+   "osm": "node/2902816724",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.562723,
+   "lon": 13.020413,
+   "addr": "",
+   "osm": "node/2902816726",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.560145,
+   "lon": 13.01764,
+   "addr": "",
+   "osm": "node/2930229932",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fosie livs",
+   "type": "supermarket",
+   "lat": 55.558776,
+   "lon": 13.018255,
+   "addr": "",
+   "osm": "node/3786483534",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fitness24seven",
+   "type": "spa",
+   "lat": 55.557992,
+   "lon": 13.018981,
+   "addr": "",
+   "osm": "node/5775943029",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Abo Kresh Bagari",
+   "type": "cafe",
+   "lat": 55.559129,
+   "lon": 13.014586,
+   "addr": "",
+   "osm": "node/10754116866",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fish & Shrimps",
+   "type": "restaurant",
+   "lat": 55.559149,
+   "lon": 13.015121,
+   "addr": "",
+   "osm": "node/10754116868",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Grill Hörnan",
+   "type": "restaurant",
+   "lat": 55.558841,
+   "lon": 13.01456,
+   "addr": "",
+   "osm": "node/10754116869",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Lindängens Pizzeria",
+   "type": "restaurant",
+   "lat": 55.55897,
+   "lon": 13.014576,
+   "addr": "",
+   "osm": "node/10754116871",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Willys Hemma Malmö Lindängen",
+   "type": "supermarket",
+   "lat": 55.558912,
+   "lon": 13.014858,
+   "addr": "Munkhättegatan",
+   "osm": "node/10754116872",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Lindängenbiblioteket",
+   "type": "community",
+   "lat": 55.559353,
+   "lon": 13.014943,
+   "addr": "",
+   "osm": "node/10754116874",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Lindängen Tobak & Spel",
+   "type": "supermarket",
+   "lat": 55.558198,
+   "lon": 13.016276,
+   "addr": "",
+   "osm": "node/10754157909",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Lindängsbadet",
+   "type": "spa",
+   "lat": 55.5631306,
+   "lon": 13.0163203,
+   "addr": "",
+   "osm": "way/28549733",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Fosie kyrka",
+   "type": "community",
+   "lat": 55.5626575,
+   "lon": 13.0250938,
+   "addr": "",
+   "osm": "way/28558032",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Heliga Korsets Kapell",
+   "type": "community",
+   "lat": 55.5618249,
+   "lon": 13.0238685,
+   "addr": "",
+   "osm": "way/230610822",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5632109,
+   "lon": 13.0196725,
+   "addr": "",
+   "osm": "way/1419483497",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5600066,
+   "lon": 13.0134878,
+   "addr": "",
+   "osm": "way/1571403507",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5619032,
+   "lon": 13.0140484,
+   "addr": "",
+   "osm": "way/1571403508",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5619167,
+   "lon": 13.0171002,
+   "addr": "",
+   "osm": "way/1571403510",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5613122,
+   "lon": 13.0194218,
+   "addr": "",
+   "osm": "way/1571403514",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5612744,
+   "lon": 13.0202054,
+   "addr": "",
+   "osm": "way/1571403516",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5617158,
+   "lon": 13.020098,
+   "addr": "",
+   "osm": "way/1571403519",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5627918,
+   "lon": 13.0196541,
+   "addr": "",
+   "osm": "way/1571403525",
+   "source": "OpenStreetMap"
+  },
+  {
+   "name": "Playground",
+   "type": "playground",
+   "lat": 55.5595199,
+   "lon": 13.0197801,
+   "addr": "",
+   "osm": "way/1571403566",
+   "source": "OpenStreetMap"
+  }
+ ]
+}

@@ -339,7 +339,7 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
       <script>
       (function () {
         var NS = 'http://www.w3.org/2000/svg'
-        var PLACES = [{"id": "marievik", "name": "Marievik", "city": "Stockholm", "lat": 59.3105, "lon": 18.0235, "modelled": true, "x": 525.5, "y": 589.5}, {"id": "uppsala", "name": "Uppsala", "city": "Uppsala", "lat": 59.8586, "lon": 17.6389, "modelled": false, "x": 505.9, "y": 537.3}, {"id": "lillabommen", "name": "Lilla Bommen", "city": "Göteborg", "lat": 57.7128, "lon": 11.9686, "modelled": false, "x": 220.9, "y": 741.6}, {"id": "gothenburg_schools", "name": "Schools", "city": "Göteborg", "lat": 57.7089, "lon": 11.9746, "modelled": false, "x": 221.2, "y": 742.0}, {"id": "skelleftea_campus", "name": "University campus", "city": "Skellefteå", "lat": 64.7507, "lon": 20.9528, "modelled": false, "x": 632.3, "y": 71.4}, {"id": "lindangen", "name": "Lindängen", "city": "Malmö", "lat": 55.56, "lon": 13.03, "modelled": false, "x": 264.5, "y": 946.7}, {"id": "sandvangen", "name": "Sandvången", "city": "Malmö", "lat": 55.59, "lon": 12.99, "modelled": false, "x": 262.5, "y": 943.8}]
+        var PLACES = [{"id": "marievik", "name": "Marievik", "city": "Stockholm", "lat": 59.3105, "lon": 18.0235, "modelled": true, "x": 525.5, "y": 589.5}, {"id": "uppsala", "name": "Uppsala", "city": "Uppsala", "lat": 59.8586, "lon": 17.6389, "modelled": false, "x": 505.9, "y": 537.3}, {"id": "lillabommen", "name": "Lilla Bommen", "city": "Göteborg", "lat": 57.7128, "lon": 11.9686, "modelled": false, "x": 220.9, "y": 741.6}, {"id": "gothenburg_schools", "name": "Schools", "city": "Göteborg", "lat": 57.7089, "lon": 11.9746, "modelled": false, "x": 221.2, "y": 742.0}, {"id": "skelleftea_campus", "name": "University campus", "city": "Skellefteå", "lat": 64.7507, "lon": 20.9528, "modelled": false, "x": 632.3, "y": 71.4}, {"id": "lindangen", "name": "Lindängen", "city": "Malmö", "lat": 55.5614, "lon": 13.0195, "modelled": true, "x": 264.5, "y": 946.7}, {"id": "sandvangen", "name": "Sandvången", "city": "Malmö", "lat": 55.59, "lon": 12.99, "modelled": false, "x": 262.5, "y": 943.8}]
         var PJ = {"lon0": 16.5, "x0": -4.74, "k": 95.23809523809524, "n": 65.5}
         function P(lat, lon) {   // the same sinusoidal projection the outlines were drawn with
           var x = (lon - PJ.lon0) * Math.cos(lat * Math.PI / 180)
@@ -539,7 +539,7 @@ footer span:last-child{margin-left:auto; font-family:var(--mono); text-transform
         <span class="pin" aria-hidden="true"></span><b>Marievik</b><span class="city">Stockholm</span>
       </button>
       <button type="button" class="proj" role="radio" data-project="lindangen" aria-checked="false">
-        <span class="pin" aria-hidden="true"></span><b>Lindängen</b><span class="city">Malmö</span><span class="tag">Placeholder</span>
+        <span class="pin" aria-hidden="true"></span><b>Lindängen</b><span class="city">Malmö</span>
       </button>
       <button type="button" class="proj" role="radio" data-project="sandvangen" aria-checked="false">
         <span class="pin" aria-hidden="true"></span><b>Sandvången</b><span class="city">Malmö</span><span class="tag">Placeholder</span>

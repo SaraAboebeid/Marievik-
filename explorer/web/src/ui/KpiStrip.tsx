@@ -13,6 +13,13 @@ interface Props {
   valuesFrom: 'here' | 'building' | null    // 'building': on a floor, the figures are the whole building's
   waiting: string | null                    // why there are no values yet ("Pick a building", "Calculating…")
   onExplain: (kpi: string) => void
+  site?: SiteFigures | null                 // with no building open: the whole site's current scenario, first in the strip
+}
+
+export interface SiteFigures {
+  tiles: { label: string; value: string; unit?: string; sub?: string }[]
+  note: string        // where the figures come from (the tooltip of the group's label)
+  progress?: string   // "4/13 laid out" while the buildings are still being laid out
 }
 
 const TONE = {
@@ -25,7 +32,7 @@ const TONE = {
  *  scale_kpis), then the ones followed from the landing page that this scale doesn't already show, then the
  *  profile's KPIs that belong to no place (decision influence, ...) in a Project chip. Each tile says honestly
  *  whether it is calculated here, borrowed from the building, a placeholder, or not available at this scale. */
-export function KpiStrip({ scale, profile, cavfKpis, pinned, methods, values, valuesFrom, waiting, onExplain }: Props) {
+export function KpiStrip({ scale, profile, cavfKpis, pinned, methods, values, valuesFrom, waiting, onExplain, site }: Props) {
   const [open, setOpen] = useState(() => { try { return localStorage.getItem('mvx-kpistrip') !== '0' } catch { return true } })
   const toggle = () => setOpen((o) => { try { localStorage.setItem('mvx-kpistrip', o ? '0' : '1') } catch { /* private window */ } return !o })
 
@@ -67,7 +74,7 @@ export function KpiStrip({ scale, profile, cavfKpis, pinned, methods, values, va
     )
   }
 
-  if (!atScale.length && !followed.length) return null
+  if (!atScale.length && !followed.length && !site) return null
   return (
     <div className="-mx-4 -mb-2 mt-0.5 basis-full border-t-2 border-edge bg-sunken/70">
       <div className="flex items-stretch gap-2 px-4 py-1.5">
@@ -78,6 +85,25 @@ export function KpiStrip({ scale, profile, cavfKpis, pinned, methods, values, va
         </button>
         {open && (
           <div className="flex min-w-0 flex-1 items-stretch gap-1.5 overflow-x-auto pb-0.5">
+            {site && (
+              <>
+                <span className="flex shrink-0 flex-col justify-center px-1 font-mono text-[9.5px] uppercase tracking-[0.08em] text-ink-2" title={site.note}>
+                  Site · now
+                  {site.progress && <span className="normal-case tracking-normal text-muted">{site.progress}</span>}
+                </span>
+                {site.tiles.map((t) => (
+                  <div key={t.label} title={`${t.label}${t.sub ? ` · ${t.sub}` : ''}\n${site.note}`}
+                    className="flex min-w-[8.5rem] max-w-[13rem] shrink-0 flex-col items-start rounded-md border-2 border-edge bg-surface px-2 py-1 shadow-[2px_2px_0_var(--color-edge)]">
+                    <span className="w-full truncate font-mono text-[9.5px] uppercase tracking-[0.06em] text-ink-2">{t.label}</span>
+                    <span className="whitespace-nowrap font-mono text-[13.5px] font-semibold tabular-nums leading-tight text-ink">
+                      {t.value}{t.unit && <span className="ml-1 font-sans text-[10px] font-normal text-ink-2">{t.unit}</span>}
+                    </span>
+                    {t.sub && <span className="w-full truncate text-[10px] leading-tight text-muted">{t.sub}</span>}
+                  </div>
+                ))}
+                {(atScale.length > 0 || followed.length > 0) && <span className="mx-1 w-0.5 shrink-0 self-stretch bg-edge/40" aria-hidden />}
+              </>
+            )}
             {atScale.map((k) => tile(k, 'scale'))}
             {followed.length > 0 && (
               <>

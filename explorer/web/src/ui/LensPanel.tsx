@@ -5,6 +5,7 @@ import { LAYER_HINT, LAYER_LABEL } from './LayerBar'
 import { LAYERS_AT, LAYER_ORDER, type Layer } from '../layers'
 import type { StudioView } from '../viewer/Viewer'
 import type { Scenario } from '../studio/crowd'
+import { bl } from '../codes'
 
 // Floor scale uses the same lens row as the other scales, plus Room use; each lens it has is one of the floor's own
 // views (None = the plain furnished plan, Vacancy = the floor zoned rented/vacant). The rest grey out.
@@ -77,7 +78,7 @@ export function LensPanel({ floorOpen, scale, layer, setLayer, view, setView, ex
         </>
       ) : (
         <Seg value={layer} options={LAYER_ORDER.map((id) => [id, LAYER_LABEL[id]] as [Layer, string])} onChange={setLayer}
-          hint={LAYER_HINT} wrapClass={pill} disabled={disabled} />
+          hint={Object.fromEntries(Object.entries(LAYER_HINT).map(([k, v]) => [k, v.replace(/B01/g, bl('B01'))])) as typeof LAYER_HINT} wrapClass={pill} disabled={disabled} />
       )}
       <label className={`${pill} cursor-pointer gap-2 px-3 py-1.5`} title="Explode floors: pull every floor apart and show each one's real plan - walls, rooms and units, not just the box.">
         <input type="checkbox" className="h-3.5 w-3.5 accent-[color:var(--color-accent)]" checked={explode > 0}

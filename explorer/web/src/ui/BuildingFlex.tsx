@@ -4,6 +4,7 @@ import { W as PLATE_W, type StudioMeta, type StudioPayload } from '../studio/eng
 import { GYPSUM, runCosts, smartax, solidM2, sumCosts, wallDiff, type ChangeCost, type SmartaxMode, type SystemSpec } from '../flex'
 import type { FlexFrame, FlexFloorFrame } from '../viewer/Viewer'
 import { DecadeChart, fmtK, fmtN } from './FlexDrawer'
+import { bl } from '../codes'
 
 // Flexibility at Building scale (B01): the whole building as an exploded stack of its floors, built twice side by
 // side — Smartax walls on the left, fixed gypsum walls on the right — through ten years in which every floor keeps
@@ -182,7 +183,7 @@ export function BuildingFlex({ meta, onOpenFloor, onClose, onFrame }: {
   return (
     <div className="pointer-events-auto flex max-h-[min(30rem,50vh)] w-full flex-col overflow-hidden rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex flex-wrap items-center justify-between gap-2 px-3.5 pb-2 pt-1">
-        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Flexibility · B01 · Smartax left, gypsum right</h4>
+        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Flexibility · {bl('B01')} · Smartax left, gypsum right</h4>
         <span className="flex items-center gap-1.5">
           <button type="button" onClick={() => setSmall(!small)} aria-expanded={!small} title={small ? 'Show the figures, charts and floor plans' : 'Fold away, to see more of the model'}
             className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[11px] font-bold">{small ? 'more ▴' : 'less ▾'}</button>

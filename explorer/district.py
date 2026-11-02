@@ -35,7 +35,7 @@ B01_SECTOR = {"Tech company": "office_corporate", "Consultancy": "office_sme", "
               "Engineering firm": "office_corporate", "Media house": "office_corporate", "Start-up hub": "office_sme",
               "Coworking operator": "cowork", "Law firm": "office_sme", "Food and drink": "food"}
 ATTRS = ("transit", "life", "green", "water", "quality", "flex", "evening", "workers")
-_prep: dict | None = None
+_preps: dict[str, dict] = {}       # per site
 
 
 def market() -> dict:
@@ -52,9 +52,9 @@ def _h(s: str) -> int:
 # ------------------------------------------------------------------ the district as it stands
 def prepare(site) -> dict:
     """Buildings, their fixed location qualities and today's units (cached: the site does not change)."""
-    global _prep
-    if _prep is not None:
-        return _prep
+    key = getattr(site, "key", "marievik")
+    if key in _preps:
+        return _preps[key]
     from parametric.mvk import site as S   # noqa: WPS433 (the explorer's own site helpers)
     from .studio import tenancy
 
@@ -76,8 +76,8 @@ def prepare(site) -> dict:
             "green_m2": u.get("green_m2", 0) + u.get("plaza_m2", 0),
         })
     near = {a["id"]: [b["id"] for b in blds if a["fp"].distance(b["fp"]) <= REACH] for a in blds}
-    _prep = {"buildings": blds, "near": near, "market": mk}
-    return _prep
+    _preps[key] = {"buildings": blds, "near": near, "market": mk}
+    return _preps[key]
 
 
 def _initial_units(prep, project: str = "marievik") -> list[dict]:

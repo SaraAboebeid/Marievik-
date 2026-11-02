@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LEASE_STEPS, eventsIn, quarterLabel, rentedShare, stepTime, type Lease, type LeaseBook } from '../leases'
+import { bl } from '../codes'
 
 const KIND = {
   in: { label: 'Moves in', dot: 'bg-[#e08a1e]' },
@@ -158,7 +159,7 @@ export function LeaseTimeline({ book, buildings, focus, step, setStep, playing, 
                     className={`cursor-pointer border-t border-line ${r.q === step ? 'bg-coral/35 font-semibold' : r.q < step ? 'text-ink-2' : ''} hover:bg-sunken`}>
                     <td className="whitespace-nowrap px-2 py-0.5 font-mono">{quarterLabel(stepTime(r.q))}</td>
                     <td className="whitespace-nowrap px-2 py-0.5"><i className={`mr-1.5 inline-block h-2 w-2 rounded-full ${KIND[r.kind].dot}`} />{KIND[r.kind].label}</td>
-                    <td className="px-2 py-0.5 font-mono">{r.building}</td>
+                    <td className="px-2 py-0.5 font-mono">{bl(r.building)}</td>
                     <td className="whitespace-nowrap px-2 py-0.5">{r.name}</td>
                     <td className="whitespace-nowrap px-2 py-0.5">{r.lease.tenant}</td>
                     <td className="whitespace-nowrap px-2 py-0.5 font-mono text-[10.5px]">{term(r.lease)}</td>

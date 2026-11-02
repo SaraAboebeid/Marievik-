@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { FloorPayload } from '../types'
-import { KINDS, PROGRAMME, SEASONS, ZONES, fmtHour, nightOf, onAt, streetLife, sunAt, unitProgram, weatherAt } from '../seasons'
+import { KINDS, PROGRAMME, SEASONS, SITE_NAME, ZONES, fmtHour, nightOf, onAt, streetLife, sunAt, unitProgram, weatherAt } from '../seasons'
 
 // Seasons & hours: one day in each season at Marievik, morning to the next morning, played or scrubbed. The
 // viewer (viewer/seasonShow.ts) draws it; this bar is the clock, the day's programme per place, and what's on now.
@@ -8,10 +8,11 @@ import { KINDS, PROGRAMME, SEASONS, ZONES, fmtHour, nightOf, onAt, streetLife, s
 const H0 = 6, H1 = 30   // the day runs 06:00 → 06:00
 const SPEEDS = [0.5, 1, 2, 4]
 
-export function SeasonPanel({ floors, onClock, onOrbit, onClose }: {
+export function SeasonPanel({ floors, onClock, onOrbit, onLayout, onClose }: {
   floors: FloorPayload[]
   onClock: (season: number, hour: number, labels: boolean) => void
   onOrbit: (radPerSecond: number) => void
+  onLayout?: () => void
   onClose: () => void
 }) {
   const [season, setSeason] = useState(3)
@@ -26,6 +27,7 @@ export function SeasonPanel({ floors, onClock, onOrbit, onClose }: {
   useEffect(() => { onClock(season, hour, labels) }, [season, hour, labels])   // eslint-disable-line react-hooks/exhaustive-deps
   // the 360: the view circles the site while the year plays (drag to look around; it carries on after)
   useEffect(() => { onOrbit(orbit && playing ? 0.07 : 0) }, [orbit, playing])   // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { const t = window.setTimeout(() => onLayout?.(), 60); return () => window.clearTimeout(t) }, [small])   // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => onOrbit(0), [])   // eslint-disable-line react-hooks/exhaustive-deps
   // the clock: a day in ~40 s at 1x, then on to the next season at dawn
   useEffect(() => {
@@ -90,7 +92,7 @@ export function SeasonPanel({ floors, onClock, onOrbit, onClose }: {
   return (
     <div className="pointer-events-auto flex max-h-[min(30rem,46vh)] w-full flex-col overflow-hidden rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex flex-wrap items-center justify-between gap-2 px-3.5 pb-2 pt-1" style={{ background: s.tint }}>
-        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[#202020]">Seasons &amp; hours · Marievik through the year</h4>
+        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[#202020]">Seasons &amp; hours · {SITE_NAME} through the year</h4>
         <span className="flex items-center gap-1.5">
           <span className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[12px] font-bold">{s.icon} {s.label} · {fmtHour(hour)}</span>
           <span className="hidden rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[11px] sm:inline" title="Weather">{w.icon} {w.label}</span>
@@ -153,7 +155,8 @@ export function SeasonPanel({ floors, onClock, onOrbit, onClose }: {
                 <span className="absolute left-0 top-0 z-10 rounded-sm bg-raised/90 pr-1 font-mono text-[9.5px] font-semibold leading-[18px]">Ground floors</span>
                 <span className="absolute top-0.5 h-[14px] rounded-sm border border-edge px-1 text-[9.5px] leading-[12px]" style={{ left: pct(7), width: `calc(${pct(17)} - ${pct(7)})`, background: KINDS.work.colour }}>offices, shops, cafés, lunch</span>
                 <span className="absolute top-0.5 h-[14px] overflow-hidden whitespace-nowrap rounded-sm border border-edge px-1 text-[9.5px] leading-[12px]" style={{ left: pct(17), width: `calc(${pct(23)} - ${pct(17)})`, background: KINDS.craft.colour }}>yoga, pottery, quiz, bars, dinner</span>
-                <span className="absolute top-0.5 h-[14px] overflow-hidden whitespace-nowrap rounded-sm border border-edge px-1 text-[9.5px] leading-[12px]" style={{ left: pct(23), width: `calc(${pct(26)} - ${pct(23)})`, background: KINDS.party.colour }}>late</span>
+                <span className="absolute top-0.5 h-[14px] overflow-hidden whitespace-nowrap rounded-sm border border-edge px-1 text-[9.5px] leading-[12px]" style={{ left: pct(23), width: `calc(${pct(26)} - ${pct(23)})`, background: KINDS.party.colour }}>late bars, study, after-parties</span>
+                <span className="absolute top-0.5 h-[14px] overflow-hidden whitespace-nowrap rounded-sm border border-edge px-1 text-[9.5px] leading-[12px]" style={{ left: pct(26), width: `calc(${pct(30)} - ${pct(26)})`, background: KINDS.food.colour }}>bakers, cleaners, sunrise yoga, breakfast</span>
               </div>
             </div>
           )}

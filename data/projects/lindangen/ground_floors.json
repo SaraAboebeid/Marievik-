@@ -1,0 +1,98 @@
+{
+ "_meta": {
+  "purpose": "What is on each Lindängen building's ground floor, as a programme the explorer turns into a MOCK-UP ground-floor plan (parametric/mvk/ground.py). The lamellas keep apartments on the ground floor (not listed).",
+  "status": "MOCK-UP. Nothing here is surveyed: the 8-storey slabs (Hus 14-16) are given an entrance hall, a laundry, a residents' room and a bike & waste room, as is typical of 1960s Malmö slabs, for discussion. Replace with the owners' plans.",
+  "sources": "mock-up",
+  "kinds": "supermarket | restaurant | cafe | gym | event | shop | lobby | bike. 'share' = share of the floor left once the core and back of house are taken out.",
+  "updated": "2026-11-02"
+ },
+ "buildings": {
+  "H14": {
+   "use": "residential",
+   "spaces": [
+    {
+     "kind": "lobby",
+     "name": "Residents' entrance",
+     "share": 0.22,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Tvättstuga (laundry)",
+     "share": 0.2,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Föreningslokal (residents' room)",
+     "share": 0.33,
+     "source": "mock-up"
+    },
+    {
+     "kind": "bike",
+     "name": "Bike & waste room",
+     "share": 0.25,
+     "source": "mock-up"
+    }
+   ]
+  },
+  "H15": {
+   "use": "residential",
+   "spaces": [
+    {
+     "kind": "lobby",
+     "name": "Residents' entrance",
+     "share": 0.22,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Tvättstuga (laundry)",
+     "share": 0.2,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Föreningslokal (residents' room)",
+     "share": 0.33,
+     "source": "mock-up"
+    },
+    {
+     "kind": "bike",
+     "name": "Bike & waste room",
+     "share": 0.25,
+     "source": "mock-up"
+    }
+   ]
+  },
+  "H16": {
+   "use": "residential",
+   "spaces": [
+    {
+     "kind": "lobby",
+     "name": "Residents' entrance",
+     "share": 0.22,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Tvättstuga (laundry)",
+     "share": 0.2,
+     "source": "mock-up"
+    },
+    {
+     "kind": "event",
+     "name": "Föreningslokal (residents' room)",
+     "share": 0.33,
+     "source": "mock-up"
+    },
+    {
+     "kind": "bike",
+     "name": "Bike & waste room",
+     "share": 0.25,
+     "source": "mock-up"
+    }
+   ]
+  }
+ }
+}

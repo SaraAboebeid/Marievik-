@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { api, fmt, fmt1, SYSTEM_COLOR, SYSTEM_LABEL } from '../api'
 import type { BuildingPayload, Settings, Supplier, SupplierCompare, SupplierSystemResult } from '../types'
 import { Badge, Button, Toggle } from './kit'
+import { bl } from '../codes'
 
 interface Props {
   suppliers: Supplier[]
@@ -120,9 +121,9 @@ export function SupplierDrawer({ suppliers, building, settings, onApply, onClose
           {building ? `In ${building.id} ${building.name.split(' - ')[0]}, same uses, three ways to build the walls` : 'In a building'}
         </h4>
         {building && (using
-          ? <span className="flex items-center gap-2"><Badge tone="good">{building.id} uses {sup.title}</Badge>
+          ? <span className="flex items-center gap-2"><Badge tone="good">{bl(building.id)} uses {sup.title}</Badge>
               <Button onClick={() => onApply('conventional')}>Switch {building.id} back to conventional</Button></span>
-          : <Button primary onClick={() => onApply(sup.system)}>Use {sup.title} in {building.id}</Button>)}
+          : <Button primary onClick={() => onApply(sup.system)}>Use {sup.title} in {bl(building.id)}</Button>)}
       </div>
       {!building && <p className="mb-4 text-[13px] text-ink-2">Open a building to see how {sup.title} compares there: the layout picks the
         cheapest build that meets each wall's sound and fire requirement.</p>}

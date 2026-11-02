@@ -6,11 +6,16 @@ import type { CompareRow, Occupancy, Params, StudioMeta, StudioPayload, Variants
 import type { FloorTenancy } from './studio/tenancy'
 import type { UrbanLife } from './urbanLife'
 import type { CompareCardRow, DistrictMeta, DistrictResult, EvacResult, LayerData } from './layers'
+import { readChoice } from './profile'
+
+// Every request names the project's site (?project= in the URL): the server keeps one model per site
+// (parametric/site/<project>_site.json) and opens Marievik for projects without one.
+const SITE_KEY = readChoice().project
 
 async function call<T>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(path, body === undefined ? undefined : {
+  const res = await fetch(path, body === undefined ? { headers: { 'X-Site': SITE_KEY } } : {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Site': SITE_KEY },
     body: JSON.stringify(body),
   })
   if (!res.ok) {

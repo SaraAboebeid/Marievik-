@@ -1,0 +1,5954 @@
+{
+ "name": "Lindängen, Malmö",
+ "crs": "EPSG:3006 SWEREF 99 TM",
+ "origin_E": 375050.0,
+ "origin_N": 6159060.0,
+ "location": {
+  "name": "Lindängen, Malmö",
+  "lat": 55.5614,
+  "lon": 13.0195,
+  "tz": 1.0,
+  "epw": "SWE_SK_Malmo.026360_TMYx.2011-2025.epw"
+ },
+ "note": "Model coordinates = SWEREF 99 TM minus origin (metres). Footprints from OpenStreetMap (ODbL, © OpenStreetMap contributors), downloaded 2026-11-02; storeys and Hus numbers from Sara's site sketch (680 apartments, 44 532 m2); facades from Google Street View - visual estimates.",
+ "summary": {
+  "apartments": 680,
+  "area_m2": 44532,
+  "buildings": 16
+ },
+ "profile_overrides": {
+  "residential": {
+   "unit_width": 5.4
+  }
+ },
+ "buildings": [
+  {
+   "id": "H01",
+   "name": "Koralgatan 17–33 - Hus 1, Hymnen 1",
+   "hus": 1,
+   "property": "Hymnen 1",
+   "address": "Koralgatan 17–33",
+   "osm_id": "way/33709976",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     83.98,
+     152.61
+    ],
+    [
+     26.52,
+     158.36
+    ],
+    [
+     27.69,
+     170.36
+    ],
+    [
+     36.37,
+     169.44
+    ],
+    [
+     50.4,
+     168.04
+    ],
+    [
+     64.43,
+     166.64
+    ],
+    [
+     78.47,
+     165.24
+    ],
+    [
+     92.5,
+     163.83
+    ],
+    [
+     106.53,
+     162.43
+    ],
+    [
+     120.57,
+     161.03
+    ],
+    [
+     130.76,
+     159.96
+    ],
+    [
+     130.13,
+     153.41
+    ],
+    [
+     129.6,
+     147.97
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1246.3,
+   "facade": {
+    "material": "render_cream",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.34,
+    "sill": 0.8,
+    "head": 2.3,
+    "balconies": true,
+    "accent": "brick_maroon",
+    "notes": "Re-rendered pale cream lamella: red-brown stair bands on the entrance side, full-width glazed balconies between white cross-walls on the garden side, yellow-brick gables.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H02",
+   "name": "Koralgatan 1–15 - Hus 2, Hymnen 1",
+   "hus": 2,
+   "property": "Hymnen 1",
+   "address": "Koralgatan 1–15",
+   "osm_id": "way/33709975",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     76.95,
+     107.48
+    ],
+    [
+     22.01,
+     112.84
+    ],
+    [
+     23.17,
+     124.83
+    ],
+    [
+     28.77,
+     124.34
+    ],
+    [
+     43.88,
+     122.9
+    ],
+    [
+     58.98,
+     121.36
+    ],
+    [
+     74.08,
+     119.93
+    ],
+    [
+     89.19,
+     118.49
+    ],
+    [
+     104.29,
+     117.06
+    ],
+    [
+     119.4,
+     115.52
+    ],
+    [
+     126.63,
+     114.87
+    ],
+    [
+     126.01,
+     108.42
+    ],
+    [
+     125.47,
+     102.87
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1257.4,
+   "facade": {
+    "material": "render_cream",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.34,
+    "sill": 0.8,
+    "head": 2.3,
+    "balconies": true,
+    "accent": "brick_maroon",
+    "notes": "Re-rendered pale cream lamella: red-brown stair bands on the entrance side, full-width glazed balconies between white cross-walls on the garden side, yellow-brick gables.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H03",
+   "name": "Koralgatan 12–20 - Hus 3, Kantaten 1",
+   "hus": 3,
+   "property": "Kantaten 1",
+   "address": "Koralgatan 12–20",
+   "osm_id": "way/211414240",
+   "osm_tags": {
+    "building": "apartments"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     48.4,
+     62.53
+    ],
+    [
+     58.03,
+     61.7
+    ],
+    [
+     70.68,
+     60.45
+    ],
+    [
+     85.16,
+     59.14
+    ],
+    [
+     92.9,
+     58.48
+    ],
+    [
+     91.8,
+     46.26
+    ],
+    [
+     69.14,
+     48.35
+    ],
+    [
+     47.23,
+     50.32
+    ]
+   ],
+   "holes": [],
+   "area_m2": 547.3,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H04",
+   "name": "Koralgatan 2–10, Kantatgatan 1–9 - Hus 4, Kantaten 1",
+   "hus": 4,
+   "property": "Kantaten 1",
+   "address": "Koralgatan 2–10, Kantatgatan 1–9",
+   "osm_id": "way/33707957",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     110.01,
+     58.44
+    ],
+    [
+     116.93,
+     57.91
+    ],
+    [
+     123.29,
+     57.28
+    ],
+    [
+     112.23,
+     -62.67
+    ],
+    [
+     106.19,
+     -62.05
+    ],
+    [
+     98.95,
+     -61.4
+    ],
+    [
+     99.77,
+     -52.52
+    ],
+    [
+     101.14,
+     -37.97
+    ],
+    [
+     102.51,
+     -23.08
+    ],
+    [
+     103.87,
+     -8.31
+    ],
+    [
+     105.33,
+     7.35
+    ],
+    [
+     106.71,
+     22.67
+    ],
+    [
+     108.08,
+     37.22
+    ],
+    [
+     109.45,
+     52.33
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1603.8,
+   "facade": {
+    "material": "render_cream",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.3,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "accent": "brick_maroon",
+    "notes": "Pale cream render with white-framed windows and red-brown stair bands; yellow-brick gables.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H05",
+   "name": "Koralgatan 30–34 - Hus 5, Kantaten 1",
+   "hus": 5,
+   "property": "Kantaten 1",
+   "address": "Koralgatan 30–34",
+   "osm_id": "way/211414238",
+   "osm_tags": {
+    "building": "apartments"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     42.49,
+     5.69
+    ],
+    [
+     50.36,
+     4.9
+    ],
+    [
+     64.52,
+     3.61
+    ],
+    [
+     79.38,
+     2.3
+    ],
+    [
+     87.24,
+     1.51
+    ],
+    [
+     86.07,
+     -10.92
+    ],
+    [
+     41.38,
+     -6.75
+    ]
+   ],
+   "holes": [],
+   "area_m2": 560.6,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H06",
+   "name": "Koralgatan 22–38, Kantatgatan 25–31 - Hus 6, Kantaten 1",
+   "hus": 6,
+   "property": "Kantaten 1",
+   "address": "Koralgatan 22–38, Kantatgatan 25–31",
+   "osm_id": "way/33707953",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     18.9,
+     -53.44
+    ],
+    [
+     6.25,
+     -52.3
+    ],
+    [
+     14.8,
+     39.44
+    ],
+    [
+     17.52,
+     68.42
+    ],
+    [
+     24.0,
+     67.79
+    ],
+    [
+     30.17,
+     67.17
+    ],
+    [
+     29.43,
+     59.06
+    ],
+    [
+     28.07,
+     44.51
+    ],
+    [
+     26.63,
+     29.41
+    ],
+    [
+     25.26,
+     14.42
+    ],
+    [
+     23.82,
+     -0.46
+    ],
+    [
+     22.45,
+     -15.57
+    ],
+    [
+     21.0,
+     -30.67
+    ],
+    [
+     19.62,
+     -45.89
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1540.9,
+   "facade": {
+    "material": "render_cream",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.3,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "accent": "brick_maroon",
+    "notes": "Pale cream render with white-framed windows and red-brown stair bands; yellow-brick gables.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H07",
+   "name": "Kantatgatan 15–21 - Hus 7, Kantaten 1",
+   "hus": 7,
+   "property": "Kantaten 1",
+   "address": "Kantatgatan 15–21",
+   "osm_id": "way/33707954",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     80.13,
+     -55.52
+    ],
+    [
+     61.75,
+     -53.66
+    ],
+    [
+     35.88,
+     -51.14
+    ],
+    [
+     36.98,
+     -39.37
+    ],
+    [
+     46.67,
+     -40.31
+    ],
+    [
+     60.32,
+     -41.7
+    ],
+    [
+     73.41,
+     -42.97
+    ],
+    [
+     81.22,
+     -43.64
+    ]
+   ],
+   "holes": [],
+   "area_m2": 525.1,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H08",
+   "name": "Kantatgatan 2–12 - Hus 8, Kantaten 6",
+   "hus": 8,
+   "property": "Kantaten 6",
+   "address": "Kantatgatan 2–12",
+   "osm_id": "way/211418219",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     93.92,
+     -105.02
+    ],
+    [
+     100.09,
+     -105.53
+    ],
+    [
+     106.01,
+     -106.14
+    ],
+    [
+     99.17,
+     -180.11
+    ],
+    [
+     87.08,
+     -178.99
+    ],
+    [
+     87.8,
+     -171.33
+    ],
+    [
+     89.17,
+     -156.67
+    ],
+    [
+     90.55,
+     -141.56
+    ],
+    [
+     91.92,
+     -126.57
+    ],
+    [
+     93.35,
+     -111.8
+    ]
+   ],
+   "holes": [],
+   "area_m2": 901.2,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H09",
+   "name": "Kantatgatan 14–20 - Hus 9, Kantaten 6",
+   "hus": 9,
+   "property": "Kantaten 6",
+   "address": "Kantatgatan 14–20",
+   "osm_id": "way/33707946",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     32.09,
+     -102.14
+    ],
+    [
+     40.15,
+     -102.93
+    ],
+    [
+     57.21,
+     -104.53
+    ],
+    [
+     69.99,
+     -105.67
+    ],
+    [
+     76.91,
+     -106.32
+    ],
+    [
+     76.2,
+     -113.42
+    ],
+    [
+     75.65,
+     -119.53
+    ],
+    [
+     30.83,
+     -115.36
+    ]
+   ],
+   "holes": [],
+   "area_m2": 596.2,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H10",
+   "name": "Kantatgatan 22–34 - Hus 10, Kantaten 6",
+   "hus": 10,
+   "property": "Kantaten 6",
+   "address": "Kantatgatan 22–34",
+   "osm_id": "way/211418220",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     15.09,
+     -96.43
+    ],
+    [
+     14.37,
+     -104.09
+    ],
+    [
+     12.86,
+     -119.19
+    ],
+    [
+     11.42,
+     -134.29
+    ],
+    [
+     9.92,
+     -149.28
+    ],
+    [
+     8.49,
+     -164.16
+    ],
+    [
+     7.05,
+     -179.04
+    ],
+    [
+     5.55,
+     -194.26
+    ],
+    [
+     4.91,
+     -201.03
+    ],
+    [
+     -7.8,
+     -199.78
+    ],
+    [
+     -2.73,
+     -148.14
+    ],
+    [
+     2.38,
+     -95.17
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1339.5,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H11",
+   "name": "Kantatgatan 36–42 - Hus 11, Kantaten 6",
+   "hus": 11,
+   "property": "Kantaten 6",
+   "address": "Kantatgatan 36–42",
+   "osm_id": "way/211418222",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     25.9,
+     -162.21
+    ],
+    [
+     34.02,
+     -163.11
+    ],
+    [
+     48.49,
+     -164.53
+    ],
+    [
+     62.65,
+     -165.82
+    ],
+    [
+     70.71,
+     -166.72
+    ],
+    [
+     69.99,
+     -174.16
+    ],
+    [
+     69.53,
+     -179.05
+    ],
+    [
+     24.72,
+     -174.65
+    ]
+   ],
+   "holes": [],
+   "area_m2": 559.6,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H12",
+   "name": "Koralgatan 39–49 - Hus 12, Kantaten 3",
+   "hus": 12,
+   "property": "Kantaten 3",
+   "address": "Koralgatan 39–49",
+   "osm_id": "way/33707950",
+   "osm_tags": {
+    "building": "apartments",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     -139.61,
+     104.2
+    ],
+    [
+     -131.05,
+     103.29
+    ],
+    [
+     -116.33,
+     101.86
+    ],
+    [
+     -101.66,
+     100.44
+    ],
+    [
+     -87.0,
+     99.02
+    ],
+    [
+     -72.27,
+     97.6
+    ],
+    [
+     -57.61,
+     96.18
+    ],
+    [
+     -49.17,
+     95.38
+    ],
+    [
+     -49.87,
+     88.5
+    ],
+    [
+     -50.33,
+     83.5
+    ],
+    [
+     -95.71,
+     87.91
+    ],
+    [
+     -140.77,
+     92.32
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1081.0,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H13",
+   "name": "Koralgatan 56–66 - Hus 13, Kantaten 3",
+   "hus": 13,
+   "property": "Kantaten 3",
+   "address": "Koralgatan 56–66",
+   "osm_id": "way/33707948",
+   "osm_tags": {
+    "building": "apartments",
+    "source": "Yahoo!"
+   },
+   "levels": 3,
+   "height_m": 9.3,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     -136.98,
+     -20.48
+    ],
+    [
+     -143.34,
+     -19.86
+    ],
+    [
+     -150.7,
+     -19.09
+    ],
+    [
+     -146.17,
+     26.88
+    ],
+    [
+     -141.75,
+     71.3
+    ],
+    [
+     -127.97,
+     69.9
+    ],
+    [
+     -128.93,
+     60.35
+    ],
+    [
+     -130.37,
+     45.36
+    ],
+    [
+     -131.88,
+     30.26
+    ],
+    [
+     -133.38,
+     15.27
+    ],
+    [
+     -134.88,
+     0.17
+    ],
+    [
+     -136.38,
+     -14.82
+    ]
+   ],
+   "holes": [],
+   "area_m2": 1259.2,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.28,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Skåne yellow brick lamella (1960s), white windows, balconies with light panel fronts, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H14",
+   "name": "Koralgatan 48–54 - Hus 14, Kantaten 3",
+   "hus": 14,
+   "property": "Kantaten 3",
+   "address": "Koralgatan 48–54",
+   "osm_id": "way/33707951",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 8,
+   "height_m": 23.55,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     -74.99,
+     0.13
+    ],
+    [
+     -87.39,
+     1.26
+    ],
+    [
+     -86.56,
+     10.37
+    ],
+    [
+     -85.04,
+     26.14
+    ],
+    [
+     -83.58,
+     42.02
+    ],
+    [
+     -82.05,
+     57.79
+    ],
+    [
+     -81.41,
+     64.79
+    ],
+    [
+     -68.95,
+     63.65
+    ]
+   ],
+   "holes": [],
+   "area_m2": 796.9,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.3,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Eight-storey yellow-brick slab: blind brick gables, recessed balconies in rows on the long side, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H15",
+   "name": "Kantatgatan 35–41 - Hus 15",
+   "hus": 15,
+   "property": "",
+   "address": "Kantatgatan 35–41",
+   "osm_id": "way/33707952",
+   "osm_tags": {
+    "building": "apartments",
+    "roof:shape": "flat",
+    "source": "Yahoo!"
+   },
+   "levels": 8,
+   "height_m": 23.55,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     -36.16,
+     18.29
+    ],
+    [
+     -23.64,
+     17.04
+    ],
+    [
+     -29.8,
+     -46.26
+    ],
+    [
+     -42.33,
+     -45.01
+    ],
+    [
+     -41.34,
+     -34.68
+    ],
+    [
+     -39.73,
+     -18.14
+    ],
+    [
+     -38.14,
+     -2.26
+    ],
+    [
+     -36.69,
+     13.18
+    ]
+   ],
+   "holes": [],
+   "area_m2": 801.0,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.3,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Eight-storey yellow-brick slab: blind brick gables, recessed balconies in rows on the long side, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  },
+  {
+   "id": "H16",
+   "name": "Kantatgatan 43–47 - Hus 16, Kantaten 2",
+   "hus": 16,
+   "property": "Kantaten 2",
+   "address": "Kantatgatan 43–47",
+   "osm_id": "way/33707941",
+   "osm_tags": {
+    "building": "apartments",
+    "building:levels": "10",
+    "roof:shape": "flat"
+   },
+   "levels": 8,
+   "height_m": 23.55,
+   "current_use": "residential",
+   "ground_use": "residential",
+   "role": "study",
+   "footprint": [
+    [
+     -89.52,
+     -66.71
+    ],
+    [
+     -152.78,
+     -60.9
+    ],
+    [
+     -151.5,
+     -47.02
+    ],
+    [
+     -136.58,
+     -48.44
+    ],
+    [
+     -117.82,
+     -50.09
+    ],
+    [
+     -96.86,
+     -52.03
+    ],
+    [
+     -88.24,
+     -52.83
+    ]
+   ],
+   "holes": [],
+   "area_m2": 885.2,
+   "facade": {
+    "material": "brick_yellow",
+    "window": "punched",
+    "module": 2.4,
+    "wwr": 0.3,
+    "sill": 0.9,
+    "head": 2.3,
+    "balconies": true,
+    "notes": "Eight-storey yellow-brick slab: blind brick gables, recessed balconies in rows on the long side, flat roof.",
+    "roof": {
+     "shape": "flat",
+     "membrane": "dark",
+     "parapet": 0.45,
+     "features": []
+    },
+    "source": "Visual estimate from Google Street View (Oct 2025) and Google Maps aerials, 2026-11-02 - not surveyed"
+   }
+  }
+ ],
+ "roads": [
+  {
+   "kind": "tertiary",
+   "name": "Eriksfältsvägen",
+   "pts": [
+    [
+     178.01,
+     349.92
+    ],
+    [
+     170.42,
+     278.31
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     167.78,
+     247.88
+    ],
+    [
+     161.67,
+     197.27
+    ],
+    [
+     158.65,
+     168.74
+    ],
+    [
+     151.22,
+     100.8
+    ],
+    [
+     149.71,
+     85.37
+    ],
+    [
+     133.88,
+     -78.32
+    ],
+    [
+     132.54,
+     -92.09
+    ],
+    [
+     133.8,
+     -111.84
+    ],
+    [
+     134.01,
+     -122.53
+    ],
+    [
+     132.2,
+     -134.84
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     68.55,
+     -359.64
+    ],
+    [
+     83.14,
+     -357.16
+    ],
+    [
+     91.87,
+     -354.18
+    ],
+    [
+     100.09,
+     -349.29
+    ],
+    [
+     107.4,
+     -343.04
+    ],
+    [
+     113.49,
+     -335.31
+    ],
+    [
+     118.06,
+     -327.53
+    ],
+    [
+     121.22,
+     -318.82
+    ],
+    [
+     122.78,
+     -310.29
+    ],
+    [
+     125.44,
+     -288.1
+    ],
+    [
+     130.89,
+     -240.59
+    ],
+    [
+     133.25,
+     -217.61
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Agnesfridsvägen",
+   "pts": [
+    [
+     499.86,
+     -138.07
+    ],
+    [
+     488.84,
+     -139.53
+    ],
+    [
+     478.59,
+     -142.58
+    ],
+    [
+     469.18,
+     -144.99
+    ],
+    [
+     459.98,
+     -146.62
+    ],
+    [
+     451.31,
+     -147.6
+    ],
+    [
+     442.45,
+     -148.35
+    ],
+    [
+     434.69,
+     -148.46
+    ],
+    [
+     422.4,
+     -147.89
+    ],
+    [
+     384.62,
+     -146.82
+    ],
+    [
+     330.14,
+     -145.27
+    ],
+    [
+     289.15,
+     -144.21
+    ],
+    [
+     222.87,
+     -142.21
+    ],
+    [
+     193.42,
+     -141.6
+    ],
+    [
+     168.33,
+     -140.66
+    ],
+    [
+     160.84,
+     -139.67
+    ],
+    [
+     157.02,
+     -138.67
+    ],
+    [
+     150.82,
+     -136.93
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -45.47,
+     118.88
+    ],
+    [
+     -62.41,
+     120.15
+    ],
+    [
+     -56.55,
+     199.71
+    ],
+    [
+     -39.61,
+     198.45
+    ],
+    [
+     -45.47,
+     118.88
+    ],
+    [
+     -27.15,
+     117.58
+    ],
+    [
+     -27.84,
+     108.69
+    ],
+    [
+     -28.26,
+     103.02
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -323.81,
+     333.96
+    ],
+    [
+     -289.7,
+     339.55
+    ],
+    [
+     -266.06,
+     340.88
+    ],
+    [
+     -238.55,
+     340.87
+    ],
+    [
+     -191.42,
+     340.53
+    ],
+    [
+     -156.2,
+     338.41
+    ],
+    [
+     -119.13,
+     335.24
+    ],
+    [
+     -90.66,
+     335.42
+    ],
+    [
+     -54.02,
+     339.06
+    ],
+    [
+     -20.07,
+     343.32
+    ],
+    [
+     13.27,
+     348.72
+    ],
+    [
+     21.44,
+     349.49
+    ],
+    [
+     29.14,
+     349.49
+    ],
+    [
+     40.08,
+     348.06
+    ],
+    [
+     66.72,
+     344.18
+    ],
+    [
+     88.21,
+     340.9
+    ],
+    [
+     88.78,
+     340.88
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     110.96,
+     304.39
+    ],
+    [
+     103.36,
+     252.5
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     97.41,
+     209.79
+    ],
+    [
+     97.85,
+     203.21
+    ],
+    [
+     98.82,
+     199.62
+    ],
+    [
+     100.03,
+     197.8
+    ],
+    [
+     100.94,
+     196.55
+    ],
+    [
+     103.66,
+     194.36
+    ],
+    [
+     107.76,
+     192.13
+    ],
+    [
+     148.04,
+     172.94
+    ],
+    [
+     149.42,
+     172.46
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Eriksfältsvägen",
+   "pts": [
+    [
+     180.53,
+     278.69
+    ],
+    [
+     189.54,
+     349.15
+    ]
+   ]
+  },
+  {
+   "kind": "unclassified",
+   "name": "",
+   "pts": [
+    [
+     161.67,
+     197.27
+    ],
+    [
+     173.38,
+     196.16
+    ],
+    [
+     187.49,
+     195.31
+    ],
+    [
+     332.99,
+     196.51
+    ],
+    [
+     382.19,
+     195.78
+    ],
+    [
+     431.23,
+     193.83
+    ],
+    [
+     460.82,
+     189.32
+    ],
+    [
+     506.66,
+     181.22
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     184.34,
+     129.14
+    ],
+    [
+     343.73,
+     119.37
+    ],
+    [
+     370.64,
+     118.27
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     161.32,
+     -134.0
+    ],
+    [
+     155.17,
+     -128.37
+    ],
+    [
+     151.83,
+     -123.82
+    ],
+    [
+     155.87,
+     -79.62
+    ],
+    [
+     159.88,
+     -36.08
+    ],
+    [
+     172.61,
+     98.3
+    ],
+    [
+     176.38,
+     128.81
+    ],
+    [
+     179.2,
+     165.59
+    ],
+    [
+     180.1,
+     179.71
+    ],
+    [
+     181.11,
+     190.82
+    ],
+    [
+     187.49,
+     195.31
+    ],
+    [
+     235.72,
+     233.58
+    ],
+    [
+     243.04,
+     240.17
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Koralgatan",
+   "pts": [
+    [
+     163.81,
+     84.07
+    ],
+    [
+     149.71,
+     85.37
+    ],
+    [
+     131.14,
+     86.79
+    ],
+    [
+     107.42,
+     89.58
+    ],
+    [
+     101.32,
+     90.31
+    ],
+    [
+     38.65,
+     96.66
+    ],
+    [
+     14.73,
+     98.9
+    ],
+    [
+     3.15,
+     100.01
+    ],
+    [
+     -28.26,
+     103.02
+    ],
+    [
+     -31.37,
+     102.11
+    ],
+    [
+     -33.94,
+     100.51
+    ],
+    [
+     -35.94,
+     97.01
+    ],
+    [
+     -36.57,
+     92.46
+    ],
+    [
+     -34.93,
+     85.84
+    ],
+    [
+     -31.65,
+     83.75
+    ],
+    [
+     -26.58,
+     82.26
+    ],
+    [
+     1.99,
+     79.22
+    ],
+    [
+     36.31,
+     76.68
+    ],
+    [
+     84.8,
+     73.07
+    ],
+    [
+     92.16,
+     74.54
+    ],
+    [
+     96.85,
+     79.52
+    ],
+    [
+     101.32,
+     90.31
+    ]
+   ]
+  },
+  {
+   "kind": "residential",
+   "name": "Kantatgatan",
+   "pts": [
+    [
+     146.89,
+     -91.16
+    ],
+    [
+     132.54,
+     -92.09
+    ],
+    [
+     113.56,
+     -91.33
+    ],
+    [
+     98.31,
+     -90.67
+    ],
+    [
+     92.71,
+     -89.95
+    ],
+    [
+     88.25,
+     -89.38
+    ],
+    [
+     54.15,
+     -85.62
+    ],
+    [
+     20.87,
+     -82.0
+    ],
+    [
+     -22.61,
+     -77.2
+    ],
+    [
+     -47.28,
+     -75.05
+    ],
+    [
+     -51.41,
+     -69.25
+    ],
+    [
+     -51.11,
+     -63.13
+    ],
+    [
+     -48.69,
+     -60.09
+    ],
+    [
+     -45.42,
+     -58.4
+    ],
+    [
+     -11.31,
+     -61.82
+    ],
+    [
+     23.24,
+     -65.14
+    ],
+    [
+     70.32,
+     -69.72
+    ],
+    [
+     79.25,
+     -75.2
+    ],
+    [
+     84.87,
+     -83.72
+    ],
+    [
+     88.25,
+     -89.38
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Munkhättegatan",
+   "pts": [
+    [
+     66.77,
+     -346.89
+    ],
+    [
+     9.88,
+     -347.83
+    ],
+    [
+     -3.56,
+     -347.67
+    ],
+    [
+     -18.27,
+     -347.58
+    ],
+    [
+     -98.35,
+     -342.96
+    ],
+    [
+     -186.74,
+     -332.86
+    ],
+    [
+     -212.19,
+     -328.91
+    ],
+    [
+     -217.41,
+     -328.09
+    ],
+    [
+     -257.78,
+     -320.81
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     123.53,
+     -195.51
+    ],
+    [
+     123.23,
+     -199.39
+    ],
+    [
+     121.39,
+     -215.38
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     121.39,
+     -215.38
+    ],
+    [
+     110.74,
+     -309.84
+    ],
+    [
+     107.52,
+     -320.88
+    ],
+    [
+     103.74,
+     -327.34
+    ],
+    [
+     99.71,
+     -333.8
+    ],
+    [
+     93.04,
+     -339.62
+    ],
+    [
+     87.01,
+     -343.01
+    ],
+    [
+     78.17,
+     -345.43
+    ],
+    [
+     66.77,
+     -346.89
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     133.25,
+     -217.61
+    ],
+    [
+     133.73,
+     -214.17
+    ],
+    [
+     135.55,
+     -194.62
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     135.55,
+     -194.62
+    ],
+    [
+     136.8,
+     -184.08
+    ],
+    [
+     138.03,
+     -176.21
+    ],
+    [
+     139.26,
+     -168.56
+    ],
+    [
+     142.19,
+     -163.08
+    ],
+    [
+     146.88,
+     -158.09
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     208.95,
+     -265.31
+    ],
+    [
+     226.64,
+     -273.72
+    ],
+    [
+     232.52,
+     -275.56
+    ],
+    [
+     240.43,
+     -277.01
+    ],
+    [
+     279.95,
+     -281.25
+    ],
+    [
+     315.26,
+     -284.59
+    ],
+    [
+     325.01,
+     -285.54
+    ],
+    [
+     351.83,
+     -287.97
+    ],
+    [
+     391.64,
+     -288.55
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     515.98,
+     -32.85
+    ],
+    [
+     525.3,
+     -13.51
+    ],
+    [
+     531.57,
+     7.13
+    ],
+    [
+     534.43,
+     25.87
+    ],
+    [
+     540.25,
+     86.39
+    ],
+    [
+     541.81,
+     112.29
+    ],
+    [
+     541.18,
+     127.68
+    ],
+    [
+     537.73,
+     144.15
+    ],
+    [
+     533.01,
+     155.86
+    ],
+    [
+     527.84,
+     167.03
+    ],
+    [
+     519.37,
+     179.75
+    ],
+    [
+     511.39,
+     189.77
+    ],
+    [
+     500.84,
+     200.54
+    ],
+    [
+     491.41,
+     208.6
+    ],
+    [
+     482.15,
+     215.88
+    ],
+    [
+     468.82,
+     224.05
+    ],
+    [
+     462.35,
+     227.47
+    ],
+    [
+     447.95,
+     233.56
+    ],
+    [
+     433.55,
+     237.64
+    ],
+    [
+     413.83,
+     241.21
+    ],
+    [
+     392.14,
+     241.71
+    ],
+    [
+     243.04,
+     240.17
+    ],
+    [
+     228.01,
+     237.59
+    ],
+    [
+     219.03,
+     234.61
+    ],
+    [
+     211.17,
+     231.27
+    ],
+    [
+     200.59,
+     227.68
+    ],
+    [
+     189.39,
+     224.43
+    ],
+    [
+     187.55,
+     224.15
+    ],
+    [
+     181.4,
+     223.1
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     80.73,
+     -776.01
+    ],
+    [
+     99.32,
+     -628.66
+    ],
+    [
+     101.93,
+     -608.13
+    ],
+    [
+     113.9,
+     -509.14
+    ],
+    [
+     115.66,
+     -482.91
+    ],
+    [
+     115.62,
+     -461.87
+    ],
+    [
+     113.92,
+     -435.43
+    ],
+    [
+     114.5,
+     -412.84
+    ],
+    [
+     120.16,
+     -389.17
+    ],
+    [
+     129.44,
+     -371.39
+    ],
+    [
+     141.01,
+     -353.02
+    ],
+    [
+     143.35,
+     -348.18
+    ],
+    [
+     149.19,
+     -335.99
+    ],
+    [
+     153.69,
+     -319.97
+    ],
+    [
+     156.97,
+     -302.14
+    ],
+    [
+     159.28,
+     -289.95
+    ],
+    [
+     163.41,
+     -280.05
+    ],
+    [
+     171.95,
+     -266.04
+    ],
+    [
+     183.36,
+     -255.56
+    ],
+    [
+     191.41,
+     -249.78
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     173.97,
+     -223.89
+    ],
+    [
+     161.79,
+     -232.68
+    ],
+    [
+     152.45,
+     -237.31
+    ],
+    [
+     140.72,
+     -238.98
+    ],
+    [
+     130.89,
+     -240.59
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     149.54,
+     -135.56
+    ],
+    [
+     147.09,
+     -128.58
+    ],
+    [
+     145.14,
+     -123.63
+    ],
+    [
+     144.02,
+     -118.81
+    ],
+    [
+     144.16,
+     -114.02
+    ],
+    [
+     146.89,
+     -91.16
+    ],
+    [
+     148.05,
+     -79.17
+    ],
+    [
+     152.27,
+     -35.19
+    ],
+    [
+     163.81,
+     84.07
+    ],
+    [
+     165.7,
+     99.28
+    ],
+    [
+     170.6,
+     151.7
+    ],
+    [
+     172.61,
+     180.26
+    ],
+    [
+     173.38,
+     196.16
+    ],
+    [
+     177.41,
+     246.93
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Agnesfridsvägen",
+   "pts": [
+    [
+     148.8,
+     -156.92
+    ],
+    [
+     153.32,
+     -155.82
+    ],
+    [
+     159.76,
+     -155.56
+    ],
+    [
+     185.16,
+     -156.84
+    ],
+    [
+     213.69,
+     -158.88
+    ],
+    [
+     242.13,
+     -162.03
+    ],
+    [
+     299.16,
+     -167.32
+    ],
+    [
+     319.86,
+     -169.36
+    ],
+    [
+     322.44,
+     -169.66
+    ],
+    [
+     345.86,
+     -171.77
+    ],
+    [
+     360.66,
+     -172.75
+    ],
+    [
+     375.59,
+     -173.62
+    ],
+    [
+     391.87,
+     -173.75
+    ],
+    [
+     411.26,
+     -173.41
+    ],
+    [
+     432.19,
+     -172.0
+    ],
+    [
+     450.04,
+     -170.06
+    ],
+    [
+     468.7,
+     -168.69
+    ],
+    [
+     473.74,
+     -169.06
+    ],
+    [
+     477.95,
+     -169.74
+    ],
+    [
+     482.5,
+     -171.54
+    ],
+    [
+     490.74,
+     -174.78
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     126.67,
+     -147.49
+    ],
+    [
+     125.84,
+     -156.49
+    ],
+    [
+     125.63,
+     -166.17
+    ],
+    [
+     125.4,
+     -174.4
+    ],
+    [
+     124.61,
+     -184.07
+    ],
+    [
+     123.53,
+     -195.51
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -34.93,
+     85.84
+    ],
+    [
+     -43.22,
+     80.62
+    ],
+    [
+     -44.19,
+     70.96
+    ],
+    [
+     -49.15,
+     18.88
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     100.56,
+     5.92
+    ],
+    [
+     92.88,
+     6.59
+    ],
+    [
+     60.21,
+     9.63
+    ],
+    [
+     30.37,
+     12.38
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     92.88,
+     6.59
+    ],
+    [
+     93.15,
+     11.81
+    ],
+    [
+     88.08,
+     13.07
+    ],
+    [
+     86.41,
+     14.23
+    ],
+    [
+     87.56,
+     28.01
+    ],
+    [
+     74.58,
+     29.05
+    ],
+    [
+     75.2,
+     35.04
+    ],
+    [
+     94.77,
+     33.26
+    ],
+    [
+     96.9,
+     61.26
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     18.37,
+     104.7
+    ],
+    [
+     20.86,
+     130.13
+    ],
+    [
+     23.26,
+     154.67
+    ],
+    [
+     25.3,
+     175.1
+    ],
+    [
+     93.11,
+     167.6
+    ],
+    [
+     136.58,
+     162.8
+    ],
+    [
+     133.69,
+     119.01
+    ],
+    [
+     131.64,
+     93.34
+    ],
+    [
+     131.14,
+     86.79
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     26.25,
+     -32.49
+    ],
+    [
+     46.83,
+     -34.53
+    ],
+    [
+     76.54,
+     -37.49
+    ],
+    [
+     96.86,
+     -39.52
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     46.83,
+     -34.53
+    ],
+    [
+     48.17,
+     -23.09
+    ],
+    [
+     49.33,
+     -13.33
+    ],
+    [
+     28.35,
+     -11.95
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     20.86,
+     130.13
+    ],
+    [
+     41.82,
+     128.09
+    ],
+    [
+     54.28,
+     126.84
+    ],
+    [
+     133.69,
+     119.01
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -11.31,
+     -61.82
+    ],
+    [
+     -10.68,
+     -55.16
+    ],
+    [
+     -3.48,
+     22.59
+    ],
+    [
+     -2.38,
+     34.47
+    ],
+    [
+     -1.75,
+     41.02
+    ],
+    [
+     1.92,
+     77.0
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -3.48,
+     22.59
+    ],
+    [
+     -26.17,
+     30.03
+    ],
+    [
+     -40.39,
+     31.55
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     35.4,
+     66.91
+    ],
+    [
+     96.9,
+     61.26
+    ],
+    [
+     105.08,
+     60.58
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -26.17,
+     30.03
+    ],
+    [
+     -2.38,
+     34.47
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     92.71,
+     -89.95
+    ],
+    [
+     93.31,
+     -82.29
+    ],
+    [
+     96.86,
+     -39.52
+    ],
+    [
+     98.79,
+     -16.19
+    ],
+    [
+     100.56,
+     5.92
+    ],
+    [
+     102.29,
+     26.92
+    ],
+    [
+     105.08,
+     60.58
+    ],
+    [
+     107.42,
+     89.58
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     76.54,
+     -37.49
+    ],
+    [
+     77.75,
+     -26.05
+    ],
+    [
+     78.13,
+     -14.93
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     23.24,
+     -65.14
+    ],
+    [
+     23.88,
+     -58.37
+    ],
+    [
+     26.25,
+     -32.49
+    ],
+    [
+     28.35,
+     -11.95
+    ],
+    [
+     30.37,
+     12.38
+    ],
+    [
+     31.39,
+     23.71
+    ],
+    [
+     32.1,
+     30.81
+    ],
+    [
+     33.58,
+     47.36
+    ],
+    [
+     35.4,
+     66.91
+    ],
+    [
+     36.31,
+     76.68
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -48.69,
+     -60.09
+    ],
+    [
+     -47.96,
+     -52.2
+    ],
+    [
+     -43.29,
+     -3.67
+    ],
+    [
+     -40.39,
+     31.55
+    ],
+    [
+     -39.79,
+     39.32
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     58.29,
+     44.21
+    ],
+    [
+     53.26,
+     44.69
+    ],
+    [
+     33.58,
+     47.36
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     75.2,
+     35.04
+    ],
+    [
+     75.73,
+     42.82
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -1.75,
+     41.02
+    ],
+    [
+     14.8,
+     39.44
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -161.01,
+     -26.37
+    ],
+    [
+     -133.57,
+     -29.15
+    ],
+    [
+     -95.94,
+     -32.9
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -97.53,
+     -48.67
+    ],
+    [
+     -135.35,
+     -45.03
+    ],
+    [
+     -162.73,
+     -42.35
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -130.48,
+     4.05
+    ],
+    [
+     -92.59,
+     0.41
+    ],
+    [
+     -43.29,
+     -3.67
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -135.35,
+     -45.03
+    ],
+    [
+     -133.57,
+     -29.15
+    ],
+    [
+     -130.48,
+     4.05
+    ],
+    [
+     -127.12,
+     39.81
+    ],
+    [
+     -123.55,
+     78.57
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -148.87,
+     86.98
+    ],
+    [
+     -136.9,
+     79.85
+    ],
+    [
+     -123.55,
+     78.57
+    ],
+    [
+     -93.97,
+     75.73
+    ],
+    [
+     -85.16,
+     74.92
+    ],
+    [
+     -44.19,
+     70.96
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -85.16,
+     74.92
+    ],
+    [
+     -87.12,
+     54.93
+    ],
+    [
+     -88.26,
+     43.6
+    ],
+    [
+     -92.59,
+     0.41
+    ],
+    [
+     -95.94,
+     -32.9
+    ],
+    [
+     -97.53,
+     -48.67
+    ],
+    [
+     -53.37,
+     -51.82
+    ],
+    [
+     -47.96,
+     -52.2
+    ],
+    [
+     -10.68,
+     -55.16
+    ],
+    [
+     23.88,
+     -58.37
+    ],
+    [
+     77.82,
+     -63.25
+    ],
+    [
+     83.16,
+     -66.41
+    ],
+    [
+     85.23,
+     -71.25
+    ],
+    [
+     88.36,
+     -78.69
+    ],
+    [
+     93.31,
+     -82.29
+    ],
+    [
+     114.24,
+     -85.33
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -127.12,
+     39.81
+    ],
+    [
+     -117.19,
+     38.42
+    ],
+    [
+     -112.1,
+     39.72
+    ],
+    [
+     -102.73,
+     38.67
+    ],
+    [
+     -95.06,
+     44.47
+    ],
+    [
+     -88.26,
+     43.6
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     19.55,
+     -94.88
+    ],
+    [
+     91.16,
+     -102.27
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     13.46,
+     -155.62
+    ],
+    [
+     83.47,
+     -161.74
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     79.89,
+     -189.81
+    ],
+    [
+     83.47,
+     -161.74
+    ],
+    [
+     91.16,
+     -102.27
+    ],
+    [
+     91.91,
+     -96.05
+    ],
+    [
+     92.71,
+     -89.95
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     20.87,
+     -82.0
+    ],
+    [
+     20.08,
+     -89.66
+    ],
+    [
+     19.55,
+     -94.88
+    ],
+    [
+     13.46,
+     -155.62
+    ],
+    [
+     9.42,
+     -195.82
+    ],
+    [
+     11.91,
+     -208.02
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     59.31,
+     -199.13
+    ],
+    [
+     67.12,
+     -192.78
+    ],
+    [
+     79.89,
+     -189.81
+    ],
+    [
+     107.72,
+     -183.25
+    ],
+    [
+     113.34,
+     -183.41
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     63.66,
+     -199.14
+    ],
+    [
+     68.59,
+     -207.86
+    ],
+    [
+     69.61,
+     -218.36
+    ],
+    [
+     70.52,
+     -228.52
+    ],
+    [
+     68.84,
+     -234.26
+    ],
+    [
+     68.03,
+     -249.38
+    ],
+    [
+     67.08,
+     -265.05
+    ],
+    [
+     66.13,
+     -280.62
+    ],
+    [
+     64.86,
+     -300.96
+    ],
+    [
+     61.65,
+     -329.26
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     45.04,
+     -232.35
+    ],
+    [
+     68.84,
+     -234.26
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     10.18,
+     -326.01
+    ],
+    [
+     61.65,
+     -329.26
+    ],
+    [
+     69.84,
+     -329.83
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     9.7,
+     -360.63
+    ],
+    [
+     9.88,
+     -347.83
+    ],
+    [
+     10.02,
+     -338.37
+    ],
+    [
+     10.18,
+     -326.01
+    ],
+    [
+     -46.83,
+     -319.93
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -10.46,
+     -213.18
+    ],
+    [
+     -10.53,
+     -217.96
+    ],
+    [
+     -10.55,
+     -220.75
+    ],
+    [
+     -10.79,
+     -238.0
+    ],
+    [
+     -14.21,
+     -260.84
+    ],
+    [
+     -15.59,
+     -273.72
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -10.79,
+     -238.0
+    ],
+    [
+     1.78,
+     -235.46
+    ],
+    [
+     5.62,
+     -229.23
+    ],
+    [
+     7.6,
+     -219.71
+    ],
+    [
+     5.41,
+     -216.75
+    ],
+    [
+     -10.53,
+     -217.96
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     35.76,
+     -278.97
+    ],
+    [
+     38.51,
+     -248.98
+    ],
+    [
+     42.1,
+     -238.17
+    ],
+    [
+     45.04,
+     -232.35
+    ],
+    [
+     44.12,
+     -222.64
+    ],
+    [
+     44.04,
+     -212.28
+    ],
+    [
+     43.8,
+     -200.69
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     7.6,
+     -219.71
+    ],
+    [
+     21.73,
+     -217.55
+    ],
+    [
+     28.13,
+     -210.16
+    ],
+    [
+     36.91,
+     -209.85
+    ],
+    [
+     44.04,
+     -212.28
+    ],
+    [
+     48.19,
+     -217.19
+    ],
+    [
+     69.61,
+     -218.36
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -57.07,
+     -223.43
+    ],
+    [
+     -62.73,
+     -240.3
+    ],
+    [
+     -62.63,
+     -247.99
+    ],
+    [
+     -52.08,
+     -245.17
+    ],
+    [
+     -40.65,
+     -236.15
+    ],
+    [
+     -35.68,
+     -225.6
+    ],
+    [
+     -23.36,
+     -220.83
+    ],
+    [
+     -10.55,
+     -220.75
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     148.8,
+     -156.92
+    ],
+    [
+     151.14,
+     -154.65
+    ],
+    [
+     152.86,
+     -151.91
+    ],
+    [
+     153.89,
+     -148.93
+    ],
+    [
+     154.23,
+     -145.71
+    ],
+    [
+     153.82,
+     -142.58
+    ],
+    [
+     152.64,
+     -139.54
+    ],
+    [
+     150.82,
+     -136.93
+    ],
+    [
+     149.54,
+     -135.56
+    ],
+    [
+     147.0,
+     -133.82
+    ],
+    [
+     144.07,
+     -132.62
+    ],
+    [
+     140.99,
+     -132.2
+    ],
+    [
+     137.89,
+     -132.33
+    ],
+    [
+     134.9,
+     -133.25
+    ],
+    [
+     132.2,
+     -134.84
+    ],
+    [
+     129.61,
+     -137.33
+    ],
+    [
+     127.75,
+     -140.39
+    ],
+    [
+     126.77,
+     -143.93
+    ],
+    [
+     126.67,
+     -147.49
+    ],
+    [
+     127.34,
+     -150.4
+    ],
+    [
+     128.59,
+     -153.11
+    ],
+    [
+     130.42,
+     -155.39
+    ],
+    [
+     132.7,
+     -157.35
+    ],
+    [
+     135.31,
+     -158.76
+    ],
+    [
+     138.19,
+     -159.51
+    ],
+    [
+     141.15,
+     -159.71
+    ],
+    [
+     144.13,
+     -159.23
+    ],
+    [
+     146.88,
+     -158.09
+    ],
+    [
+     148.8,
+     -156.92
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -146.21,
+     111.63
+    ],
+    [
+     -247.45,
+     106.72
+    ],
+    [
+     -334.93,
+     161.67
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -3.73,
+     -369.04
+    ],
+    [
+     -3.69,
+     -360.81
+    ],
+    [
+     -3.56,
+     -347.67
+    ],
+    [
+     -3.42,
+     -338.21
+    ],
+    [
+     10.02,
+     -338.37
+    ],
+    [
+     49.04,
+     -337.7
+    ],
+    [
+     70.38,
+     -337.42
+    ],
+    [
+     80.41,
+     -335.7
+    ],
+    [
+     88.7,
+     -332.48
+    ],
+    [
+     95.78,
+     -325.34
+    ],
+    [
+     100.48,
+     -317.9
+    ],
+    [
+     103.09,
+     -297.04
+    ],
+    [
+     111.34,
+     -211.42
+    ],
+    [
+     117.29,
+     -197.33
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     131.14,
+     86.79
+    ],
+    [
+     130.62,
+     79.79
+    ],
+    [
+     134.66,
+     77.56
+    ],
+    [
+     137.26,
+     73.47
+    ],
+    [
+     138.87,
+     68.08
+    ],
+    [
+     138.34,
+     58.52
+    ],
+    [
+     125.26,
+     -77.3
+    ],
+    [
+     122.67,
+     -81.68
+    ],
+    [
+     118.75,
+     -84.13
+    ],
+    [
+     114.24,
+     -85.33
+    ],
+    [
+     113.56,
+     -91.33
+    ],
+    [
+     112.98,
+     -98.66
+    ],
+    [
+     118.02,
+     -100.92
+    ],
+    [
+     119.99,
+     -104.98
+    ],
+    [
+     120.82,
+     -111.13
+    ],
+    [
+     113.34,
+     -183.41
+    ],
+    [
+     118.62,
+     -179.55
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     110.95,
+     -202.94
+    ],
+    [
+     147.21,
+     -206.09
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     177.51,
+     13.42
+    ],
+    [
+     184.34,
+     129.14
+    ],
+    [
+     187.49,
+     195.31
+    ],
+    [
+     185.97,
+     197.25
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     136.58,
+     162.8
+    ],
+    [
+     142.11,
+     159.75
+    ],
+    [
+     146.58,
+     159.28
+    ],
+    [
+     148.46,
+     158.9
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -3.42,
+     -338.21
+    ],
+    [
+     -73.12,
+     -334.66
+    ],
+    [
+     -97.45,
+     -333.41
+    ],
+    [
+     -99.15,
+     -333.25
+    ],
+    [
+     -135.01,
+     -329.22
+    ],
+    [
+     -162.12,
+     -325.99
+    ],
+    [
+     -183.24,
+     -322.83
+    ],
+    [
+     -211.07,
+     -318.58
+    ],
+    [
+     -242.04,
+     -313.35
+    ],
+    [
+     -269.05,
+     -308.8
+    ],
+    [
+     -290.43,
+     -303.95
+    ],
+    [
+     -312.19,
+     -300.99
+    ],
+    [
+     -322.32,
+     -302.37
+    ],
+    [
+     -339.27,
+     -299.1
+    ],
+    [
+     -342.41,
+     -298.57
+    ],
+    [
+     -356.26,
+     -292.83
+    ],
+    [
+     -368.88,
+     -290.57
+    ],
+    [
+     -392.94,
+     -286.43
+    ],
+    [
+     -401.91,
+     -284.62
+    ],
+    [
+     -477.72,
+     -269.53
+    ],
+    [
+     -510.86,
+     -263.01
+    ],
+    [
+     -546.34,
+     -256.99
+    ],
+    [
+     -593.71,
+     -249.17
+    ],
+    [
+     -598.18,
+     -248.82
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     155.87,
+     -79.62
+    ],
+    [
+     148.05,
+     -79.17
+    ],
+    [
+     143.08,
+     -78.81
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     142.66,
+     101.6
+    ],
+    [
+     151.22,
+     100.8
+    ],
+    [
+     156.32,
+     100.21
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     148.71,
+     178.82
+    ],
+    [
+     149.42,
+     172.46
+    ],
+    [
+     149.71,
+     169.55
+    ],
+    [
+     148.46,
+     158.9
+    ],
+    [
+     148.3,
+     157.57
+    ],
+    [
+     142.66,
+     101.6
+    ],
+    [
+     139.71,
+     97.68
+    ],
+    [
+     137.1,
+     94.63
+    ],
+    [
+     131.64,
+     93.34
+    ],
+    [
+     18.37,
+     104.7
+    ],
+    [
+     15.28,
+     105.01
+    ],
+    [
+     3.38,
+     105.8
+    ],
+    [
+     -27.84,
+     108.69
+    ],
+    [
+     -40.9,
+     104.28
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     152.27,
+     -35.19
+    ],
+    [
+     159.88,
+     -36.08
+    ],
+    [
+     167.5,
+     -36.63
+    ],
+    [
+     174.83,
+     -27.71
+    ],
+    [
+     177.51,
+     13.42
+    ],
+    [
+     295.09,
+     7.06
+    ],
+    [
+     296.3,
+     31.75
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     147.21,
+     -206.09
+    ],
+    [
+     152.14,
+     -205.9
+    ],
+    [
+     163.82,
+     -210.35
+    ],
+    [
+     173.97,
+     -223.89
+    ],
+    [
+     184.5,
+     -239.67
+    ],
+    [
+     191.41,
+     -249.78
+    ],
+    [
+     198.9,
+     -257.23
+    ],
+    [
+     208.95,
+     -265.31
+    ],
+    [
+     205.69,
+     -304.75
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -183.24,
+     -322.83
+    ],
+    [
+     -180.84,
+     -263.32
+    ],
+    [
+     -185.11,
+     -255.96
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     113.57,
+     318.46
+    ],
+    [
+     110.96,
+     304.39
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     75.73,
+     42.82
+    ],
+    [
+     58.29,
+     44.21
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     49.33,
+     -13.33
+    ],
+    [
+     64.14,
+     -14.2
+    ],
+    [
+     78.13,
+     -14.93
+    ],
+    [
+     98.79,
+     -16.19
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -28.26,
+     103.02
+    ],
+    [
+     -40.9,
+     104.28
+    ],
+    [
+     -141.28,
+     114.16
+    ],
+    [
+     -146.21,
+     111.63
+    ],
+    [
+     -148.87,
+     86.98
+    ],
+    [
+     -161.01,
+     -26.37
+    ],
+    [
+     -162.73,
+     -42.35
+    ],
+    [
+     -165.35,
+     -65.66
+    ],
+    [
+     -169.74,
+     -110.97
+    ],
+    [
+     -172.67,
+     -140.73
+    ],
+    [
+     -175.8,
+     -172.93
+    ],
+    [
+     -177.7,
+     -193.15
+    ],
+    [
+     -181.02,
+     -227.46
+    ],
+    [
+     -185.11,
+     -255.96
+    ],
+    [
+     -195.67,
+     -318.35
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -359.89,
+     -174.91
+    ],
+    [
+     -339.43,
+     -176.72
+    ],
+    [
+     -292.15,
+     -180.86
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -377.89,
+     -204.01
+    ],
+    [
+     -370.33,
+     -204.57
+    ],
+    [
+     -351.18,
+     -205.89
+    ],
+    [
+     -342.26,
+     -207.04
+    ],
+    [
+     -338.99,
+     -207.47
+    ],
+    [
+     -289.44,
+     -214.01
+    ],
+    [
+     -262.16,
+     -217.9
+    ],
+    [
+     -260.21,
+     -218.18
+    ],
+    [
+     -249.34,
+     -219.72
+    ],
+    [
+     -206.11,
+     -224.52
+    ],
+    [
+     -181.02,
+     -227.46
+    ],
+    [
+     -160.57,
+     -229.83
+    ],
+    [
+     -146.42,
+     -227.0
+    ],
+    [
+     -135.59,
+     -225.86
+    ],
+    [
+     -118.91,
+     -227.45
+    ],
+    [
+     -99.28,
+     -229.35
+    ],
+    [
+     -94.74,
+     -229.7
+    ],
+    [
+     -74.72,
+     -227.04
+    ],
+    [
+     -66.28,
+     -225.28
+    ],
+    [
+     -57.07,
+     -223.43
+    ],
+    [
+     -41.77,
+     -220.3
+    ],
+    [
+     -38.16,
+     -219.62
+    ],
+    [
+     -10.46,
+     -213.18
+    ],
+    [
+     11.91,
+     -208.02
+    ],
+    [
+     43.8,
+     -200.69
+    ],
+    [
+     50.22,
+     -199.21
+    ],
+    [
+     59.31,
+     -199.13
+    ],
+    [
+     63.66,
+     -199.14
+    ],
+    [
+     68.21,
+     -199.05
+    ],
+    [
+     110.07,
+     -202.92
+    ],
+    [
+     110.95,
+     -202.94
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -26.3,
+     -85.0
+    ],
+    [
+     -31.35,
+     -129.18
+    ],
+    [
+     -41.77,
+     -220.3
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -148.62,
+     -191.53
+    ],
+    [
+     -147.22,
+     -175.64
+    ],
+    [
+     -137.78,
+     -68.23
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -98.28,
+     -187.95
+    ],
+    [
+     -95.52,
+     -190.82
+    ],
+    [
+     -94.61,
+     -194.07
+    ],
+    [
+     -96.71,
+     -199.25
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -47.28,
+     -75.05
+    ],
+    [
+     -53.48,
+     -82.22
+    ],
+    [
+     -59.44,
+     -91.85
+    ],
+    [
+     -63.21,
+     -113.34
+    ],
+    [
+     -65.59,
+     -134.77
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -31.35,
+     -129.18
+    ],
+    [
+     -47.84,
+     -132.05
+    ],
+    [
+     -58.7,
+     -138.75
+    ],
+    [
+     -60.58,
+     -160.52
+    ],
+    [
+     -66.28,
+     -225.28
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -107.85,
+     -155.94
+    ],
+    [
+     -98.0,
+     -162.57
+    ],
+    [
+     -91.11,
+     -164.44
+    ],
+    [
+     -82.41,
+     -162.35
+    ],
+    [
+     -74.06,
+     -159.69
+    ],
+    [
+     -60.58,
+     -160.52
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -47.28,
+     -75.05
+    ],
+    [
+     -57.27,
+     -75.43
+    ],
+    [
+     -60.62,
+     -75.56
+    ],
+    [
+     -76.47,
+     -73.99
+    ],
+    [
+     -98.63,
+     -71.91
+    ],
+    [
+     -137.78,
+     -68.23
+    ],
+    [
+     -165.35,
+     -65.66
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -99.28,
+     -229.35
+    ],
+    [
+     -96.71,
+     -199.25
+    ],
+    [
+     -106.59,
+     -195.85
+    ],
+    [
+     -116.66,
+     -197.12
+    ],
+    [
+     -127.79,
+     -195.69
+    ],
+    [
+     -148.62,
+     -191.53
+    ],
+    [
+     -161.52,
+     -192.27
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     112.98,
+     -98.66
+    ],
+    [
+     91.91,
+     -96.05
+    ],
+    [
+     20.08,
+     -89.66
+    ],
+    [
+     -26.3,
+     -85.0
+    ],
+    [
+     -53.48,
+     -82.22
+    ],
+    [
+     -57.27,
+     -75.43
+    ],
+    [
+     -57.65,
+     -62.39
+    ],
+    [
+     -53.37,
+     -51.82
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -76.47,
+     -73.99
+    ],
+    [
+     -85.85,
+     -154.79
+    ],
+    [
+     -87.62,
+     -159.31
+    ],
+    [
+     -91.11,
+     -164.44
+    ],
+    [
+     -94.62,
+     -172.47
+    ],
+    [
+     -95.97,
+     -184.35
+    ],
+    [
+     -98.28,
+     -187.95
+    ],
+    [
+     -106.59,
+     -195.85
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -159.31,
+     -174.52
+    ],
+    [
+     -147.22,
+     -175.64
+    ],
+    [
+     -136.36,
+     -173.06
+    ],
+    [
+     -120.03,
+     -164.73
+    ],
+    [
+     -107.85,
+     -155.94
+    ],
+    [
+     -98.63,
+     -71.91
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -341.98,
+     102.63
+    ],
+    [
+     -304.94,
+     78.19
+    ],
+    [
+     -251.53,
+     70.2
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -247.45,
+     106.72
+    ],
+    [
+     -251.53,
+     70.2
+    ],
+    [
+     -262.82,
+     -31.25
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -211.38,
+     -0.32
+    ],
+    [
+     -209.05,
+     -9.07
+    ],
+    [
+     -208.93,
+     -22.55
+    ],
+    [
+     -209.4,
+     -32.56
+    ],
+    [
+     -206.7,
+     -37.42
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -220.5,
+     -67.65
+    ],
+    [
+     -201.63,
+     -78.55
+    ],
+    [
+     -194.41,
+     -86.55
+    ],
+    [
+     -186.27,
+     -102.04
+    ],
+    [
+     -182.52,
+     -105.71
+    ],
+    [
+     -176.8,
+     -108.43
+    ],
+    [
+     -169.74,
+     -110.97
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -227.85,
+     -81.92
+    ],
+    [
+     -240.95,
+     -83.21
+    ],
+    [
+     -246.62,
+     -84.83
+    ],
+    [
+     -254.26,
+     -89.4
+    ],
+    [
+     -262.82,
+     -92.94
+    ],
+    [
+     -267.11,
+     -95.16
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -206.7,
+     -37.42
+    ],
+    [
+     -208.99,
+     -46.93
+    ],
+    [
+     -215.76,
+     -60.55
+    ],
+    [
+     -220.5,
+     -67.65
+    ],
+    [
+     -223.76,
+     -73.35
+    ],
+    [
+     -227.85,
+     -81.92
+    ],
+    [
+     -228.85,
+     -88.24
+    ],
+    [
+     -229.86,
+     -105.8
+    ],
+    [
+     -229.9,
+     -115.93
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     11.37,
+     197.88
+    ],
+    [
+     3.38,
+     105.8
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     148.08,
+     198.77
+    ],
+    [
+     147.29,
+     186.32
+    ],
+    [
+     148.08,
+     183.18
+    ],
+    [
+     148.71,
+     178.82
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     147.7,
+     169.83
+    ],
+    [
+     149.71,
+     169.55
+    ],
+    [
+     153.24,
+     169.23
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -198.19,
+     -136.99
+    ],
+    [
+     -172.67,
+     -140.73
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -73.12,
+     -334.66
+    ],
+    [
+     -65.98,
+     -250.23
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -98.35,
+     -342.96
+    ],
+    [
+     -97.45,
+     -333.41
+    ],
+    [
+     -96.25,
+     -315.74
+    ],
+    [
+     -104.88,
+     -315.05
+    ],
+    [
+     -114.51,
+     -314.1
+    ],
+    [
+     -115.24,
+     -324.1
+    ],
+    [
+     -105.95,
+     -325.93
+    ],
+    [
+     -104.88,
+     -315.05
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     -96.25,
+     -315.74
+    ],
+    [
+     -91.68,
+     -272.88
+    ],
+    [
+     -88.8,
+     -249.14
+    ],
+    [
+     -99.28,
+     -229.35
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -262.16,
+     -217.9
+    ],
+    [
+     -265.53,
+     -251.99
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     -212.19,
+     -328.91
+    ],
+    [
+     -211.07,
+     -318.58
+    ],
+    [
+     -204.27,
+     -270.34
+    ],
+    [
+     -199.46,
+     -236.62
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     -204.27,
+     -270.34
+    ],
+    [
+     -193.75,
+     -264.51
+    ],
+    [
+     -185.11,
+     -255.96
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     170.42,
+     278.31
+    ],
+    [
+     167.78,
+     247.88
+    ]
+   ]
+  },
+  {
+   "kind": "tertiary",
+   "name": "Lindängsvägen",
+   "pts": [
+    [
+     177.41,
+     246.93
+    ],
+    [
+     180.53,
+     278.69
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     97.41,
+     209.79
+    ],
+    [
+     57.53,
+     203.47
+    ],
+    [
+     17.41,
+     197.15
+    ],
+    [
+     11.37,
+     197.88
+    ],
+    [
+     4.39,
+     198.75
+    ],
+    [
+     -69.58,
+     220.46
+    ],
+    [
+     -234.15,
+     236.63
+    ],
+    [
+     -329.38,
+     232.0
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     181.4,
+     223.1
+    ],
+    [
+     158.2,
+     219.31
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     101.77,
+     241.07
+    ],
+    [
+     91.68,
+     230.34
+    ],
+    [
+     83.71,
+     222.88
+    ],
+    [
+     72.62,
+     214.73
+    ],
+    [
+     57.53,
+     203.47
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     93.11,
+     167.6
+    ],
+    [
+     100.03,
+     197.8
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     113.57,
+     318.46
+    ],
+    [
+     118.67,
+     338.14
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "",
+   "pts": [
+    [
+     103.36,
+     252.5
+    ],
+    [
+     101.77,
+     241.07
+    ],
+    [
+     98.91,
+     220.55
+    ],
+    [
+     97.41,
+     209.79
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     158.2,
+     219.31
+    ],
+    [
+     150.78,
+     218.07
+    ],
+    [
+     97.41,
+     209.79
+    ]
+   ]
+  },
+  {
+   "kind": "path",
+   "name": "Högaholmsstigen",
+   "pts": [
+    [
+     -356.87,
+     -20.88
+    ],
+    [
+     -262.82,
+     -31.25
+    ],
+    [
+     -206.7,
+     -37.42
+    ],
+    [
+     -162.73,
+     -42.35
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     -93.97,
+     75.73
+    ],
+    [
+     -96.86,
+     69.79
+    ],
+    [
+     -97.39,
+     66.69
+    ],
+    [
+     -98.32,
+     60.71
+    ],
+    [
+     -94.23,
+     60.25
+    ],
+    [
+     -94.92,
+     55.71
+    ],
+    [
+     -87.12,
+     54.93
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     48.17,
+     -23.09
+    ],
+    [
+     52.52,
+     -18.65
+    ],
+    [
+     56.51,
+     -16.09
+    ],
+    [
+     60.27,
+     -14.87
+    ],
+    [
+     64.14,
+     -14.2
+    ],
+    [
+     67.57,
+     -15.41
+    ],
+    [
+     72.54,
+     -18.22
+    ],
+    [
+     76.12,
+     -23.22
+    ],
+    [
+     77.75,
+     -26.05
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     87.56,
+     28.01
+    ],
+    [
+     102.29,
+     26.92
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     2.96,
+     95.68
+    ],
+    [
+     2.01,
+     84.34
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     3.38,
+     105.8
+    ],
+    [
+     3.15,
+     100.01
+    ],
+    [
+     2.96,
+     95.68
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     2.01,
+     84.34
+    ],
+    [
+     1.99,
+     79.22
+    ],
+    [
+     1.92,
+     77.0
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     17.21,
+     126.0
+    ],
+    [
+     15.28,
+     105.01
+    ],
+    [
+     14.73,
+     98.9
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     23.26,
+     154.67
+    ],
+    [
+     38.36,
+     153.13
+    ],
+    [
+     51.33,
+     151.76
+    ],
+    [
+     81.97,
+     148.54
+    ],
+    [
+     70.48,
+     139.52
+    ],
+    [
+     54.28,
+     126.84
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     51.33,
+     151.76
+    ],
+    [
+     50.31,
+     142.65
+    ],
+    [
+     51.52,
+     140.73
+    ],
+    [
+     70.48,
+     139.52
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     38.36,
+     153.13
+    ],
+    [
+     37.28,
+     141.8
+    ],
+    [
+     37.89,
+     136.33
+    ],
+    [
+     40.08,
+     131.48
+    ],
+    [
+     41.82,
+     128.09
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     145.77,
+     -190.35
+    ],
+    [
+     148.02,
+     -191.19
+    ],
+    [
+     148.25,
+     -191.76
+    ],
+    [
+     148.24,
+     -194.32
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     147.21,
+     -206.09
+    ],
+    [
+     147.78,
+     -201.76
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     113.34,
+     -183.41
+    ],
+    [
+     111.31,
+     -190.26
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     110.58,
+     -198.14
+    ],
+    [
+     110.07,
+     -202.92
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     78.82,
+     -369.06
+    ],
+    [
+     93.45,
+     -365.02
+    ],
+    [
+     98.7,
+     -362.39
+    ],
+    [
+     104.92,
+     -359.11
+    ],
+    [
+     110.73,
+     -354.49
+    ],
+    [
+     118.24,
+     -347.91
+    ],
+    [
+     119.69,
+     -345.84
+    ],
+    [
+     123.43,
+     -340.71
+    ],
+    [
+     127.97,
+     -332.15
+    ],
+    [
+     130.71,
+     -324.66
+    ],
+    [
+     133.14,
+     -316.93
+    ],
+    [
+     134.52,
+     -305.95
+    ],
+    [
+     140.72,
+     -238.98
+    ],
+    [
+     140.15,
+     -234.84
+    ]
+   ]
+  },
+  {
+   "kind": "service",
+   "name": "",
+   "pts": [
+    [
+     242.13,
+     -162.03
+    ],
+    [
+     227.82,
+     -234.44
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     142.26,
+     -211.74
+    ],
+    [
+     144.77,
+     -201.01
+    ],
+    [
+     145.77,
+     -190.35
+    ],
+    [
+     147.7,
+     -169.02
+    ],
+    [
+     149.69,
+     -163.4
+    ],
+    [
+     153.23,
+     -161.16
+    ],
+    [
+     159.49,
+     -160.45
+    ]
+   ]
+  },
+  {
+   "kind": "cycleway",
+   "name": "",
+   "pts": [
+    [
+     159.49,
+     -160.45
+    ],
+    [
+     159.76,
+     -155.56
+    ],
+    [
+     160.84,
+     -139.67
+    ],
+    [
+     161.32,
+     -134.0
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     138.48,
+     -78.56
+    ],
+    [
+     133.88,
+     -78.32
+    ],
+    [
+     125.26,
+     -77.3
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     143.08,
+     -78.81
+    ],
+    [
+     138.48,
+     -78.56
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     160.98,
+     99.74
+    ],
+    [
+     165.7,
+     99.28
+    ],
+    [
+     172.61,
+     98.3
+    ]
+   ]
+  },
+  {
+   "kind": "footway",
+   "name": "",
+   "pts": [
+    [
+     156.32,
+     100.21
+    ],
+    [
+     160.98,
+     99.74
+    ]
+   ]
+  }
+ ],
+ "water": [],
+ "materials": {
+  "brick_yellow": [
+   206,
+   178,
+   116
+  ],
+  "brick_maroon": [
+   128,
+   58,
+   50
+  ],
+  "render_cream": [
+   232,
+   222,
+   196
+  ],
+  "brick_red": [
+   150,
+   72,
+   56
+  ],
+  "brick_dark": [
+   92,
+   62,
+   52
+  ],
+  "render_white": [
+   238,
+   236,
+   230
+  ],
+  "render_light": [
+   226,
+   221,
+   208
+  ],
+  "render_yellow": [
+   228,
+   204,
+   138
+  ],
+  "stone_light": [
+   214,
+   207,
+   190
+  ],
+  "metal_panel_light": [
+   196,
+   202,
+   208
+  ],
+  "metal_light": [
+   180,
+   186,
+   192
+  ],
+  "membrane_dark": [
+   88,
+   90,
+   96
+  ],
+  "membrane_light": [
+   196,
+   192,
+   184
+  ],
+  "pv": [
+   38,
+   48,
+   70
+  ],
+  "glass": [
+   140,
+   175,
+   200
+  ],
+  "green": [
+   110,
+   150,
+   90
+  ]
+ }
+}

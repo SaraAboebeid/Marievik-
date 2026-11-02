@@ -4,6 +4,7 @@ import { H as PLATE_H, W as PLATE_W, type StudioMeta, type StudioPayload } from 
 import { FloorLayer, HZ, iso, pts, type FloorLayerProps } from './flexDraw'
 import type { Timeline, TimelineResponse } from '../types'
 import { GYPSUM, WALL_H, runCosts, smartax, solidM2, sumCosts, wallDiff, type ChangeCost, type SmartaxMode, type SystemSpec } from '../flex'
+import { bl } from '../codes'
 
 // Flexibility (Building scale, B01): one floor built twice side by side — Smartax walls on the left, fixed gypsum
 // walls on the right — through either one year (a use per quarter, picked from the floor studio's plans) or ten
@@ -149,7 +150,7 @@ export function FlexDrawer({ meta, project, floor, setFloor, prefill, prefillNot
   return (
     <div className="pointer-events-auto flex max-h-[min(40rem,66vh)] w-full flex-col overflow-hidden rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex flex-wrap items-center justify-between gap-2 px-3.5 pb-2.5 pt-1.5">
-        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Flexibility · B01 floor {floor} · Smartax against fixed gypsum walls</h4>
+        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Flexibility · {bl('B01')} floor {floor} · Smartax against fixed gypsum walls</h4>
         <span className="flex items-center gap-1.5">
           <span className="flex overflow-hidden rounded-md border-2 border-edge text-[11px] font-bold">
             {(['year', 'decade'] as Mode[]).map((m) => (

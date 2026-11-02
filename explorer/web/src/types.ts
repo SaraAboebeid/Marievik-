@@ -35,9 +35,13 @@ export interface SiteBuilding {
   holes: Ring[]
   facade?: Facade
   height_m?: number
+  code?: string                      // the owner's code (AMF's M27 ...) where confirmed: shown in place of the id
 }
 
 export interface SitePayload {
+  key?: string                       // the project's site (parametric/site/<key>_site.json)
+  name?: string
+  summary?: { apartments?: number; area_m2?: number; buildings?: number } | null
   location: { name: string; lat: number; lon: number; tz: number; epw: string }
   materials: Record<string, [number, number, number]>
   roads: { kind: string; name?: string; pts: XY[] }[]

@@ -80,7 +80,7 @@ def site_layers(site, studio_layouts: dict[int, str] | None = None, studio_param
         peak = sum(x["peak"] for x in floors)
         rented = vacant = 0.0
         for f in range(int(b["levels"])):
-            ft = studio_tenancy.floor_tenancy("marievik", b["id"], f, fp.area, today=date.today().year)
+            ft = studio_tenancy.floor_tenancy(getattr(site, "key", "marievik"), b["id"], f, fp.area, today=date.today().year)
             rented += ft["rented"]
             vacant += ft["vacant"]
         vacancy_today = round(vacant / (rented + vacant), 3) if (rented + vacant) else 0.0

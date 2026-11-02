@@ -833,11 +833,17 @@ export class SeasonShow {
       u.prog = p
       const mat = u.mesh.material as THREE.MeshStandardMaterial
       if (!p) { mat.color.set('#d9d5cc'); mat.emissive.set('#000000'); continue }
-      const col = new THREE.Color(KINDS[p.kind].colour)
-      // a light tint by day, glowing in its colour after dark; closed spaces go dark
-      mat.color.copy(p.open ? col.clone().lerp(new THREE.Color('#f4f1ea'), 0.5 - night * 0.3) : new THREE.Color('#6d7178'))
-      mat.emissive.copy(p.open ? col : new THREE.Color('#000000'))
-      mat.emissiveIntensity = p.open ? night * 0.85 : 0
+      // the colour of what it hosts, faded over the last 40 minutes so one use dissolves into the next;
+      // a light tint by day, glowing after dark
+      const col = new THREE.Color(0, 0, 0)
+      const N = 5
+      for (let k = 0; k < N; k++) {
+        const q = k === 0 ? p : unitProgram(u.name, u.building, season, hour - (k / (N - 1)) * 0.67)
+        col.add(new THREE.Color(KINDS[(q ?? p).kind].colour).multiplyScalar(1 / N))
+      }
+      mat.color.copy(col.clone().lerp(new THREE.Color('#f4f1ea'), 0.5 - night * 0.3))
+      mat.emissive.copy(col)
+      mat.emissiveIntensity = 0.04 + night * 0.85
       if (p.open) now.set(u.building, [...(now.get(u.building) ?? []), { label: p.label, kind: p.kind, area: u.area }])
     }
     const order: Kind[] = ['party', 'culture', 'craft', 'well', 'food', 'shop', 'home', 'work']

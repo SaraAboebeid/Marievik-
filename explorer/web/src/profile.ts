@@ -8,10 +8,10 @@ export const PROFILE_LABEL: Record<string, string> = {
   supplier: 'Material supplier',
 }
 
-/** Every project opens the Marievik model until its own is added. */
+/** Every project opens the Marievik model until its own is added (Lindängen has its own since 2026-11-02). */
 export const PROJECTS: Record<string, { name: string; city: string; placeholder: boolean }> = {
   marievik: { name: 'Marievik', city: 'Stockholm', placeholder: false },
-  lindangen: { name: 'Lindängen', city: 'Malmö', placeholder: true },
+  lindangen: { name: 'Lindängen', city: 'Malmö', placeholder: false },
   sandvangen: { name: 'Sandvången', city: 'Malmö', placeholder: true },
   uppsala: { name: 'Uppsala', city: 'Uppsala', placeholder: true },
   lillabommen: { name: 'Lilla Bommen', city: 'Göteborg', placeholder: true },

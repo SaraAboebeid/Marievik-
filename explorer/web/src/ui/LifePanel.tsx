@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import { Card } from './kit'
 import { AMENITY_TYPES, activeIn, type LifeItem, type UrbanLife } from '../urbanLife'
 import { inkOn, lifeIconSvg } from '../lifeIcons'
+import { SITE_NAME } from '../seasons'
 
 export interface LifeFilter { year: number; permanent: boolean; temporary: boolean; amenities: boolean }
 export const LIFE_YEARS = [2024, 2030] as const
@@ -18,7 +19,7 @@ export function Icon({ k, size = 12, stroke }: { k: string; size?: number; strok
  *  Three kinds of life, three objects (on the map and here): permanent → a planted flag, temporary → a balloon that
  *  is there for its one year, amenities → round tokens. */
 export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null; filter: LifeFilter; setFilter: (f: LifeFilter) => void }) {
-  if (!life) return <Card title="Life on Marievik">Loading…</Card>
+  if (!life) return <Card title={`Life on ${SITE_NAME}`}>Loading…</Card>
   const cat = (c: string) => life.categories[c] ?? { label: c, colour: '#9a978e' }
   const y = filter.year
   const perm = life.timeline.filter((t) => t.kind === 'permanent' && activeIn(t, y))
@@ -58,7 +59,7 @@ export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null;
   }
 
   return (
-    <Card title="Life on Marievik" right={
+    <Card title={`Life on ${SITE_NAME}`} right={
       <span className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[12px] font-bold text-ink shadow-[2px_2px_0_var(--color-edge)]">{y}</span>
     }>
       {/* the three layers, each drawn as its own map object */}
@@ -118,7 +119,7 @@ export function LifePanel({ life, filter, setFilter }: { life: UrbanLife | null;
           </>
         )}
         <p className="mt-1.5 leading-snug text-muted">
-          Timeline: AMF's Marievik plan 2024–2030 (categories inferred). Places: AMF event pages, OpenStreetMap; amenities from OpenStreetMap (hover a token for its name).
+          {SITE_NAME === 'Marievik' ? <>Timeline: AMF's Marievik plan 2024–2030 (categories inferred). Places: AMF event pages, OpenStreetMap; amenities from OpenStreetMap (hover a token for its name).</> : <>No development timeline supplied yet: the timeline lists places that exist today. Amenities from OpenStreetMap (hover a token for its name).</>}
         </p>
       </div>
     </Card>

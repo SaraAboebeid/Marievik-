@@ -10,6 +10,7 @@ import { HeadlineFigures, SpaceDistribution } from './ui/KeyFigures'
 import { TopBar, buildingAddress, type Tab } from './ui/TopBar'
 import { DistrictPanel, UrbanPanel } from './ui/ScalePanel'
 import { PROFILE_LABEL, PROJECTS, readChoice, writeChoice } from './profile'
+import { setSeasonSite } from './seasons'
 import { MethodsDrawer } from './ui/MethodsDrawer'
 import { Viewer, type Pick, type StudioView, type ViewOptions } from './viewer/Viewer'
 import { fromPayload, layoutFor, layoutForUse, setGeometry } from './studio/engine'
@@ -22,7 +23,7 @@ import { GeneratePlans } from './ui/VariantsPanel'
 import { PlanningTable } from './ui/PlanningTable'
 import { LifePanel, type LifeFilter } from './ui/LifePanel'
 import { LifeDecade } from './ui/LifeDecade'
-import { KpiStrip, type KpiScale } from './ui/KpiStrip'
+import { KpiStrip, type KpiScale, type SiteFigures } from './ui/KpiStrip'
 import { AMENITY_TYPES, activeIn, type UrbanLife } from './urbanLife'
 import { lifeIconSvg } from './lifeIcons'
 import { leaseAt, mockLeaseBook, rentedShare, stepTime } from './leases'
@@ -49,6 +50,8 @@ import { CompareDrawer } from './ui/CompareDrawer'
 import { MapLegend } from './ui/MapLegend'
 import { ParametricDrawer } from './ui/ParametricDrawer'
 import { SupplierDrawer } from './ui/SupplierDrawer'
+import { splitHref } from './SideBySide'
+import { bl, setCodes } from './codes'
 
 export type Overlay = 'type' | 'daylight' | 'comfort'
 export type Method = 'quick' | 'ladybug'
@@ -60,6 +63,9 @@ const SCALE_TABS: [Scale | 'floor', string, string][] = [
   ['building', 'Building', 'One building as a whole'],
   ['floor', 'Floor', 'One floor of a building: its plan, rooms and units'],
 ]
+
+const SHOW_URBAN_CARDS = false   // the urban-scale cards are hidden for now; flip to bring them back
+const EMBEDDED = new URLSearchParams(window.location.search).has('embed')   // a pane of the side-by-side view
 
 const STORE_KEY = 'marievik-explorer-saved'
 
@@ -530,7 +536,10 @@ export default function App() {
     let alive = true
     api.site().then(async (s) => {
       if (!alive) return
+      setCodes(s)
       setSite(s)
+      // the seasons show plays this site's own places, programme and sun
+      setSeasonSite(s.key ?? 'marievik', PROJECTS[s.key ?? 'marievik']?.name ?? s.name ?? 'Marievik', s.location.lat, s.location.lon)
       viewer.current?.setSite(s)
       api.context().then((c) => { if (alive && c && c.roads) viewer.current?.setContext(c) }).catch(() => {})
       const ids = s.buildings.map((b) => b.id)
@@ -745,7 +754,7 @@ export default function App() {
         const yi = Math.max(0, districtRes.strategy.years.indexOf(distYear))
         v.setLayerTint(Object.fromEntries(districtRes.strategy.buildings.map((bd) => {
           const vac = bd.vacancy[yi], n = bdata[bd.id]?.floors.length ?? 8
-          return [bd.id, { floors: Array(n).fill(riskColour(vac / 0.15)), label: `${bd.id} ${Math.round(vac * 100)} %` }]
+          return [bd.id, { floors: Array(n).fill(riskColour(vac / 0.15)), label: `${bl(bd.id)} ${Math.round(vac * 100)} %` }]
         })))
         return
       }
@@ -753,7 +762,7 @@ export default function App() {
       if (!layerData) { v.setLayerTint(null); return }
       v.setLayerTint(Object.fromEntries(layerData.buildings.map((bd) => {
         const n = bdata[bd.id]?.floors.length ?? 8
-        return [bd.id, { floors: Array(n).fill(riskColour(bd.vacancyToday / 0.15)), label: `${bd.id} ${Math.round(bd.vacancyToday * 100)} % today` }]
+        return [bd.id, { floors: Array(n).fill(riskColour(bd.vacancyToday / 0.15)), label: `${bl(bd.id)} ${Math.round(bd.vacancyToday * 100)} % today` }]
       })))
       return
     }
@@ -768,17 +777,17 @@ export default function App() {
           floors: bd.floors.map((f) => (f.checksOk === false ? '#d8342b' : f.source === 'estimate' ? '#b9b6ac' : riskColour(f.planned / Math.max(1, f.legalMax)))),
           // District: every building labelled; Building: the one in focus (and B01)
           label: scale === 'district' || bd.id === 'B01' || bd.id === buildingId
-            ? `${bd.id} ${planned} / ${legal} people${fails ? ` · ${fails} floor${fails > 1 ? 's' : ''} fail a check` : ''}${bd.floors.some((f) => f.source === 'mock') ? ' · mock-up' : ''}` : undefined,
+            ? `${bl(bd.id)} ${planned} / ${legal} people${fails ? ` · ${fails} floor${fails > 1 ? 's' : ''} fail a check` : ''}${bd.floors.some((f) => f.source === 'mock') ? ' · mock-up' : ''}` : undefined,
         }
       } else if (layer === 'fire') {
         const plan = bd.floors.filter((f) => f.escape_m !== null)
         const worst = plan.length ? plan.reduce((a, f) => ((f.escape_m ?? 0) > (a.escape_m ?? 0) ? f : a)) : null
         tints[bd.id] = {
           floors: bd.floors.map((f) => (f.escape_m === null ? '#9a978e' : riskColour(f.escape_m / f.escapeLimit))),
-          label: worst ? `${bd.id} longest escape ${worst.escape_m?.toFixed(1)} m (floor ${worst.floor}) · out in ~${Math.ceil((worst.evac_s ?? 0) / 60)} min` : undefined,
+          label: worst ? `${bl(bd.id)} longest escape ${worst.escape_m?.toFixed(1)} m (floor ${worst.floor}) · out in ~${Math.ceil((worst.evac_s ?? 0) / 60)} min` : undefined,
         }
       } else {
-        tints[bd.id] = { floors: bd.floors.map((f) => busyColour(f.peak / maxPeak)), label: bd.id === 'B01' || bd.id === buildingId ? `${bd.id} ${bd.peak} at the peak` : undefined }
+        tints[bd.id] = { floors: bd.floors.map((f) => busyColour(f.peak / maxPeak)), label: bd.id === 'B01' || bd.id === buildingId ? `${bl(bd.id)} ${bd.peak} at the peak` : undefined }
       }
     }
     v.setLayerTint(tints)
@@ -870,7 +879,7 @@ export default function App() {
     const t = stepTime(leaseStep)
     const rented = Object.fromEntries(leaseBook.spaces.map((sp) => [sp.id, !!leaseAt(leaseBook, sp.id, t)]))
     const share = rentedShare(leaseBook, t)
-    v.setTenancyOccupancy(rented, Object.fromEntries(tourIds.map((id) => [id, `${id} · ${Math.round((share[id] ?? 0) * 100)} % rented`])))
+    v.setTenancyOccupancy(rented, Object.fromEntries(tourIds.map((id) => [id, `${bl(id)} · ${Math.round((share[id] ?? 0) * 100)} % rented`])))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tourKey, leaseStep, leaseBook])
   // a lens the new scale doesn't offer (layers.ts LAYERS_AT) goes back to None - at urban scale, to Amenities
@@ -1119,6 +1128,20 @@ export default function App() {
     }
   }, [bdata, scale, districtHidden])
 
+  // the site's current scenario, in the KPI strip while no building is open (it was a card in the right panel)
+  const siteFigures: SiteFigures | null = site && level.kind === 'site' ? {
+    tiles: [
+      { label: 'Gross floor area', value: fmt(totals.gfa_m2), unit: 'm²',
+        sub: totals.added_gfa_m2 ? `${fmt(totals.added_gfa_m2)} m² added on top` : 'no floors added' },
+      { label: 'Units', value: fmt(totals.units), sub: 'apartments, offices, rooms…' },
+      { label: 'New fit-out cost', value: fmt1(totals.capex_sek / 1e6), unit: 'MSEK' },
+      { label: 'Upfront carbon A1–A5', value: fmt(totals.upfront_kgco2e / 1000), unit: 't CO₂e',
+        sub: `${fmt1(totals.gfa_m2 ? totals.upfront_kgco2e / totals.gfa_m2 : 0)} kg/m²` },
+    ],
+    note: 'Existing shells are retained (no new carbon). Prices and carbon come from the Marievik+ catalogue, mostly placeholder values until EPDs and tenders replace them.',
+    progress: totals.loaded < site.buildings.length ? `${totals.loaded}/${site.buildings.length} laid out` : undefined,
+  } : null
+
   const allSettings = useCallback(() => {
     const all: Record<string, Settings> = {}
     if (site) for (const b of site.buildings) all[b.id] = { ...site.defaults, ...(scen[b.id] ?? {}) }
@@ -1223,8 +1246,8 @@ export default function App() {
     const ten = tenancy[b.id]?.[f.index]
     return ten ? { n: f.index, label: f.index === 0 ? 'GF' : `F${f.index}`, use: studioUse ? USE_FAMILY[studioUse] ?? f.use_label : f.use_label, area, ten } : null
   }).filter((r): r is FloorRow => r !== null) : null
-  const crumbs:{ label: string; to: Level }[] = [{ label: 'Marievik', to: { kind: 'site' } }]
-  if (level.kind !== 'site') crumbs.push({ label: `${level.building} ${b?.name ?? ''}`, to: { kind: 'building', building: level.building } })
+  const crumbs:{ label: string; to: Level }[] = [{ label: PROJECTS[site?.key ?? 'marievik']?.name ?? 'Marievik', to: { kind: 'site' } }]
+  if (level.kind !== 'site') crumbs.push({ label: `${bl(level.building)} ${b?.name ?? ''}`, to: { kind: 'building', building: level.building } })
   if (level.kind === 'floor' || level.kind === 'unit') crumbs.push({ label: `Floor ${level.floor}${b?.floors[level.floor]?.added ? ' (added)' : ''}`, to: { kind: 'floor', building: level.building, floor: level.floor } })
   if (level.kind === 'unit') crumbs.push({ label: floorData?.units.find((u) => u.id === level.unit)?.name ?? level.unit, to: level })
 
@@ -1239,7 +1262,7 @@ export default function App() {
     }
     const bb = bdata[hover.p.building]
     const f = bb?.floors[hover.p.floor]
-    return bb ? `${bb.id} ${bb.name} · floor ${hover.p.floor}${f ? ` · ${f.use_label}${f.added ? ' (added)' : ''}` : ''}` : hover.p.building
+    return bb ? `${bl(bb.id)} ${bb.name} · floor ${hover.p.floor}${f ? ` · ${f.use_label}${f.added ? ' (added)' : ''}` : ''}` : hover.p.building
   })()
 
   // hovering a building other than the open one: a card with its figures, instead of the one-line label
@@ -1271,6 +1294,9 @@ export default function App() {
           { label: 'Methods & data', open: explain !== null, onClick: () => setExplain((e) => (e === null ? '' : null)) },
           { label: 'Standards', title: 'Dimensioned standards sheets: accessibility, escape routes, loads and every use in the catalogue',
             open: showStandards, onClick: () => setShowStandards((s) => !s) },
+          // not inside a side-by-side pane (?embed=1), which would nest a split in a split
+          ...(EMBEDDED ? [] : [{ label: 'Side by side', title: 'Two projects next to each other, each with its own model and panels',
+            open: false, onClick: () => { window.location.href = splitHref(choice.project) } }]),
         ]} />
 
       {/* under the bar: where you are, and the tools — a second full-width bar (like the header above it),
@@ -1312,7 +1338,7 @@ export default function App() {
                 <path d="M5.5 2.5h6l3 3v12h-9z" strokeLinejoin="round" /><path d="M11.5 2.5v3h3" strokeLinejoin="round" />
               </svg>
               <span className="min-w-0 flex-1 truncate text-left">
-                {buildingId ? `${buildingId} · ${buildingAddress(site.buildings.find((bd) => bd.id === buildingId)!)}` : 'Pick a building…'}
+                {buildingId ? `${bl(buildingId)} · ${buildingAddress(site.buildings.find((bd) => bd.id === buildingId)!)}` : 'Pick a building…'}
               </span>
               <svg viewBox="0 0 12 12" className={`h-2.5 w-2.5 shrink-0 text-ink-2 transition-transform ${bPickerOpen ? 'rotate-180' : ''}`} aria-hidden>
                 <path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" />
@@ -1329,10 +1355,10 @@ export default function App() {
                 </li>
                 {site.buildings.map((bd) => (
                   <li key={bd.id}>
-                    <button type="button" role="option" aria-selected={buildingId === bd.id} title={`${bd.id} · ${buildingAddress(bd)}`}
+                    <button type="button" role="option" aria-selected={buildingId === bd.id} title={`${bl(bd.id)} · ${buildingAddress(bd)}`}
                       onClick={() => { go({ kind: 'building', building: bd.id }); setBPickerOpen(false) }}
                       className={`block w-full truncate border-t-2 border-edge px-3 py-1.5 text-left text-[12.5px] ${buildingId === bd.id ? 'bg-accent-soft font-semibold text-accent' : 'hover:bg-sunken'}`}>
-                      {bd.id} · {buildingAddress(bd)}
+                      {bl(bd.id)} · {buildingAddress(bd)}
                     </button>
                   </li>
                 ))}
@@ -1376,7 +1402,7 @@ export default function App() {
         <KpiStrip scale={kpiScale} profile={projectProfile} pinned={choice.kpis}
           cavfKpis={!projectProfile && cavfProfile ? methods?.profiles[cavfProfile]?.kpis ?? null : null}
           methods={methods} values={stripValues} valuesFrom={stripValues ? (kpiScale === 'floor' ? 'building' : 'here') : null}
-          waiting={stripWaiting} onExplain={(k) => setExplain(k)} />
+          waiting={stripWaiting} onExplain={(k) => setExplain(k)} site={siteFigures} />
       </div>
 
       {error && (
@@ -1420,7 +1446,8 @@ export default function App() {
           open — what you change (layout/walls/people, building settings) above what comes out of it (results).
           Nothing to set up on the whole site. */}
       {panels.right ? (
-        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn || seasonsOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem]`}>
+        // hidden when nothing but its close button renders (the whole site at building scale: its figures are in the KPI strip)
+        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn || seasonsOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem] [&:not(:has(>:nth-child(2)))]:hidden`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -1476,8 +1503,9 @@ export default function App() {
           )}
           {lifeOn && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
           {lifeOn && life && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
-          {scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
-          {scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
+          {/* hidden for now (2026-11-02): the urban-scale cards, Marievik in Liljeholmen and ground floors & open space */}
+          {SHOW_URBAN_CARDS && scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
+          {SHOW_URBAN_CARDS && scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
           {floorOpen ? (
             <StudioPanel model={studioModel!} setView={setStudioView}
               floorLabel={studioFloor === 0 ? 'Ground floor' : `Floor ${studioFloor}`}
@@ -1522,7 +1550,7 @@ export default function App() {
         {overlay === 'daylight' && dl && <Legend title={`Daylight factor % — ${dl.method === 'quick' ? 'quick estimate' : 'Radiance'}`} bins={DF_BINS} />}
         {overlay === 'comfort' && cf && <Legend title="Occupied hours in category II comfort" bins={COMFORT_BINS} />}
         {layer !== 'none' && layer !== 'tenancy' && layer !== 'amenities' && layer !== 'flexibility' && layer !== 'seasons' && studioFloor === null && level.kind !== 'floor' && level.kind !== 'unit' && (
-          <Legend title={LAYER_LEGEND[layer].title} bins={LAYER_LEGEND[layer].bins} />
+          <Legend title={LAYER_LEGEND[layer].title.replace(/B01/g, bl('B01'))} bins={LAYER_LEGEND[layer].bins} />
         )}
       </div>
 
@@ -1530,15 +1558,15 @@ export default function App() {
       <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${
         tourOn || lifeBar || flexOn || seasonsOn ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
         {seasonsOn ? (
-          seasonFloors ? <SeasonPanel floors={seasonFloors} onClock={(se, h, l) => viewer.current?.setSeasonClock(se, h, l)} onOrbit={(w) => viewer.current?.setSeasonOrbit(w)} onClose={() => setLayerState(scale === 'urban' ? 'amenities' : 'none')} />
+          seasonFloors ? <SeasonPanel floors={seasonFloors} onClock={(se, h, l) => viewer.current?.setSeasonClock(se, h, l)} onOrbit={(w) => viewer.current?.setSeasonOrbit(w)} onLayout={() => viewer.current?.frameSeason(false)} onClose={() => setLayerState(scale === 'urban' ? 'amenities' : 'none')} />
             : <div className="pointer-events-auto rounded-lg border-2 border-edge bg-raised px-3 py-2 font-mono text-[11.5px]">Opening the ground floors and setting up the seasons…</div>
         ) : flexOn ? (
           flexFloorOpen || buildingId !== 'B01' ? (
             <div className="flex w-full flex-col gap-1.5">
               {buildingId !== 'B01' && (
                 <div className="pointer-events-auto flex items-center gap-2 self-start rounded-lg border-2 border-edge bg-surface px-3 py-1.5 text-[12px] shadow-[2px_2px_0_var(--color-edge)]">
-                  {buildingId ? `${buildingId} has no drawn floor plans yet: flexibility is shown for B01.` : 'Pick a building for the whole-building view: B01 has drawn floor plans.'}
-                  <button type="button" onClick={() => go({ kind: 'building', building: 'B01' })} className="rounded-md border-2 border-edge bg-coral px-2 py-px font-bold">Open B01</button>
+                  {buildingId ? `${bl(buildingId)} has no drawn floor plans yet: flexibility is shown for ${bl('B01')}.` : `Pick a building for the whole-building view: ${bl('B01')} has drawn floor plans.`}
+                  <button type="button" onClick={() => go({ kind: 'building', building: 'B01' })} className="rounded-md border-2 border-edge bg-coral px-2 py-px font-bold">Open {bl('B01')}</button>
                 </div>
               )}
               {flexFloorOpen && buildingId === 'B01' && (
@@ -1618,7 +1646,7 @@ export default function App() {
           style={{ left: hoverLeft, top: hover.y - 12, transform: hoverFlip ? 'translate(-100%, -100%)' : 'translateY(-100%)' }}>
           <div className="flex items-baseline gap-1.5">
             <span className="h-2.5 w-2.5 shrink-0 rounded-[3px]" style={{ background: USE_DOT[hoverSB?.current_use ?? ''] ?? '#cfcdc4' }} />
-            <span><span className="font-semibold">{hoverB.id}</span> {hoverSB ? buildingAddress(hoverSB) : hoverB.name}</span>
+            <span><span className="font-semibold">{bl(hoverB.id)}</span> {hoverSB ? buildingAddress(hoverSB) : hoverB.name}</span>
           </div>
           <div className="pl-4 text-[11.5px] text-ink-2">{useOf(hoverB, hoverSB)}</div>
           <div className="mt-2 grid grid-cols-3 gap-2 border-t border-line pt-2">

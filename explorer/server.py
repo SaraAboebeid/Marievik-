@@ -33,6 +33,7 @@ API (all JSON)
 from __future__ import annotations
 
 import argparse
+import contextvars
 import json
 import os
 import subprocess
@@ -44,7 +45,7 @@ import uuid
 from datetime import date
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -59,16 +60,37 @@ SIM_SCRIPT = HERE / "sim" / "full_sim.py"
 LANDING = HERE.parent / "web" / "landing.html"           # the Digital Lab front door
 
 app = FastAPI(title="Marievik+ Explorer", docs_url="/api/docs")
-SITE: M.Site | None = None
+SITES: dict[str, M.Site] = {}
+_SITES_LOCK = threading.Lock()
 JOBS: dict[str, dict] = {}
 CAPS: dict = {"probed": False}
+# Which project's site a request is about: the web app sends its ?project= as the X-Site header (or ?site=).
+# Projects without a site file of their own (parametric/site/<key>_site.json) open Marievik.
+DEFAULT_SITE = os.environ.get("MVK_SITE", "marievik")
+CURRENT_SITE: contextvars.ContextVar[str] = contextvars.ContextVar("CURRENT_SITE", default=DEFAULT_SITE)
+
+
+def site_key(raw: str | None) -> str:
+    k = (raw or "").strip().lower()
+    return k if k and k.replace("_", "").isalnum() and k in M.S.site_keys() else DEFAULT_SITE
 
 
 def site() -> M.Site:
-    global SITE
-    if SITE is None:
-        SITE = M.Site()
-    return SITE
+    key = CURRENT_SITE.get()
+    if key not in SITES:
+        with _SITES_LOCK:
+            if key not in SITES:
+                SITES[key] = M.Site(key=key)
+    return SITES[key]
+
+
+@app.middleware("http")
+async def _pick_site(request: Request, call_next):
+    token = CURRENT_SITE.set(site_key(request.headers.get("x-site") or request.query_params.get("site")))
+    try:
+        return await call_next(request)
+    finally:
+        CURRENT_SITE.reset(token)
 
 
 class ScenarioBody(BaseModel):

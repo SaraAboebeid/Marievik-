@@ -1,6 +1,7 @@
 import { fmt } from '../api'
 import type { SitePayload, UrbanSummary } from '../types'
 import { Card, Row, Toggle } from './kit'
+import { bl } from '../codes'
 
 /** District scale: which of the site's buildings count toward the totals and stay lit in the 3D view. */
 export function DistrictPanel({ site, hidden, onToggle, onAll, onNone }: {
@@ -19,7 +20,7 @@ export function DistrictPanel({ site, hidden, onToggle, onAll, onNone }: {
       </div>
       <div className="flex flex-wrap gap-1.5">
         {site.buildings.map((b) => (
-          <Toggle key={b.id} on={!hidden.has(b.id)} onChange={() => onToggle(b.id)} label={b.id} />
+          <Toggle key={b.id} on={!hidden.has(b.id)} onChange={() => onToggle(b.id)} label={bl(b.id)} />
         ))}
       </div>
     </Card>
@@ -38,7 +39,7 @@ export function UrbanPanel({ urban, loading }: { urban: UrbanSummary | null; loa
       ) : (
         <div>
           {urban?.buildings.map((b) => (
-            <Row key={b.id} label={`${b.id} · ${b.ground_use_label}`}
+            <Row key={b.id} label={`${bl(b.id)} · ${b.ground_use_label}`}
               value={`${fmt(b.green_m2)} m² green · ${fmt(b.plaza_m2)} m² plaza`} />
           ))}
         </div>

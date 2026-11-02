@@ -18,7 +18,7 @@ import { glowGlass, roomLight, setGlow } from './glow'
 import { flock, planks, pvCells, sedum, speckle, shoreBands } from './textures'
 import { buildSculptures } from './sculptures'
 import { SeasonShow } from './seasonShow'
-import { nightOf, sunAt } from '../seasons'
+import { ZONES, nightOf, sunAt } from '../seasons'
 import type { Amenity } from '../urbanLife'
 import { buildBoats, buildDressing, buildPeople, buildPierRails, buildTrees, ground, peopleSpots, type Ground } from './dress'
 import { UNIT_BOX, detailGeometry, disposeTree, flat, inflate, localBox, prism, segmentBox } from './geometry'
@@ -40,6 +40,17 @@ const STUDIO_FURN: Record<string, [string, number]> = {
   planter: ['#6fae5a', 1.4], stage: ['#d9cfb4', 0.45], bench: ['#b88c55', 0.45], ahu: ['#b4b1a8', 2.2], pallet: ['#c9ac78', 1.2],
 }
 /** Distance colours: green near an exit, yellow, coral, red at the 45 m limit. */
+/** Is (x, y) within d metres of the ring's edges? */
+function nearRing(x: number, y: number, ring: [number, number][], d: number) {
+  for (let i = 0; i < ring.length; i++) {
+    const [ax, ay] = ring[i], [bx, by] = ring[(i + 1) % ring.length]
+    const vx = bx - ax, vy = by - ay, l2 = vx * vx + vy * vy
+    const t = l2 ? Math.max(0, Math.min(1, ((x - ax) * vx + (y - ay) * vy) / l2)) : 0
+    if (Math.hypot(ax + t * vx - x, ay + t * vy - y) <= d) return true
+  }
+  return false
+}
+
 function rampColor(t: number): [number, number, number] {
   const stops: [number, [number, number, number]][] = [[0, [3, 176, 95]], [0.55, [245, 214, 107]], [0.85, [253, 135, 110]], [1, [180, 50, 31]]]
   t = Math.max(0, Math.min(1, t))
@@ -309,6 +320,7 @@ export class Viewer {
     const h = this.container.clientHeight
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
+    if (this.season) window.setTimeout(() => this.frameSeason(false), 50)
     this.renderer.setSize(w, h)
     this.labelRenderer.setSize(w, h)
     this.composer.setSize(w, h)
@@ -512,7 +524,7 @@ export class Viewer {
     water.rotation.z = Math.atan2(-0.8, 0.6) + Math.PI / 2
     water.receiveShadow = true
     water.userData.placeholder = true
-    this.contextGroup.add(water)
+    if ((site.key ?? 'marievik') === 'marievik') this.contextGroup.add(water)
     const road = new THREE.LineBasicMaterial({ color: '#8c8f86' })
     for (const r of site.roads) {
       const g = new THREE.BufferGeometry().setFromPoints(r.pts.map(([x, y]) => new THREE.Vector3(x, y, 0.03)))
@@ -525,6 +537,7 @@ export class Viewer {
 
   // ------------------------------------------------------------------ urban context (OpenStreetMap)
   private ctxGroup = new THREE.Group()
+  private linkGroup = new THREE.Group()   // skybridges and other raised context joined to site buildings
 
   setContext(ctx: UrbanContext) {
     this.invalidate()
@@ -610,7 +623,15 @@ export class Viewer {
     for (const p of ctx.platforms ?? []) surf(p.rings, p.z ?? 0, M('#bdb8ae', 0.9), 0.8)
     if (ctx.massing?.length) {
       // neighbouring buildings in detail: parts, colours, windows, pitched roofs (viewer/context3d.ts)
-      for (const o of buildMassing(ctx.massing)) g.add(o)
+      // raised pieces touching a site building (the skybridge between B05 and B06) belong to the site, not the
+      // surroundings: kept apart so they fade with the buildings they join (applyFocus)
+      const fps = this.site?.buildings.map((b) => b.footprint) ?? []
+      const joins = (m: (typeof ctx.massing)[number]) => (m.z0 ?? 0) >= 2 &&
+        m.rings.some((rs) => rs[0].some(([x, y]) => fps.some((fp) => nearRing(x, y, fp, 3))))
+      for (const o of buildMassing(ctx.massing.filter((m) => !joins(m)))) g.add(o)
+      this.linkGroup.clear()
+      for (const o of buildMassing(ctx.massing.filter(joins))) this.linkGroup.add(o)
+      g.add(this.linkGroup)
     } else {
       const nb = new THREE.MeshStandardMaterial({ color: '#e4e1da', roughness: 0.9 })
       for (const b of ctx.buildings ?? []) surf(b.rings, 0, nb, b.h)
@@ -618,7 +639,8 @@ export class Viewer {
     for (const o of buildBarriers(ctx.barriers ?? [])) g.add(o)
     for (const o of buildRoadPaint(ctx.crossings ?? [], ctx.markings ?? [])) g.add(o)
     // public art modelled from photos (viewer/sculptures.ts); the generic artwork markers stay for the rest
-    const art = buildSculptures()
+    // (Marievik's artworks only: other sites have none modelled yet)
+    const art = (this.site?.key ?? 'marievik') === 'marievik' ? buildSculptures() : { group: new THREE.Group(), spots: [] as [number, number][] }
     g.add(art.group)
     const furn = { ...(ctx.furniture ?? {}) }
     if (furn.artwork) furn.artwork = furn.artwork.filter(([x, y]) => !art.spots.some(([u, v]) => Math.hypot(u - x, v - y) < 3))
@@ -841,9 +863,11 @@ export class Viewer {
   private applyFocus(animate: boolean) {
     this.invalidate()
     const f = this.focus
+    let anyGhost = false
     for (const [id, bv] of this.buildings) {
       const active = f.kind !== 'site' && 'building' in f && f.building === id
       const ghost = (f.kind !== 'site' && !active) || this.dimmed.has(id)
+      anyGhost ||= ghost
       for (const mm of bv.mats) {
         const sm = mm as THREE.MeshStandardMaterial
         sm.transparent = ghost
@@ -875,6 +899,7 @@ export class Viewer {
         }
       })
     }
+    this.linkGroup.visible = !anyGhost   // a skybridge hangs in the air once the buildings it joins fade
     // the open floor (and its labels, analysis and studio overlays) moves with its own floor when exploded
     const off = f.kind === 'floor' || f.kind === 'unit' ? this.options.explode * f.floor : 0
     this.floorGroup.position.z = this.analysisGroup.position.z = this.labelGroup.position.z = off
@@ -967,6 +992,28 @@ export class Viewer {
       if (!f && start >= 0) { if (i - start > len) { len = i - start; best = [start * step, Math.min(H, i * step)] } start = -1 }
     })
     return len * step < 120 ? [0, H] : best
+  }
+
+  /** The largest open rectangle of the canvas (px from its top-left) not covered by the explorer's panels. */
+  private openRect(): [number, number, number, number] {
+    const [y0, y1] = this.openBand()
+    const rc = this.container.getBoundingClientRect()
+    const W = rc.width, step = 8
+    const free: boolean[] = []
+    for (let x = 0; x < W; x += step) {
+      free.push([0.25, 0.5, 0.75].every((fy) => {
+        const el = document.elementFromPoint(rc.left + x, rc.top + y0 + (y1 - y0) * fy)
+        return !el || this.container.contains(el)
+      }))
+    }
+    let best: [number, number] = [0, W], len = 0, start = -1
+    free.push(false)
+    free.forEach((f, i) => {
+      if (f && start < 0) start = i
+      if (!f && start >= 0) { if (i - start > len) { len = i - start; best = [start * step, Math.min(W, i * step)] } start = -1 }
+    })
+    if (len * step < 200) best = [0, W]
+    return [best[0], y0, best[1], y1]
   }
 
   private flyToBox(box: THREE.Box3, dist = 1.2, elev = 0.6) {
@@ -1643,6 +1690,9 @@ export class Viewer {
     if (this.season) {
       this.season.dispose()
       this.season = null
+      this.seasonFrame = null
+      this.camera.clearViewOffset()
+      this.camera.updateProjectionMatrix()
       this.nightK = 0
       this.buildingsGroup.visible = true
       if (this.seasonSun) { this.sunReq = this.seasonSun; this.seasonSun = null }
@@ -1657,7 +1707,35 @@ export class Viewer {
     this.world.add(show.group)
     this.season = show
     this.buildingsGroup.visible = false
-    this.frameSite(true)
+    // frame the study buildings and the outdoor places in the open part of the screen
+    const pts: [number, number][] = [...d.floors.flatMap((f) => f.rings[0] ?? []), ...ZONES.map((z) => z.p)]
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1])
+    const bx = [Math.min(...xs), Math.max(...xs)], by = [Math.min(...ys), Math.max(...ys)]
+    this.seasonFrame = { c: new THREE.Vector3((bx[0] + bx[1]) / 2 - this.center.x, 6, -(by[0] + by[1]) / 2 + this.center.y), r: Math.hypot(bx[1] - bx[0], by[1] - by[0]) / 2 }
+    window.setTimeout(() => this.frameSeason(true), 60)   // after the bar along the bottom has laid out
+  }
+  private seasonFrame: { c: THREE.Vector3; r: number } | null = null
+  /** Centre the show in the part of the canvas the panels leave open: the projection is shifted (setViewOffset)
+   *  rather than the aim, so the 360 still turns round the middle of the site. Call again when the panels change. */
+  frameSeason(fly = false) {
+    const F = this.seasonFrame
+    if (!this.season || !F) return
+    const [x0, y0, x1, y1] = this.openRect()
+    const W = this.container.clientWidth || 1, H = this.container.clientHeight || 1
+    this.camera.setViewOffset(W, H, W / 2 - (x0 + x1) / 2, H / 2 - (y0 + y1) / 2, W, H)
+    this.camera.updateProjectionMatrix()
+    if (fly) {
+      const tanV = Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2))
+      const tanH = tanV * this.camera.aspect
+      const d = (F.r / Math.min(tanV * ((y1 - y0) / H), tanH * ((x1 - x0) / W))) * 0.46
+      const off = this.camera.position.clone().sub(this.controls.target).setY(0)
+      if (off.lengthSq() < 1e-6) off.set(-1, 0, 1)
+      off.normalize()
+      const elev = 0.62
+      const p1 = F.c.clone().add(off.multiplyScalar(d * Math.cos(elev))).add(new THREE.Vector3(0, d * Math.sin(elev), 0))
+      this.anim = { t0: performance.now(), dur: 1400, p0: this.camera.position.clone(), p1, c0: this.controls.target.clone(), c1: F.c.clone() }
+    }
+    this.invalidate()
   }
   /** The show's clock: season 0–3 (spring … winter), hour 0–30 (past 24 is the next morning). */
   setSeasonClock(season: number, hour: number, labels = true) {

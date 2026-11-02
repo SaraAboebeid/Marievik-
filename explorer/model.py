@@ -87,10 +87,15 @@ def clean_settings(raw: dict | None) -> dict:
 class Site:
     """Loads the site once; runs and caches building scenarios."""
 
-    def __init__(self, site_file: Path | None = None):
-        self.site = S.load(str(site_file) if site_file else None)
+    def __init__(self, site_file: Path | None = None, key: str = "marievik"):
+        self.key = key
+        self.site = S.load(str(site_file) if site_file else S.site_file(key))
         self.buildings = {b["id"]: b for b in self.site["buildings"]}
         self.profiles = L.load_profiles()
+        # a site may tune a use profile to its own building stock (e.g. Lindängen's narrower 1960s flats)
+        for use, over in (self.site.get("profile_overrides") or {}).items():
+            if use in self.profiles:
+                self.profiles[use] = dict(self.profiles[use], **over)
         self.db = L.load_db()
         self.catalogue = PR.load_catalogue(str(ROOT))
         self.systems = [s for s in SYSTEMS if s == "as_profile" or L.system_available(s, self.db, self.catalogue)]
@@ -101,17 +106,23 @@ class Site:
         self._lock = threading.Lock()
         self._context: dict | None = None
         # what is on each ground floor (restaurants, gyms, event spaces ...): laid out as mock-up plans
-        gf = ROOT / "data" / "projects" / "marievik" / "ground_floors.json"
+        gf = ROOT / "data" / "projects" / key / "ground_floors.json"
         self.ground = {k: v for k, v in json.loads(gf.read_text(encoding="utf-8"))["buildings"].items()
                        if v.get("spaces")} if gf.is_file() else {}
+        # the owner's own building codes (AMF's M27, M19 ...), shown in place of B01 ... where they are confirmed
+        ph = ROOT / "data" / "projects" / key / "phasing.json"
+        self.codes = {k: v["amf_code"] for k, v in json.loads(ph.read_text(encoding="utf-8"))["buildings"].items()
+                      if v.get("amf_code")} if ph.is_file() else {}
 
     # ------------------------------------------------------------------ public
     def site_payload(self) -> dict:
         return {
             "origin": {"E": self.site.get("origin_E", 672400), "N": self.site.get("origin_N", 6578480),
                        "crs": "SWEREF 99 TM (EPSG:3006), local = minus origin"},
-            "location": {"name": "Marievik, Liljeholmen, Stockholm", "lat": 59.3105, "lon": 18.0235,
-                         "tz": 1.0, "epw": "SWE_ST_Stockholm.024850_TMYx.2011-2025.epw"},
+            "key": self.key, "name": self.site.get("name", self.key),
+            "location": self.site.get("location") or {"name": "Marievik, Liljeholmen, Stockholm", "lat": 59.3105, "lon": 18.0235,
+                                                      "tz": 1.0, "epw": "SWE_ST_Stockholm.024850_TMYx.2011-2025.epw"},
+            "summary": self.site.get("summary"),
             "materials": self.materials,
             "roads": self.site.get("roads", []),
             "uses": {k: self.profiles[k]["label"] for k in self.profiles if not k.startswith("_")},
@@ -122,7 +133,9 @@ class Site:
             "buildings": [{"id": b["id"], "name": b["name"], "levels": b["levels"], "current_use": b["current_use"],
                            "ground_use": b.get("ground_use"), "role": b.get("role"),
                            "footprint": b["footprint"], "holes": b.get("holes") or [],
-                           "facade": b.get("facade"), "height_m": b.get("height_m")}
+                           "facade": b.get("facade"), "height_m": b.get("height_m"),
+                           **{k: b[k] for k in ("hus", "property", "address") if k in b},
+                           **({"code": self.codes[b["id"]]} if b["id"] in self.codes else {})}
                           for b in self.site["buildings"]],
             "provenance": "Footprints/storeys: OpenStreetMap (ODbL). Uses, facades: visual estimates. "
                           "Layouts: Marievik_parametric engine (mock plans until real plans arrive).",
@@ -172,6 +185,7 @@ class Site:
             ov = {"*": {"windows": [{"wall": "all", "type": WINDOWS[s["windows"]]}]}}
         facade = b.get("facade") if s["facade"] else None
         res = L.build(fp, uses, floor_heights=hs, overrides=ov, n_floors=levels + add, mode="conversion",
+                      profiles=self.profiles if self.site.get("profile_overrides") else None,
                       partition_system=None if s["partition_system"] == "as_profile" else s["partition_system"],
                       catalogue=self.catalogue, facade=facade, plan=plan, ground=ground)
         if add:
@@ -326,6 +340,7 @@ class Site:
             return hit
         hs = S.floor_heights(b, levels)
         res = L.build(fp, uses, floor_heights=hs, n_floors=levels, mode="conversion",
+                      profiles=self.profiles if self.site.get("profile_overrides") else None,
                       partition_system=None, catalogue=self.catalogue, facade=b.get("facade"), plan=plan, ground=ground)
         units = {F.index: units_of(F) for F in res["floors"]}
         out = {"building": bid, "key": key, "res": res, "levels": levels, "units": units, "uses": uses}
@@ -416,7 +431,7 @@ class Site:
         """Urban context (streets, paths, quay, water, greens, trees, lamps, neighbouring buildings) from
         <Marievik_parametric>/site/marievik_context.json, built by site/make_context.py. Empty if missing."""
         if self._context is None:
-            p = MVK / "site" / "marievik_context.json"
+            p = MVK / "site" / ("%s_context.json" % self.key)
             try:
                 self._context = json.loads(p.read_text(encoding="utf-8"))
             except (OSError, ValueError):

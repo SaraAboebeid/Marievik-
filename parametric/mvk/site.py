@@ -1,7 +1,7 @@
 """
-mvk.site - the Marievik site: building footprints, storeys and assumed uses.
+mvk.site - a project's site: building footprints, storeys and assumed uses.
 
-site/marievik_site.json (next to this package) holds every building as
+site/<project>_site.json (next to this package; marievik, lindangen, ...) holds every building as
   id, name, osm_id, levels, height_m, current_use (office | residential), ground_use,
   footprint [[x, y], ...], holes [[[x, y], ...]], role (study | context)
 Coordinates are SWEREF 99 TM minus (origin_E, origin_N), in metres, so the Rhino model
@@ -15,7 +15,18 @@ import os
 from shapely.geometry import Polygon
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SITE_FILE = os.path.join(os.path.dirname(HERE), "site", "marievik_site.json")
+SITE_DIR = os.path.join(os.path.dirname(HERE), "site")
+SITE_FILE = os.path.join(SITE_DIR, "marievik_site.json")
+
+
+def site_file(key="marievik"):
+    """site/<key>_site.json - one per project (marievik, lindangen, ...)."""
+    return os.path.join(SITE_DIR, "%s_site.json" % key)
+
+
+def site_keys():
+    """Projects that have a site file."""
+    return sorted(f[:-len("_site.json")] for f in os.listdir(SITE_DIR) if f.endswith("_site.json"))
 
 # current use in the site file -> use profile in use_profiles.json
 USE_FOR = {"office": "office_cellular", "residential": "residential", "retail": "retail",

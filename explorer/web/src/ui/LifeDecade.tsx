@@ -35,7 +35,7 @@ export function LifeDecade({ life, filter, setFilter, onClose }: {
   return (
     <div className="pointer-events-auto w-full rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">
       <div className="checker-band flex items-center justify-between gap-2 px-3.5 pb-2.5 pt-1.5">
-        <h4 className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em]">Life on {SITE_NAME} · the decade {LIFE_YEARS[0]}–{LIFE_YEARS[1]}</h4>
+        <h4 className="font-mono text-[12.5px] font-semibold uppercase tracking-[0.1em]">Life on {SITE_NAME} · the decade {LIFE_YEARS[0]}–{LIFE_YEARS[1]}</h4>
         <span className="flex items-center gap-1.5">
           <span className="rounded-[4px] border-2 border-edge bg-surface px-1.5 font-mono text-[12px] font-bold">{y}</span>
           <button type="button" onClick={() => { setPlaying(false); onClose() }} aria-label="Close the decade" title="Close"
@@ -50,7 +50,7 @@ export function LifeDecade({ life, filter, setFilter, onClose }: {
             className={`rounded-md border-2 border-edge px-2.5 py-1 font-mono text-[12px] font-bold shadow-[2px_2px_0_var(--color-edge)] ${playing ? 'bg-accent text-white' : 'bg-coral text-[#202020]'}`}>
             {playing ? '❚❚ pause' : '▶ play'}
           </button>
-          <div className="space-y-1 text-[10.5px] text-ink-2">
+          <div className="space-y-1 text-[12px] text-ink-2">
             <span className="flex items-center gap-1.5"><i className="inline-block h-[7px] w-[7px] border border-[#202020] bg-[#9a978e]" />planted, stays</span>
             <span className="flex items-center gap-1.5"><i className="inline-block h-[7px] w-[7px] rounded-full border border-dashed border-[#202020] bg-[#9a978e]" />one year only</span>
           </div>
@@ -64,8 +64,8 @@ export function LifeDecade({ life, filter, setFilter, onClose }: {
               <button key={yr} type="button" role="radio" aria-checked={on} onClick={() => { setPlaying(false); setFilter({ ...filter, year: yr }) }}
                 title={`${yr}: ${active.filter((t) => t.kind === 'permanent').length} permanent, ${active.filter((t) => t.kind === 'temporary').length} temporary`}
                 className={`life-col flex min-w-0 flex-col items-stretch rounded-md border-2 border-edge text-left ${on ? 'bg-coral shadow-[2px_2px_0_var(--color-edge)]' : 'bg-sunken hover:bg-surface'}`}>
-                <span className={`flex items-baseline justify-between border-b-2 border-edge px-1.5 py-0.5 font-mono text-[12px] font-bold ${on ? 'text-[#202020]' : 'text-ink'}`}>
-                  {yr}<span className="text-[9.5px] font-normal">{active.length} active</span>
+                <span className={`flex items-baseline justify-between border-b-2 border-edge px-1.5 py-0.5 font-mono text-[13.5px] font-bold ${on ? 'text-[#202020]' : 'text-ink'}`}>
+                  {yr}<span className="text-[11px] font-normal">{active.length} active</span>
                 </span>
                 <span className="flex min-h-[18px] flex-wrap content-start gap-[2px] px-1.5 pt-1">
                   {active.map((t) => (
@@ -75,16 +75,16 @@ export function LifeDecade({ life, filter, setFilter, onClose }: {
                 <span className="flex min-w-0 flex-col gap-[3px] px-1.5 pb-1.5 pt-1">
                   {starts.slice(0, 4).map((t) => (
                     <span key={t.id} title={`${t.name} · ${t.kind === 'permanent' ? 'starts, stays' : 'this year only'}`}
-                      className={`flex min-w-0 items-center gap-1 rounded-[3px] bg-surface py-px pl-px pr-1 text-[10.5px] leading-tight text-ink ${
+                      className={`flex min-w-0 items-center gap-1 rounded-[3px] bg-surface py-[2px] pl-[2px] pr-1 text-[12.5px] font-medium leading-tight text-ink ${
                         t.kind === 'permanent' ? 'border-[1.5px] border-edge' : 'border-[1.5px] border-dashed border-edge'}`}>
-                      <i className="grid h-[13px] w-[13px] shrink-0 place-items-center rounded-[2px]" style={{ background: cat(t.category).colour, color: inkOn(cat(t.category).colour) }}>
-                        <Icon k={t.category} size={8} stroke={2.6} />
+                      <i className="grid h-[16px] w-[16px] shrink-0 place-items-center rounded-[2px]" style={{ background: cat(t.category).colour, color: inkOn(cat(t.category).colour) }}>
+                        <Icon k={t.category} size={10} stroke={2.4} />
                       </i>
                       <span className="truncate">{t.name}</span>
                     </span>
                   ))}
-                  {starts.length > 4 && <span className="text-[10px] text-ink-2">+{starts.length - 4} more</span>}
-                  {!starts.length && <span className="text-[10px] italic text-muted">nothing new</span>}
+                  {starts.length > 4 && <span className="text-[11.5px] text-ink-2">+{starts.length - 4} more</span>}
+                  {!starts.length && <span className="text-[11.5px] italic text-muted">nothing new</span>}
                 </span>
               </button>
             )

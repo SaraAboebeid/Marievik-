@@ -21,8 +21,11 @@ export const bandOf = (d: number, radii: number[]) => radii.findIndex((r) => d <
 const vars = (c: string) => ({ '--c': c, '--on': inkOn(c) }) as CSSProperties
 const Icon = ({ k }: { k: string }) => <span className="inline-grid place-items-center" dangerouslySetInnerHTML={{ __html: lifeIconSvg(k, 9, 2.8) }} />
 
-export function WalkPanel({ amenities, center, walk, setWalk }: {
-  amenities: Amenity[]; center: [number, number]; walk: WalkState; setWalk: (w: WalkState) => void
+const NOTE = "Straight-line distance from the middle of the site, so real walks are a little longer. Amenities from OpenStreetMap (fetched 2026-10-27); gyms and saunas inside buildings aren't mapped. Click a ring on the map or a row here."
+
+/** `compact`: in the bottom bar beside the decade - the note moves to the title's tooltip, a ring's list scrolls sooner. */
+export function WalkPanel({ amenities, center, walk, setWalk, compact = false }: {
+  amenities: Amenity[]; center: [number, number]; walk: WalkState; setWalk: (w: WalkState) => void; compact?: boolean
 }) {
   const radii = walkRadii(walk.pace)
   const withD = amenities.map((a) => ({ a, d: Math.hypot(a.x - center[0], a.y - center[1]) }))
@@ -67,7 +70,7 @@ export function WalkPanel({ amenities, center, walk, setWalk }: {
                 <span className="font-mono text-[11px]">{open ? '▾' : '▸'}</span>
               </button>
               {open && (
-                <div className="max-h-[22rem] overflow-y-auto border-t-2 border-edge bg-raised px-2 py-1.5">
+                <div className={`${compact ? 'max-h-[11rem]' : 'max-h-[22rem]'} overflow-y-auto border-t-2 border-edge bg-raised px-2 py-1.5`}>
                   {byType.length === 0 && <p className="text-[11.5px] text-muted">Nothing mapped in this ring.</p>}
                   {byType.map(([type, xs]) => {
                     const t = AMENITY_TYPES[type] ?? { label: type, colour: '#9a978e' }
@@ -94,9 +97,9 @@ export function WalkPanel({ amenities, center, walk, setWalk }: {
           )
         })}
       </div>
-      <p className="mt-2 text-[10.5px] leading-snug text-muted">
-        Straight-line distance from the middle of the site, so real walks are a little longer. Amenities from OpenStreetMap (fetched 2026-10-27); gyms and saunas inside buildings aren't mapped. Click a ring on the map or a row here.
-      </p>
+      {compact
+        ? <p className="mt-1.5 text-[10.5px] text-muted" title={NOTE}>As the crow flies, from the middle of the site ⓘ</p>
+        : <p className="mt-2 text-[10.5px] leading-snug text-muted">{NOTE}</p>}
     </Card>
   )
 }

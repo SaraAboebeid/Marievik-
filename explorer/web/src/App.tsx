@@ -50,7 +50,7 @@ import { CompareDrawer } from './ui/CompareDrawer'
 import { MapLegend } from './ui/MapLegend'
 import { ParametricDrawer } from './ui/ParametricDrawer'
 import { SupplierDrawer } from './ui/SupplierDrawer'
-import { splitHref } from './SideBySide'
+import { FOLLOW, PAIR, defaultPair, followerSrc, listen, pairHref, post, type PairKpis, type PairState } from './pair'
 import { bl, setCodes } from './codes'
 
 export type Overlay = 'type' | 'daylight' | 'comfort'
@@ -65,7 +65,6 @@ const SCALE_TABS: [Scale | 'floor', string, string][] = [
 ]
 
 const SHOW_URBAN_CARDS = false   // the urban-scale cards are hidden for now; flip to bring them back
-const EMBEDDED = new URLSearchParams(window.location.search).has('embed')   // a pane of the side-by-side view
 
 const STORE_KEY = 'marievik-explorer-saved'
 
@@ -492,12 +491,14 @@ export default function App() {
 
   // the side panels start under the top bar, which wraps to two rows on narrow screens and grows with the KPI strip
   const topBarRef = useRef<HTMLDivElement>(null)
+  const pairFrame = useRef<HTMLIFrameElement>(null)   // the other project of a pair (pair.ts), right half
   useEffect(() => {
     const el = topBarRef.current
     if (!el) return
     const ro = new ResizeObserver(() => {
       const r = el.getBoundingClientRect()
       document.documentElement.style.setProperty('--panel-top', `${Math.round(r.bottom + 12)}px`)
+      post(pairFrame.current?.contentWindow, { t: 'top', px: `${Math.round(r.bottom + 12)}px` })
     })
     ro.observe(el)
     return () => ro.disconnect()
@@ -1246,7 +1247,55 @@ export default function App() {
     const ten = tenancy[b.id]?.[f.index]
     return ten ? { n: f.index, label: f.index === 0 ? 'GF' : `F${f.index}`, use: studioUse ? USE_FAMILY[studioUse] ?? f.use_label : f.use_label, area, ten } : null
   }).filter((r): r is FloorRow => r !== null) : null
-  const crumbs:{ label: string; to: Level }[] = [{ label: PROJECTS[site?.key ?? 'marievik']?.name ?? 'Marievik', to: { kind: 'site' } }]
+  // ------------------------------------------------------------ two projects in one window (pair.ts)
+  // left: post what the bars set (and again when the right half says it's ready); show the right half's KPIs
+  const [pairKpis, setPairKpis] = useState<PairKpis | null>(null)
+  const [pairReady, setPairReady] = useState(0)
+  useEffect(() => {
+    if (!PAIR) return
+    return listen((m) => {
+      if (m.t === 'ready') setPairReady((n) => n + 1)
+      else if (m.t === 'kpis') setPairKpis(m.k)
+    })
+  }, [])
+  const pairState: PairState = { scale, layer, sun, view, lifeFilter, distYear, leaseStep, profile: choice.profile }
+  const pairKey = JSON.stringify(pairState)
+  useEffect(() => {
+    if (!PAIR || !pairReady) return
+    const to = pairFrame.current?.contentWindow
+    post(to, { t: 'state', s: pairState })
+    post(to, { t: 'top', px: document.documentElement.style.getPropertyValue('--panel-top') })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pairKey, pairReady])
+  // right: follow the left's bars and clock, and hand it this project's KPI strip
+  useEffect(() => {
+    if (!FOLLOW) return
+    const off = listen((m) => {
+      if (m.t === 'state') {
+        const s = m.s
+        setScale(s.scale); setLayerState(s.layer); setSun(s.sun); setView(s.view)
+        setLifeFilter(s.lifeFilter); setDistYear(s.distYear); setLeaseStep(s.leaseStep)
+        setChoice((c) => (c.profile === s.profile ? c : { ...c, profile: s.profile }))
+      } else if (m.t === 'season') viewer.current?.setSeasonClock(m.se, m.h, m.labels)
+      else if (m.t === 'orbit') viewer.current?.setSeasonOrbit(m.speed)
+      else if (m.t === 'top') document.documentElement.style.setProperty('--panel-top', m.px)
+    })
+    post(window.parent, { t: 'ready' })
+    return off
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  const pairOut: PairKpis | null = FOLLOW ? {
+    scale: kpiScale, profile: projectProfile, pinned: choice.kpis, methods, values: stripValues, waiting: stripWaiting, site: siteFigures,
+    cavfKpis: !projectProfile && cavfProfile ? methods?.profiles[cavfProfile]?.kpis ?? null : null,
+    valuesFrom: stripValues ? (kpiScale === 'floor' ? 'building' : 'here') : null,
+  } : null
+  const pairOutKey = FOLLOW ? JSON.stringify({ ...pairOut, methods: !!methods }) : ''
+  useEffect(() => {
+    if (pairOut) post(window.parent, { t: 'kpis', k: pairOut })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pairOutKey])
+
+  const crumbs:{ label: string; to: Level }[] =[{ label: PROJECTS[site?.key ?? 'marievik']?.name ?? 'Marievik', to: { kind: 'site' } }]
   if (level.kind !== 'site') crumbs.push({ label: `${bl(level.building)} ${b?.name ?? ''}`, to: { kind: 'building', building: level.building } })
   if (level.kind === 'floor' || level.kind === 'unit') crumbs.push({ label: `Floor ${level.floor}${b?.floors[level.floor]?.added ? ' (added)' : ''}`, to: { kind: 'floor', building: level.building, floor: level.floor } })
   if (level.kind === 'unit') crumbs.push({ label: floorData?.units.find((u) => u.id === level.unit)?.name ?? level.unit, to: level })
@@ -1280,11 +1329,24 @@ export default function App() {
 
   return (
     <div className="relative h-full w-full">
-      <div ref={host} className="absolute inset-0" />
+      <div ref={host} className={PAIR ? 'absolute inset-y-0 left-0 w-1/2' : 'absolute inset-0'} />
+      {/* two projects in one window (pair.ts): the other project's model in the right half, under these bars */}
+      {PAIR && (
+        <>
+          <iframe ref={pairFrame} src={followerSrc(PAIR)} title={`${PROJECTS[PAIR].name} explorer`}
+            className="absolute inset-y-0 right-0 h-full w-1/2 border-0 border-l-2 border-edge" />
+          {[project, PROJECTS[PAIR]].map((p, i) => (
+            <span key={i} className={`pointer-events-none absolute ${panelTop} z-10 rounded-md border-2 border-edge bg-coral px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wide text-[#202020] shadow-[2px_2px_0_var(--color-edge)] ${i ? 'left-[calc(50%+0.75rem)]' : 'left-3'}`}>
+              {p.name}, {p.city}
+            </span>
+          ))}
+        </>
+      )}
 
+      {!FOLLOW && <>
       <TopBar tab={tab}
         setTab={(t) => { setTab(t); if (t === 'compare') setShowCompare(true) }}
-        location={`${project.name}, ${project.city}`}
+        location={PAIR ? `${project.name} ⇄ ${PROJECTS[PAIR].name}` : `${project.name}, ${project.city}`}
         profile={{ value: choice.profile ?? '', options: profileOptions, onChange: (v) => setChoice((c) => ({ ...c, profile: v || null })) }}
         tools={[
           { label: 'Parametric model', title: 'Plans, bill of quantities and every use × wall system for one building',
@@ -1294,9 +1356,8 @@ export default function App() {
           { label: 'Methods & data', open: explain !== null, onClick: () => setExplain((e) => (e === null ? '' : null)) },
           { label: 'Standards', title: 'Dimensioned standards sheets: accessibility, escape routes, loads and every use in the catalogue',
             open: showStandards, onClick: () => setShowStandards((s) => !s) },
-          // not inside a side-by-side pane (?embed=1), which would nest a split in a split
-          ...(EMBEDDED ? [] : [{ label: 'Side by side', title: 'Two projects next to each other, each with its own model and panels',
-            open: false, onClick: () => { window.location.href = splitHref(choice.project) } }]),
+          { label: 'Side by side', title: PAIR ? 'Back to one project' : 'Two projects in one window: one set of bars, both models, both KPI strips',
+            open: !!PAIR, onClick: () => { window.location.href = pairHref(choice.project, PAIR ? null : defaultPair(choice.project)) } },
         ]} />
 
       {/* under the bar: where you are, and the tools — a second full-width bar (like the header above it),
@@ -1391,7 +1452,20 @@ export default function App() {
         )}
         </div>
         <div className="flex flex-wrap items-center justify-end gap-1.5">
-          {project.placeholder && <span className="rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
+          {PAIR && (
+            <div className="flex items-center gap-1.5 rounded-md border-2 border-edge bg-surface px-2 py-1 text-[12px] font-semibold shadow-[3px_3px_0_var(--color-edge)]">
+              <span className="text-ink-2">{project.name} with</span>
+              <select value={PAIR} onChange={(e) => { window.location.href = pairHref(choice.project, e.target.value) }}
+                className="rounded border border-line-strong bg-surface px-1 py-0.5 font-semibold" aria-label="Project on the right">
+                {Object.entries(PROJECTS).filter(([k]) => k !== choice.project).map(([k, p]) => (
+                  <option key={k} value={k}>{p.name}, {p.city}{p.placeholder ? ' (placeholder model)' : ''}</option>
+                ))}
+              </select>
+              <button type="button" title="Swap the two sides" onClick={() => { window.location.href = pairHref(PAIR!, choice.project) }}
+                className="rounded border border-line-strong px-1.5 hover:bg-coral">⇄</button>
+            </div>
+          )}
+          {project.placeholder &&<span className="rounded bg-warn-bg px-1.5 font-mono text-[10.5px] text-warn">placeholder model</span>}
           {working && (
             <span className="rounded-md border-2 border-edge bg-surface px-3 py-1.5 font-mono text-[11.5px] text-ink-2 shadow-[3px_3px_0_var(--color-edge)]">{working}</span>
           )}
@@ -1402,8 +1476,11 @@ export default function App() {
         <KpiStrip scale={kpiScale} profile={projectProfile} pinned={choice.kpis}
           cavfKpis={!projectProfile && cavfProfile ? methods?.profiles[cavfProfile]?.kpis ?? null : null}
           methods={methods} values={stripValues} valuesFrom={stripValues ? (kpiScale === 'floor' ? 'building' : 'here') : null}
-          waiting={stripWaiting} onExplain={(k) => setExplain(k)} site={siteFigures} />
+          waiting={stripWaiting} onExplain={(k) => setExplain(k)} site={siteFigures} tag={PAIR ? project.name : undefined}
+          pair={PAIR ? { tag: PROJECTS[PAIR].name, profile: null, cavfKpis: null, pinned: null, values: null, valuesFrom: null,
+            waiting: 'loading…', site: null, ...pairKpis } : null} />
       </div>
+      </>}
 
       {error && (
         <div className="absolute left-1/2 top-32 z-30 max-w-xl -translate-x-1/2 rounded-md border border-critical bg-critical-bg px-3 py-2 text-[12.5px] text-critical shadow">
@@ -1447,7 +1524,7 @@ export default function App() {
           Nothing to set up on the whole site. */}
       {panels.right ? (
         // hidden when nothing but its close button renders (the whole site at building scale: its figures are in the KPI strip)
-        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn || seasonsOn ? 'panel-short' : ''} absolute right-3 ${panelTop} z-10 w-[22rem] [&:not(:has(>:nth-child(2)))]:hidden`}>
+        <aside className={`panel-scroll ${bottomBar || lifeBar || tourOn || seasonsOn ? 'panel-short' : ''} absolute ${PAIR ? 'right-[calc(50%+0.75rem)]' : 'right-3'} ${panelTop} z-10 w-[22rem] [&:not(:has(>:nth-child(2)))]:hidden`}>
           <div className="mb-1 flex justify-end">
             <button onClick={() => togglePanel('right')} title="Close panel" aria-label="Close panel"
               className="grid h-6 w-6 place-items-center rounded-full border border-line bg-raised/95 text-[14px] leading-none text-ink-2 shadow-sm hover:text-ink">×</button>
@@ -1489,20 +1566,22 @@ export default function App() {
             )}
             </>
           )}
-          {site && scale === 'district' && (
+          {/* rented / vacant at District scale: just the tour and its timeline, no building chips or ten-years card */}
+          {site && scale === 'district' && layer !== 'tenancy' && (
             <DistrictPanel site={site} hidden={districtHidden}
               onToggle={(id) => setDistrictHidden((h) => { const n = new Set(h); n.has(id) ? n.delete(id) : n.add(id); return n })}
               onAll={() => setDistrictHidden(new Set())}
               onNone={() => setDistrictHidden(new Set(site.buildings.map((bd) => bd.id)))} />
           )}
-          {site && scale === 'district' && studioFloor === null && (
+          {site && scale === 'district' && studioFloor === null && layer !== 'tenancy' && (
             <DistrictModel meta={districtMeta} res={districtRes} busy={districtBusy} cards={districtCards}
               toggle={(id) => setDistrictCards((c) => { const n = new Set(c); n.has(id) ? n.delete(id) : n.add(id); return n })}
               onRun={() => runDistrict()} year={distYear} setYear={(y) => { setDistYear(y); if (layer === 'none') setLayerState('vacancy') }}
               compare={cardRows} compareBusy={cardBusy} onCompare={runCardCompare} onPickCompare={pickCardRow} />
           )}
           {lifeOn && <LifePanel life={life} filter={lifeFilter} setFilter={setLifeFilter} />}
-          {lifeOn && life && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
+          {/* with the decade along the bottom, the walk card sits beside it there instead */}
+          {lifeOn && life && !lifeBar && <WalkPanel amenities={life.amenities} center={siteC} walk={walk} setWalk={setWalk} />}
           {/* hidden for now (2026-11-02): the urban-scale cards, Marievik in Liljeholmen and ground floors & open space */}
           {SHOW_URBAN_CARDS && scale === 'urban' && <UrbanModel res={districtRes} year={distYear} />}
           {SHOW_URBAN_CARDS && scale === 'urban' && <UrbanPanel urban={urban} loading={!urban} />}
@@ -1538,7 +1617,7 @@ export default function App() {
         </aside>
       ) : (
         <button onClick={() => togglePanel('right')} title="Show figures" aria-label="Show figures"
-          className={`absolute right-3 ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
+          className={`absolute ${PAIR ? 'right-[calc(50%+0.75rem)]' : 'right-3'} ${panelTop} z-10 grid h-8 w-8 place-items-center rounded-lg border border-line bg-raised/95 text-[13px] text-ink-2 shadow-sm hover:border-line-strong hover:text-ink`}>
           ◂
         </button>
       )}
@@ -1554,11 +1633,13 @@ export default function App() {
         )}
       </div>
 
-      {/* bottom: map legend + sun/view controls, both foldable */}
-      <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${
+      {/* bottom: map legend + sun/view controls, both foldable (a pair's right half has none: the left's plays both) */}
+      <div className={`pointer-events-none absolute bottom-3 z-10 flex items-end gap-2 ${FOLLOW ? 'hidden' : ''} ${
         tourOn || lifeBar || flexOn || seasonsOn ? 'inset-x-3' : 'left-1/2 w-max max-w-[calc(100vw-1.5rem)] -translate-x-1/2'}`}>
         {seasonsOn ? (
-          seasonFloors ? <SeasonPanel floors={seasonFloors} onClock={(se, h, l) => viewer.current?.setSeasonClock(se, h, l)} onOrbit={(w) => viewer.current?.setSeasonOrbit(w)} onLayout={() => viewer.current?.frameSeason(false)} onClose={() => setLayerState(scale === 'urban' ? 'amenities' : 'none')} />
+          seasonFloors ? <SeasonPanel floors={seasonFloors}
+            onClock={(se, h, l) => { viewer.current?.setSeasonClock(se, h, l); post(pairFrame.current?.contentWindow, { t: 'season', se, h, labels: l }) }}
+            onOrbit={(w) => { viewer.current?.setSeasonOrbit(w); post(pairFrame.current?.contentWindow, { t: 'orbit', speed: w }) }} onLayout={() => viewer.current?.frameSeason(false)} onClose={() => setLayerState(scale === 'urban' ? 'amenities' : 'none')} />
             : <div className="pointer-events-auto rounded-lg border-2 border-edge bg-raised px-3 py-2 font-mono text-[11.5px]">Opening the ground floors and setting up the seasons…</div>
         ) : flexOn ? (
           flexFloorOpen || buildingId !== 'B01' ? (
@@ -1589,7 +1670,14 @@ export default function App() {
               }} />
           )
         ) : lifeBar ? (
-          <LifeDecade life={life!} filter={lifeFilter} setFilter={setLifeFilter} onClose={() => setDecadeClosed(true)} />
+          <div className="flex items-end gap-2.5">
+            <div className="min-w-0 flex-1">
+              <LifeDecade life={life!} filter={lifeFilter} setFilter={setLifeFilter} onClose={() => setDecadeClosed(true)} />
+            </div>
+            <div className="w-[300px] shrink-0">
+              <WalkPanel amenities={life!.amenities} center={siteC} walk={walk} setWalk={setWalk} compact />
+            </div>
+          </div>
         ) : tourOn ? (
           <LeaseTimeline book={leaseBook} buildings={tourIds} focus={tourFocus} step={leaseStep} setStep={setLeaseStep}
             playing={leasePlaying} setPlaying={setLeasePlaying} />

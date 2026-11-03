@@ -76,7 +76,7 @@ export function LeaseTimeline({ book, buildings, focus, step, setStep, playing, 
     if (step >= LEASE_STEPS) setStep(0)
     setPlaying(true)
   }
-  const list = (ls: { tenant: string; space: string }[]) => ls.slice(0, 3).map((l) => `${l.tenant} (${l.space.replace('-S', ' · ')})`).join(', ') + (ls.length > 3 ? ` +${ls.length - 3}` : '')
+  const list = (ls: { tenant: string; space: string }[]) => ls.slice(0, 3).map((l) => `${l.tenant} (${l.space.replace(/^([^-]+)-S/, (_, b: string) => `${bl(b)} · `)})`).join(', ') + (ls.length > 3 ? ` +${ls.length - 3}` : '')
 
   return (
     <div className="pointer-events-auto w-full rounded-xl border-2 border-edge bg-raised shadow-[3px_3px_0_var(--color-edge)]">

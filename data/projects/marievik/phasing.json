@@ -35,11 +35,31 @@
         { "event": "construction", "label": "Produktion (preliminär)", "year_from": 2026, "year_to": 2028, "confidence": "approximate, and preliminary in the source" },
         { "event": "move_in", "label": "Inflytt HG", "year": 2028, "confidence": "year only, preliminary and unconfirmed" }
       ]
+    },
+    "B04": {
+      "amf_code": "M28",
+      "note": "Matched by position on AMF's Marievik parcel map (2026-11-03, against M27/M19/M26 above): the waterfront block east of M26. That map also labels M30 between M27 and M28, which this model has no separate building for - it may be part of B04's footprint. Not on the phasing schedule's dated rows.",
+      "events": []
+    },
+    "B05": {
+      "amf_code": "M25",
+      "note": "Matched by position on AMF's Marievik parcel map (2026-11-03): the slab south of M28, north-east of M24. Not on the phasing schedule's dated rows.",
+      "events": []
+    },
+    "B06": {
+      "amf_code": "M24",
+      "note": "Matched by position on AMF's Marievik parcel map (2026-11-03): the southernmost AMF slab, south-west of M25. Not on the phasing schedule's dated rows.",
+      "events": []
+    },
+    "B07": {
+      "amf_code": "M23",
+      "note": "Matched by position on AMF's Marievik parcel map (2026-11-03): the waterfront building north-east of M19. Not on the phasing schedule's dated rows.",
+      "events": []
     }
   },
 
   "not_yet_modelled": {
     "_note": "Real AMF parcels seen on the schedule and/or the 2019 site plan that have no building entry in parametric/site/marievik_site.json yet.",
-    "codes": ["M14", "M22", "M23 (Flänshjulet 1)", "M24 (Buteljgatan 29A)", "M25 (Årstaängsvägen 25)", "M28 (Marieviksgatan 19)", "M30", "M15:Kv1", "M15:Kv2", "M15:Kv3", "M15:Kv4"]
+    "codes": ["M14", "M22", "M30 (possibly within B04)", "M15:Kv1", "M15:Kv2", "M15:Kv3", "M15:Kv4"]
   }
 }

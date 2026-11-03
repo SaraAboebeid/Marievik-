@@ -126,10 +126,11 @@ body {
 .studio-label.exit { background: #03b05f; }
 .studio-label.tenant { font-size: 12px; background: #fffdf6; }
 .studio-label.vacant { font-size: 12px; background: #9a978e; color: #fff; }
-.studio-label.layer { font-size: 11.5px; background: #fffdf6; white-space: nowrap; }
-.studio-label.layer.flex-side { font-size: 10.5px; line-height: 1.2; text-align: center; padding: 2px 6px; box-shadow: 1.5px 1.5px 0 #202020; }
-.studio-label.layer.flex-side span { font-weight: 500; font-size: 9.5px; opacity: .9; }
-.studio-label.layer.tour { font-size: 10.5px; padding: 0 5px; box-shadow: 1.5px 1.5px 0 #202020; }
+/* building labels (every lens): 1.5 pt (2 px) up from 11.5 / 10.5 / 9.5 (2026-11-03) */
+.studio-label.layer { font-size: 13.5px; background: #fffdf6; white-space: nowrap; }
+.studio-label.layer.flex-side { font-size: 12.5px; line-height: 1.2; text-align: center; padding: 2px 6px; box-shadow: 1.5px 1.5px 0 #202020; }
+.studio-label.layer.flex-side span { font-weight: 500; font-size: 11.5px; opacity: .9; }
+.studio-label.layer.tour { font-size: 12.5px; padding: 1px 6px; box-shadow: 1.5px 1.5px 0 #202020; }
 .studio-label.name { font-family: var(--font-sans); font-size: 11.5px; box-shadow: none; border-width: 1px; background: rgba(255, 253, 246, 0.9); }
 
 /* Urban scale, "Life on Marievik": three kinds of life, three objects on the model.
@@ -158,7 +159,7 @@ body {
   animation: lp-wave 3.4s ease-in-out var(--phase) infinite;
 }
 .lp-flag .lp-ico { width: 21px; background: var(--c); border-right: 2px solid #202020; }
-.lp-flag .lp-name { padding: 2px 6px 2px 6px; font-size: 11.5px; font-weight: 700; line-height: 16px; }
+.lp-flag .lp-name { padding: 2px 7px 2px 7px; font-size: 13.5px; font-weight: 700; line-height: 18px; }
 .lp-check { width: 6px; border-left: 1.5px solid #202020; background: conic-gradient(#202020 25%, var(--c) 0 50%, #202020 0 75%, var(--c) 0) 0 0 / 6px 6px; border-radius: 0 2px 2px 0; }
 .lp-permanent:hover .lp-flag { box-shadow: 5px 5px 0 #202020; }
 /* new this year: a yellow starburst */
@@ -186,8 +187,8 @@ body {
   background: #fffdf6; border: 1.5px dashed #202020; border-radius: 3px; padding: 1px 7px 2px;
   transform: rotate(var(--tilt)); transform-origin: 0 50%; pointer-events: auto; cursor: default;
 }
-.lp-ticket .lp-name { font-size: 11px; font-weight: 700; line-height: 14px; }
-.lp-temporary .lp-badge { font: normal 600 8.5px/10px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: #ac2e23; }
+.lp-ticket .lp-name { font-size: 13px; font-weight: 700; line-height: 16px; }
+.lp-temporary .lp-badge { font: normal 600 10px/12px var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: #ac2e23; }
 .lp-temporary:hover .lp-ticket { border-style: solid; box-shadow: 2px 2px 0 #202020; }
 
 /* amenities: the tokens */
@@ -200,7 +201,7 @@ body {
 .lp-amenity:hover .lp-token { transform: scale(1.45); }
 .lp-tag {
   position: absolute; left: 24px; top: 50%; translate: 0 -50%; opacity: 0; pointer-events: none; white-space: nowrap;
-  font-size: 11px; font-weight: 600; line-height: 16px; background: #fffdf6; border: 1.5px solid #202020; border-radius: 4px;
+  font-size: 13px; font-weight: 600; line-height: 18px; background: #fffdf6; border: 1.5px solid #202020; border-radius: 4px;
   padding: 0 6px; box-shadow: 2px 2px 0 #202020; transition: opacity 0.12s;
 }
 .lp-amenity:hover .lp-tag { opacity: 1; }
@@ -233,8 +234,8 @@ body {
 .life-tile[aria-pressed="false"] { opacity: 0.5; box-shadow: none; }
 .life-tile[aria-pressed="false"] .life-tile-name { text-decoration: line-through; text-decoration-thickness: 2px; }
 .life-col { transition: background-color 0.15s; }
-.life-col .cell-p { width: 5px; height: 5px; border: 1px solid #202020; background: var(--c); }
-.life-col .cell-t { width: 5px; height: 5px; border-radius: 50%; border: 1px dashed #202020; background: var(--c); }
+.life-col .cell-p { width: 7px; height: 7px; border: 1px solid #202020; background: var(--c); }
+.life-col .cell-t { width: 7px; height: 7px; border-radius: 50%; border: 1px dashed #202020; background: var(--c); }
 .life-new { font: 800 8.5px/1 var(--font-mono); letter-spacing: 0.04em; text-transform: uppercase; color: #202020; background: #f5c443; border: 1.5px solid #202020; border-radius: 3px; padding: 2px 3px; transform: rotate(-4deg); }
 
 /* --panel-top: just under the top bar and KPI strip, measured in App.tsx (they wrap on narrow screens) */
@@ -278,7 +279,7 @@ body {
 .lp-dim .lp-in { opacity: 0.22; filter: grayscale(0.8); }
 
 /* Seasons & hours (viewer/seasonShow.ts): what's on in each building and each outdoor place */
-.studio-label.layer.season-b, .studio-label.layer.season-z { font-size: 10.5px; padding: 1px 6px; box-shadow: 1.5px 1.5px 0 #202020; display: flex; align-items: center; gap: 5px; }
-.studio-label.layer.season-z { font-family: var(--font-sans); font-weight: 700; font-size: 11px; background: #202020; color: #fffdf6; border-color: #fffdf6; }
+.studio-label.layer.season-b, .studio-label.layer.season-z { font-size: 12.5px; padding: 1px 6px; box-shadow: 1.5px 1.5px 0 #202020; display: flex; align-items: center; gap: 5px; }
+.studio-label.layer.season-z { font-family: var(--font-sans); font-weight: 700; font-size: 13px; background: #202020; color: #fffdf6; border-color: #fffdf6; }
 .studio-label.layer.season-b i, .studio-label.layer.season-z i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; border: 1.5px solid #202020; flex: none; }
 .studio-label.layer.season-b b { margin-right: 3px; }
